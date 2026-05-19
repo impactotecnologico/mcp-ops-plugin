@@ -1,6 +1,6 @@
 {
   "name": "opsphere",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "DevOps operational intelligence — monitor, diagnose, and manage your infrastructure directly from Cursor. Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, and more.",
   "author": {
     "name": "Opsphere",
