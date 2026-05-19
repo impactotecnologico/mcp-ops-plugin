@@ -27,7 +27,7 @@ These tools are available once authenticated and integrations are configured:
 | Cloud | AWS | `aws_sts_whoami`, `aws_cli_query` |
 | Network (built-in) | — | `dns_lookup`, `http_check`, `cert_status` |
 | Integration Mgmt | — | `ops_configure_integration`, `ops_list_integrations`, `ops_test_integration`, `ops_remove_integration` |
-| Plan & Usage | — | `ops_my_usage` *(activates in Sprint 4)* |
+| Plan & Usage | — | `ops_my_usage` |
 
 **Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately after login — no integration setup needed.**
 
@@ -64,8 +64,6 @@ If the MCP connection fails with **401 Unauthorized** or tools are not visible:
 
 ## Trial Expiration (TRIAL_EXPIRED)
 
-> Note: Trial enforcement activates in Sprint 4. This section pre-documents the handling so the rule is ready when the gateway starts emitting this error. Until then, this code path is unreachable.
-
 If the gateway returns error code `TRIAL_EXPIRED`:
 
 - Tell the user: "Your 30-day free trial has expired. Visit **https://opsphere.io/pricing** to continue using Opsphere."
@@ -75,8 +73,6 @@ If the gateway returns error code `TRIAL_EXPIRED`:
 ---
 
 ## Rate Limit (RATE_LIMIT_EXCEEDED)
-
-> Note: Rate limit enforcement activates in Sprint 4.
 
 If the gateway returns error code `RATE_LIMIT_EXCEEDED`:
 
@@ -88,12 +84,10 @@ If the gateway returns error code `RATE_LIMIT_EXCEEDED`:
 
 ## Plan & Usage Visibility
 
-> Note: `ops_my_usage` activates in Sprint 4. Until then, redirect the user to https://opsphere.io/pricing for plan details.
-
 When the user asks about their plan, usage, trial status, remaining calls, or upgrade options:
 
-- Direct them to **https://opsphere.io/pricing** for current plan information.
-- Once Sprint 4 is deployed, `ops_my_usage` will return: plan name, trial end date, days remaining, daily usage (used / limit / resets at), configured integrations count, and upgrade link.
+- Use `ops_my_usage` — no parameters required.
+- It returns: plan name, trial end date, days remaining, daily usage (used / limit / resets at), configured integrations count, and upgrade link.
 
 ---
 
@@ -110,7 +104,7 @@ Users might say things like:
 - "Show PR #42 status in Bitbucket"
 - "Find Jira issues assigned to me"
 - "What GitHub Actions ran today on the main branch?"
-- "Show my usage" — direct to https://opsphere.io/pricing (ops_my_usage activates in Sprint 4)
+- "Show my usage" — triggers `ops_my_usage`
 - "Which integrations do I have configured?" — triggers `ops_list_integrations`
 
 ---

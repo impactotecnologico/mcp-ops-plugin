@@ -59,11 +59,9 @@ Remove all stored credentials for a provider.
 
 ---
 
-## Plan & Usage
+## Plan & Usage [built-in]
 
-> **Coming in Sprint 4.** The `ops_my_usage` tool is not yet available. Until then, visit [https://opsphere.io/pricing](https://opsphere.io/pricing) for plan details.
-
-### `ops_my_usage` *(Sprint 4)*
+### `ops_my_usage`
 Show current plan, trial end date, days remaining, daily tool call usage, and upgrade link.
 
 **Example**: _"Show my Opsphere usage"_ or _"How many tool calls do I have left today?"_

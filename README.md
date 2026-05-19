@@ -36,7 +36,7 @@ Total time from install to first result: **under 60 seconds**.
 | "Find Jira issues assigned to me" | Search Jira with JQL |
 | "What GitHub Actions ran on main today?" | List latest workflow runs |
 | "Which integrations do I have configured?" | Run `/integration-status` |
-| "Show my plan and usage" | Link to opsphere.io/pricing *(full usage tool coming soon)* |
+| "Show my plan and usage" | Display trial status, daily calls used, and upgrade link |
 
 ---
 

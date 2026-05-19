@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-05-19
+
+### Added
+
+- `ops_my_usage` tool: shows plan, trial end date, days remaining, daily usage
+  (used/limit/resetsAt), configured integrations count, and upgrade link.
+- Trial expiration enforcement: gateway returns `TRIAL_EXPIRED` (HTTP 403) when
+  a public_free tenant's 30-day trial has expired — blocks all `/mcp` methods.
+- Rate limiting: gateway returns `RATE_LIMIT_EXCEEDED` (HTTP 429) after 100
+  tool calls/day for free tenants, with `details.resetsAt` in the response.
+- Usage nudge: tool responses above 80% of daily limit include a brief note
+  with current usage and upgrade link (not shown on setup/meta tools).
+- Rule updates: `TRIAL_EXPIRED`, `RATE_LIMIT_EXCEEDED`, and `ops_my_usage`
+  sections are now active (previously marked as "activates in Sprint 4").
+
 ## [0.1.0] - 2026-05-19
 
 ### Added
