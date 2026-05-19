@@ -1,8 +1,8 @@
 # MCP-Ops Plugin — Cursor Marketplace: Technical Inventory & Execution Plan
 
-> **Date**: 2026-05-07  
+> **Date**: 2026-05-07 (updated 2026-05-19)  
 > **Author**: Architecture / Security / Platform Review  
-> **Status**: Draft — Ready for Review  
+> **Status**: Draft v2.1 — Updated after tool enforcement gap closure  
 > **Scope**: Public plugin layer for Cursor Marketplace. Private IP must remain in backend.
 
 ---
@@ -26,7 +26,7 @@
 
 ## 1. Executive Summary
 
-MCP-Ops is a mature internal DevOps operations platform with **207+ tools** across 22 integrations (AWS, K8s, Datadog, Vercel, ArgoCD, Cloudflare, Sentry, Jira, Azure, etc.), a multi-tenant backend (PostgreSQL), HTTP gateway, web chat with LLM agents, and an admin portal.
+MCP-Ops is a mature internal DevOps operations platform with **207+ tools** across **22 modules** (AWS, K8s, Datadog, Vercel, ArgoCD, Cloudflare, Sentry, Jira, Azure, Pingdom, Contentful, EKS/ECS sync, etc.), a multi-tenant backend (PostgreSQL), HTTP gateway, web chat with LLM agents, and an admin portal.
 
 The goal is to extract a **thin public plugin** for the Cursor Marketplace that:
 - Authenticates users via API key against our private backend
@@ -37,9 +37,33 @@ The goal is to extract a **thin public plugin** for the Cursor Marketplace that:
 
 **The plugin is a client. The intelligence stays in the backend.**
 
+### Multi-Tenant Architecture (current state)
+
+The platform now operates with three tenants, each with a discriminated `TenantType`:
+
+| Tenant | Slug | Type | Purpose |
+|--------|------|------|---------|
+| **Breitling** | `breitling` | `client` | Customer tenant — users, cloud accounts, credentials, tools |
+| **Opsphere** | `opsphere` | `platform_admin` | Operators with cross-tenant visibility |
+| **Opsphere Platform** | `opsphere-platform` | `platform_infra` | Opsphere's own infrastructure (future) |
+
+`TenantType` is a discriminated union: `'client' | 'platform_admin' | 'platform_infra'`. The gateway resolves it from the API key and passes it through to the session pool and MCP subprocess.
+
 ### Key Architectural Decision: Multi-Tenant Isolation for Public Users
 
 Each public plugin user gets their **own auto-provisioned tenant** (not a shared "PublicPlugin" tenant). This is critical because `tenant_credentials` are scoped per-tenant — a shared tenant would mean all users share the same Vercel/Datadog/etc. tokens. Auto-provisioned tenants with `subscription_id = 'public_free'` provide total isolation with zero schema changes. See [Section 5.3](#53-tenant-model-for-public-plugin-critical-architecture-decision) for the full analysis.
+
+### Security Pre-requisites Completed (2026-05-19)
+
+The following security hardening was implemented and deployed before this plan update:
+
+- **Deny-by-default tool loading**: `tools-config-loader.ts` now treats modules missing from `tenant_tools` DB as `enabled: false` — JSON carry-over eliminated
+- **Fail-closed on Postgres failure**: When `USE_POSTGRES_TOOLS_CONFIG=true` and DB loading fails, the MCP server registers ZERO tools (not the full JSON catalog)
+- **Full DB matrix**: 22 modules × 2 profiles = complete `tenant_tools` coverage verified in production
+- **Session pool hardening**: Session key is now `${userId}|${tenantId}|${tenantType}|${runtimeProfile}` (4 components). `MCP_API_KEY` stripped from subprocess env
+- **Tenant rename**: Opsphere → Breitling (client tenant). Seed scripts renamed (`seed-breitling.ts`, `seed-breitling-tenant-data.ts`)
+
+These fixes close the tool enforcement gap identified during the marketplace planning audit. See `mcp-ops-b/openspec/changes/close-tool-enforcement-gap/` for full implementation details.
 
 ---
 
@@ -49,11 +73,11 @@ Each public plugin user gets their **own auto-provisioned tenant** (not a shared
 
 | Repository | Role | Tech |
 |------------|------|------|
-| **mcp-ops-b** | Core MCP server (207 tools, prompts, resources) | TypeScript, @modelcontextprotocol/sdk, Express gateway |
+| **mcp-ops-b** | Core MCP server (207+ tools, 22 modules, prompts, resources) | TypeScript, @modelcontextprotocol/sdk, Express gateway |
 | **mcp-ops-web-admin-api** | Admin/BFF REST API | Express, Zod, mcp-ops-db, Helmet |
 | **mcp-ops-web-admin** | Admin portal (tenant/user/tool management) | Next.js 16, React 19, Tailwind, shadcn |
 | **mcp-ops-web-chat** | Chat interface with LLM agent | Next.js 16, React 18, Tailwind, MCP client |
-| **mcp-ops-db** | Database layer (migrations, repos, seeds) | PostgreSQL, pg driver, 32 migrations |
+| **mcp-ops-db** | Database layer (migrations, repos, seeds) — published to CodeArtifact as npm package | PostgreSQL, pg driver, 39+ migrations, v1.17.2+ |
 | **mcp-ops-infra** | Infrastructure as Code | Terraform (AWS ECS/ALB/RDS/WAF, Cloudflare) |
 | **mcp-ops-plugin** | **EMPTY** — Target repo for public plugin | N/A (placeholder) |
 
@@ -99,16 +123,17 @@ Each public plugin user gets their **own auto-provisioned tenant** (not a shared
 | Mechanism | Where | How It Works |
 |-----------|-------|-------------|
 | **API Keys (SHA-256 hashed)** | mcp-ops-db `tenant_api_keys` | Raw key prefixed `mcp_`, stored as SHA-256 hash. Lookup via `lookupByHash`. Active/expired check. Optional user-scoped (`user_id` FK). |
-| **JWT (jsonwebtoken)** | Gateway `auth.ts`, Web Chat | Signed with `JWT_SECRET`. Claims: `userId`, `tenantId`, `isAdmin`, `runtimeProfile`. 24h expiry in web-chat. |
+| **JWT (jsonwebtoken)** | Gateway `auth.ts`, Web Chat | Signed with `JWT_SECRET`. Claims: `userId`, `tenantId`, `tenantSlug`, `tenantType`, `username`, `isAdmin`. 24h expiry in web-chat. Gateway resolves `runtimeProfile` as `'web'` for JWT, `'cursor'` for API keys. |
 | **Bcrypt passwords** | mcp-ops-db `tenant_users.password_hash` | Cost 12. Used for web-chat login. |
 | **Cognito/ALB OIDC** | Admin API `require-auth.ts` | ALB-injected `x-amzn-oidc-data` header. Base64 decoded (no signature verification in app — ALB validates). |
 | **Internal shared token** | Admin API `require-internal-token.ts` | `ADMIN_INTERNAL_TOKEN` (min 32 chars), constant-time comparison. BFF between admin-web and admin-api. |
 | **AWS SSO sessions** | mcp-ops-db `user_aws_sessions` | Encrypted SSO tokens (AES-256-GCM via `AWS_SESSION_ENCRYPTION_KEY`). Refresh support. Per-user per-profile. |
 | **Azure sessions** | mcp-ops-db `user_azure_sessions` | Same encryption pattern. Per-user per-tenant. Device code flow. |
-| **Tenant identification** | `tenant-context.ts` | Via `OPS_TENANT_ID` env or `MCP_API_KEY` hash lookup. Resolved at process start. |
-| **Caller identity** | `caller-identity.ts` | Trusted boundary from env vars (`MCP_CALLER_USER_ID`, etc.). Local Cursor = admin. |
+| **Tenant identification** | `tenant-context.ts` | Via `OPS_TENANT_ID` env or `MCP_API_KEY` hash lookup. Resolved at process start. Exports `TenantType = 'client' \| 'platform_admin' \| 'platform_infra'`. |
+| **Caller identity** | `caller-identity.ts` | Trusted boundary from env vars (`MCP_CALLER_USER_ID`, `MCP_CALLER_TENANT_ID`, `MCP_CALLER_TENANT_TYPE`, etc.). Local Cursor = admin. |
 | **Role-based access** | `tenant_users.role` | `member` \| `tenant_admin`. Plus `allowed_tools` / `allowed_environments` JSONB arrays. |
 | **Runtime profiles** | `tenant_tools.runtime_profile` | `default` \| `cursor` \| `web`. Tool enablement per profile. |
+| **Tool gating (DB-authoritative)** | `tools-config-loader.ts` | Deny-by-default: modules missing from `tenant_tools` DB are disabled. Fail-closed: if Postgres fails and `USE_POSTGRES_TOOLS_CONFIG=true`, zero tools registered. |
 
 ### 3.2 Reusability Assessment
 
@@ -156,15 +181,16 @@ Each public plugin user gets their **own auto-provisioned tenant** (not a shared
 ### 4.2 Server Boot Sequence (stdio mode)
 
 1. Console shim (stdout → file only, stderr preserved)
-2. `McpServer({ name: 'mcp-ops', version: '0.4.0' })`
-3. Load tools config (JSON file or Postgres override)
-4. Initialize tenant context
-5. Load credentials from Postgres (optional)
-6. Load tools config overlay from Postgres (optional)
-7. **Monkey-patch `registerTool`** for usage tracking + output enrichment
-8. Register all tools, prompts, resources
-9. Connect stdio transport
-10. Start cron jobs
+2. `McpServer({ name: 'mcp-ops', version })` — version from package.json
+3. Load tools config (JSON file)
+4. Initialize tenant context (`initTenantContext`)
+5. Populate Vercel brand prefix map from catalog
+6. Load credentials from Postgres (`loadConfigFromPostgres`)
+7. Load tools config from Postgres — **deny-by-default, fail-closed** (`loadToolsConfigFromPostgres`)
+8. **Monkey-patch `registerTool`** for usage tracking + output enrichment
+9. Register all tools, prompts, resources with effective config
+10. Connect stdio transport + init MCP logging
+11. Start EKS/ECS sync cron jobs
 
 ### 4.3 Gateway Architecture
 
@@ -178,16 +204,19 @@ Express Gateway (port from GATEWAY_PORT)
     ├─ GET /mcp → 405 (SSE not supported)
     └─ POST /mcp + authMiddleware
          │
-         ├─ Token prefix "mcp_" → API key lookup (partner key)
-         ├─ Otherwise → JWT verification
+         ├─ Token prefix "mcp_" → API key lookup (partner key) → runtimeProfile='cursor'
+         ├─ Otherwise → JWT verification → runtimeProfile='web'
          │
          ▼
-    Session Pool
+    Session Pool (key = userId|tenantId|tenantType|runtimeProfile)
          │
-         ├─ Get or create child process (per userId+tenantId)
-         ├─ Inject env: MCP_CALLER_USER_ID, MCP_CALLER_TENANT_ID, etc.
+         ├─ Get or create child process
+         ├─ Inject env: MCP_CALLER_USER_ID, MCP_CALLER_TENANT_ID,
+         │              MCP_CALLER_TENANT_TYPE, MCP_CALLER_IS_ADMIN,
+         │              MCP_RUNTIME_PROFILE, OPS_TENANT_ID
+         ├─ MCP_API_KEY stripped from subprocess env (security)
          ├─ Pipe JSON-RPC to child stdin
-         ├─ Read response from child stdout (120s timeout)
+         ├─ Read response from child stdout (60s timeout)
          └─ Return response to client
 ```
 
@@ -195,7 +224,7 @@ Express Gateway (port from GATEWAY_PORT)
 
 | Pattern | Implementation | Plugin Impact |
 |---------|---------------|---------------|
-| **Tool gating** | `withModuleRegistration` + config JSON | Transparent — backend filters tools |
+| **Tool gating** | `withModuleRegistration` + Postgres `tenant_tools` (deny-by-default, fail-closed) | Transparent — backend filters tools, DB-authoritative |
 | **Usage tracking** | `insertUsageEvent` (fire-and-forget) | Transparent — backend tracks |
 | **Output enrichment** | Post-processing tool results | Transparent — backend enriches |
 | **Error handling** | Tools return error in `text` content (not throw) | Plugin receives normal MCP responses |
@@ -273,11 +302,11 @@ The complete 207-tool catalog remains available for internal/enterprise tenants.
 ```
 Cloudflare .......... 35 tools (20 read + 15 write)
 Azure ............... 23 tools (all read/session)
+AWS ................. 20 tools (12 read + 8 auth)
+GitHub Enterprise ... 15 tools (14 read + 1 write)
 K8s ................. 14 tools (all read)
-GitHub Enterprise ... 14 tools (all read)
 Bitbucket ........... 12 tools (all read)
-AWS ................. 18 tools (10 read + 8 auth)
-Sentry .............. 10 tools (all read)
+Sentry .............. 11 tools (all read)
 Repos ............... 9 tools (all read)
 Contentful .......... 8 tools (all read)
 Pingdom ............. 8 tools (all read)
@@ -287,10 +316,14 @@ Vercel .............. 7 tools (all read)
 Datadog ............. 6 tools (all read)
 Jira ................ 6 tools (all read)
 Observability ....... 6 tools (all read)
-EKS/ECS ............. 5 tools (context management)
+EKS sync ............ 4 tools (context management)
 ArgoCD .............. 4 tools (all read)
 Confluence .......... 2 tools (all read)
 Ops ................. 2 tools (1 read + 1 admin)
+ECS sync ............ 1 tool (metadata sync)
+
+Modules (tools-config-full.json): 22
+Total tools: ~211
 ```
 
 ### 5.3 Tenant Model for Public Plugin (CRITICAL ARCHITECTURE DECISION)
@@ -379,36 +412,23 @@ A lightweight dashboard at `dashboard.opsphere.io` where users can:
 - Caller identity is verified via the API key → tenant resolution chain
 - Credential values never appear in `listTools` responses or logs
 
-#### SECURITY: Tool Enforcement Gap (MUST FIX before public launch)
+#### SECURITY: Tool Enforcement Gap — CLOSED (implemented 2026-05-19)
 
-**Current behavior audited in code:**
+> **Status: RESOLVED** — All 3 layers deployed. See `mcp-ops-b/openspec/changes/close-tool-enforcement-gap/` for implementation details.
 
-The MCP server enforces tool access at **registration time only** (not at call time). Tools are gated via `withModuleRegistration` and `registerToolIfEnabled` in `src/config.ts`. If a tool is not registered, it does not exist in the MCP server's tool table and cannot be called.
+The MCP server enforces tool access at **registration time** (not at call time). Tools are gated via `withModuleRegistration` and `registerToolIfEnabled`. If a tool is not registered, it cannot be called.
 
-**However**, `tools-config-loader.ts` has a **critical carry-over behavior**:
+A critical carry-over vulnerability was identified and closed via a 3-layer defense:
 
-```
-// Current behavior in tools-config-loader.ts (lines 85-96):
-// For each module in tools-config.json that is NOT in tenant_tools DB:
-//   → the JSON config is COPIED into the effective config
-//   → the module may remain FULLY ENABLED
-```
+| Layer | Fix | Status |
+|-------|-----|--------|
+| **1. Full DB matrix** | All 22 modules seeded in `tenant_tools` with explicit `is_enabled` flags. `verifyCoverage()` function in seed scripts validates completeness. | **DEPLOYED** |
+| **2. Deny-by-default loader** | `tools-config-loader.ts` now disables modules missing from `tenant_tools` DB instead of carrying over from JSON. | **DEPLOYED** |
+| **3. Fail-closed** | When `USE_POSTGRES_TOOLS_CONFIG=true` and Postgres fails, `index.ts` registers ZERO tools instead of falling back to full JSON. | **DEPLOYED** |
 
-**This means**: if we seed only 33 tools in `tenant_tools` for a `public_free` tenant, any module that exists in `tools-config.json` but is NOT in those 33 rows will be **carried over from JSON and remain enabled**. The user could call tools outside their free pack.
+**Backward compatibility**: Ensured by seeding full `tenant_tools` coverage for all existing tenants (`breitling`, `opsphere`, `opsphere-platform`) before deploying the deny-by-default change.
 
-**Additional fallback risk**: if Postgres loading fails (DB error, no tenant context, 0 rows returned, wrong `MCP_RUNTIME_PROFILE`), the server falls back to the **full JSON config** — all 207 tools enabled.
-
-**Required fixes (3 layers of defense):**
-
-| Layer | Fix | Where | Priority |
-|-------|-----|-------|----------|
-| **1. Full DB matrix** | Seed ALL modules in `tenant_tools` for public_free tenants — explicitly `is_enabled: false` for every module NOT in the free pack | `mcp-ops-db` seed script | **CRITICAL** |
-| **2. Whitelist semantics** | Change `tools-config-loader.ts`: when loading from Postgres, do NOT carry over modules missing from DB. If a module has no DB row, treat it as `enabled: false` (deny-by-default) | `mcp-ops-b/src/tools-config-loader.ts` | **CRITICAL** |
-| **3. Fallback lockdown** | When `USE_POSTGRES_TOOLS_CONFIG=true` but Postgres loading fails, **refuse to start** (or register ZERO tools) instead of falling back to full JSON | `mcp-ops-b/src/tools-config-loader.ts` + `src/index.ts` | **HIGH** |
-
-**Layer 1 detail — Full DB matrix seed:**
-
-For each `public_free` tenant, `tenant_tools` must contain a row for EVERY module in `tools_catalog`, not just the enabled ones:
+**For future public_free tenants**: The full module matrix template (below) will be seeded on auto-signup:
 
 ```
 Module              | is_enabled | runtime_profile
@@ -449,46 +469,12 @@ Plus `disabledTools` within enabled modules to limit to 2 tools per provider:
       "aws_sso_logout", "aws_session_revoke", "aws_session_status",
       "aws_ecr_repos", "aws_ecr_images", "aws_secretsmanager_list",
       "aws_secretsmanager_describe", "aws_codeartifact_packages",
-      "aws_codeartifact_versions", "check_aws_session_for_env"
+      "aws_codeartifact_versions", "check_aws_session_for_env",
+      "aws_cloudwatch_logs_search", "aws_cloudwatch_logs_groups"
     ]
   }
 }
 ```
-
-**Layer 2 detail — Code change in `tools-config-loader.ts`:**
-
-Replace the current carry-over block:
-```typescript
-// BEFORE (INSECURE for public tenants):
-for (const [moduleName, cfg] of Object.entries(jsonConfig.modules)) {
-  if (!modules[moduleName]) {
-    modules[moduleName] = cfg; // ← carries over from JSON = SECURITY GAP
-  }
-}
-
-// AFTER (SECURE — deny-by-default when DB is active):
-for (const [moduleName, cfg] of Object.entries(jsonConfig.modules)) {
-  if (!modules[moduleName]) {
-    // Module not in DB for this tenant → disable it
-    modules[moduleName] = { enabled: false };
-    console.warn(`[tools-config-loader] Module '${moduleName}' not in DB for tenant — DISABLED (deny-by-default)`);
-  }
-}
-```
-
-**Layer 3 detail — Fallback lockdown:**
-
-In `src/index.ts`, when `USE_POSTGRES_TOOLS_CONFIG=true`:
-```typescript
-// If Postgres config loading was expected but failed → do not fall back to JSON
-if (process.env.USE_POSTGRES_TOOLS_CONFIG === 'true' && !dbToolsConfig) {
-  console.error('[FATAL] Postgres tools config required but unavailable — refusing to register tools');
-  // Register ZERO tools — server starts but has nothing to offer
-  // This is safer than exposing all 207 tools to a public user
-}
-```
-
-> **Impact**: These fixes affect ALL tenants, not just public ones. Layer 2 changes the behavior from "carry over from JSON" to "deny by default". This is a BREAKING CHANGE for existing internal tenants if they rely on JSON carry-over. Mitigation: ensure all existing tenants have full `tenant_tools` coverage in DB before deploying.
 
 #### 30-Day Trial Enforcement
 
@@ -751,15 +737,21 @@ mcp-ops-plugin/
 - [ ] Design and create plugin icon/assets
 - [ ] Add `LICENSE` file (commercial/proprietary)
 
-### Phase 1: Backend — Security Hardening + Auto-Signup + Credential Management (Week 1-2)
+### Phase 1A: Backend — Security Hardening (COMPLETED 2026-05-19)
 
-**Goal**: Close tool enforcement gap, enable 30-day trials, enable self-registration
+**Goal**: Close tool enforcement gap before public launch
 
-**CRITICAL — Tool enforcement fixes (mcp-ops-b):**
-- [ ] **[SECURITY]** Modify `tools-config-loader.ts` — deny-by-default: modules missing from DB are disabled, not carried over from JSON
-- [ ] **[SECURITY]** Modify `index.ts` — when `USE_POSTGRES_TOOLS_CONFIG=true` and Postgres fails, register ZERO tools instead of falling back to full JSON
-- [ ] **[SECURITY]** Verify change is backward-compatible: ensure all existing internal tenants have full `tenant_tools` DB coverage before deploying
-- [ ] Write security tests: confirm a public_free tenant CANNOT call tools outside their pack
+- [x] **[SECURITY]** Modify `tools-config-loader.ts` — deny-by-default: modules missing from DB are disabled
+- [x] **[SECURITY]** Modify `index.ts` — fail-closed: register ZERO tools if Postgres config fails when expected
+- [x] **[SECURITY]** Full DB matrix: 22 modules × 2 profiles seeded for all tenants with `verifyCoverage()`
+- [x] **[SECURITY]** Session pool key: 4 components (`userId|tenantId|tenantType|runtimeProfile`)
+- [x] **[SECURITY]** Strip `MCP_API_KEY` from subprocess environment
+- [x] Tenant rename: Opsphere → Breitling (client). Seed scripts renamed (`seed-breitling.ts`, `seed-breitling-tenant-data.ts`)
+- [x] Backward-compatible: all existing tenants verified with full `tenant_tools` coverage
+
+### Phase 1B: Backend — Auto-Signup + Credential Management (Week 1-2)
+
+**Goal**: Enable 30-day trials and self-registration
 
 **In mcp-ops-db:**
 - [ ] Create seed script for public_free tenant template — FULL module matrix (all modules in DB, only free pack enabled, all others `is_enabled: false`)
@@ -772,13 +764,13 @@ mcp-ops-plugin/
 - [ ] Seed full `tenant_tools` matrix on signup (from public_free template)
 - [ ] Add rate limiting on signup endpoint (5 per IP per hour)
 - [ ] Add email verification flow (optional for MVP, required for launch)
-- [ ] Return clear error codes for expired trials (`TRIAL_EXPIRED`)
+- [ ] Return `TRIAL_EXPIRED` error code (403, distinct from generic 401) in `auth.ts`
 
 **In mcp-ops-b (new MCP tools):**
 - [ ] Implement `ops_configure_integration` tool — upserts `tenant_credentials` for caller's tenant
 - [ ] Implement `ops_list_integrations` tool — lists configured providers with masked values
 - [ ] Add credential key whitelist validation (only known keys from `CREDENTIAL_MAP`)
-- [ ] Handle MCP process restart after credential change (reload env)
+- [ ] Handle MCP process restart after credential change (kill + respawn subprocess)
 - [ ] Write tests for credential isolation between tenants
 
 **In mcp-ops-b (cron):**
@@ -935,7 +927,7 @@ mcp-ops-plugin/
 | Risk | Severity | Mitigation |
 |------|----------|------------|
 | Gateway SSE not supported | Medium | HTTP POST is sufficient for MCP. Monitor MCP SDK evolution for Streamable HTTP improvements. |
-| 120s timeout for long tools | Medium | Add client-side timeout handling + progress indicators. Consider async pattern for very long operations. |
+| 60s timeout for long tools | Medium | Add client-side timeout handling + progress indicators. Consider async pattern for very long operations. |
 | Session pool scaling (GATEWAY_MAX_SESSIONS) | **High** | Default is 10 sessions. Public plugin could have 100s of concurrent users. Must implement per-gateway-instance limits + ECS autoscaling. Consider Redis-backed session routing for multi-instance. |
 | Thousands of auto-provisioned tenants | **High** | DB queries on `tenants` and `tenant_tools` must scale. Add indexes on `subscription_id`. Implement cleanup for inactive tenants (no usage in 90 days). |
 | MCP process restart after credential change | Medium | `ops_configure_integration` must gracefully terminate and respawn the user's MCP child process. Session pool already handles process lifecycle. |
@@ -962,7 +954,7 @@ mcp-ops-plugin/
 | Credential values in logs | High | `ops_configure_integration` must NEVER log credential values. Audit event stores masked value only. |
 | Man-in-the-middle | Low | HTTPS enforced. Gateway behind ALB + TLS. |
 | Plugin supply chain | Medium | Minimal dependencies. `npm audit` in CI. Lockfile committed. |
-| Unauthorized tool access (outside free pack) | **CRITICAL — currently open** | `tools-config-loader.ts` carries over JSON modules missing from DB → public_free user could access all 207 tools. Requires 3-layer fix BEFORE launch. See Section 5.3 "Tool Enforcement Gap". |
+| Unauthorized tool access (outside free pack) | **CLOSED** | 3-layer defense deployed: (1) deny-by-default in `tools-config-loader.ts`, (2) fail-closed in `index.ts`, (3) full DB matrix with `verifyCoverage()`. See Section 5.3. |
 | Trial bypass via re-signup | Low | Different email = new tenant = new 30 days. Accepted for MVP. Future: device fingerprinting or payment for signup. |
 | Zombie tenants with stored credentials | Medium | Daily cron suspends `public_free` tenants after 30 days. Separate cron purges credentials for suspended tenants after 90 days. |
 
@@ -979,9 +971,13 @@ mcp-ops-plugin/
 | **No LLM in plugin** | LLM agent is premium backend feature. Plugin users get Cursor's built-in AI + our tools. | Decided |
 | **Max 2 tools per provider (free)** | Creates natural upsell path. Enough to demonstrate value. Limits support surface. | Decided |
 | **30-day free trial** | `tenant_api_keys.expires_at` set on signup + daily cron suspends expired tenants. Re-signup with different email creates new tenant (accepted for MVP). | **Decided** |
-| **Deny-by-default tool loading** | Change `tools-config-loader.ts` to NOT carry over JSON modules missing from DB. Prevents public_free users from accessing internal tools. BREAKING CHANGE for all tenants — requires full DB coverage migration first. | **Decided** |
-| **Full module matrix in DB** | Seed ALL modules in `tenant_tools` for public_free (enabled + disabled). Eliminates JSON carry-over risk. Combined with Layer 2 code change provides defense in depth. | **Decided** |
-| **3-layer tool enforcement** | 1) Full DB matrix, 2) deny-by-default in loader, 3) fail-closed on Postgres error. No single point of failure. | **Decided** |
+| **Deny-by-default tool loading** | `tools-config-loader.ts` no longer carries over JSON modules missing from DB. Backward-compatible: all existing tenants have full `tenant_tools` coverage. | **Implemented** |
+| **Full module matrix in DB** | 22 modules × 2 profiles seeded in `tenant_tools` for all tenants. `verifyCoverage()` validates completeness in seed scripts. | **Implemented** |
+| **3-layer tool enforcement** | 1) Full DB matrix, 2) deny-by-default in loader, 3) fail-closed on Postgres error. No single point of failure. | **Implemented** |
+| **4-component session key** | `userId\|tenantId\|tenantType\|runtimeProfile` ensures isolation across all dimensions. `MCP_API_KEY` stripped from subprocess env. | **Implemented** |
+| **Tenant rename: Opsphere → Breitling** | Primary client tenant reflects actual customer. `opsphere` reserved for platform admin. Seed scripts and data scripts renamed. | **Implemented** |
+| **3 tenant types** | `client`, `platform_admin`, `platform_infra` — discriminated union enables future multi-tenant scaling with proper access control. | **Implemented** |
+| **mcp-ops-db as npm package** | Published to CodeArtifact (v1.17.2+). Shared dependency across mcp-ops-b, web-admin-api, web-chat. | **Implemented** |
 | **Auto-provisioned tenant per user** | `tenant_credentials` is per-tenant only. Shared tenant = shared credentials = security disaster. One tenant per user gives total isolation with zero schema changes. | **Decided** |
 | **`subscription_id` as plan identifier** | "PublicPlugin" is a plan, not a tenant. `subscription_id = 'public_free'` on each auto-created tenant. Enables plan-based tool gating via existing `tenant_tools`. | **Decided** |
 | **MCP tools for credential registration** | `ops_configure_integration` lets users set their Vercel/DD/etc. tokens from Cursor directly. Stored in their isolated tenant. No web UI needed for MVP. | **Decided** |
@@ -1028,7 +1024,7 @@ The plugin should require **minimal** configuration:
 |----------|----------|--------|-------------|
 | `MCP_OPS_API_KEY` | Yes | Cursor secure settings | API key (`mcp_` prefix) |
 | `MCP_OPS_GATEWAY_URL` | No | Settings (default: production URL) | Gateway endpoint |
-| `MCP_OPS_TIMEOUT` | No | Settings (default: 120000) | Request timeout (ms) |
+| `MCP_OPS_TIMEOUT` | No | Settings (default: 60000) | Request timeout (ms) |
 | `MCP_OPS_DEBUG` | No | Settings (default: false) | Enable debug logging |
 
 ---
@@ -1042,13 +1038,18 @@ For the plugin to work, the gateway (`mcp-ops-b/src/gateway`) needs:
 | API key auth | **Ready** | None |
 | POST /mcp | **Ready** | None |
 | GET /health | **Ready** | None |
+| Tool enforcement (deny-by-default) | **Ready** | None — 3-layer defense deployed |
+| Session pool isolation | **Ready** | None — 4-component key + env stripping deployed |
+| `TenantType` propagation | **Ready** | None — Gateway resolves and passes `tenantType` to session pool and MCP subprocess |
 | CORS headers | **Not implemented** | Add if plugin calls gateway directly from browser context (unlikely for Cursor) |
 | Rate limiting | **Not implemented at gateway** | **CRITICAL** — Add per-API-key rate limiting before public launch |
 | Session pool scaling | **Default 10 sessions** | **CRITICAL** — Increase `GATEWAY_MAX_SESSIONS`, implement ECS autoscaling |
 | Public WAF rules | **Partial** (WAF exists on ALB) | Review and harden rules for public internet traffic |
 | Auto-signup endpoint | **Not implemented** | **CRITICAL** — Build `POST /api/public/signup` with tenant auto-provisioning |
+| `TRIAL_EXPIRED` error code | **Not implemented** | Add specific 403 response in `auth.ts` for expired trial API keys (currently returns generic 401) |
 | Credential management tools | **Not implemented** | **CRITICAL** — Build `ops_configure_integration` + `ops_list_integrations` |
 | Process restart on cred change | **Not implemented** | After `ops_configure_integration`, kill+respawn the user's MCP child |
+| Trial expiration cron | **Not implemented** | Daily cron: `tenants.status = 'suspended'` for expired `public_free` tenants |
 
 ## Appendix D: Tenant Auto-Provisioning Flow (Draft)
 
