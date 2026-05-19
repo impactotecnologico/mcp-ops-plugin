@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "opsphere": {
+      "url": "https://mcp-gateway.opsphere.io/mcp",
+      "headers": {
+        "Authorization": "Bearer ${input:opsphere-token}"
+      }
+    }
+  }
+}

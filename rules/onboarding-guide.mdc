@@ -1,0 +1,123 @@
+---
+description: Opsphere plugin context — capabilities, available tools, integration guidance, and error handling. Always active.
+alwaysApply: true
+---
+
+# Opsphere — DevOps Operational Intelligence
+
+Opsphere connects your DevOps tools to Cursor. Query logs, check deploys, search issues, diagnose incidents, and manage integrations — all from the chat, without leaving the IDE.
+
+The backend is a remote MCP server. All tool calls go to the Opsphere gateway. No tool logic runs locally.
+
+---
+
+## Available Tool Categories
+
+These tools are available once authenticated and integrations are configured:
+
+| Category | Provider | Tools |
+|----------|----------|-------|
+| Monitoring | Datadog | `dd_logs_search`, `dd_errors_by_service`, `dd_errors_recent`, `dd_synthetics_summary` |
+| Deployments | Vercel | `vercel_deploys_latest`, `vercel_project_status` |
+| Source Control | GitHub Enterprise | `ghe_repo_summary`, `ghe_actions_latest` |
+| Source Control | Bitbucket | `bb_pipelines_latest`, `bb_pipeline_diagnose` |
+| CDN / DNS | Cloudflare | `cf_quick_status`, `cf_dns_records` |
+| Issue Tracking | Jira | `jira_issue_get`, `jira_issues_search` |
+| Error Tracking | Sentry | `sentry_issues_list`, `sentry_issues_search` |
+| Cloud | AWS | `aws_sts_whoami`, `aws_cli_query` |
+| Network (built-in) | — | `dns_lookup`, `http_check`, `cert_status` |
+| Integration Mgmt | — | `ops_configure_integration`, `ops_list_integrations`, `ops_test_integration`, `ops_remove_integration` |
+| Plan & Usage | — | `ops_my_usage` *(activates in Sprint 4)* |
+
+**Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately after login — no integration setup needed.**
+
+---
+
+## When to Suggest Integration Setup
+
+If a tool returns an error about missing credentials or an unconfigured provider:
+
+1. Identify the provider from the tool name prefix:
+   - `dd_` → Datadog
+   - `vercel_` → Vercel
+   - `ghe_` → GitHub
+   - `bb_` → Bitbucket
+   - `cf_` → Cloudflare
+   - `jira_` → Jira
+   - `sentry_` → Sentry
+   - `aws_` → AWS
+
+2. Suggest: "It looks like [Provider] is not configured yet. Say **'Configure my [Provider]'** and I will walk you through it."
+
+3. Use the `configure-integration` skill for the full setup flow.
+
+---
+
+## When to Suggest Signup / Re-login
+
+If the MCP connection fails with **401 Unauthorized** or tools are not visible:
+
+- The user likely has not set up an account yet, or their token has expired (tokens last 24 hours).
+- Suggest: "It looks like you need to authenticate. Say **'Set up my Opsphere account'** or run `/opsphere-setup`."
+
+---
+
+## Trial Expiration (TRIAL_EXPIRED)
+
+> Note: Trial enforcement activates in Sprint 4. This section pre-documents the handling so the rule is ready when the gateway starts emitting this error. Until then, this code path is unreachable.
+
+If the gateway returns error code `TRIAL_EXPIRED`:
+
+- Tell the user: "Your 30-day free trial has expired. Visit **https://opsphere.io/pricing** to continue using Opsphere."
+- Do not retry the request.
+- Do not suggest re-login — re-authentication will not fix an expired trial.
+
+---
+
+## Rate Limit (RATE_LIMIT_EXCEEDED)
+
+> Note: Rate limit enforcement activates in Sprint 4.
+
+If the gateway returns error code `RATE_LIMIT_EXCEEDED`:
+
+- Tell the user how many calls they have used and when the limit resets (from `details.resetsAt` in the error body).
+- Suggest: "You can check your full plan status with `ops_my_usage`."
+- Do not retry the request automatically.
+
+---
+
+## Plan & Usage Visibility
+
+> Note: `ops_my_usage` activates in Sprint 4. Until then, redirect the user to https://opsphere.io/pricing for plan details.
+
+When the user asks about their plan, usage, trial status, remaining calls, or upgrade options:
+
+- Direct them to **https://opsphere.io/pricing** for current plan information.
+- Once Sprint 4 is deployed, `ops_my_usage` will return: plan name, trial end date, days remaining, daily usage (used / limit / resets at), configured integrations count, and upgrade link.
+
+---
+
+## Example Prompts
+
+Users might say things like:
+
+- "Check my latest Vercel deploys"
+- "Search Datadog logs for errors in the last hour"
+- "What's failing in Sentry right now?"
+- "Is example.com up?" — triggers `dns_lookup` + `http_check` + `cert_status`
+- "Check the SSL cert for api.mycompany.com"
+- "Configure my Datadog" — triggers the `configure-integration` skill
+- "Show PR #42 status in Bitbucket"
+- "Find Jira issues assigned to me"
+- "What GitHub Actions ran today on the main branch?"
+- "Show my usage" — direct to https://opsphere.io/pricing (ops_my_usage activates in Sprint 4)
+- "Which integrations do I have configured?" — triggers `ops_list_integrations`
+
+---
+
+## Important Constraints
+
+- Never invent tool names. Only call tools that exist in the list above.
+- Never ask the user to edit `mcp.json` or configure the MCP transport manually — the plugin handles this.
+- Credentials are stored securely in the backend, never locally. Do not ask users to paste credentials into the chat directly — guide them through `ops_configure_integration`.
+- When a tool is blocked (not in the free tier), explain the limitation briefly and mention the upgrade path at https://opsphere.io/pricing.
