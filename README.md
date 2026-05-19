@@ -61,7 +61,7 @@ Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately after
 | **AWS** | Identity check · CLI queries | Access Key + Secret Key |
 | **Network (built-in)** | DNS lookup · HTTP check · TLS cert | Nothing — works immediately |
 
-> Full catalog (211+ tools) unlocked on paid plans — including Kubernetes, ArgoCD, Azure Service Bus, Akamai, and more.
+> Full tool catalog unlocked on paid plans — including Kubernetes, ArgoCD, Azure Service Bus, Akamai, and more.
 
 ---
 
