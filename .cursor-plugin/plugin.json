@@ -23,7 +23,8 @@
     "infrastructure",
     "observability",
     "mcp",
-    "operational-intelligence"
+    "operational-intelligence",
+    "opsphere"
   ],
   "logo": "assets/logo.svg"
 }
