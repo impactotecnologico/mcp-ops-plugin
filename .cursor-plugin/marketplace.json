@@ -22,7 +22,7 @@
       "homepage": "https://opsphere.io",
       "repository": "https://github.com/impactotecnologico/mcp-ops-plugin",
       "license": "MIT",
-      "logo": "assets/logo.svg",
+      "logo": "assets/isotipo.png",
       "keywords": [
         "devops",
         "monitoring",

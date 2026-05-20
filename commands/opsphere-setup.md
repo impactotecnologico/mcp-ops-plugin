@@ -1,78 +1,66 @@
 ---
 name: opsphere-setup
-description: Sign up or log in to Opsphere to connect your DevOps tools to Cursor
+description: Guide the user to connect their Opsphere account and set up integrations
 ---
 
-# Opsphere Account Setup
+# Opsphere Setup
 
-Guide the user through signing up or logging in to Opsphere. Walk through each step conversationally — do not dump all questions at once.
-
-## Steps
-
-### 1. Ask whether they are new or returning
-
-Ask: "Do you already have an Opsphere account, or would you like to create one?"
+Guide the user through connecting Opsphere and configuring their first integration. Walk through each step conversationally.
 
 ---
 
-### 2a. New user — Signup
+## Step 1 — Check authentication status
 
-1. Ask for their email address.
-2. Ask them to choose a password (minimum 8 characters). Remind them not to reuse an important password.
-3. Call the signup endpoint. Use stdin piping to keep the password out of shell history:
+Call `ops_my_usage` (no parameters). This determines the current state:
 
-```bash
-echo '{"email":"<EMAIL>","password":"<PASSWORD>"}' | curl -s -X POST https://mcp-cursor.opsphere.io/api/plugin/signup \
-  -H "Content-Type: application/json" \
-  --data-binary @-
-```
-
-4. Parse the JSON response:
-   - **Success (201)**: response contains `accessToken`, `refreshToken`, and `user`.
-   - **409 `email_already_registered`**: tell the user the email is already registered and offer to log in instead.
-   - **400**: validation error — check email format or password length.
-   - **429**: too many attempts — ask the user to wait a few minutes.
-   - **500**: ask the user to try again; if it persists, contact support at hello@opsphere.io.
+- **Success**: the user is already authenticated. Skip to Step 3.
+- **Error or 401**: the user is not authenticated. Continue to Step 2.
 
 ---
 
-### 2b. Existing user — Login
+## Step 2 — Connect the account (OAuth2)
 
-1. Ask for their email and password.
-2. Call the login endpoint:
-
-```bash
-echo '{"email":"<EMAIL>","password":"<PASSWORD>"}' | curl -s -X POST https://mcp-cursor.opsphere.io/api/plugin/login \
-  -H "Content-Type: application/json" \
-  --data-binary @-
-```
-
-3. Parse the JSON response (same format as signup).
-   - **401 `invalid_credentials`**: wrong email or password — ask them to double-check.
-   - **403 `account_suspended`**: trial has expired — direct them to https://opsphere.io/pricing.
-
----
-
-### 3. After successful authentication
-
-The response contains an `accessToken` (valid for 24 hours). Show it to the user and instruct:
-
-> "Copy this token. When Cursor asks for the **opsphere-token** setting, paste it there.
-> You can also set it in Cursor Settings → MCP → opsphere → token."
+Authentication is handled automatically by Cursor — there is no need to paste a token.
 
 Tell the user:
-> "Your 30-day free trial is active. You have access to tools for Datadog, Vercel,
-> GitHub, Cloudflare, Jira, Sentry, Bitbucket, and AWS — plus DNS, HTTP, and TLS diagnostics
-> that work immediately without any configuration."
 
-Then ask: "Would you like to connect your first integration? I can guide you through setting up Datadog, Vercel, GitHub, or any other provider. Just say 'Configure my Datadog' or whichever you'd like to start with."
+> "To connect Opsphere, click the **Connect** button next to the Opsphere server in **Cursor Settings → MCP**. A browser window will open where you can sign up or log in. Once you complete the sign-in, Cursor will store the token automatically and reconnect here."
+
+Wait for the user to confirm they have connected. Then call `ops_my_usage` again to verify.
+
+If the user asks what to do in the browser:
+
+- **New user**: switch to the **Sign up** tab, enter an email and password, click **Create account**.
+- **Returning user**: stay on the **Log in** tab, enter credentials, click **Log in**.
+
+> Tokens are valid for 24 hours. When one expires, Cursor will show the Connect button again — just click it.
+
+---
+
+## Step 3 — Share account status
+
+Call `ops_my_usage` and tell the user:
+
+- Whether they are on a free trial (and days remaining) or a paid plan.
+- Their daily tool call usage.
+- Which integrations are currently configured (call `ops_list_integrations`).
+
+Example message:
+
+> "You're connected! Your 30-day free trial has X days remaining. You have access to tools for Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, and AWS — plus DNS, HTTP, and TLS diagnostics that work immediately.
+>
+> Would you like to connect your first integration? Just say 'Configure my Datadog' or whichever provider you use."
+
+---
+
+## Step 4 — Configure the first integration (optional)
+
+If the user wants to set up an integration, run the `configure-integration` skill for the chosen provider.
 
 ---
 
 ## Security notes
 
-- Never display the password after the API call.
-- Do not store the password anywhere.
-- The `accessToken` is a JWT — it is safe to display (it is not a secret in the same sense as a password, but treat it like one).
-- The `refreshToken` in the response should be stored securely by the user if they want seamless re-login. For MVP, they can re-run this command after 24 hours if their token expires.
-- The gateway URL is always: `https://mcp-cursor.opsphere.io`
+- Never ask the user for their password. Authentication happens in the browser via OAuth.
+- The `ops_my_usage` tool returns plan and usage data — no credentials are ever returned.
+- If the user asks about their token, explain that Cursor manages it automatically and they don't need to handle it manually.

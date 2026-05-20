@@ -5,7 +5,7 @@
 **Symptom**: The Opsphere MCP server shows as "disconnected" in Cursor Settings → MCP, or tools don't appear in the agent.
 
 **Checks**:
-1. Verify your token is set in Cursor Settings → MCP → opsphere → token.
+1. Look for a **Connect** or **Sign in to opsphere** button in Cursor Settings → MCP. Click it to authenticate.
 2. Test the gateway is reachable:
    ```bash
    curl https://mcp-cursor.opsphere.io/health
@@ -15,21 +15,25 @@
 
 ---
 
+## No "Connect" button visible
+
+**Symptom**: Cursor doesn't show a Connect button after installing the plugin.
+
+**Checks**:
+1. Reload Cursor: **Command Palette → Developer: Reload Window**.
+2. Go to **Cursor Settings → MCP** and confirm the `opsphere` server is listed.
+3. If the server shows an error icon, click it to see the error detail.
+4. Make sure you have Cursor version 0.50.0 or later.
+
+---
+
 ## 401 Unauthorized
 
 **Symptom**: Tools return a `401 Unauthorized` error or the agent says your session has expired.
 
 **Cause**: Your access token has expired (tokens last 24 hours).
 
-**Fix**: Run `/opsphere-setup` to log in again and get a fresh token. Set the new token in Cursor Settings → MCP.
-
----
-
-## "opsphere-token" prompt appears every time
-
-**Symptom**: Cursor asks for `opsphere-token` on every session.
-
-**Fix**: This is expected if you haven't saved the token in Cursor's secret store. When prompted, paste your token and check "Remember this value" (if Cursor offers the option). Otherwise, save it in your shell environment and refer to it via a Cursor setting.
+**Fix**: In Cursor Settings → MCP, click **Connect** (or **Sign in to opsphere**) to open a new browser sign-in window and get a fresh token. No need to copy or paste anything.
 
 ---
 
@@ -39,7 +43,7 @@
 
 **Cause**: Your 30-day free trial has ended.
 
-**Fix**: Upgrade at **https://opsphere.io/pricing** to continue using Opsphere.
+**Fix**: Upgrade at **https://opsphere.io/pricing** to continue using Opsphere. Re-authenticating will not fix this — it is a subscription state, not an auth issue.
 
 ---
 
@@ -94,11 +98,7 @@
 
 **Cause**: The `workspaceOpen` hook may not have run, or the hook isn't supported in your version of Cursor.
 
-**Fix**: This is cosmetic — the plugin still works normally. You can manually run:
-```bash
-./scripts/check-auth.sh
-```
-Or just start using the agent directly.
+**Fix**: This is cosmetic — the plugin still works normally. You can just start using the agent directly.
 
 ---
 

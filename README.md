@@ -21,11 +21,11 @@ Everything runs through a secure remote MCP server. No credentials are stored lo
 ## Quick Start
 
 1. **Install** Opsphere from the Cursor Marketplace.
-2. **Create your account**: run `/opsphere-setup` — the agent walks you through signup in under 60 seconds.
+2. **Connect**: click the **Connect** button next to Opsphere in **Cursor Settings → MCP**. A browser window opens — sign up or log in. Cursor stores the token automatically.
 3. **Connect your tools**: say _"Configure my Datadog"_ — the agent asks for your credentials and sets everything up.
 4. **Start asking**: say _"Check DNS for mysite.com"_ or _"Show my Vercel deploys"_ — you're live.
 
-Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately after login with no integration setup needed.
+Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately after connecting with no integration setup needed.
 
 ---
 
@@ -93,10 +93,11 @@ After your trial, upgrade at [https://opsphere.io/pricing](https://opsphere.io/p
 
 ## Security
 
+- Authentication uses **OAuth2 Authorization Code + PKCE** — the industry standard. You sign in via a browser window; Cursor manages the token automatically.
 - Credentials are **encrypted and stored per-tenant** in the Opsphere backend — no other user can access them.
 - Each account gets a fully **isolated tenant** — no shared state.
 - All communication is over **HTTPS**. No credentials are ever logged or returned to the plugin.
-- Access tokens are valid for **24 hours**. Re-run `/opsphere-setup` after expiry.
+- Access tokens are valid for **24 hours**. When one expires, Cursor shows the Connect button again — click it to renew.
 - **No credentials are stored locally** in Cursor or on your machine.
 - The plugin client is **open-source (MIT)**. The backend is proprietary SaaS.
 - Tokens are hashed server-side and never stored in plaintext.
@@ -108,8 +109,7 @@ After your trial, upgrade at [https://opsphere.io/pricing](https://opsphere.io/p
 <details>
 <summary>MCP connection not starting or tools not visible</summary>
 
-- Check that the `opsphere-token` is set: Cursor Settings → MCP → opsphere → input token.
-- Verify your token is valid by running `/opsphere-setup` to log in again.
+- Look for a **Connect** button in Cursor Settings → MCP → opsphere. Click it to authenticate.
 - Check gateway reachability: `curl https://mcp-cursor.opsphere.io/health`
 - If the gateway is down, check [https://status.opsphere.io](https://status.opsphere.io).
 
@@ -118,9 +118,8 @@ After your trial, upgrade at [https://opsphere.io/pricing](https://opsphere.io/p
 <details>
 <summary>401 Unauthorized</summary>
 
-- Your access token may have expired (tokens last 24 hours).
-- Run `/opsphere-setup` to log in and get a fresh token.
-- Do not manually edit `mcp.json` — the plugin manages the connection automatically.
+- Your access token has expired (tokens last 24 hours).
+- In Cursor Settings → MCP, click **Connect** to open a new browser sign-in window and renew automatically.
 
 </details>
 

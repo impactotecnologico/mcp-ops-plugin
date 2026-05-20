@@ -18,44 +18,21 @@ Install Opsphere from the Cursor Marketplace:
 
 ---
 
-## Step 2 — Sign up or log in
+## Step 2 — Connect your account
 
-Once installed, open any workspace. The welcome message will appear in the terminal:
+Once installed, Cursor will detect that Opsphere requires authentication and show a **Connect** button next to the MCP server in Settings → MCP.
 
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Opsphere — DevOps Intelligence
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Click **Connect** (or **Sign in to opsphere**).
+2. A browser window opens with the Opsphere sign-in page.
+3. **New user**: fill in your email and password in the **Sign up** tab and click **Create account**.
+   **Returning user**: switch to the **Log in** tab, enter your credentials, and click **Log in**.
+4. The browser window closes automatically. Cursor stores the token and connects.
 
-  First time? Ask the agent:
-  → "Set up my Opsphere account"
-```
-
-In the Cursor chat, say:
-
-> "Set up my Opsphere account"
-
-The agent will run `/opsphere-setup` and guide you through creating an account or logging in.
+> Authentication is handled entirely by Cursor — you never need to copy or paste a token.
 
 ---
 
-## Step 3 — Set your token
-
-After signup or login, the agent will give you an **access token**.
-
-Set it in Cursor:
-
-1. Go to **Settings → MCP**.
-2. Find the **opsphere** server.
-3. When prompted for `opsphere-token`, paste the token.
-
-Alternatively, Cursor may prompt you automatically when the MCP connection first starts.
-
-The token is valid for **24 hours**. Run `/opsphere-setup` again after expiry.
-
----
-
-## Step 4 — Verify the connection
+## Step 3 — Verify the connection
 
 Ask the agent:
 
@@ -66,7 +43,7 @@ Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately — n
 
 ---
 
-## Step 5 — Configure your first integration
+## Step 4 — Configure your first integration
 
 Say:
 
@@ -77,20 +54,9 @@ Repeat for any other provider you use (Vercel, GitHub, Cloudflare, Jira, Sentry,
 
 ---
 
-## Manual token configuration (alternative)
+## Re-authentication
 
-If you prefer to set the token manually without the agent:
-
-1. Find your token from a previous `/opsphere-setup` session, or log in again:
-
-```bash
-echo '{"email":"you@example.com","password":"yourpassword"}' | \
-  curl -s -X POST https://mcp-cursor.opsphere.io/api/plugin/login \
-  -H "Content-Type: application/json" --data-binary @-
-```
-
-2. Copy the `accessToken` from the response.
-3. Set it in Cursor Settings → MCP → opsphere → token.
+Tokens are valid for **24 hours**. When your session expires, Cursor will show the **Connect** button again — click it to open a new browser sign-in window. Your integrations and settings are preserved.
 
 ---
 
