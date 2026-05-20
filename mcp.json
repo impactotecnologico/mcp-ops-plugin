@@ -1,4 +1,12 @@
 {
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "opsphere-token",
+      "description": "Opsphere API token — get one free at https://mcp-cursor.opsphere.io/signup or ask the agent: 'Set up my Opsphere account'",
+      "password": true
+    }
+  ],
   "mcpServers": {
     "opsphere": {
       "url": "https://mcp-cursor.opsphere.io/mcp",
