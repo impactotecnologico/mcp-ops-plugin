@@ -110,7 +110,7 @@ After your trial, upgrade at [https://opsphere.io/pricing](https://opsphere.io/p
 
 - Check that the `opsphere-token` is set: Cursor Settings → MCP → opsphere → input token.
 - Verify your token is valid by running `/opsphere-setup` to log in again.
-- Check gateway reachability: `curl https://mcp-gateway.opsphere.io/health`
+- Check gateway reachability: `curl https://mcp-cursor.opsphere.io/health`
 - If the gateway is down, check [https://status.opsphere.io](https://status.opsphere.io).
 
 </details>

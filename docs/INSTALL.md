@@ -85,7 +85,7 @@ If you prefer to set the token manually without the agent:
 
 ```bash
 echo '{"email":"you@example.com","password":"yourpassword"}' | \
-  curl -s -X POST https://mcp-gateway.opsphere.io/api/plugin/login \
+  curl -s -X POST https://mcp-cursor.opsphere.io/api/plugin/login \
   -H "Content-Type: application/json" --data-binary @-
 ```
 

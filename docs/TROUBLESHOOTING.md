@@ -8,7 +8,7 @@
 1. Verify your token is set in Cursor Settings → MCP → opsphere → token.
 2. Test the gateway is reachable:
    ```bash
-   curl https://mcp-gateway.opsphere.io/health
+   curl https://mcp-cursor.opsphere.io/health
    ```
    Expected response: `{"status":"ok"}`
 3. If unreachable, check your internet connection or try again in a few minutes.

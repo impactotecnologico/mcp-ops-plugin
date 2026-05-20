@@ -22,7 +22,7 @@ Ask: "Do you already have an Opsphere account, or would you like to create one?"
 3. Call the signup endpoint. Use stdin piping to keep the password out of shell history:
 
 ```bash
-echo '{"email":"<EMAIL>","password":"<PASSWORD>"}' | curl -s -X POST https://mcp-gateway.opsphere.io/api/plugin/signup \
+echo '{"email":"<EMAIL>","password":"<PASSWORD>"}' | curl -s -X POST https://mcp-cursor.opsphere.io/api/plugin/signup \
   -H "Content-Type: application/json" \
   --data-binary @-
 ```
@@ -42,7 +42,7 @@ echo '{"email":"<EMAIL>","password":"<PASSWORD>"}' | curl -s -X POST https://mcp
 2. Call the login endpoint:
 
 ```bash
-echo '{"email":"<EMAIL>","password":"<PASSWORD>"}' | curl -s -X POST https://mcp-gateway.opsphere.io/api/plugin/login \
+echo '{"email":"<EMAIL>","password":"<PASSWORD>"}' | curl -s -X POST https://mcp-cursor.opsphere.io/api/plugin/login \
   -H "Content-Type: application/json" \
   --data-binary @-
 ```
@@ -75,4 +75,4 @@ Then ask: "Would you like to connect your first integration? I can guide you thr
 - Do not store the password anywhere.
 - The `accessToken` is a JWT — it is safe to display (it is not a secret in the same sense as a password, but treat it like one).
 - The `refreshToken` in the response should be stored securely by the user if they want seamless re-login. For MVP, they can re-run this command after 24 hours if their token expires.
-- The gateway URL is always: `https://mcp-gateway.opsphere.io`
+- The gateway URL is always: `https://mcp-cursor.opsphere.io`
