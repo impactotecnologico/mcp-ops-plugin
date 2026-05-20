@@ -10,13 +10,13 @@
   },
   "plugins": [
     {
-      "name": "opsphere",
+      "name": "Opsphere MCP Plugin",
       "source": ".",
       "description": "DevOps operational intelligence — monitor, diagnose, and manage your infrastructure directly from Cursor. Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, and more.",
       "version": "1.0.0",
       "author": {
         "name": "Opsphere",
-        "email": "hello@opsphere.io"
+        "email": "contact@opsphere.io"
       },
       "homepage": "https://opsphere.io",
       "repository": "https://github.com/impactotecnologico/mcp-ops-plugin",
