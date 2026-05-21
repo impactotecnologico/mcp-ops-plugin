@@ -1,10 +1,10 @@
 # Opsphere — DevOps Intelligence for Cursor
 
-> Query logs, check deploys, diagnose incidents, and manage your infrastructure — without leaving your IDE.
+> Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
-![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/opsphere-io/mcp-ops-plugin/releases)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
 
 ![Opsphere banner](assets/banners/banner1-dark.png)
 
@@ -12,69 +12,99 @@
 
 ## What is Opsphere?
 
-Opsphere is a DevOps operational intelligence plugin for Cursor. It connects your monitoring, deployment, and issue tracking tools to the AI agent — so you can query Datadog logs, diagnose Kubernetes pods, check DNS health, or find Sentry errors just by asking in natural language.
+Opsphere is a DevOps operational intelligence plugin for Cursor. It connects your monitoring, deployment, and issue-tracking tools to the AI agent so you can ask in natural language:
 
-Everything runs through a secure remote MCP server. No credentials are stored locally. No backend code is bundled in the plugin.
+- _"Search Datadog logs for payment errors in the last hour"_
+- _"What's failing in Sentry right now?"_
+- _"Check DNS for mysite.com across all resolvers"_
+- _"Diagnose the failed Bitbucket pipeline"_
+
+Everything runs through a **secure remote MCP server**. No credentials are stored locally. No backend code is bundled in the plugin. Authentication uses OAuth2 + PKCE — Cursor manages the token automatically.
 
 ---
 
 ## Quick Start
 
 1. **Install** Opsphere from the Cursor Marketplace.
-2. **Connect**: click the **Connect** button next to Opsphere in **Cursor Settings → MCP**. A browser window opens — sign up or log in. Cursor stores the token automatically.
-3. **Connect your tools**: say _"Configure my Datadog"_ — the agent asks for your credentials and sets everything up.
+2. **Connect**: click **Connect** next to Opsphere in **Cursor Settings → MCP**. A browser window opens — sign up (free, no card needed) or log in. Cursor stores the token automatically.
+3. **Connect your tools**: say _"Configure my Datadog"_ — the agent asks for credentials and sets everything up.
 4. **Start asking**: say _"Check DNS for mysite.com"_ or _"Show my Vercel deploys"_ — you're live.
 
-Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately after connecting with no integration setup needed.
+> **Network tools** (`dns_lookup`, `http_check`, `cert_status`) work immediately after step 2 — no integration setup needed.
 
 ---
 
-## Example Prompts
+## How It Works
 
-| What you say | What happens |
-|---|---|
-| "Configure my Datadog" | Walks you through connecting Datadog API keys step by step |
-| "Check DNS for example.com" | Runs `dns_lookup` across multiple resolvers and flags discrepancies |
-| "Is api.mycompany.com up?" | Runs `http_check` and reports status + response time |
-| "Show my latest Vercel deploys" | Lists the last 3 deployments with status and timestamp |
-| "Search Datadog logs for payment errors in the last hour" | Queries Datadog Logs v2 with your search |
-| "What's failing in Sentry right now?" | Lists unresolved issues by severity |
-| "Diagnose the failed Bitbucket pipeline" | Identifies the failed step and shows its log output |
-| "Find Jira issues assigned to me" | Searches Jira with JQL and returns issue summaries |
-| "What GitHub Actions ran on main today?" | Lists latest workflow runs with status |
-| "Show my usage" | Displays plan, trial status, and daily tool calls via `ops_my_usage` |
-| "Which integrations do I have configured?" | Runs `/integration-status` |
+```
+You (Cursor chat)
+      │
+      ▼
+Opsphere MCP plugin          ← rules, skills, commands bundled here
+      │   (OAuth2 token)
+      ▼
+Opsphere Gateway             ← validates token, routes tool calls
+      │
+      ├── Datadog API
+      ├── Vercel API
+      ├── GitHub / Bitbucket
+      ├── Cloudflare
+      ├── Jira / Sentry
+      ├── AWS
+      └── DNS / HTTP / TLS   ← always available, no credentials needed
+```
 
 ---
 
 ## Supported Integrations
 
-| Provider | Tools included (free tier) | Credentials needed |
+| Provider | What you can do | Credentials needed |
 |---|---|---|
-| **Datadog** | Log search · error counts by service | API Key + App Key |
-| **Vercel** | Latest deploys · project status | API Token |
-| **GitHub Enterprise** | Repo summary · latest Actions run | Personal Access Token |
-| **Bitbucket** | Pipeline list · pipeline diagnosis | App Password |
-| **Cloudflare** | Zone status · DNS records | API Token |
-| **Jira** | Issue search · issue detail | API Token |
-| **Sentry** | Issues list · issue search | Auth Token |
-| **AWS** | Identity check · CLI queries | Access Key + Secret Key |
-| **Network (built-in)** | DNS lookup · HTTP check · TLS cert | Nothing — works immediately |
+| **Datadog** | Search logs · count errors by service · check synthetics | API Key + App Key |
+| **Vercel** | Latest deploys · project status · env vars | API Token |
+| **GitHub** | Repo summary · Actions runs · PRs | Personal Access Token |
+| **Bitbucket** | Pipeline list · pipeline diagnosis · PR search | App Password |
+| **Cloudflare** | Zone status · DNS records · firewall events | API Token |
+| **Jira** | Issue search · issue detail · comments | API Token |
+| **Sentry** | Issues list · issue search · project stats | Auth Token |
+| **AWS** | Identity check · read-only CLI queries | Access Key + Secret Key |
+| **Network (built-in)** | DNS lookup · HTTP check · TLS cert · TCP | Nothing — always works |
 
-> Full tool catalog unlocked on paid plans — including Kubernetes, ArgoCD, Azure Service Bus, Akamai, and more.
+> Full tool catalog on paid plans — including Kubernetes, ArgoCD, Azure Service Bus, Akamai, Confluence, and more.
+
+---
+
+## Example Prompts
+
+| You say | What happens |
+|---|---|
+| `"Configure my Datadog"` | Guided setup: asks for API Key + App Key, configures and tests in one flow |
+| `"Check DNS for example.com"` | Runs `dns_lookup` across Google, Cloudflare, and system resolvers |
+| `"Is api.mycompany.com up?"` | Runs `http_check` + `cert_status` and reports status + cert expiry |
+| `"Show my latest Vercel deploys"` | Lists the last 3 deployments with status, branch, and timestamp |
+| `"Search Datadog logs for payment errors in the last hour"` | Queries Datadog Logs v2 with your filter |
+| `"What's failing in Sentry right now?"` | Lists unresolved issues by severity |
+| `"Diagnose the failed Bitbucket pipeline"` | Identifies the failed step and shows its log output |
+| `"Find Jira issues assigned to me"` | Searches Jira with JQL and returns summaries |
+| `"What GitHub Actions ran on main today?"` | Lists latest workflow runs with status |
+| `"Show my usage"` | Displays plan, trial status, and daily tool calls |
+| `"Which integrations do I have set up?"` | Lists configured vs. pending providers |
 
 ---
 
 ## Screenshots
 
-![Welcome](assets/screenshots/welcome.png)
-*Welcome message shown when opening a workspace with Opsphere installed.*
+<!-- Screenshots will be added in the next release. -->
+<!-- To contribute screenshots, see docs/CONTRIBUTING.md -->
 
-![Setup complete](assets/screenshots/setup-complete.png)
-*Account creation and first login via the `/opsphere-setup` command.*
+| | |
+|---|---|
+| ![Opsphere setup](assets/screenshots/opsphere-setup.png) | ![Integration status](assets/screenshots/integration-status.png) |
+| *First-run setup via `/opsphere-setup` — OAuth login and first integration in under 2 minutes.* | *`/integration-status` — see which providers are active and what tools they unlock.* |
+| ![DNS diagnosis](assets/screenshots/dns-diagnosis.png) | ![Sentry errors](assets/screenshots/sentry-errors.png) |
+| *Live `dns_lookup` result across multiple resolvers.* | *`"What's failing in Sentry?"` returns grouped issues by severity.* |
 
-![Tool in action](assets/screenshots/tool-in-action.png)
-*Live `dns_lookup` result showing resolver responses in the Cursor chat.*
+> **Note**: Screenshots coming soon. The plugin is fully functional — images will be added in the next release.
 
 ---
 
@@ -83,35 +113,33 @@ Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately after
 Opsphere includes a **30-day free trial** with no credit card required:
 
 - **100 tool calls per day** (resets at midnight UTC)
-- Access to **all 8 integrations** above (up to 2 tools per provider)
+- All **8 integrations** above (up to 2 tools per provider)
 - **Network diagnostics** (`dns_lookup`, `http_check`, `cert_status`) — unlimited, no setup
-- **`ops_my_usage`** — check your plan, trial status, and daily usage at any time
+- **`ops_my_usage`** — check plan status and daily usage at any time
 
-After your trial, upgrade at [https://opsphere.io/pricing](https://opsphere.io/pricing) to unlock the full tool catalog, unlimited daily calls, and premium providers.
+After your trial, upgrade at [opsphere.io/pricing](https://opsphere.io/pricing) to unlock the full tool catalog (139 tools), unlimited daily calls, and premium providers.
 
 ---
 
 ## Security
 
-- Authentication uses **OAuth2 Authorization Code + PKCE** — the industry standard. You sign in via a browser window; Cursor manages the token automatically.
-- Credentials are **encrypted and stored per-tenant** in the Opsphere backend — no other user can access them.
-- Each account gets a fully **isolated tenant** — no shared state.
-- All communication is over **HTTPS**. No credentials are ever logged or returned to the plugin.
-- Access tokens are valid for **24 hours**. When one expires, Cursor shows the Connect button again — click it to renew.
-- **No credentials are stored locally** in Cursor or on your machine.
-- The plugin client is **open-source (MIT)**. The backend is proprietary SaaS.
-- Tokens are hashed server-side and never stored in plaintext.
+- **OAuth2 Authorization Code + PKCE** — industry-standard authentication. You sign in via a browser window; Cursor manages the token automatically.
+- **Encrypted per-tenant storage** — credentials are isolated per account; no cross-tenant access is possible.
+- **HTTPS only** — no credentials are ever logged or returned to the plugin.
+- **24-hour access tokens** — when one expires, Cursor shows the Connect button again; click it to renew in seconds.
+- **No local storage** — no credentials are stored in Cursor or on your machine.
+- **Open-source client** — the plugin (MIT). The backend is proprietary SaaS.
 
 ---
 
 ## Troubleshooting
 
 <details>
-<summary>MCP connection not starting or tools not visible</summary>
+<summary>No Connect button / tools not visible</summary>
 
-- Look for a **Connect** button in Cursor Settings → MCP → opsphere. Click it to authenticate.
+- Open **Cursor Settings → MCP** and look for the Opsphere entry. If there is no Connect button, try reloading the window (`Cmd+Shift+P → Reload Window`).
 - Check gateway reachability: `curl https://mcp-cursor.opsphere.io/health`
-- If the gateway is down, check [https://status.opsphere.io](https://status.opsphere.io).
+- If the gateway is down, check [status.opsphere.io](https://status.opsphere.io).
 
 </details>
 
@@ -119,7 +147,7 @@ After your trial, upgrade at [https://opsphere.io/pricing](https://opsphere.io/p
 <summary>401 Unauthorized</summary>
 
 - Your access token has expired (tokens last 24 hours).
-- In Cursor Settings → MCP, click **Connect** to open a new browser sign-in window and renew automatically.
+- In **Cursor Settings → MCP**, click **Connect** to open a new browser sign-in window and renew automatically.
 
 </details>
 
@@ -127,7 +155,7 @@ After your trial, upgrade at [https://opsphere.io/pricing](https://opsphere.io/p
 <summary>TRIAL_EXPIRED error</summary>
 
 - Your 30-day free trial has ended.
-- Upgrade at [https://opsphere.io/pricing](https://opsphere.io/pricing) to continue.
+- Upgrade at [opsphere.io/pricing](https://opsphere.io/pricing) to continue.
 - Re-logging in will not fix this — it is a subscription state, not an auth issue.
 
 </details>
@@ -137,8 +165,8 @@ After your trial, upgrade at [https://opsphere.io/pricing](https://opsphere.io/p
 
 - You have reached your daily limit of 100 tool calls.
 - The limit resets at midnight UTC.
-- Say "Show my usage" to check remaining calls via `ops_my_usage`.
-- Upgrade at [https://opsphere.io/pricing](https://opsphere.io/pricing) for unlimited calls.
+- Say _"Show my usage"_ to check remaining calls via `ops_my_usage`.
+- Upgrade at [opsphere.io/pricing](https://opsphere.io/pricing) for unlimited calls.
 
 </details>
 
@@ -157,10 +185,11 @@ See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for the full guide.
 
 ## Links
 
-- **Website**: [https://opsphere.io](https://opsphere.io)
-- **Pricing**: [https://opsphere.io/pricing](https://opsphere.io/pricing)
-- **Docs**: [docs/](docs/)
+- **Website**: [opsphere.io](https://opsphere.io)
+- **Pricing**: [opsphere.io/pricing](https://opsphere.io/pricing)
+- **Status**: [status.opsphere.io](https://status.opsphere.io)
 - **Support**: [hello@opsphere.io](mailto:hello@opsphere.io)
+- **Docs**: [docs/](docs/)
 
 ---
 

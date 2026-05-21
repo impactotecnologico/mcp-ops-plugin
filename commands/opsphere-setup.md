@@ -1,6 +1,6 @@
 ---
 name: opsphere-setup
-description: Guide the user to connect their Opsphere account and set up integrations
+description: First-run setup — authenticate via OAuth and connect your first provider in under 2 minutes. Run this after installing the plugin.
 ---
 
 # Opsphere Setup

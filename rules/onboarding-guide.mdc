@@ -1,5 +1,5 @@
 ---
-description: Opsphere plugin context — capabilities, available tools, integration guidance, and error handling. Always active.
+description: Opsphere context applied to every conversation — tool catalog by provider, integration prefixes, error codes (TRIAL_EXPIRED, RATE_LIMIT_EXCEEDED), and response guidelines.
 alwaysApply: true
 ---
 

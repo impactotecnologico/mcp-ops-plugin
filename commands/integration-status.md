@@ -1,6 +1,6 @@
 ---
 name: integration-status
-description: Check which Opsphere integrations are configured and suggest what to connect next
+description: Show which of your 8 integrations are active, which tools they unlock, and get a recommended next step to expand your coverage
 ---
 
 # Integration Status

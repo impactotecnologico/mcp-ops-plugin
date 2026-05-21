@@ -1,6 +1,6 @@
 ---
 name: configure-integration
-description: Guide users through configuring third-party integrations (Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, AWS) using Opsphere MCP tools. Use when the user wants to set up, configure, register, or connect a provider, or when a tool reports missing or invalid credentials.
+description: Connect Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, or AWS — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider, or when a tool reports missing credentials.
 ---
 
 # Configure Integration
