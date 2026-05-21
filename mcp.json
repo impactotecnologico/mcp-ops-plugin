@@ -1,7 +1,10 @@
 {
   "mcpServers": {
     "opsphere": {
-      "url": "https://mcp-cursor.opsphere.io/mcp"
+      "url": "https://mcp-cursor.opsphere.io/mcp",
+      "auth": {
+        "CLIENT_ID": "cursor-mcp"
+      }
     }
   }
 }
