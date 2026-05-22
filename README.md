@@ -94,17 +94,23 @@ Opsphere Gateway             ← validates token, routes tool calls
 
 ## Screenshots
 
-<!-- Screenshots will be added in the next release. -->
-<!-- To contribute screenshots, see docs/CONTRIBUTING.md -->
+### Getting started
 
 | | |
 |---|---|
-| ![Opsphere setup](assets/screenshots/opsphere-setup.png) | ![Integration status](assets/screenshots/integration-status.png) |
-| *First-run setup via `/opsphere-setup` — OAuth login and first integration in under 2 minutes.* | *`/integration-status` — see which providers are active and what tools they unlock.* |
-| ![DNS diagnosis](assets/screenshots/dns-diagnosis.png) | ![Sentry errors](assets/screenshots/sentry-errors.png) |
-| *Live `dns_lookup` result across multiple resolvers.* | *`"What's failing in Sentry?"` returns grouped issues by severity.* |
+| ![Command menu](assets/screenshots/command-menu.png) | ![Opsphere setup](assets/screenshots/opsphere-setup.png) |
+| *Type `/opsp` in the chat to access Opsphere commands.* | *`/opsphere-setup` guides you through authentication step by step.* |
+| ![OAuth login](assets/screenshots/oauth-login.png) | ![OAuth signup](assets/screenshots/oauth-signup.png) |
+| *Sign in with your existing account — browser-based OAuth2.* | *New user? Create a free account in seconds — no credit card required.* |
+| ![OAuth redirect](assets/screenshots/oauth-redirect.png) | ![Connected](assets/screenshots/connected-success.png) |
+| *Cursor captures the OAuth callback automatically.* | *Connected — trial active, 33 tools and 19 prompts enabled.* |
 
-> **Note**: Screenshots coming soon. The plugin is fully functional — images will be added in the next release.
+### Tools in action
+
+| | |
+|---|---|
+| ![DNS diagnosis](assets/screenshots/dns-diagnosis.png) | ![Integration status](assets/screenshots/integration-status.png) |
+| *`dns_lookup` resolves a domain across Google, Cloudflare, and system resolvers simultaneously.* | *`/integration-status` shows which providers are active and what tools they unlock.* |
 
 ---
 
