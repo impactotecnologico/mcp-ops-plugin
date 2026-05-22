@@ -1,8 +1,8 @@
 {
-  "name": "opsphere-marketplace",
+  "name": "opsphere",
   "owner": {
     "name": "Opsphere",
-    "email": "hello@opsphere.io"
+    "email": "contact@opsphere.io"
   },
   "metadata": {
     "description": "DevOps operational intelligence tools for Cursor — monitor, diagnose, and manage your infrastructure directly from the IDE.",

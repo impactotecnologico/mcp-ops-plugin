@@ -5,7 +5,7 @@
   "description": "Query logs, diagnose incidents, check deploys, and manage your infrastructure without leaving Cursor. Connects Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, AWS, and more via a secure remote MCP server.",
   "author": {
     "name": "Opsphere",
-    "email": "hello@opsphere.io"
+    "email": "contact@opsphere.io"
   },
   "homepage": "https://opsphere.io",
   "repository": "https://github.com/opsphere-io/mcp-ops-plugin",
