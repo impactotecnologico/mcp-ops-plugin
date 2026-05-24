@@ -33,7 +33,7 @@ If the user asks what to do in the browser:
 - **New user**: switch to the **Sign up** tab, enter an email and password, click **Create account**.
 - **Returning user**: stay on the **Log in** tab, enter credentials, click **Log in**.
 
-> Tokens are valid for 24 hours. When one expires, Cursor will show the Connect button again — just click it.
+> Opsphere uses refresh-token rotation, so Cursor renews sessions automatically in the background.
 
 ---
 

@@ -18,7 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
   error handling (`TRIAL_EXPIRED`, `RATE_LIMIT_EXCEEDED`), and example prompts.
 - `/integration-status` command to check connected services and suggest next steps.
 - Welcome message on workspace open (`workspaceOpen` hook → `scripts/check-auth.sh`).
-- `mcp.json` remote MCP configuration using `${input:opsphere-token}` variable substitution.
+- `mcp.json` remote MCP configuration with OAuth2 Connect flow (`auth.CLIENT_ID`).
 - Operational tools across 10 provider modules (up to 2 tools per provider in free tier).
 - Network diagnostics (`dns_lookup`, `http_check`, `cert_status`) — available immediately
   after login with no integration setup required.

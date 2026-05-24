@@ -104,7 +104,7 @@
 
 ## Still stuck?
 
-Contact us at **hello@opsphere.io** with:
+Contact us at **contact@opsphere.io** with:
 - A description of what you're trying to do.
 - The error message (exact text).
 - Your Cursor version (`Help → About`).

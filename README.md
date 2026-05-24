@@ -2,7 +2,7 @@
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/opsphere-io/mcp-ops-plugin/releases)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/impactotecnologico/mcp-ops-plugin/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
 
@@ -132,7 +132,7 @@ After your trial, upgrade at [opsphere.io/pricing](https://opsphere.io/pricing) 
 - **OAuth2 Authorization Code + PKCE** — industry-standard authentication. You sign in via a browser window; Cursor manages the token automatically.
 - **Encrypted per-tenant storage** — credentials are isolated per account; no cross-tenant access is possible.
 - **HTTPS only** — no credentials are ever logged or returned to the plugin.
-- **24-hour access tokens** — when one expires, Cursor shows the Connect button again; click it to renew in seconds.
+- **Refresh-token rotation** — access tokens are short-lived and renewed automatically by Cursor without daily re-login.
 - **No local storage** — no credentials are stored in Cursor or on your machine.
 - **Open-source client** — the plugin (MIT). The backend is proprietary SaaS.
 
@@ -194,7 +194,7 @@ See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for the full guide.
 - **Website**: [opsphere.io](https://opsphere.io)
 - **Pricing**: [opsphere.io/pricing](https://opsphere.io/pricing)
 - **Status**: [status.opsphere.io](https://status.opsphere.io)
-- **Support**: [hello@opsphere.io](mailto:hello@opsphere.io)
+- **Support**: [contact@opsphere.io](mailto:contact@opsphere.io)
 - **Docs**: [docs/](docs/)
 
 ---

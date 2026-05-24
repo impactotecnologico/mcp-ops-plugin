@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Prints Opsphere quick-start guidance on workspace open.
-# The auth token lives in Cursor's MCP input settings (${input:opsphere-token})
-# and is not accessible from a shell context, so we print a brief welcome
+# OAuth tokens are managed by Cursor via Connect (OAuth2 + PKCE) and are not
+# accessible from a shell context, so we print a brief welcome
 # that serves both new and returning users without being intrusive.
 
 echo ""
