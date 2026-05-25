@@ -1,0 +1,30 @@
+{
+  "name": "opsphere",
+  "displayName": "Opsphere — DevOps Intelligence",
+  "version": "1.0.0",
+  "description": "Query logs, diagnose incidents, check deploys, and manage your infrastructure without leaving Cursor. Connects Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, AWS, and more via a secure remote MCP server.",
+  "author": {
+    "name": "Opsphere",
+    "email": "contact@opsphere.io"
+  },
+  "homepage": "https://opsphere.io",
+  "repository": "https://github.com/impactotecnologico/mcp-ops-plugin",
+  "license": "MIT",
+  "keywords": [
+    "devops",
+    "monitoring",
+    "datadog",
+    "vercel",
+    "cloudflare",
+    "aws",
+    "github",
+    "sentry",
+    "jira",
+    "bitbucket",
+    "infrastructure",
+    "observability",
+    "mcp",
+    "operational-intelligence"
+  ],
+  "logo": "assets/logo-icon.svg"
+}

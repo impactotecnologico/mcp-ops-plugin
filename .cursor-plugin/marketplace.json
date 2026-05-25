@@ -1,0 +1,46 @@
+{
+  "name": "opsphere",
+  "owner": {
+    "name": "Opsphere",
+    "email": "contact@opsphere.io"
+  },
+  "metadata": {
+    "description": "DevOps operational intelligence tools for Cursor — monitor, diagnose, and manage your infrastructure directly from the IDE.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "Opsphere MCP Plugin",
+      "type": "Opsphere",
+      "source": ".",
+      "description": "DevOps operational intelligence — monitor, diagnose, and manage your infrastructure directly from Cursor. Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, and more.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Opsphere",
+        "email": "contact@opsphere.io"
+      },
+      "homepage": "https://opsphere.io",
+      "repository": "https://github.com/impactotecnologico/mcp-ops-plugin",
+      "license": "MIT",
+      "logo": "assets/logo-icon.svg",
+      "keywords": [
+        "devops",
+        "monitoring",
+        "datadog",
+        "vercel",
+        "cloudflare",
+        "aws",
+        "github",
+        "sentry",
+        "jira",
+        "bitbucket",
+        "infrastructure",
+        "observability",
+        "mcp",
+        "operational-intelligence",
+        "opsphere"
+      ],
+      "category": "DevOps"
+    }
+  ]
+}
