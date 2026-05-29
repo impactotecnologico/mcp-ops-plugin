@@ -62,9 +62,59 @@ Remove all stored credentials for a provider.
 ## Plan & Usage [built-in]
 
 ### `ops_my_usage`
-Show current plan, trial end date, days remaining, daily tool call usage, and upgrade link.
+Show current plan, trial end date, days remaining, daily tool call usage, work context status, and upgrade link.
 
 **Example**: _"Show my Opsphere usage"_ or _"How many tool calls do I have left today?"_
+
+### `ops_set_work_context`
+Save what you usually work with (projects, providers, environments) so Opsphere personalizes answers. Free-tier accounts only. No API keys.
+
+**Example**: _"I work with Vercel and Datadog on project acme-prod"_ → agent calls this tool with your description.
+
+### `ops_get_work_context`
+Returns configured operational context for all cloud accounts (full text). Use when you need details beyond the default account summary injected at connect time.
+
+**Example**: _"What's my saved work context?"_
+
+**Resource**: `opsphere://tenant/account-context` (same full content, MCP resource).
+
+---
+
+## Operational Memory
+
+Available when the `memory` module is enabled for your tenant. **Not live ops truth** — always re-check Datadog, Vercel, K8s, etc. after reading memory.
+
+### `memory_search`
+Retrieve a compact block of distilled memories (full-text search). Use before repeating long investigations.
+
+**Parameters**: `query` (required, min 3 chars), `scopes?` (`session` | `user` | `repository` | `incident` | `decision`), `repo?`, `environment?`, `limit?` (default 5, max 10).
+
+**Example**: _"Search memory for prior work on payment timeouts in PRE"_
+
+---
+
+### `memory_store`
+Persist a short distilled fact (not raw logs). Rate-limited (50 stores/user/day). Rejects secrets and duplicates of account catalog context unless `skip_catalog_duplicate_check=true`.
+
+**Parameters**: `scope`, `kind`, `title`, `summary` (required); optional `content`, `repo`, `environment`, `incident`, `decision`, `visibility`, `skip_catalog_duplicate_check`.
+
+**Scopes**: `user` / `session` (default for partners), `repository` (requires `repo`), `incident` (requires `kind=episodic` + `incident` object), `decision` (requires `decision` object).
+
+**Example**: _"Save a one-paragraph summary of today's root cause for next time"_
+
+---
+
+### `memory_session_touch`
+Optional heartbeat at session start; binds repo context when you pass `repo` or when inferred from recent `ghe_*` / `bb_*` / `repos_*` calls.
+
+**Example**: _"Touch memory session for org/my-repo"_
+
+---
+
+### `memory_invalidate`
+Mark a memory item `stale`, `invalidated`, or `superseded` (owner or admin).
+
+**Example**: _"Invalidate memory item [uuid] — obsolete after deploy"_
 
 ---
 

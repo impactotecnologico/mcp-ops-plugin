@@ -41,6 +41,26 @@ Ask the agent:
 If the MCP connection is working, the agent will call `http_check` and return a result.
 Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately — no integration setup needed.
 
+If your plan includes **operational memory**, ask:
+
+> "List tools starting with memory_"
+
+You should see `memory_search`, `memory_store`, `memory_session_touch`, and `memory_invalidate`. If they are missing, memory is not enabled for your tenant yet — contact support or check your plan.
+
+---
+
+## Step 3.5 — Work context (recommended)
+
+After your first connect, run:
+
+> "Set up my Opsphere account"
+
+or ask:
+
+> "Help me tell Opsphere what I usually work with"
+
+The agent will ask for a short description of your stack (projects, providers, environments). **Do not paste API keys here** — only free-form context. You can skip and configure it later.
+
 ---
 
 ## Step 4 — Configure your first integration

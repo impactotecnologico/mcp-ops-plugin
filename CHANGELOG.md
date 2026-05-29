@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+
+- **Work context onboarding**: `set-work-context` skill, Step 3.5 in `/opsphere-setup`, `ops_set_work_context` and `ops_get_work_context` tools.
+- Gateway injects tenant account context on MCP `initialize` (default account + index of others).
+- MCP resource `opsphere://tenant/account-context` for full per-account context.
+- **Operational memory** documented in `onboarding-guide` rule and `docs/TOOLS.md`:
+  `memory_search`, `memory_store`, `memory_session_touch`, `memory_invalidate`.
+- Agent guidance: when to search/store/invalidate memory; quick selection table; catalog duplicate guard (`catalog_context_duplicate`).
+- Example prompts for recall and saving investigation summaries.
+
 ## [1.0.0] - 2026-05-19
 
 ### Added

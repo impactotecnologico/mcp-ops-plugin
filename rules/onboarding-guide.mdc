@@ -28,8 +28,14 @@ These tools are available once authenticated and integrations are configured:
 | Network (built-in) | — | `dns_lookup`, `http_check`, `cert_status` |
 | Integration Mgmt | — | `ops_configure_integration`, `ops_list_integrations`, `ops_test_integration`, `ops_remove_integration` |
 | Plan & Usage | — | `ops_my_usage` |
+| Work context | — | `ops_set_work_context`, `ops_get_work_context` |
+| Operational memory | — | `memory_search`, `memory_store`, `memory_session_touch`, `memory_invalidate` |
 
 **Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately after login — no integration setup needed.**
+
+**Memory tools** appear only when the `memory` module is enabled for your tenant (`tenant_tools`, profile `cursor`). They store **distilled** notes from past sessions — not live ops truth. Always verify current state with Datadog, K8s, Vercel, or other live tools after reading memory.
+
+**Work context** is injected automatically when MCP connects (default cloud account + index of others). After signup, if `ops_my_usage` shows work context as not configured, run the `set-work-context` skill. For full text of a non-default account, use `ops_get_work_context` or resource `opsphere://tenant/account-context`.
 
 ---
 
@@ -101,11 +107,36 @@ Users might say things like:
 - "Is example.com up?" — triggers `dns_lookup` + `http_check` + `cert_status`
 - "Check the SSL cert for api.mycompany.com"
 - "Configure my Datadog" — triggers the `configure-integration` skill
+- "Tell Opsphere what I usually work with" — triggers the `set-work-context` skill
 - "Show PR #42 status in Bitbucket"
 - "Find Jira issues assigned to me"
 - "What GitHub Actions ran today on the main branch?"
 - "Show my usage" — triggers `ops_my_usage`
 - "Which integrations do I have configured?" — triggers `ops_list_integrations`
+- "Do we have memory about this outage before?" — `memory_search` with `scopes: ["incident"]` (and `repo` if known)
+- "Save this investigation summary for next time" — `memory_store` (`scope`: `user` or `session` for general notes; `incident` / `decision` for structured post-mortems)
+
+### Memory quick selection
+
+| Need | Tool |
+|------|------|
+| Recall prior work / outage precedent | `memory_search` |
+| Save finding after investigation | `memory_store` |
+| Optional session heartbeat | `memory_session_touch` |
+| Remove stale memory | `memory_invalidate` |
+
+### When to use memory (agent behavior)
+
+1. **Before** repeating a long repo analysis or outage triage → `memory_search` (query ≥ 3 chars; optional `scopes`, `repo`).
+2. **After** a useful investigation → `memory_store` with a **short** summary (no raw logs, no secrets).
+3. **When outdated** → `memory_invalidate` with `status: stale` (owner or admin).
+4. **Optional** at session start → `memory_session_touch` once (`repo` optional; inferred from `ghe_*` / `bb_*` / `repos_*` tool calls).
+
+Default scopes for partners: **session** + **user**. Use `scope=repository` only with explicit `repo` `org/name`. Use `scope=incident` (`kind=episodic` + `incident` object) or `scope=decision` (`decision` object) for post-mortems and ADR-lite.
+
+Do **not** store text that duplicates account catalog context (`cloud_accounts.system_prompt_context`). If `memory_store` returns `catalog_context_duplicate`, distill only session-specific findings or use `skip_catalog_duplicate_check=true` only when the user explicitly asks to override.
+
+If `memory_*` tools are missing from `tools/list`, the tenant does not have memory enabled — do not invent the tools; tell the user to contact Opsphere support or check signup plan.
 
 ---
 

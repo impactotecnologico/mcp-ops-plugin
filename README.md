@@ -89,6 +89,10 @@ Opsphere Gateway             ← validates token, routes tool calls
 | `"What GitHub Actions ran on main today?"` | Lists latest workflow runs with status |
 | `"Show my usage"` | Displays plan, trial status, and daily tool calls |
 | `"Which integrations do I have set up?"` | Lists configured vs. pending providers |
+| `"Do we have memory about this outage?"` | `memory_search` (when the memory module is enabled for your tenant) |
+| `"Save this investigation for next time"` | `memory_store` — short distilled summary, not raw logs |
+
+> **Operational memory:** recall and save session notes when your tenant has the `memory` module enabled. See [docs/TOOLS.md](docs/TOOLS.md#operational-memory).
 
 ---
 
