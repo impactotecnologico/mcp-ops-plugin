@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - [Cursor IDE](https://cursor.com) version 0.50.0 or later.
-- An internet connection (the plugin communicates with the Opsphere gateway).
+- An internet connection — Opsphere is a **remote MCP** plugin; all tools run on `https://mcp-cursor.opsphere.io` (see [REMOTE-MCP-ARCHITECTURE.md](REMOTE-MCP-ARCHITECTURE.md)).
 
 ---
 
@@ -16,7 +16,24 @@ Install Opsphere from the Cursor Marketplace:
 3. Search for **Opsphere**.
 4. Click **Install**.
 
----
+After install, type **`/opsphere-welcome`** in chat for a quick start guide (or **`/opsphere-setup`** for full onboarding). The plugin does **not** run shell scripts on workspace open.
+
+### Test locally (before marketplace install)
+
+Cursor’s [plugin submission checklist](https://cursor.com/docs/reference/plugins) expects the plugin to be tested locally. From a clone of this repository:
+
+```bash
+git clone https://github.com/impactotecnologico/mcp-ops-plugin.git
+cd mcp-ops-plugin
+npm test   # optional: same validation as CI
+
+mkdir -p ~/.cursor/plugins/local
+cp -R . ~/.cursor/plugins/local/opsphere
+```
+
+Then in Cursor: **Reload Window** (`Cmd+Shift+P` → Reload Window) → **Settings → MCP** → connect **Opsphere** → type **`/opsphere-welcome`** in chat.
+
+To remove the local copy: `rm -rf ~/.cursor/plugins/local/opsphere` and reload again.
 
 ## Step 2 — Connect your account
 
@@ -40,6 +57,26 @@ Ask the agent:
 
 If the MCP connection is working, the agent will call `http_check` and return a result.
 Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately — no integration setup needed.
+
+If your plan includes **operational memory**, ask:
+
+> "List tools starting with memory_"
+
+You should see `memory_search`, `memory_store`, `memory_session_touch`, and `memory_invalidate`. If they are missing, memory is not enabled for your tenant yet — contact support or check your plan.
+
+---
+
+## Step 3.5 — Work context (recommended)
+
+After your first connect, run:
+
+> "Set up my Opsphere account"
+
+or ask:
+
+> "Help me tell Opsphere what I usually work with"
+
+The agent will ask for a short description of your stack (projects, providers, environments). **Do not paste API keys here** — only free-form context. You can skip and configure it later.
 
 ---
 

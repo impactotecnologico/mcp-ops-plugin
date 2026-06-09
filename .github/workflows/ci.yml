@@ -1,5 +1,9 @@
 name: CI
 
+# Public hygiene checks for marketplace bundle (flags #5–6):
+# - scripts/ci-validate.sh — manifests, no secrets/hooks/exfiltration patterns
+# - Gitleaks — full git history secret scan
+
 on:
   push:
     branches: [main]

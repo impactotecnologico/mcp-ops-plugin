@@ -1,9 +1,0 @@
-{
-  "hooks": {
-    "workspaceOpen": [
-      {
-        "command": "./scripts/check-auth.sh"
-      }
-    ]
-  }
-}

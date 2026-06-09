@@ -5,16 +5,16 @@
     "email": "contact@opsphere.io"
   },
   "metadata": {
-    "description": "DevOps operational intelligence tools for Cursor — monitor, diagnose, and manage your infrastructure directly from the IDE.",
-    "version": "1.0.0"
+    "description": "Thin client remote MCP plugin — all tools execute on Opsphere gateway (mcp-cursor.opsphere.io). DevOps intelligence for Cursor.",
+    "version": "1.0.1"
   },
   "plugins": [
     {
       "name": "Opsphere MCP Plugin",
       "type": "Opsphere",
       "source": ".",
-      "description": "DevOps operational intelligence — monitor, diagnose, and manage your infrastructure directly from Cursor. Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, and more.",
-      "version": "1.0.0",
+      "description": "Thin client — all MCP tools run on the Opsphere gateway. Monitor Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, AWS from Cursor. OAuth2 remote MCP; auditable manifest-only bundle (MIT).",
+      "version": "1.0.1",
       "author": {
         "name": "Opsphere",
         "email": "contact@opsphere.io"
