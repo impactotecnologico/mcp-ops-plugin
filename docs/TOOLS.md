@@ -260,12 +260,16 @@ Advanced Sentry issue search with sorting.
 
 ## AWS
 
-Requires: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`.
+Requires: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` (static IAM — **not** AWS SSO).
+
+> **Important**: Do not pass `profile` unless your plan includes SSO and you have an active SSO session. On the free plugin tier, SSO login tools are not available. Default AWS region is not stored during setup — specify region in the CLI command when needed.
 
 ### `aws_sts_whoami`
 Return the current AWS identity (account ID and ARN).
 
 **Example**: _"Who am I in AWS?"_
+
+Call **without** `profile`.
 
 ---
 
@@ -273,6 +277,8 @@ Return the current AWS identity (account ID and ARN).
 Run a read-only AWS CLI query (describe/list/get) against any service.
 
 **Example**: _"List my S3 buckets"_ or _"Describe the Lambda function payments-prod"_
+
+Call **without** `profile`. Add `--region <region>` in the command when the user specifies a region.
 
 ---
 

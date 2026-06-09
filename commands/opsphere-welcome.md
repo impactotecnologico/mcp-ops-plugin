@@ -26,6 +26,8 @@ Copy or paraphrase the following:
 > - _"Check my latest Vercel deploys"_
 > - _"Search Datadog logs for errors in the last hour"_
 > - _"Configure my Datadog"_
+> - _"Configure my AWS"_ — IAM Access Key + Secret Key (not SSO)
+> - _"List my S3 buckets"_ — after AWS is configured (no SSO step)
 > - **`/integration-status`** — see which providers are connected
 >
 > **Docs:** [INSTALL.md](../docs/INSTALL.md) · [TOOLS.md](../docs/TOOLS.md) · [TROUBLESHOOTING.md](../docs/TROUBLESHOOTING.md)

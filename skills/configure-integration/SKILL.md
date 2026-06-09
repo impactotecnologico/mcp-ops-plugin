@@ -272,12 +272,24 @@ It uses four MCP tools from the backend:
    })
    ```
 5. Call `ops_test_integration(provider: "aws")` to verify (runs `sts:GetCallerIdentity`).
-6. On success: "AWS is connected! You can now use `aws_sts_whoami` and `aws_cli_query`."
+6. On success, run the **verification checklist** (both calls **without** `profile`):
+   - `aws_sts_whoami`
+   - `aws_cli_query` with `command: "sts get-caller-identity"`
+7. Tell the user: "AWS is connected! You can use `aws_sts_whoami` and `aws_cli_query` for read-only queries."
+
+**After setup — how to query AWS**:
+
+- Use **static IAM keys only** — the plugin does not support AWS SSO on the free tier.
+- **Never** pass `profile` to `aws_sts_whoami` or `aws_cli_query` unless the user's plan includes SSO and they have an active SSO session.
+- **Never** call `aws_sso_login*` or `aws_session_status` for plugin users — those tools are disabled on the free tier.
+- **Region**: only Access Key + Secret Key are stored. Default region is **not** configured. Omit `region` unless the user asks; when needed, include it in the CLI command (e.g. `ec2 describe-instances --region us-east-1`) or pass the tool's `region` parameter.
+- Example — user says _"List my S3 buckets"_ → call `aws_cli_query` with `command: "s3api list-buckets"` (no `profile`, add `--region` only if the user specifies a region).
 
 **Common issues**:
 - `InvalidClientTokenId` → the Key ID is wrong or the key has been deactivated in IAM.
 - `SignatureDoesNotMatch` → the Secret Key is incorrect. Common cause: trailing space on copy-paste.
 - `AccessDenied` → IAM user lacks permissions. Minimum required: `sts:GetCallerIdentity`.
+- `Error loading SSO Token` → the agent used SSO or passed `profile` by mistake. Retry without `profile`.
 
 ---
 

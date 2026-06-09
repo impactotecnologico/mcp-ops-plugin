@@ -83,6 +83,10 @@ mcp-cursor.opsphere.io/mcp      ← ALL tool execution happens here
 | **AWS** | Identity check · read-only CLI queries | Access Key + Secret Key |
 | **Network (built-in)** | DNS lookup · HTTP check · TLS cert · TCP | Nothing — always works |
 
+### AWS with the plugin
+
+Opsphere plugin AWS integration uses **IAM Access Key + Secret Access Key** — not AWS SSO. Say _"Configure my AWS"_ to store your keys on the gateway (encrypted). After setup, ask things like _"List my S3 buckets"_ or _"Who am I in AWS?"_ — the agent calls `aws_cli_query` / `aws_sts_whoami` **without** SSO or `profile`. Local `aws sso login` on your laptop does not apply; tools run on the remote gateway. Specify AWS region in your request when needed (default region is not stored during setup).
+
 > Full tool catalog on paid plans — including Kubernetes, ArgoCD, Azure Service Bus, Akamai, Confluence, and more.
 
 ---
@@ -102,6 +106,8 @@ mcp-cursor.opsphere.io/mcp      ← ALL tool execution happens here
 | `"What GitHub Actions ran on main today?"` | Lists latest workflow runs with status |
 | `"Show my usage"` | Displays plan, trial status, and daily tool calls |
 | `"Which integrations do I have set up?"` | Lists configured vs. pending providers |
+| `"Configure my AWS"` | Guided IAM key setup (Access Key + Secret Key — not SSO) |
+| `"List my S3 buckets"` | Read-only `aws_cli_query` using configured keys (no SSO step) |
 | `"Do we have memory about this outage?"` | `memory_search` (when the memory module is enabled for your tenant) |
 | `"Save this investigation for next time"` | `memory_store` — short distilled summary, not raw logs |
 
