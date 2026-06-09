@@ -59,12 +59,28 @@ If a tool returns an error about missing credentials or an unconfigured provider
 
 ---
 
+## Integration credentials — agent rules (mandatory)
+
+When a user needs to connect Datadog, Vercel, AWS, GitHub, or any other provider:
+
+1. **Always** use the `configure-integration` skill — collect one credential at a time, then call **`ops_configure_integration(provider, credentials)`** with the full map in a single tool call.
+2. **Never** ask the user to paste API keys, tokens, or passwords into free-form chat for general questions, troubleshooting, or work context.
+3. **Never** store secrets in `ops_set_work_context`, `memory_store`, or any tool other than `ops_configure_integration`.
+4. **Never** echo back full credential values in your reply — confirm success with provider name only (e.g. "Datadog connected").
+5. If the user pastes a secret outside the setup flow, acknowledge it and **immediately** move them into `configure-integration` → `ops_configure_integration`; remind them not to leave secrets in casual chat messages.
+
+Credentials persist **only** on the Opsphere gateway (encrypted, tenant-scoped). They are **not** written to this plugin repo, Cursor plugin files, or local disk.
+
+---
+
 ## When to Suggest Signup / Re-login
 
 If the MCP connection fails with **401 Unauthorized** or tools are not visible:
 
 - The user likely has not set up an account yet, or their token has expired (tokens last 24 hours).
-- Suggest: "It looks like you need to authenticate. Say **'Set up my Opsphere account'** or run `/opsphere-setup`."
+- Suggest: "It looks like you need to authenticate. Say **'Set up my Opsphere account'**, run **`/opsphere-setup`**, or **`/opsphere-welcome`** for a quick start."
+
+For brand-new installs (no Connect yet), you may suggest **`/opsphere-welcome`** before full setup — it lists example prompts without running any shell scripts.
 
 ---
 
@@ -144,5 +160,5 @@ If `memory_*` tools are missing from `tools/list`, the tenant does not have memo
 
 - Never invent tool names. Only call tools that exist in the list above.
 - Never ask the user to edit `mcp.json` or configure the MCP transport manually — the plugin handles this.
-- Credentials are stored securely in the backend, never locally. Do not ask users to paste credentials into the chat directly — guide them through `ops_configure_integration`.
+- **Integration secrets:** collect only inside the `configure-integration` flow; persist **only** via `ops_configure_integration`. Never in free-form chat, work context, or memory. Never stored locally or in this repo.
 - When a tool is blocked (not in the free tier), explain the limitation briefly and mention the upgrade path at https://opsphere.io/pricing.

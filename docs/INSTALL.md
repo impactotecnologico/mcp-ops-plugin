@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - [Cursor IDE](https://cursor.com) version 0.50.0 or later.
-- An internet connection (the plugin communicates with the Opsphere gateway).
+- An internet connection — Opsphere is a **remote MCP** plugin; all tools run on `https://mcp-cursor.opsphere.io` (see [REMOTE-MCP-ARCHITECTURE.md](REMOTE-MCP-ARCHITECTURE.md)).
 
 ---
 
@@ -16,7 +16,24 @@ Install Opsphere from the Cursor Marketplace:
 3. Search for **Opsphere**.
 4. Click **Install**.
 
----
+After install, type **`/opsphere-welcome`** in chat for a quick start guide (or **`/opsphere-setup`** for full onboarding). The plugin does **not** run shell scripts on workspace open.
+
+### Test locally (before marketplace install)
+
+Cursor’s [plugin submission checklist](https://cursor.com/docs/reference/plugins) expects the plugin to be tested locally. From a clone of this repository:
+
+```bash
+git clone https://github.com/impactotecnologico/mcp-ops-plugin.git
+cd mcp-ops-plugin
+npm test   # optional: same validation as CI
+
+mkdir -p ~/.cursor/plugins/local
+cp -R . ~/.cursor/plugins/local/opsphere
+```
+
+Then in Cursor: **Reload Window** (`Cmd+Shift+P` → Reload Window) → **Settings → MCP** → connect **Opsphere** → type **`/opsphere-welcome`** in chat.
+
+To remove the local copy: `rm -rf ~/.cursor/plugins/local/opsphere` and reload again.
 
 ## Step 2 — Connect your account
 

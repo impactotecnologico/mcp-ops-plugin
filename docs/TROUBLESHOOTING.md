@@ -92,15 +92,16 @@
 
 ---
 
-## Welcome message doesn't appear on workspace open
+## Getting started after install
 
-**Symptom**: The welcome banner doesn't show when you open a workspace.
+**Symptom**: You don't see a welcome banner when opening a workspace.
 
-**Cause**: The `workspaceOpen` hook may not have run, or the hook isn't supported in your version of Cursor.
+**Expected behavior**: Opsphere does **not** run shell scripts on workspace open (removed for security review). Instead:
 
-**Fix**: This is cosmetic — the plugin still works normally. You can just start using the agent directly.
+1. Type **`/opsphere-welcome`** in chat for quick tips and example prompts.
+2. Or **`/opsphere-setup`** for full OAuth + integration onboarding.
 
----
+See [INSTALL.md](INSTALL.md) step 1.
 
 ## Still stuck?
 

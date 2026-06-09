@@ -8,10 +8,12 @@ description: Connect Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucke
 This skill guides users through connecting their third-party services to Opsphere.
 It uses four MCP tools from the backend:
 
-- `ops_configure_integration(provider, credentials)` — stores credentials securely
-- `ops_list_integrations()` — shows configured vs. pending providers
+- `ops_configure_integration(provider, credentials)` — **the only tool that persists integration secrets** on the gateway (encrypted, tenant-scoped)
+- `ops_list_integrations()` — shows configured vs. pending providers (masked previews only)
 - `ops_test_integration(provider)` — verifies credentials actually work
 - `ops_remove_integration(provider)` — removes all credentials for a provider
+
+> **Security:** Collect credentials one at a time in conversation, but pass them to the gateway **only** in `ops_configure_integration`. Do not ask users to paste keys in unrelated messages, work context, or memory.
 
 ## General Flow
 

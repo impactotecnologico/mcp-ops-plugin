@@ -2,8 +2,9 @@
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/impactotecnologico/mcp-ops-plugin/releases)
+[![Version](https://img.shields.io/badge/version-1.0.1-blue)](https://github.com/impactotecnologico/mcp-ops-plugin/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![CI](https://github.com/impactotecnologico/mcp-ops-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/impactotecnologico/mcp-ops-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
 
 ![Opsphere banner](assets/banners/banner1-dark.png)
@@ -12,46 +13,58 @@
 
 ## What is Opsphere?
 
-Opsphere is a DevOps operational intelligence plugin for Cursor. It connects your monitoring, deployment, and issue-tracking tools to the AI agent so you can ask in natural language:
+Opsphere is a **thin client** DevOps plugin for Cursor: rules, skills, and `mcp.json` only — **all MCP tools run on the remote Opsphere gateway** (`mcp-cursor.opsphere.io`). It connects your monitoring, deployment, and issue-tracking tools to the AI agent so you can ask in natural language:
 
 - _"Search Datadog logs for payment errors in the last hour"_
 - _"What's failing in Sentry right now?"_
 - _"Check DNS for mysite.com across all resolvers"_
 - _"Diagnose the failed Bitbucket pipeline"_
 
-Everything runs through a **secure remote MCP server**. No credentials are stored locally. No backend code is bundled in the plugin. Authentication uses OAuth2 + PKCE — Cursor manages the token automatically.
+Everything runs through a **secure remote MCP server** — intentional by design. No tool logic in the plugin bundle. No credentials stored locally. OAuth2 + PKCE via Cursor Connect.
+
+Architecture diagram and domain list: **[docs/REMOTE-MCP-ARCHITECTURE.md](docs/REMOTE-MCP-ARCHITECTURE.md)**.
 
 ---
 
 ## Quick Start
 
 1. **Install** Opsphere from the Cursor Marketplace.
-2. **Connect**: click **Connect** next to Opsphere in **Cursor Settings → MCP**. A browser window opens — sign up (free, no card needed) or log in. Cursor stores the token automatically.
-3. **Connect your tools**: say _"Configure my Datadog"_ — the agent asks for credentials and sets everything up.
-4. **Start asking**: say _"Check DNS for mysite.com"_ or _"Show my Vercel deploys"_ — you're live.
+2. **Welcome**: type **`/opsphere-welcome`** in chat (or **`/opsphere-setup`** for full onboarding) — see example prompts and next steps.
+3. **Connect**: click **Connect** next to Opsphere in **Cursor Settings → MCP**. A browser window opens — sign up (free, no card needed) or log in. Cursor stores the token automatically.
+4. **Connect your tools**: say _"Configure my Datadog"_ — the agent walks you through setup and sends credentials **only** via `ops_configure_integration` on the gateway (never stored in this repo or in Cursor's plugin files).
+5. **Start asking**: say _"Check DNS for mysite.com"_ or _"Show my Vercel deploys"_ — you're live.
 
-> **Network tools** (`dns_lookup`, `http_check`, `cert_status`) work immediately after step 2 — no integration setup needed.
+> **Network tools** (`dns_lookup`, `http_check`, `cert_status`) work immediately after step 3 — no integration setup needed.
+
+### Slash commands (type in chat)
+
+| Command | When to use |
+|---------|-------------|
+| **`/opsphere-welcome`** | Just installed — quick tips and example prompts |
+| **`/opsphere-setup`** | First-run OAuth + first integration (step by step) |
+| **`/integration-status`** | See which providers are connected |
+
+No shell scripts run automatically when you open a workspace — you invoke these commands yourself.
+
+**Developers / reviewers:** to test from source before marketplace install, see [docs/INSTALL.md](docs/INSTALL.md#test-locally-before-marketplace-install) (`~/.cursor/plugins/local/opsphere`).
 
 ---
 
 ## How It Works
 
+Remote MCP: Cursor calls **one endpoint** — `https://mcp-cursor.opsphere.io/mcp`. See [docs/REMOTE-MCP-ARCHITECTURE.md](docs/REMOTE-MCP-ARCHITECTURE.md) for the full flow and domain list.
+
 ```
 You (Cursor chat)
       │
       ▼
-Opsphere MCP plugin          ← rules, skills, commands bundled here
-      │   (OAuth2 token)
+Opsphere plugin (thin client)   ← rules, skills, commands — MIT, no tool code
+      │   OAuth2 Bearer token (Cursor-managed)
       ▼
-Opsphere Gateway             ← validates token, routes tool calls
+mcp-cursor.opsphere.io/mcp      ← ALL tool execution happens here
       │
-      ├── Datadog API
-      ├── Vercel API
-      ├── GitHub / Bitbucket
-      ├── Cloudflare
-      ├── Jira / Sentry
-      ├── AWS
-      └── DNS / HTTP / TLS   ← always available, no credentials needed
+      ├── Datadog / Vercel / GitHub / AWS / …  (server-side only)
+      └── DNS / HTTP / TLS built-ins
 ```
 
 ---
@@ -131,14 +144,26 @@ After your trial, upgrade at [opsphere.io/pricing](https://opsphere.io/pricing) 
 
 ---
 
-## Security
+## Security & Trust
 
-- **OAuth2 Authorization Code + PKCE** — industry-standard authentication. You sign in via a browser window; Cursor manages the token automatically.
-- **Encrypted per-tenant storage** — credentials are isolated per account; no cross-tenant access is possible.
-- **HTTPS only** — no credentials are ever logged or returned to the plugin.
-- **Refresh-token rotation** — access tokens are short-lived and renewed automatically by Cursor without daily re-login.
-- **No local storage** — no credentials are stored in Cursor or on your machine.
-- **Open-source client** — the plugin (MIT). The backend is proprietary SaaS.
+Opsphere is a **remote MCP SaaS**: this repo is the open-source Cursor client (MIT); tool execution and credential storage run on [mcp-cursor.opsphere.io](https://mcp-cursor.opsphere.io).
+
+| Topic | Summary |
+|-------|---------|
+| **Authentication** | OAuth 2.0 + PKCE via Cursor Connect — no secrets in the plugin bundle |
+| **Credentials** | Sent **only** via `ops_configure_integration`; encrypted at rest on gateway; **never** in plugin repo or Cursor plugin files |
+| **Transport** | HTTPS only; credential values not logged; `ops_list_integrations` shows masked previews only |
+| **Your code** | Not sent to Opsphere unless you paste it in chat |
+| **Revocation** | Disconnect MCP, `ops_remove_integration`, or email [contact@opsphere.io](mailto:contact@opsphere.io) for account deletion |
+| **Bundle hygiene** | Markdown + JSON only — **no secrets, no install hooks, no exfiltration code** in the plugin package |
+
+**Automated verification (public repo):** every push/PR runs [`scripts/ci-validate.sh`](scripts/ci-validate.sh) (manifest + hygiene checks) and **Gitleaks** (full-history secret scan) via [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Run locally: `npm test`.
+
+> Cursor security review: *"Security agent confirmed no secrets, no install hooks, no exfiltration in bundle."*
+
+Full details: **[SECURITY.md](SECURITY.md)** (encryption, retention, isolation, vulnerability reporting). Marketplace copy-paste: **[docs/SECURITY-AND-TRUST.md](docs/SECURITY-AND-TRUST.md)**.
+
+**Legal:** [Privacy Policy](https://opsphere.io/privacy) · [Terms of Service](https://opsphere.io/terms) · [docs/PRIVACY.md](docs/PRIVACY.md)
 
 ---
 
@@ -197,9 +222,10 @@ See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for the full guide.
 
 | Topic | Detail |
 |-------|--------|
-| **Sent to Opsphere** | OAuth tokens (via Cursor), tool parameters, integration credentials you configure in chat, usage metadata for plan limits |
+| **Sent to Opsphere** | OAuth tokens (via Cursor), tool parameters, integration credentials **only via `ops_configure_integration`**, usage metadata |
+| **Not stored locally** | Integration secrets never persist in this repo, the plugin bundle, or workspace plugin files |
 | **Not sent** | Your workspace source code (unless you paste it in chat) |
-| **Stored server-side** | Integration credentials encrypted per account on Opsphere |
+| **Stored server-side** | Integration credentials encrypted per tenant on Opsphere; audit events for configure/remove (no secret values in logs) |
 | **Full policy** | [docs/PRIVACY.md](docs/PRIVACY.md) · [opsphere.io/privacy](https://opsphere.io/privacy) |
 
 ---
@@ -221,8 +247,10 @@ Removing the plugin does not automatically delete your Opsphere account or serve
 - **Pricing**: [opsphere.io/pricing](https://opsphere.io/pricing)
 - **Status**: [status.opsphere.io](https://status.opsphere.io)
 - **Support**: [contact@opsphere.io](mailto:contact@opsphere.io)
+- **Architecture (remote MCP)**: [docs/REMOTE-MCP-ARCHITECTURE.md](docs/REMOTE-MCP-ARCHITECTURE.md)
+- **Security & Trust**: [SECURITY.md](SECURITY.md) · [docs/SECURITY-AND-TRUST.md](docs/SECURITY-AND-TRUST.md)
 - **Privacy**: [docs/PRIVACY.md](docs/PRIVACY.md) · [opsphere.io/privacy](https://opsphere.io/privacy)
-- **Security**: [SECURITY.md](SECURITY.md)
+- **Security policy (vulnerabilities)**: [SECURITY.md](SECURITY.md)
 - **Terms**: [opsphere.io/terms](https://opsphere.io/terms)
 
 ---
@@ -230,3 +258,7 @@ Removing the plugin does not automatically delete your Opsphere account or serve
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+---
+
+Opsphere is an independent product; not affiliated with or endorsed by Cursor/Anysphere.
