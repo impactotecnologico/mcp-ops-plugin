@@ -90,6 +90,9 @@ usage.json
 # Plugin Cursor — internals
 _internal/
 
+# Infra — deps Python vendoreadas en Lambda (no código nuestro)
+**/lambda_package/
+
 # Docs y specs (README.md en raíz NO coincide con docs/ → sigue indexándose)
 docs/
 openspec/
