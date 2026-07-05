@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-07-05
+
+### Changed
+
+- Version bump to **1.0.3** for publish (`v1.0.2` tag already existed on another commit).
+
 ## [1.0.2] - 2026-07-05
 
 ### Added
