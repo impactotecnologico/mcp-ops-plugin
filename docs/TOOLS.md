@@ -62,9 +62,11 @@ Remove all stored credentials for a provider.
 ## Plan & Usage [built-in]
 
 ### `ops_my_usage`
-Show current plan, trial end date, days remaining, daily tool call usage, work context status, and upgrade link.
+Show current plan (`Community`, `Team`, …), trial end date, days remaining, daily and monthly tool usage, enabled MCP tool count, work context status, and upgrade link.
 
 **Example**: _"Show my Opsphere usage"_ or _"How many tool calls do I have left today?"_
+
+See **[docs/PLANS.md](PLANS.md)** for tier comparison.
 
 ### `ops_set_work_context`
 Save what you usually work with (projects, providers, environments) so Opsphere personalizes answers. Free-tier accounts only. No API keys.

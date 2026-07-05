@@ -121,12 +121,31 @@ If the gateway returns error code `RATE_LIMIT_EXCEEDED`:
 
 ---
 
+## Read-Only Plan (READ_ONLY_PLAN)
+
+If the gateway returns error code `READ_ONLY_PLAN`:
+
+- The user's **Community** plan blocks mutating tools (CDN writes, cache purge, workflow dispatch, etc.).
+- Suggest upgrade at **https://opsphere.io/pricing** for write access.
+- Do not retry with the same tool.
+
+---
+
+## Single Environment (SINGLE_ENVIRONMENT_ONLY)
+
+If the gateway returns error code `SINGLE_ENVIRONMENT_ONLY`:
+
+- **Community** allows one environment per request (e.g. `envs: ["INT"]` only).
+- Ask the user to narrow the scope or upgrade for multi-env comparison.
+
+---
+
 ## Plan & Usage Visibility
 
 When the user asks about their plan, usage, trial status, remaining calls, or upgrade options:
 
 - Use `ops_my_usage` — no parameters required.
-- It returns: plan name, trial end date, days remaining, daily usage (used / limit / resets at), configured integrations count, and upgrade link.
+- It returns: plan name, trial end date, days remaining, daily usage (used / limit / resets at), **monthly usage (UTC month)**, enabled MCP tool count, configured integrations, and upgrade link.
 
 ---
 
@@ -172,6 +191,14 @@ Default scopes for partners: **session** + **user**. Use `scope=repository` only
 Do **not** store text that duplicates account catalog context (`cloud_accounts.system_prompt_context`). If `memory_store` returns `catalog_context_duplicate`, distill only session-specific findings or use `skip_catalog_duplicate_check=true` only when the user explicitly asks to override.
 
 If `memory_*` tools are missing from `tools/list`, the tenant does not have memory enabled — do not invent the tools; tell the user to contact Opsphere support or check signup plan.
+
+---
+
+## Subagent delegation
+
+For **site-down**, widespread failures, or multi-step incident triage, delegate to the **`outage-triage`** subagent (`/outage-triage` or "use outage-triage") instead of running the full flow in the main thread. It runs read-only, isolates verbose tool output, and returns a structured verdict with evidence.
+
+Do not delegate simple single-tool requests (one `http_check`, one `dd_logs_search`) — handle those inline.
 
 ---
 

@@ -1,7 +1,7 @@
 {
   "name": "opsphere",
   "displayName": "Opsphere — DevOps Intelligence",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Thin client for Opsphere — all MCP tools run on the remote gateway (mcp-cursor.opsphere.io). Query logs, diagnose incidents, and manage Datadog, Vercel, GitHub, AWS, and more from Cursor. OAuth2 + PKCE; no backend code in the bundle.",
   "author": {
     "name": "Opsphere",

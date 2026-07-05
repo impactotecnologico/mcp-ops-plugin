@@ -51,12 +51,32 @@
 
 **Symptom**: A tool call returns `RATE_LIMIT_EXCEEDED`.
 
-**Cause**: You have reached your daily limit of 100 tool calls (free plan).
+**Cause**: You have reached your daily limit of 100 tool calls (Community plan).
 
 **Fix**:
 - Wait until midnight UTC — the counter resets daily.
-- Run `ops_my_usage` to see your current usage.
+- Run `ops_my_usage` to see daily and monthly usage.
 - Upgrade at **https://opsphere.io/pricing** for unlimited tool calls.
+
+---
+
+## READ_ONLY_PLAN error
+
+**Symptom**: A tool call returns `READ_ONLY_PLAN`.
+
+**Cause**: Community plan blocks mutating tools (writes to CDN, cache purge, workflow dispatch, etc.).
+
+**Fix**: Upgrade at **https://opsphere.io/pricing** for Team/Professional write access.
+
+---
+
+## SINGLE_ENVIRONMENT_ONLY error
+
+**Symptom**: A tool call returns `SINGLE_ENVIRONMENT_ONLY`.
+
+**Cause**: Community allows one environment per request (e.g. comparing INT and PRD in one call).
+
+**Fix**: Retry with a single `env` / one entry in `envs`, or upgrade for multi-environment workflows.
 
 ---
 
