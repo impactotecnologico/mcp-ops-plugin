@@ -102,6 +102,24 @@
 
 ---
 
+## AWS: "Error loading SSO Token" or SSO-related failures
+
+**Symptom**: `ops_test_integration(provider: "aws")` passes, but `aws_cli_query` or `aws_sts_whoami` fails with `Error loading SSO Token`, missing SSO session, or similar.
+
+**Cause**: The agent tried to use AWS SSO or passed a `profile` parameter. Plugin AWS integration uses **static IAM access keys** (Access Key ID + Secret Access Key), not SSO. SSO login tools are not available on the free plugin tier. Local `aws sso login` on your machine does not affect Opsphere — AWS CLI runs on the remote gateway.
+
+**Fix**:
+
+1. Confirm AWS is configured: say _"Configure my AWS"_ or run `/integration-status`.
+2. Ask the agent to retry **without** `profile`, for example:
+   - `aws_sts_whoami` (no parameters)
+   - `aws_cli_query` with `command: "sts get-caller-identity"` (no `profile`)
+3. For regional queries, specify region in the CLI command (e.g. `--region eu-west-1`) — default region is not stored during setup.
+
+**Example prompt**: _"List my S3 buckets using my configured AWS keys — no SSO, no profile."_
+
+---
+
 ## Agent says it can't find a tool
 
 **Symptom**: You ask the agent to do something (e.g., "check Kubernetes pods") and it says it doesn't have that capability.

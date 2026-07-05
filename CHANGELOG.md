@@ -8,8 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [1.0.3] - 2026-07-05
 
+### Added
+
+- **`outage-triage` subagent** (`agents/outage-triage.md`) — read-only site-down and incident triage with structured evidence and verdict.
+- Onboarding rule: delegate multi-step outages to `outage-triage`.
+
+### Removed
+
+- Internal **CodeGraphContext** rule and `.cgcignore` — maintainer-only; not part of the public thin-client bundle.
+
 ### Changed
 
+- Merge `main` (AWS docs, CI checklist, security docs) with Community plans release.
 - Version bump to **1.0.3** for publish (`v1.0.2` tag already existed on another commit).
 
 ## [1.0.2] - 2026-07-05
@@ -22,11 +32,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - **CI submission checklist:** `ci-validate.sh` validates commands/skills frontmatter, logo files, manifest path hygiene, and version sync between `plugin.json` and `marketplace.json`.
 - **MCP governance** note in [docs/SECURITY-AND-TRUST.md](docs/SECURITY-AND-TRUST.md) (enterprise blocklist behavior).
 - **Network tools policy** in [SECURITY.md](SECURITY.md) — gateway-only execution, rate limits, legitimate SRE use.
+- README AWS section: IAM key setup (not SSO), example prompts for `aws_cli_query`.
+- `configure-integration` skill: AWS verification checklist and post-setup query guidance.
 
 ### Changed
 
 - README Community section: ~30 tools, ~215 full catalog (was outdated "139 tools").
 - `ops_my_usage` description aligned with gateway output.
+- `/opsphere-welcome` command: AWS setup and S3 example prompts.
 
 ## [1.0.1] - 2026-06-09
 

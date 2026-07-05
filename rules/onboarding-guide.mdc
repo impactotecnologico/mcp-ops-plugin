@@ -73,6 +73,23 @@ Credentials persist **only** on the Opsphere gateway (encrypted, tenant-scoped).
 
 ---
 
+## AWS — agent rules (mandatory)
+
+Plugin AWS integration uses **static IAM access keys** configured via `ops_configure_integration`. It is **not** AWS SSO.
+
+1. **Do not** pass `profile` to `aws_sts_whoami` or `aws_cli_query` unless the user's plan explicitly includes SSO and they have completed an SSO login flow.
+2. **Do not** call `aws_sso_login*`, `aws_session_status`, or other SSO session tools for plugin users — they are **not available** on the free plugin tier.
+3. **Do not** ask the user to run `aws sso login` locally — Opsphere runs AWS CLI on the remote gateway, not on the user's machine.
+4. **Region**: default region is **not** stored during AWS setup (only Access Key + Secret Key). Omit `region` unless the user specifies one; when needed, pass it in the CLI command (e.g. `s3api list-buckets --region eu-west-1`) or as the tool's `region` parameter if supported.
+5. After `ops_test_integration(provider: "aws")` succeeds, run this **verification checklist** before telling the user AWS is ready:
+   - `aws_sts_whoami` — **no** `profile`
+   - `aws_cli_query` with `command: "sts get-caller-identity"` — **no** `profile`
+6. For natural-language requests (e.g. _"List my S3 buckets"_), go directly to `aws_cli_query` with the appropriate read-only CLI command — **no** SSO setup step.
+
+If `aws_cli_query` fails with **"Error loading SSO Token"**, the agent attempted SSO or passed a `profile` by mistake. Retry **without** `profile` using the configured IAM keys.
+
+---
+
 ## When to Suggest Signup / Re-login
 
 If the MCP connection fails with **401 Unauthorized** or tools are not visible:
@@ -142,6 +159,8 @@ Users might say things like:
 - "Is example.com up?" — triggers `dns_lookup` + `http_check` + `cert_status`
 - "Check the SSL cert for api.mycompany.com"
 - "Configure my Datadog" — triggers the `configure-integration` skill
+- "Configure my AWS" — IAM Access Key + Secret Key (not SSO)
+- "List my S3 buckets" — `aws_cli_query` directly after AWS is configured (no SSO step)
 - "Tell Opsphere what I usually work with" — triggers the `set-work-context` skill
 - "Show PR #42 status in Bitbucket"
 - "Find Jira issues assigned to me"
@@ -172,6 +191,14 @@ Default scopes for partners: **session** + **user**. Use `scope=repository` only
 Do **not** store text that duplicates account catalog context (`cloud_accounts.system_prompt_context`). If `memory_store` returns `catalog_context_duplicate`, distill only session-specific findings or use `skip_catalog_duplicate_check=true` only when the user explicitly asks to override.
 
 If `memory_*` tools are missing from `tools/list`, the tenant does not have memory enabled — do not invent the tools; tell the user to contact Opsphere support or check signup plan.
+
+---
+
+## Subagent delegation
+
+For **site-down**, widespread failures, or multi-step incident triage, delegate to the **`outage-triage`** subagent (`/outage-triage` or "use outage-triage") instead of running the full flow in the main thread. It runs read-only, isolates verbose tool output, and returns a structured verdict with evidence.
+
+Do not delegate simple single-tool requests (one `http_check`, one `dd_logs_search`) — handle those inline.
 
 ---
 

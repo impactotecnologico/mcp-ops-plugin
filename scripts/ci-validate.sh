@@ -147,8 +147,8 @@ def fail(msg: str) -> None:
     print(f"FAIL: {msg}")
 
 
-# 11. Frontmatter name + description on commands/ and skills/
-for pattern in ("commands/*.md", "skills/*/SKILL.md"):
+# 11. Frontmatter name + description on commands/, skills/, and agents/
+for pattern in ("commands/*.md", "skills/*/SKILL.md", "agents/*.md"):
     for path in sorted(glob.glob(os.path.join(ROOT, pattern))):
         rel = os.path.relpath(path, ROOT)
         with open(path, encoding="utf-8") as f:
@@ -167,7 +167,7 @@ for pattern in ("commands/*.md", "skills/*/SKILL.md"):
             fail(f"frontmatter missing description: {rel}")
 
 if not failures:
-    print("OK: commands/skills frontmatter (name + description)")
+    print("OK: commands/skills/agents frontmatter (name + description)")
 
 # 12. Logo referenced in manifests exists
 with open(os.path.join(ROOT, ".cursor-plugin/plugin.json"), encoding="utf-8") as f:
