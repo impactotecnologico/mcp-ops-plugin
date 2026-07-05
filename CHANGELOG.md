@@ -6,11 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-07-05
+
 ### Added
 
+- **Commercial plans doc:** [docs/PLANS.md](docs/PLANS.md) — Community vs Professional vs Team vs Enterprise.
+- Onboarding rule: `READ_ONLY_PLAN` and `SINGLE_ENVIRONMENT_ONLY` error handling.
+- `ops_my_usage` docs: monthly usage, enabled tool count, plan display names.
 - **CI submission checklist:** `ci-validate.sh` validates commands/skills frontmatter, logo files, manifest path hygiene, and version sync between `plugin.json` and `marketplace.json`.
 - **MCP governance** note in [docs/SECURITY-AND-TRUST.md](docs/SECURITY-AND-TRUST.md) (enterprise blocklist behavior).
 - **Network tools policy** in [SECURITY.md](SECURITY.md) — gateway-only execution, rate limits, legitimate SRE use.
+
+### Changed
+
+- README Community section: ~30 tools, ~215 full catalog (was outdated "139 tools").
+- `ops_my_usage` description aligned with gateway output.
 
 ## [1.0.1] - 2026-06-09
 

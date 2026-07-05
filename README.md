@@ -2,7 +2,7 @@
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Version](https://img.shields.io/badge/version-1.0.1-blue)](https://github.com/impactotecnologico/mcp-ops-plugin/releases)
+[![Version](https://img.shields.io/badge/version-1.0.2-blue)](https://github.com/impactotecnologico/mcp-ops-plugin/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/impactotecnologico/mcp-ops-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/impactotecnologico/mcp-ops-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
@@ -131,16 +131,19 @@ mcp-cursor.opsphere.io/mcp      ← ALL tool execution happens here
 
 ---
 
-## Free Plan
+## Community Plan (free trial)
 
-Opsphere includes a **30-day free trial** with no credit card required:
+Opsphere includes a **30-day Community trial** with no credit card required:
 
+- **~30 MCP tools** (read-focused DevOps + memory + integration setup)
 - **100 tool calls per day** (resets at midnight UTC)
-- All **8 integrations** above (up to 2 tools per provider)
-- **Network diagnostics** (`dns_lookup`, `http_check`, `cert_status`) — unlimited, no setup
-- **`ops_my_usage`** — check plan status and daily usage at any time
+- **8 core integrations** (Datadog, Vercel, GitHub, Bitbucket, Cloudflare, Sentry, Jira, AWS)
+- **Network diagnostics** (`dns_lookup`, `http_check`, `cert_status`) — no setup required
+- **`ops_my_usage`** — plan name, trial, daily/monthly usage, tool count, upgrade link
 
-After your trial, upgrade at [opsphere.io/pricing](https://opsphere.io/pricing) to unlock the full tool catalog (139 tools), unlimited daily calls, and premium providers.
+After your trial, upgrade at [opsphere.io/pricing](https://opsphere.io/pricing) for the **full catalog (~215 tools)**, unlimited daily calls, write access, and premium providers (Kubernetes, ArgoCD, Azure, Akamai, Pingdom, …).
+
+Full comparison: **[docs/PLANS.md](docs/PLANS.md)**.
 
 ---
 

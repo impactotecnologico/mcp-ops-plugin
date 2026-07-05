@@ -104,12 +104,31 @@ If the gateway returns error code `RATE_LIMIT_EXCEEDED`:
 
 ---
 
+## Read-Only Plan (READ_ONLY_PLAN)
+
+If the gateway returns error code `READ_ONLY_PLAN`:
+
+- The user's **Community** plan blocks mutating tools (CDN writes, cache purge, workflow dispatch, etc.).
+- Suggest upgrade at **https://opsphere.io/pricing** for write access.
+- Do not retry with the same tool.
+
+---
+
+## Single Environment (SINGLE_ENVIRONMENT_ONLY)
+
+If the gateway returns error code `SINGLE_ENVIRONMENT_ONLY`:
+
+- **Community** allows one environment per request (e.g. `envs: ["INT"]` only).
+- Ask the user to narrow the scope or upgrade for multi-env comparison.
+
+---
+
 ## Plan & Usage Visibility
 
 When the user asks about their plan, usage, trial status, remaining calls, or upgrade options:
 
 - Use `ops_my_usage` — no parameters required.
-- It returns: plan name, trial end date, days remaining, daily usage (used / limit / resets at), configured integrations count, and upgrade link.
+- It returns: plan name, trial end date, days remaining, daily usage (used / limit / resets at), **monthly usage (UTC month)**, enabled MCP tool count, configured integrations, and upgrade link.
 
 ---
 
