@@ -37,7 +37,7 @@ Confirm briefly and suggest the next step (e.g. "Configure my Datadog").
 
 ## Good examples
 
-- "SaaS on Vercel + Datadog. Prod project `acme-storefront-prod`. Jira project BEC. No Kubernetes."
+- "SaaS on Vercel + Datadog. Prod project `acme-storefront-prod`. Jira project PROJ. No Kubernetes."
 - "AWS eu-west-1, ECS only. Bitbucket workspace `acmecorp`. Escalate prod issues to #platform-oncall."
 
 ## Avoid

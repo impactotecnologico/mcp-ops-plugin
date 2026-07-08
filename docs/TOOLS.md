@@ -194,7 +194,7 @@ Show the latest workflow run for a repository.
 
 Auto-diagnose the latest failed workflow: finds the failed run, identifies failed jobs/steps, returns log excerpts.
 
-**Example**: _"Why did GitHub Actions fail on storefront-next?"_
+**Example**: _"Why did GitHub Actions fail on my-app?"_
 
 **Tip**: On paid plans, **`/ci-investigator`** runs this plus PR/deploy correlation in one structured report.
 
@@ -245,7 +245,7 @@ Requires: `JIRA_DOMAIN`, `JIRA_EMAIL`, `JIRA_API_TOKEN`.
 ### `jira_issue_get`
 Fetch a Jira issue by key.
 
-**Example**: _"Get Jira issue BEC-1234"_
+**Example**: _"Get Jira issue PROJ-1234"_
 
 ---
 

@@ -5,7 +5,7 @@ Paid plans are provisioned by Opsphere — not self-serve Sign up.
 
 | | **Community** | **Professional** | **Team** | **Enterprise** |
 |---|:---:|:---:|:---:|:---:|
-| **Who** | Sign up / OAuth (individual) | Small teams (contact sales) | Org tenants (e.g. Breitling) | Custom contracts |
+| **Who** | Sign up / OAuth (individual) | Small teams (contact sales) | Org tenants (invite) | Custom contracts |
 | **MCP tools** | ~30 read-focused | Expanded catalog | Full catalog (~215) | Full + custom |
 | **Daily tool calls** | 100 / day (UTC) | Unlimited | Unlimited | Unlimited |
 | **Trial** | 30 days | — | — | — |
@@ -39,7 +39,7 @@ Contact sales via [opsphere.io/pricing](https://opsphere.io/pricing).
 
 ## Team / Enterprise (invite)
 
-Your org admin provisions access (e.g. `jose.ariza@breitling.com` → tenant `breitling`, plan `team`).
+Your org admin provisions access (e.g. `user@company.com` → tenant `acme-corp`, plan `team`).
 
 - Full tool surface (200+ tools in Cursor).
 - **`/ci-investigator`** subagent for multi-step CI failures (GitHub + Bitbucket).
