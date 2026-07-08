@@ -22,14 +22,14 @@ Copy or paraphrase the following:
 > - Or say: _"Set up my Opsphere account"_
 >
 > **Already connected? Try:**
-> - _"Is example.com up?"_ — DNS + HTTP + TLS (no setup needed)
+> - _"Is example.com up?"_ or **`/endpoint-health`** — DNS + HTTP + TLS for one host (all plans)
 > - _"Check my latest Vercel deploys"_
 > - _"Search Datadog logs for errors in the last hour"_
 > - _"Configure my Datadog"_
 > - _"Configure my AWS"_ — IAM Access Key + Secret Key (not SSO)
-> - _"List my S3 buckets"_ — after AWS is configured (no SSO step)
-> - _"Is the site down?"_ or **`/outage-triage`** — structured incident triage (read-only subagent)
-> - _"Why did CI fail on main?"_ or **`/ci-investigator`** — pipeline diagnosis (Professional / Team / Enterprise; Community gets upgrade info)
+> - _"Is the site down?"_ or **`/outage-triage`** — multi-step incident triage (all plans)
+> - _"Why did CI fail on main?"_ or **`/ci-investigator`** — pipeline diagnosis (Professional+; Community: upgrade info)
+> - _"Write a post-mortem"_ or **`/postmortem-writer`** — RCA + optional incident memory (all plans)
 > - **`/integration-status`** — see which providers are connected
 >
 > **Docs:** [INSTALL.md](../docs/INSTALL.md) · [TOOLS.md](../docs/TOOLS.md) · [TROUBLESHOOTING.md](../docs/TROUBLESHOOTING.md)
