@@ -2,7 +2,7 @@
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Version](https://img.shields.io/badge/version-1.0.3-blue)](https://github.com/impactotecnologico/mcp-ops-plugin/releases)
+[![Version](https://img.shields.io/badge/version-1.0.4-blue)](https://github.com/impactotecnologico/mcp-ops-plugin/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/impactotecnologico/mcp-ops-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/impactotecnologico/mcp-ops-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
@@ -44,7 +44,10 @@ Architecture diagram and domain list: **[docs/REMOTE-MCP-ARCHITECTURE.md](docs/R
 | **`/opsphere-setup`** | First-run OAuth + first integration (step by step) |
 | **`/integration-status`** | See which providers are connected |
 
-**Subagent:** for site-down or multi-step incident triage, ask _"use outage-triage"_ or type **`/outage-triage`** — read-only investigation with a structured verdict.
+**Subagents (read-only):**
+
+- **Incidents** — _`/outage-triage`_ — site-down and multi-step incident triage (all plans).
+- **CI** — _`/ci-investigator`_ — failed GitHub Actions / Bitbucket pipelines with structured root-cause reports (**Professional / Team / Enterprise**; Community users get upgrade guidance).
 
 No shell scripts run automatically when you open a workspace — you invoke these commands yourself.
 
@@ -103,7 +106,8 @@ Opsphere plugin AWS integration uses **IAM Access Key + Secret Access Key** — 
 | `"Show my latest Vercel deploys"` | Lists the last 3 deployments with status, branch, and timestamp |
 | `"Search Datadog logs for payment errors in the last hour"` | Queries Datadog Logs v2 with your filter |
 | `"What's failing in Sentry right now?"` | Lists unresolved issues by severity |
-| `"Diagnose the failed Bitbucket pipeline"` | Identifies the failed step and shows its log output |
+| `"Diagnose the failed Bitbucket pipeline"` | Community: `bb_pipeline_diagnose` inline; paid: delegate **`/ci-investigator`** for full report |
+| `"Why did GitHub Actions fail on main?"` | Paid: **`/ci-investigator`**; Community: `ghe_actions_latest` or upgrade at [pricing](https://opsphere.io/pricing) |
 | `"Find Jira issues assigned to me"` | Searches Jira with JQL and returns summaries |
 | `"What GitHub Actions ran on main today?"` | Lists latest workflow runs with status |
 | `"Show my usage"` | Displays plan, trial status, and daily tool calls |
@@ -128,7 +132,7 @@ Opsphere plugin AWS integration uses **IAM Access Key + Secret Access Key** — 
 | ![OAuth login](assets/screenshots/oauth-login.png) | ![OAuth signup](assets/screenshots/oauth-signup.png) |
 | *Sign in with your existing account — browser-based OAuth2.* | *New user? Create a free account in seconds — no credit card required.* |
 | ![OAuth redirect](assets/screenshots/oauth-redirect.png) | ![Connected](assets/screenshots/connected-success.png) |
-| *Cursor captures the OAuth callback automatically.* | *Connected — trial active, 33 tools and 19 prompts enabled.* |
+| *Cursor captures the OAuth callback automatically.* | *Connected — trial active, ~30 tools enabled.* |
 
 ### Tools in action
 

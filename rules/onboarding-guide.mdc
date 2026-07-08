@@ -165,10 +165,13 @@ Users might say things like:
 - "Show PR #42 status in Bitbucket"
 - "Find Jira issues assigned to me"
 - "What GitHub Actions ran today on the main branch?"
+- "Why did the pipeline fail on main?" — on paid plans, delegate to `ci-investigator`; on Community, `bb_pipeline_diagnose` or upgrade
+- "Diagnose the failed GitHub Actions workflow" — paid: `/ci-investigator`; Community: `ghe_actions_latest` inline or upgrade
 - "Show my usage" — triggers `ops_my_usage`
 - "Which integrations do I have configured?" — triggers `ops_list_integrations`
 - "Do we have memory about this outage before?" — `memory_search` with `scopes: ["incident"]` (and `repo` if known)
 - "Save this investigation summary for next time" — `memory_store` (`scope`: `user` or `session` for general notes; `incident` / `decision` for structured post-mortems)
+- "Write a post-mortem for today's outage" — delegate to **`postmortem-writer`** (asks for missing details; optional `memory_store` with `scope=incident`)
 
 ### Memory quick selection
 
@@ -196,9 +199,55 @@ If `memory_*` tools are missing from `tools/list`, the tenant does not have memo
 
 ## Subagent delegation
 
-For **site-down**, widespread failures, or multi-step incident triage, delegate to the **`outage-triage`** subagent (`/outage-triage` or "use outage-triage") instead of running the full flow in the main thread. It runs read-only, isolates verbose tool output, and returns a structured verdict with evidence.
+Opsphere ships read-only subagents in `agents/`. They are visible to all plans in Cursor; **plan gating** is enforced inside each subagent and by these rules.
+
+### Before delegating (mandatory when plan is unknown)
+
+1. Call **`ops_my_usage`** when you are about to delegate and do not already know the user's plan from this session.
+2. If `**Plan**: Community`, follow the per-subagent rules below — do **not** delegate premium subagents.
+3. If the user explicitly invokes `/ci-investigator` on Community, delegation is allowed; the subagent performs its own plan gate and returns the upgrade message.
+
+### Outage triage — all plans
+
+For **site-down**, widespread failures, or multi-step incident triage, delegate to **`outage-triage`** (`/outage-triage` or "use outage-triage") instead of running the full flow in the main thread. It runs read-only, isolates verbose tool output, and returns a structured verdict with evidence.
 
 Do not delegate simple single-tool requests (one `http_check`, one `dd_logs_search`) — handle those inline.
+
+### Endpoint health — all plans
+
+For **one hostname or URL** — reachability, DNS resolution, SSL/TLS expiry, or _"is X up?"_ — delegate to **`endpoint-health`** (`/endpoint-health` or "use endpoint-health") when the user wants a structured multi-step check (DNS + HTTP + cert).
+
+| Situation | Behavior |
+|-----------|----------|
+| Full structured check (DNS + HTTP + TLS) | Delegate to `endpoint-health` |
+| Single quick check | Inline: one `http_check`, `dns_lookup`, or `cert_status` |
+| Widespread outage or many services | Use **`outage-triage`**, not `endpoint-health` |
+
+`endpoint-health` adapts to `tools/list` (no plan gate). Community gets the core trio; paid plans may add `tcp_connect`, `dnssec_check`, Cloudflare, Pingdom, etc.
+
+### Post-mortem writer — all plans
+
+For **post-mortems**, **RCA summaries**, or **saving lessons learned** after an incident is understood, delegate to **`postmortem-writer`** (`/postmortem-writer` or "write a post-mortem").
+
+| Situation | Behavior |
+|-----------|----------|
+| User wants structured post-mortem or incident write-up | Delegate to `postmortem-writer` |
+| User wants to save investigation to memory | Delegate — subagent uses `memory_store` when approved |
+| Active outage still in progress | Use **`outage-triage`** first; post-mortem after resolution |
+| One-line "save this note" | Inline `memory_store` (`scope`: `user` or `session`) |
+
+`postmortem-writer` may **ask the user** clarifying questions (timeline, impact, root cause, action items). It adapts to `tools/list` for `memory_*` and optional read-only evidence; no plan gate.
+
+### CI investigator — Professional / Team / Enterprise only
+
+For **failed workflows**, **red pipelines**, or **multi-step CI diagnosis** (GitHub Actions + Bitbucket, PR correlation, structured root-cause report), delegate to **`ci-investigator`** (`/ci-investigator` or "use ci-investigator") on **paid** plans.
+
+| Plan | Behavior |
+|------|----------|
+| **Community** | **Do not delegate** to `ci-investigator` from the main agent. For a **single** Bitbucket repo, use `bb_pipeline_diagnose` inline. For GitHub, use `ghe_actions_latest` inline (no `ghe_actions_diagnose` on Community). For complex CI triage, suggest upgrade at **https://opsphere.io/pricing**. |
+| **Professional / Team / Enterprise** | Delegate to `ci-investigator` for multi-step CI failures. Do not delegate trivial status checks (one `ghe_actions_latest` or one `bb_pipelines_latest`) — handle inline. |
+
+The `ci-investigator` subagent calls `ops_my_usage` as step 0 and stops with an upgrade message on Community without running CI tools.
 
 ---
 

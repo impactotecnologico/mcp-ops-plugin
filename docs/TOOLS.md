@@ -174,6 +174,8 @@ Get a project summary including environment variables and latest deploys.
 
 Requires: `GHE_TOKEN` (and optionally `GHE_BASE_URL` for self-hosted instances).
 
+**Subagent (paid plans):** For failed workflows or multi-step CI triage on **Professional / Team / Enterprise**, use **`/ci-investigator`** — read-only structured report with `ghe_actions_diagnose`. Community: use `ghe_actions_latest` inline or upgrade; see [PLANS.md](PLANS.md).
+
 ### `ghe_repo_summary`
 Get a repository summary: default branch, latest commit, open PRs.
 
@@ -188,9 +190,21 @@ Show the latest workflow run for a repository.
 
 ---
 
+### `ghe_actions_diagnose` (Professional / Team / Enterprise)
+
+Auto-diagnose the latest failed workflow: finds the failed run, identifies failed jobs/steps, returns log excerpts.
+
+**Example**: _"Why did GitHub Actions fail on storefront-next?"_
+
+**Tip**: On paid plans, **`/ci-investigator`** runs this plus PR/deploy correlation in one structured report.
+
+---
+
 ## Bitbucket
 
 Requires: `BITBUCKET_API_EMAIL`, `BITBUCKET_API_TOKEN`.
+
+**Subagent (paid plans):** **`/ci-investigator`** combines Bitbucket and GitHub diagnosis on **Professional / Team / Enterprise**. Community can still use `bb_pipeline_diagnose` directly in chat for a single repo.
 
 ### `bb_pipelines_latest`
 List the latest pipeline runs for a repository.
