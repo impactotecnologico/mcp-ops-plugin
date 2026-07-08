@@ -10,15 +10,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
-- **`ci-investigator` subagent** (`agents/ci-investigator.md`) — read-only GitHub Actions and Bitbucket pipeline diagnosis with structured root-cause reports (**Professional / Team / Enterprise**; Community receives upgrade guidance).
-- [docs/PLANS.md](docs/PLANS.md): CI Investigator and outage triage rows in plan comparison table; Professional section.
+- **`ci-investigator` subagent** (`agents/ci-investigator.md`) — read-only GitHub Actions and Bitbucket pipeline diagnosis with structured root-cause reports (**Professional / Team / Enterprise**; Community receives upgrade guidance at `ops_my_usage` step 0).
+- **`endpoint-health` subagent** (`agents/endpoint-health.md`) — single-host DNS + HTTP + TLS checks for **all plans**; optional TCP, DNSSEC, Cloudflare, Pingdom when in `tools/list`.
+- **`postmortem-writer` subagent** (`agents/postmortem-writer.md`) — structured post-mortem / RCA for **all plans**; optional `memory_store` (`scope=incident`) after user approval.
+- [docs/PLANS.md](docs/PLANS.md): subagent rows (outage triage, endpoint health, post-mortem writer, CI Investigator); Professional section.
 - [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md): CI Investigator blocked on Community.
 - [docs/TOOLS.md](docs/TOOLS.md): `ghe_actions_diagnose` (paid); subagent notes under GitHub and Bitbucket.
 
 ### Changed
 
-- Onboarding rule: CI subagent delegation with plan gating (`ops_my_usage` before delegate; Community inline CI vs upgrade).
-- `/opsphere-welcome` and README: `/ci-investigator` examples and subagent table.
+- **Subagents — ask the user:** all four agents (`outage-triage`, `endpoint-health`, `ci-investigator`, `postmortem-writer`) prompt for missing hostname, env, repo, timeline, or impact (2–4 questions per turn; no invented facts).
+- Onboarding rule ([`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc)): subagent delegation for **endpoint-health** and **postmortem-writer** (all plans); **ci-investigator** plan gating; `ops_my_usage` before premium delegate when plan unknown.
+- README: dedicated **Subagents** and **Rules, skills & commands** sections; example prompts for all subagents; Community plan subagent list.
+- `/opsphere-welcome`: all four subagents plus integration example prompts.
 - README screenshot caption: ~30 tools (was outdated "33 tools").
 
 ## [1.0.3] - 2026-07-05

@@ -14,6 +14,8 @@ Paid plans are provisioned by Opsphere — not self-serve Sign up.
 | **Premium providers** | — | Partial | K8s, ArgoCD, Azure, Akamai, Pingdom, … | All |
 | **Operational memory** | Yes | Yes | Yes | Yes |
 | **Outage triage subagent** (`/outage-triage`) | Yes | Yes | Yes | Yes |
+| **Endpoint health subagent** (`/endpoint-health`) | Yes | Yes | Yes | Yes |
+| **Post-mortem writer subagent** (`/postmortem-writer`) | Yes | Yes | Yes | Yes |
 | **CI Investigator subagent** (`/ci-investigator`) | No | Yes | Yes | Yes |
 | **Users** | 1 | Up to 5 | Up to 20 | Custom |
 

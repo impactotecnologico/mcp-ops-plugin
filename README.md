@@ -44,12 +44,9 @@ Architecture diagram and domain list: **[docs/REMOTE-MCP-ARCHITECTURE.md](docs/R
 | **`/opsphere-setup`** | First-run OAuth + first integration (step by step) |
 | **`/integration-status`** | See which providers are connected |
 
-**Subagents (read-only):**
+Type **`/opsphere-welcome`** after install for example prompts including subagents (`/outage-triage`, `/endpoint-health`, `/ci-investigator`, `/postmortem-writer`).
 
-- **Incidents** — _`/outage-triage`_ — site-down and multi-step incident triage (all plans).
-- **CI** — _`/ci-investigator`_ — failed GitHub Actions / Bitbucket pipelines with structured root-cause reports (**Professional / Team / Enterprise**; Community users get upgrade guidance).
-
-No shell scripts run automatically when you open a workspace — you invoke these commands yourself.
+No shell scripts run automatically when you open a workspace — you invoke commands and subagents yourself.
 
 **Developers / reviewers:** to test from source before marketplace install, see [docs/INSTALL.md](docs/INSTALL.md#test-locally-before-marketplace-install) (`~/.cursor/plugins/local/opsphere`).
 
@@ -71,6 +68,51 @@ mcp-cursor.opsphere.io/mcp      ← ALL tool execution happens here
       ├── Datadog / Vercel / GitHub / AWS / …  (server-side only)
       └── DNS / HTTP / TLS built-ins
 ```
+
+---
+
+## Subagents
+
+Opsphere ships **specialized subagents** in [`agents/`](agents/). Invoke them in chat with **`/agent-name`** (e.g. `/endpoint-health`) or ask the main agent to use them. They run on the same remote MCP gateway; output is a structured report back to your thread.
+
+Subagents **adapt to your plan** by using only tools that appear in your session's `tools/list` — no hardcoded tenant or org. When details are missing (hostname, repo, incident timeline), they **ask you clarifying questions** before burning tool calls.
+
+| Subagent | Invoke | Plans | Read-only | What it does |
+|----------|--------|-------|-----------|--------------|
+| [**outage-triage**](agents/outage-triage.md) | `/outage-triage` | All | Yes | Multi-step **incident triage**: alerts, edge (DNS/HTTP/TLS), deploys, logs, K8s/ArgoCD when available. Structured verdict + evidence. |
+| [**endpoint-health**](agents/endpoint-health.md) | `/endpoint-health` | All | Yes | **Single host/URL** check: DNS → HTTP → TLS (+ optional TCP, DNSSEC, Cloudflare, Pingdom on paid catalogs). |
+| [**ci-investigator**](agents/ci-investigator.md) | `/ci-investigator` | Professional+ | Yes | **Failed CI**: GitHub Actions + Bitbucket diagnose, PR/deploy correlation. Community gets upgrade guidance at step 0. |
+| [**postmortem-writer**](agents/postmortem-writer.md) | `/postmortem-writer` | All | No* | **Post-mortem / RCA** draft; optional `memory_store` (`scope=incident`) after you approve. Asks for timeline, impact, action items. |
+
+\* *Writes only to **operational memory** when you confirm — no infra mutations (no deploys, cache purge, workflow dispatch).*
+
+### When to use which
+
+| You want… | Use |
+|-----------|-----|
+| Site down, many services, or full incident flow | `/outage-triage` |
+| One URL: up? DNS? cert expiry? | `/endpoint-health` |
+| Pipeline or GitHub Actions failed (paid) | `/ci-investigator` |
+| Post-mortem or save lessons learned after resolution | `/postmortem-writer` |
+| One quick `http_check` or log search | Main chat — no subagent |
+
+Plan details and subagent rows: **[docs/PLANS.md](docs/PLANS.md)**. CI blocked on Community: **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)**.
+
+---
+
+## Rules, skills & commands
+
+The plugin is a **thin client**: behavior comes from bundled markdown, not local tool code.
+
+| Layer | Path | Role |
+|-------|------|------|
+| **Always-on rule** | [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc) | Tool catalog, integration triggers, **subagent delegation**, Community error codes (`TRIAL_EXPIRED`, `RATE_LIMIT_EXCEEDED`, `READ_ONLY_PLAN`, `SINGLE_ENVIRONMENT_ONLY`), memory hygiene, AWS (IAM keys, not SSO), credential rules |
+| **Skills** | [`skills/configure-integration/`](skills/configure-integration/) | Step-by-step provider setup → `ops_configure_integration` |
+| | [`skills/set-work-context/`](skills/set-work-context/) | Tenant work context (`ops_set_work_context`) |
+| **Commands** | [`commands/`](commands/) | `/opsphere-welcome`, `/opsphere-setup`, `/integration-status` |
+| **Subagents** | [`agents/`](agents/) | Focused investigation and post-mortem flows (table above) |
+
+The onboarding rule tells the main agent **when to delegate** vs handle inline, to call `ops_my_usage` before premium subagents when plan is unknown, and **not** to paste secrets outside the configure flow.
 
 ---
 
@@ -102,7 +144,9 @@ Opsphere plugin AWS integration uses **IAM Access Key + Secret Access Key** — 
 |---|---|
 | `"Configure my Datadog"` | Guided setup: asks for API Key + App Key, configures and tests in one flow |
 | `"Check DNS for example.com"` | Runs `dns_lookup` across Google, Cloudflare, and system resolvers |
-| `"Is api.mycompany.com up?"` | Runs `http_check` + `cert_status` and reports status + cert expiry |
+| `"Is api.mycompany.com up?"` | Structured check: **`/endpoint-health`** (DNS + HTTP + TLS); or inline tools for a single probe |
+| `"Is the site down?"` / widespread outage | **`/outage-triage`** — multi-step incident report |
+| `"Write a post-mortem for today's outage"` | **`/postmortem-writer`** — draft + optional incident memory |
 | `"Show my latest Vercel deploys"` | Lists the last 3 deployments with status, branch, and timestamp |
 | `"Search Datadog logs for payment errors in the last hour"` | Queries Datadog Logs v2 with your filter |
 | `"What's failing in Sentry right now?"` | Lists unresolved issues by severity |
@@ -151,6 +195,7 @@ Opsphere includes a **30-day Community trial** with no credit card required:
 - **100 tool calls per day** (resets at midnight UTC)
 - **8 core integrations** (Datadog, Vercel, GitHub, Bitbucket, Cloudflare, Sentry, Jira, AWS)
 - **Network diagnostics** (`dns_lookup`, `http_check`, `cert_status`) — no setup required
+- **Subagents (all plans):** `/outage-triage`, `/endpoint-health`, `/postmortem-writer` — adapt to ~30 tools; `/ci-investigator` is **paid only**
 - **`ops_my_usage`** — plan name, trial, daily/monthly usage, tool count, upgrade link
 
 After your trial, upgrade at [opsphere.io/pricing](https://opsphere.io/pricing) for the **full catalog (~215 tools)**, unlimited daily calls, write access, and premium providers (Kubernetes, ArgoCD, Azure, Akamai, Pingdom, …).
@@ -263,6 +308,8 @@ Removing the plugin does not automatically delete your Opsphere account or serve
 - **Status**: [status.opsphere.io](https://status.opsphere.io)
 - **Support**: [contact@opsphere.io](mailto:contact@opsphere.io)
 - **Architecture (remote MCP)**: [docs/REMOTE-MCP-ARCHITECTURE.md](docs/REMOTE-MCP-ARCHITECTURE.md)
+- **Plans & subagents**: [docs/PLANS.md](docs/PLANS.md)
+- **Tool reference**: [docs/TOOLS.md](docs/TOOLS.md)
 - **Security & Trust**: [SECURITY.md](SECURITY.md) · [docs/SECURITY-AND-TRUST.md](docs/SECURITY-AND-TRUST.md)
 - **Privacy**: [docs/PRIVACY.md](docs/PRIVACY.md) · [opsphere.io/privacy](https://opsphere.io/privacy)
 - **Security policy (vulnerabilities)**: [SECURITY.md](SECURITY.md)
