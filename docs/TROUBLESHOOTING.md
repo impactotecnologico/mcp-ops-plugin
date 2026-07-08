@@ -80,6 +80,22 @@
 
 ---
 
+## CI Investigator blocked on Community plan
+
+**Symptom**: You run **`/ci-investigator`** or ask for automated CI diagnosis and get a message that CI Investigator requires a paid plan.
+
+**Cause**: The **`ci-investigator`** subagent is included on **Professional**, **Team**, and **Enterprise** only. Community includes basic CI tools in chat (`bb_pipeline_diagnose`, `ghe_actions_latest`) but not deep GitHub diagnose (`ghe_actions_diagnose`) or the subagent workflow.
+
+**Fix**:
+
+- For a **single** Bitbucket pipeline: ask _"Diagnose the failed Bitbucket pipeline for [repo]"_ — the main agent can call `bb_pipeline_diagnose` inline.
+- For **GitHub**: ask _"What GitHub Actions ran on main?"_ — `ghe_actions_latest` on Community; full auto-diagnose needs an upgrade.
+- Upgrade at **https://opsphere.io/pricing** for **`/ci-investigator`** and the full tool catalog.
+
+Run **`ops_my_usage`** to confirm your plan name.
+
+---
+
 ## "Missing credentials" for a tool
 
 **Symptom**: A tool call fails with a "missing credentials" message for a specific provider (e.g., Datadog, Vercel).

@@ -25,9 +25,25 @@ Use tools that exist in the current session's `tools/list`. Never invent tool na
 
 If a tool fails for missing credentials, note it and continue with available tools. Do not ask the user to paste secrets.
 
+## Ask the user (when missing)
+
+Before running tools, ensure you can scope the investigation. **Ask the user** for gaps — do not invent hostnames, projects, services, or environments.
+
+| Topic | Example question |
+|-------|------------------|
+| **Hostname / URL** | Which site, API, or domain is affected? |
+| **Environment** | INT, TST, PRE, or PRD? (Community: use **one** env per investigation) |
+| **Time window** | When did it start? Is it still happening? |
+| **Symptoms** | Fully down, 5xx, timeouts, DNS errors, or degraded latency? |
+| **Scope** | Single URL or widespread (many routes / regions)? |
+| **Vercel project** | Which Vercel project alias if we should check deploys? |
+| **Service name** | Datadog `service:` filter if they know it? |
+
+Reuse facts already in the thread. Batch at most **2–4 questions** per turn. If only the hostname is missing, ask that alone before `http_check`.
+
 ## Triage flow (follow in order; skip steps when tools are unavailable)
 
-1. **Clarify target** — hostname, environment (INT/TST/PRE/PRD), and time window if the user gave one.
+1. **Clarify target** — hostname, environment (INT/TST/PRE/PRD), and time window; use **Ask the user** when any are missing.
 2. **Active alerts** — `alerts_active` when available (Datadog monitors in alert/warn).
 3. **External uptime** — `pingdom_summary` with `hostnameContains` when relevant; `synthetics_summary_by_location` if available.
 4. **Network edge** — `http_check` → `dns_lookup` (multiple resolvers) → `cert_status` → `dnssec_check` → `cf_quick_status` for the zone when Cloudflare is configured.
@@ -42,6 +58,7 @@ If a tool fails for missing credentials, note it and continue with available too
 - No application logs during the outage window → traffic likely never reached the app (upstream issue).
 - Errors present for days without temporal correlation → chronic noise; do not claim as root cause unless correlated to the incident time.
 - Fixed timeout signatures (e.g. ~60001 ms) → investigate downstream latency before blaming the frontend.
+- Never guess hostname or Vercel project — ask the user first.
 
 ## Output format
 

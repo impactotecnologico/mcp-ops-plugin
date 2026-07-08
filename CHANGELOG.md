@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-07-08
+
+### Added
+
+- **`ci-investigator` subagent** (`agents/ci-investigator.md`) — read-only GitHub Actions and Bitbucket pipeline diagnosis with structured root-cause reports (**Professional / Team / Enterprise**; Community receives upgrade guidance).
+- [docs/PLANS.md](docs/PLANS.md): CI Investigator and outage triage rows in plan comparison table; Professional section.
+- [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md): CI Investigator blocked on Community.
+- [docs/TOOLS.md](docs/TOOLS.md): `ghe_actions_diagnose` (paid); subagent notes under GitHub and Bitbucket.
+
+### Changed
+
+- Onboarding rule: CI subagent delegation with plan gating (`ops_my_usage` before delegate; Community inline CI vs upgrade).
+- `/opsphere-welcome` and README: `/ci-investigator` examples and subagent table.
+- README screenshot caption: ~30 tools (was outdated "33 tools").
+
 ## [1.0.3] - 2026-07-05
 
 ### Added
