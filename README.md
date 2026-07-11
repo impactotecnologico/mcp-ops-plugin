@@ -236,7 +236,7 @@ Full details: **[SECURITY.md](SECURITY.md)** (encryption, retention, isolation, 
 
 - Open **Cursor Settings → MCP** and look for the Opsphere entry. If there is no Connect button, try reloading the window (`Cmd+Shift+P → Reload Window`).
 - Check gateway reachability: `curl https://mcp-cursor.opsphere.io/health`
-- If the gateway is down, check [status.opsphere.io](https://status.opsphere.io).
+- If the gateway is down, check [status.opsphere.io](https://status.opsphere.io). **Production ECS** scales the gateway down outside **06:00–22:00 Europe/Madrid** on weekdays and is off on weekends — a failed health check during those windows is expected, not an incident.
 
 </details>
 
