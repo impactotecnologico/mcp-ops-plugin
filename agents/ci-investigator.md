@@ -29,7 +29,7 @@ Use tools that exist in the current session's `tools/list`. Never invent tool na
 | Bitbucket | `bb_pipelines_latest` | `bb_pipeline_diagnose` |
 | GitHub | `ghe_actions_latest` | `ghe_actions_diagnose` |
 
-**Context (when in `tools/list`):** `ghe_repo_summary`, `ghe_pr_detail`, `ghe_pr_files`, `ghe_pr_diff`, `ghe_workflow_runs_list`, `ghe_actions_latest_jobs`, `ghe_actions_latest_logs`, `bb_pr_diffstat`, `bb_pr_diff`, `bb_pr_commits`, `vercel_deploys_latest`, `memory_search`.
+**Context (when in `tools/list`):** `ghe_repo_summary`, `ghe_pr_detail`, `ghe_pr_files`, `ghe_pr_diff`, `ghe_workflow_runs_list`, `ghe_actions_latest_jobs`, `ghe_actions_latest_logs`, `bb_pr_diffstat`, `bb_pr_diff`, `bb_pr_commits`, **`deployment_status`**, `vercel_deploys_latest`, `memory_search`.
 
 If a tool fails for missing credentials, note it in **Gaps** and continue with other available tools. Do not ask the user to paste secrets.
 
@@ -100,7 +100,7 @@ Follow in order; skip steps when tools are unavailable or the user already gave 
 4. **Bitbucket** — `bb_pipelines_latest` (repo, optional branch) → `bb_pipeline_diagnose` (repo, optional uuid from latest or user input).
 5. **GitHub** — `ghe_actions_latest` (repo, optional owner/workflow/branch) → `ghe_actions_diagnose` (repo, optional owner/workflow/branch). Prefer a single diagnose call; use `ghe_workflow_runs_list` only when the user targets a specific workflow or branch.
 6. **Change context** — when PR/commit correlation helps and tools exist: `ghe_pr_detail`, `ghe_pr_files`, `bb_pr_diffstat`, or `bb_pr_commits`.
-7. **Deploy correlation** — `vercel_deploys_latest` or `ghe_repo_summary` when the failure may relate to a recent deploy or the user mentions storefront/Vercel.
+7. **Deploy correlation** — prefer **`deployment_status(scope=auto)`** when the failure may relate to a recent release across platforms; use `vercel_deploys_latest` only for explicit Vercel-only correlation or when `deployment_status` is unavailable.
 8. **Report** — structured output below.
 
 ## Heuristics

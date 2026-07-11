@@ -36,7 +36,7 @@ Before running tools, ensure you can scope the investigation. **Ask the user** f
 | **Time window** | When did it start? Is it still happening? |
 | **Symptoms** | Fully down, 5xx, timeouts, DNS errors, or degraded latency? |
 | **Scope** | Single URL or widespread (many routes / regions)? |
-| **Vercel project** | Which Vercel project alias if we should check deploys? |
+| **Vercel project** | Which Vercel project if deploy correlation is needed? (Prefer **`deployment_status`** for "latest release"; use `vercel_*` only when Vercel is in scope.) |
 | **Service name** | Datadog `service:` filter if they know it? |
 
 Reuse facts already in the thread. Batch at most **2–4 questions** per turn. If only the hostname is missing, ask that alone before `http_check`.
@@ -47,7 +47,7 @@ Reuse facts already in the thread. Batch at most **2–4 questions** per turn. I
 2. **Active alerts** — `alerts_active` when available (Datadog monitors in alert/warn).
 3. **External uptime** — `pingdom_summary` with `hostnameContains` when relevant; `synthetics_summary_by_location` if available.
 4. **Network edge** — `http_check` → `dns_lookup` (multiple resolvers) → `cert_status` → `dnssec_check` → `cf_quick_status` for the zone when Cloudflare is configured.
-5. **Deploy correlation** — `vercel_deploys_latest` / `vercel_project_status` for storefront or named Vercel project during the outage window.
+5. **Deploy correlation** — **`deployment_status(scope=auto)`** during the outage window when available; else `vercel_deploys_latest` / `vercel_project_status` for a named Vercel project. **Do not** use deployment status alone to close an outage — correlate timing with errors and edge checks.
 6. **Application layer** — `dd_errors_by_service` then `dd_errors_recent` and/or `dd_logs_search` in the **same time window** as the reported incident.
 7. **Workload evidence only** — if errors or alerts point to backend: `k8s_find_pod` → `k8s_pod_previous_logs` / `k8s_logs` → `argocd_app_unhealthy` when K8s/ArgoCD tools exist.
 8. **Prior context** — `memory_search` with `scopes: ["incident", "decision", "repository"]` when memory tools are enabled; treat results as hints, not live truth.
@@ -58,7 +58,7 @@ Reuse facts already in the thread. Batch at most **2–4 questions** per turn. I
 - No application logs during the outage window → traffic likely never reached the app (upstream issue).
 - Errors present for days without temporal correlation → chronic noise; do not claim as root cause unless correlated to the incident time.
 - Fixed timeout signatures (e.g. ~60001 ms) → investigate downstream latency before blaming the frontend.
-- Never guess hostname or Vercel project — ask the user first.
+- **Outage triage ≠ latest deployment.** User asks "what was deployed" without downtime symptoms → parent agent should use **`deployment_status`**, not this subagent.
 
 ## Output format
 

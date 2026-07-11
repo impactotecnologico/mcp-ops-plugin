@@ -18,7 +18,8 @@ These tools are available once authenticated and integrations are configured:
 | Category | Provider | Tools |
 |----------|----------|-------|
 | Monitoring | Datadog | `dd_logs_search`, `dd_errors_by_service`, `dd_errors_recent`, `dd_synthetics_summary` |
-| Deployments | Vercel | `vercel_deploys_latest`, `vercel_project_status` |
+| Deployments | Multi-stack (catalog) | **`deployment_status`** (preferred) — Vercel, CI, GitOps, S3+CloudFront, ECS from your configured sources |
+| Deployments | Vercel (direct) | `vercel_deploys_latest`, `vercel_project_status` — only when user asks Vercel-only or `deployment_status` gaps suggest it |
 | Source Control | GitHub Enterprise | `ghe_repo_summary`, `ghe_actions_latest` |
 | Source Control | Bitbucket | `bb_pipelines_latest`, `bb_pipeline_diagnose` |
 | CDN / DNS | Cloudflare | `cf_quick_status`, `cf_dns_records` |
@@ -36,6 +37,20 @@ These tools are available once authenticated and integrations are configured:
 **Memory tools** appear only when the `memory` module is enabled for your tenant (`tenant_tools`, profile `cursor`). They store **distilled** notes from past sessions — not live ops truth. Always verify current state with Datadog, K8s, Vercel, or other live tools after reading memory.
 
 **Work context** is injected automatically when MCP connects (default cloud account + index of others). After signup, if `ops_my_usage` shows work context as not configured, run the `set-work-context` skill. For full text of a non-default account, use `ops_get_work_context` or resource `opsphere://tenant/account-context`.
+
+---
+
+## Latest deployment (any language)
+
+For **"latest deployment"**, **"último despliegue"**, **"last release"**, **"what went live"**, or similar in **any language**:
+
+1. Call **`deployment_status(env=<active env if known>, scope="auto")` FIRST** — aggregates Vercel, CI, GitOps, S3+CloudFront, and ECS from the tenant catalog.
+2. **Do not** default to `vercel_deploys_latest` unless the user asks Vercel-only or `deployment_status` returns `gaps[]` pointing there.
+3. If **`capabilities.vercel`** is false (e.g. static site on S3, ECS-only), **never** call `vercel_*` tools.
+4. Interpret **`gaps[]`** in the tool response — they are **tenant-aware**:
+   - **Community**: suggest `ops_set_work_context` (prose stack description) + `configure-integration` for Vercel/AWS; use skill **`configure-deployment-catalog`**.
+   - **Team / Enterprise**: suggest admin configures **Deployment sources** in Cloud Catalog at **https://admin.opsphere.io** (from `ops_my_usage` → Catalog configuration).
+5. **Outage vs release**: site-down / 5xx → delegate **`outage-triage`**; "what was deployed" → `deployment_status`, not outage triage.
 
 ---
 
@@ -154,6 +169,8 @@ When the user asks about their plan, usage, trial status, remaining calls, or up
 Users might say things like:
 
 - "Check my latest Vercel deploys"
+- "¿Cuál fue el último despliegue?" / "What was the last deployment?" — **`deployment_status(scope=auto)`** first
+- "When did we last publish to production?" — **`deployment_status`**
 - "Search Datadog logs for errors in the last hour"
 - "What's failing in Sentry right now?"
 - "Is example.com up?" — triggers `dns_lookup` + `http_check` + `cert_status`
@@ -162,6 +179,7 @@ Users might say things like:
 - "Configure my AWS" — IAM Access Key + Secret Key (not SSO)
 - "List my S3 buckets" — `aws_cli_query` directly after AWS is configured (no SSO step)
 - "Tell Opsphere what I usually work with" — triggers the `set-work-context` skill
+- "How do I configure deployment sources?" — triggers **`configure-deployment-catalog`** skill
 - "Show PR #42 status in Bitbucket"
 - "Find Jira issues assigned to me"
 - "What GitHub Actions ran today on the main branch?"

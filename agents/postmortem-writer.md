@@ -40,7 +40,8 @@ Use tools that exist in the current session's `tools/list`. Never invent tool na
 | `dd_logs_search` | Narrow log window around incident time |
 | `dd_errors_by_service` / `dd_errors_recent` | Error counts during window (paid catalogs) |
 | `alerts_active` | Monitors still firing at write time |
-| `vercel_deploys_latest` | Deploy correlation |
+| `deployment_status` | Deploy correlation (multi-platform, preferred) |
+| `vercel_deploys_latest` | Vercel-only deploy correlation |
 | `ghe_actions_latest` / `bb_pipelines_latest` | CI correlation |
 | `http_check` / `dns_lookup` / `cert_status` | Endpoint state at close |
 | `jira_issue_get` | Link or summarize a ticket |

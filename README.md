@@ -2,7 +2,7 @@
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Version](https://img.shields.io/badge/version-1.0.4-blue)](https://github.com/impactotecnologico/mcp-ops-plugin/releases)
+[![Version](https://img.shields.io/badge/version-1.0.5-blue)](https://github.com/impactotecnologico/mcp-ops-plugin/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/impactotecnologico/mcp-ops-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/impactotecnologico/mcp-ops-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
@@ -17,6 +17,7 @@ Opsphere is a **thin client** DevOps plugin for Cursor: rules, skills, agents, a
 
 - _"Search Datadog logs for payment errors in the last hour"_
 - _"What's failing in Sentry right now?"_
+- _"What was the last deployment in production?"_ — `deployment_status` across your configured platforms
 - _"Check DNS for mysite.com across all resolvers"_
 - _"Diagnose the failed Bitbucket pipeline"_
 
@@ -32,7 +33,7 @@ Architecture diagram and domain list: **[docs/REMOTE-MCP-ARCHITECTURE.md](docs/R
 2. **Welcome**: type **`/opsphere-welcome`** in chat (or **`/opsphere-setup`** for full onboarding) — see example prompts and next steps.
 3. **Connect**: click **Connect** next to Opsphere in **Cursor Settings → MCP**. A browser window opens — sign up (free, no card needed) or log in. Cursor stores the token automatically.
 4. **Connect your tools**: say _"Configure my Datadog"_ — the agent walks you through setup and sends credentials **only** via `ops_configure_integration` on the gateway (never stored in this repo or in Cursor's plugin files).
-5. **Start asking**: say _"Check DNS for mysite.com"_ or _"Show my Vercel deploys"_ — you're live.
+5. **Start asking**: say _"Check DNS for mysite.com"_ or _"What was the last deployment?"_ — you're live.
 
 > **Network tools** (`dns_lookup`, `http_check`, `cert_status`) work immediately after step 3 — no integration setup needed.
 
@@ -147,7 +148,8 @@ Opsphere plugin AWS integration uses **IAM Access Key + Secret Access Key** — 
 | `"Is api.mycompany.com up?"` | Structured check: **`/endpoint-health`** (DNS + HTTP + TLS); or inline tools for a single probe |
 | `"Is the site down?"` / widespread outage | **`/outage-triage`** — multi-step incident report |
 | `"Write a post-mortem for today's outage"` | **`/postmortem-writer`** — draft + optional incident memory |
-| `"Show my latest Vercel deploys"` | Lists the last 3 deployments with status, branch, and timestamp |
+| `"Show my latest Vercel deploys"` | Vercel-only: last deployments with status, branch, timestamp |
+| `"What was the last deployment?"` / `"¿Último despliegue?"` | **`deployment_status(scope=auto)`** — Vercel, CI, GitOps, S3+CloudFront, ECS from catalog |
 | `"Search Datadog logs for payment errors in the last hour"` | Queries Datadog Logs v2 with your filter |
 | `"What's failing in Sentry right now?"` | Lists unresolved issues by severity |
 | `"Diagnose the failed Bitbucket pipeline"` | Community: `bb_pipeline_diagnose` inline; paid: delegate **`/ci-investigator`** for full report |

@@ -62,7 +62,7 @@ Remove all stored credentials for a provider.
 ## Plan & Usage [built-in]
 
 ### `ops_my_usage`
-Show current plan (`Community`, `Team`, …), trial end date, days remaining, daily and monthly tool usage, enabled MCP tool count, work context status, and upgrade link.
+Show current plan (`Community`, `Team`, …), trial end date, days remaining, daily and monthly tool usage, enabled MCP tool count, work context status, **catalog configuration surface** (`plugin` vs `admin_portal`), admin portal URL, and upgrade link.
 
 **Example**: _"Show my Opsphere usage"_ or _"How many tool calls do I have left today?"_
 
@@ -149,6 +149,32 @@ Fetch recent errors with stack trace deduplication.
 Get the status of all Datadog Synthetic tests.
 
 **Example**: _"What's the Synthetics status?"_
+
+---
+
+## Deployment Status [built-in]
+
+Aggregates **latest deployment** across platforms configured for your tenant (Vercel, CI, GitOps, S3+CloudFront, ECS). **Preferred** for any "last deploy / release / publish" question in any language.
+
+### `deployment_status`
+Returns `deployments[]` (newest first) and `gaps[]` when a platform is missing or unavailable.
+
+**Parameters:**
+- `env?` — environment label (e.g. `PRD`, `prod`) — optional; defaults to catalog default env
+- `scope` — `auto` (default) | `vercel` | `ci` | `gitops` | `static_web` | `ecs` | `all`
+
+**Examples:**
+- _"¿Cuál fue el último despliegue?"_ / _"What was the last deployment?"_
+- _"When did we last publish to production?"_
+- _"Latest release on ECS?"_ → `scope=ecs`
+
+**Agent rules:**
+1. Call **`deployment_status(scope=auto)` first** — do not default to `vercel_deploys_latest`.
+2. If `capabilities.vercel` is false, never call `vercel_*`.
+3. Read `gaps[]` — Community: `set-work-context` + `configure-integration`; Team: admin **https://admin.opsphere.io** (see `ops_my_usage` → Catalog configuration).
+4. Use `vercel_deploys_latest` only for explicit Vercel-only questions or when gaps direct you there.
+
+**Community:** included in the ~30-tool catalog.
 
 ---
 

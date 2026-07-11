@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.0.5] - 2026-07-11
+
+### Added
+
+- **`configure-deployment-catalog` skill** — Community vs Team paths for deployment sources; links to `ops_set_work_context`, admin portal, and `deployment_status` gaps.
+- [docs/TOOLS.md](docs/TOOLS.md): **`deployment_status`** section (multi-platform latest deploy, scopes, agent rules).
+- Onboarding rule: **Latest deployment** section — any language → `deployment_status(scope=auto)` first; outage vs release distinction.
+
+### Changed
+
+- [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc): Deployments category is multi-stack; `deployment_status` preferred over Vercel-only tools.
+- [`skills/set-work-context/SKILL.md`](skills/set-work-context/SKILL.md): plan gate (Community only); deployment hints for ECS/S3/Vercel prose.
+- [`docs/PLANS.md`](docs/PLANS.md): Community catalog includes `deployment_status`.
+- [`commands/opsphere-welcome.md`](commands/opsphere-welcome.md): latest deployment example prompts.
+- [`agents/ci-investigator.md`](agents/ci-investigator.md): deploy correlation via `deployment_status` when available.
+- [`agents/outage-triage.md`](agents/outage-triage.md): deploy correlation prefers `deployment_status`; clarifies outage ≠ latest deployment.
+- README: example prompts for multilingual latest-deploy queries.
+
 ## [1.0.4] - 2026-07-08
 
 ### Added

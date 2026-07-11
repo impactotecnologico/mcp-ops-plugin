@@ -23,7 +23,8 @@ Copy or paraphrase the following:
 >
 > **Already connected? Try:**
 > - _"Is example.com up?"_ or **`/endpoint-health`** — DNS + HTTP + TLS for one host (all plans)
-> - _"Check my latest Vercel deploys"_
+> - _"¿Cuál fue el último despliegue?"_ / _"What was the last deployment?"_ — **`deployment_status`** (multi-platform: Vercel, CI, S3, ECS…)
+> - _"Check my latest Vercel deploys"_ — Vercel-only detail (or use deployment_status first)
 > - _"Search Datadog logs for errors in the last hour"_
 > - _"Configure my Datadog"_
 > - _"Configure my AWS"_ — IAM Access Key + Secret Key (not SSO)

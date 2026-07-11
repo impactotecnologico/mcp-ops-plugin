@@ -22,7 +22,7 @@ Paid plans are provisioned by Opsphere — not self-serve Sign up.
 ## Community (free trial)
 
 - **Connect** via Cursor OAuth → creates an isolated tenant (`subscription_id: community`).
-- **~30 tools** across Datadog, Vercel, GitHub, Bitbucket, Cloudflare, Sentry, Jira, AWS (CLI), diagnostics, memory, and integration setup.
+- **~30 tools** across Datadog, Vercel, GitHub, Bitbucket, Cloudflare, Sentry, Jira, AWS (CLI), diagnostics, memory, integration setup, and **`deployment_status`** (multi-platform latest deploy).
 - **Network tools** (`dns_lookup`, `http_check`, `cert_status`) work immediately — no credentials.
 - Check status anytime: **`ops_my_usage`** or _"Show my usage"_ in chat.
 - **Basic CI in chat** — `bb_pipeline_diagnose`, `ghe_actions_latest` (not the **`/ci-investigator`** subagent; see below).
