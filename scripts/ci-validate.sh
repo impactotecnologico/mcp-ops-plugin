@@ -252,5 +252,14 @@ else
   FAIL=1
 fi
 
+# 15. Deployment catalog skills document Team plugin restriction (Fase 5 golden)
+for skill in skills/set-work-context/SKILL.md skills/configure-deployment-catalog/SKILL.md; do
+  if [[ -f "$skill" ]] && search_quiet 'WorkContextForbiddenError' "$skill"; then
+    ok "$skill documents WorkContextForbiddenError"
+  else
+    red "$skill must document WorkContextForbiddenError for Team tenants"
+  fi
+done
+
 echo "=== done (failures: $FAIL) ==="
 exit "$FAIL"
