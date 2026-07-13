@@ -324,6 +324,22 @@ Call **without** `profile`. Add `--region <region>` in the command when the user
 
 ---
 
+## Macro Workflows (Team / Enterprise)
+
+Composite read-only tools that run multi-step investigations on the gateway with **SSE progress** (Streamable HTTP). Require Cursor 2026+ for progress UI in the IDE.
+
+| Tool | Purpose |
+|------|---------|
+| `macro_endpoint_health` | DNS + HTTP + TLS for one hostname/URL |
+| `macro_env_health` | Environment snapshot (errors, deploys, capacity) |
+| `macro_outage_triage` | Incident triage: edge, deploys, errors, optional K8s |
+
+**Community:** not available (`MACROS_PAID_ONLY`). Use subagents or atomic tools.
+
+Skill: [`skills/run-macro-workflows/`](skills/run-macro-workflows/).
+
+---
+
 ## Premium Tools (Pro / Enterprise)
 
 The following categories are available on paid plans:

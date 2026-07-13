@@ -91,8 +91,8 @@ Subagents **adapt to your plan** by using only tools that appear in your session
 
 | You want… | Use |
 |-----------|-----|
-| Site down, many services, or full incident flow | `/outage-triage` |
-| One URL: up? DNS? cert expiry? | `/endpoint-health` |
+| Site down, many services, or full incident flow | `/outage-triage` or `macro_outage_triage` (Team+) |
+| One URL: up? DNS? cert expiry? | `/endpoint-health` or `macro_endpoint_health` (Team+) |
 | Pipeline or GitHub Actions failed (paid) | `/ci-investigator` |
 | Post-mortem or save lessons learned after resolution | `/postmortem-writer` |
 | One quick `http_check` or log search | Main chat — no subagent |
@@ -107,9 +107,10 @@ The plugin is a **thin client**: behavior comes from bundled markdown, not local
 
 | Layer | Path | Role |
 |-------|------|------|
-| **Always-on rule** | [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc) | Tool catalog, integration triggers, **subagent delegation**, Community error codes (`TRIAL_EXPIRED`, `RATE_LIMIT_EXCEEDED`, `READ_ONLY_PLAN`, `SINGLE_ENVIRONMENT_ONLY`), memory hygiene, AWS (IAM keys, not SSO), credential rules |
+| **Always-on rule** | [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc) | Tool catalog, integration triggers, **subagent delegation**, macro workflows, Community error codes (`TRIAL_EXPIRED`, `RATE_LIMIT_EXCEEDED`, `READ_ONLY_PLAN`, `SINGLE_ENVIRONMENT_ONLY`), memory hygiene, AWS (IAM keys, not SSO), credential rules |
 | **Skills** | [`skills/configure-integration/`](skills/configure-integration/) | Step-by-step provider setup → `ops_configure_integration` |
 | | [`skills/set-work-context/`](skills/set-work-context/) | Tenant work context (`ops_set_work_context`) |
+| | [`skills/run-macro-workflows/`](skills/run-macro-workflows/) | Team+ composite `macro_*` tools (outage, endpoint, env health) |
 | **Commands** | [`commands/`](commands/) | `/opsphere-welcome`, `/opsphere-setup`, `/integration-status` |
 | **Subagents** | [`agents/`](agents/) | Focused investigation and post-mortem flows (table above) |
 
@@ -146,7 +147,8 @@ Opsphere plugin AWS integration uses **IAM Access Key + Secret Access Key** — 
 | `"Configure my Datadog"` | Guided setup: asks for API Key + App Key, configures and tests in one flow |
 | `"Check DNS for example.com"` | Runs `dns_lookup` across Google, Cloudflare, and system resolvers |
 | `"Is api.mycompany.com up?"` | Structured check: **`/endpoint-health`** (DNS + HTTP + TLS); or inline tools for a single probe |
-| `"Is the site down?"` / widespread outage | **`/outage-triage`** — multi-step incident report |
+| `"Is the site down?"` / widespread outage | **`/outage-triage`** or **`macro_outage_triage`** (Team+) — multi-step incident report |
+| `"How is PRE doing?"` / env health | **`macro_env_health`** (Team+) when in `tools/list` |
 | `"Write a post-mortem for today's outage"` | **`/postmortem-writer`** — draft + optional incident memory |
 | `"Show my latest Vercel deploys"` | Vercel-only: last deployments with status, branch, timestamp |
 | `"What was the last deployment?"` / `"¿Último despliegue?"` | **`deployment_status(scope=auto)`** — Vercel, CI, GitOps, S3+CloudFront, ECS from catalog |

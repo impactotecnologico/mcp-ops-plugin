@@ -31,8 +31,11 @@ These tools are available once authenticated and integrations are configured:
 | Plan & Usage | — | `ops_my_usage` |
 | Work context | — | `ops_set_work_context`, `ops_get_work_context` |
 | Operational memory | — | `memory_search`, `memory_store`, `memory_session_touch`, `memory_invalidate` |
+| **Macro workflows** (Team+) | — | `macro_outage_triage`, `macro_endpoint_health`, `macro_env_health` — composite read-only runs with SSE progress |
 
 **Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately after login — no integration setup needed.**
+
+**Macro tools** (`macro_*`) appear only on **Team / Enterprise** when the `macros` module is enabled. They run multi-step investigations server-side with progress streaming. Use skill **`run-macro-workflows`** when `tools/list` includes them; otherwise use subagents (`/outage-triage`, `/endpoint-health`) or atomic network tools.
 
 **Memory tools** appear only when the `memory` module is enabled for your tenant (`tenant_tools`, profile `cursor`). They store **distilled** notes from past sessions — not live ops truth. Always verify current state with Datadog, K8s, Vercel, or other live tools after reading memory.
 
@@ -228,6 +231,8 @@ Opsphere ships read-only subagents in `agents/`. They are visible to all plans i
 ### Outage triage — all plans
 
 For **site-down**, widespread failures, or multi-step incident triage, delegate to **`outage-triage`** (`/outage-triage` or "use outage-triage") instead of running the full flow in the main thread. It runs read-only, isolates verbose tool output, and returns a structured verdict with evidence.
+
+On **Team / Enterprise**, when `macro_outage_triage` is in `tools/list`, you may call it directly for the same class of incident (one composite tool with progress) — see skill **`run-macro-workflows`**. Prefer the subagent when the user wants interactive clarification; prefer the macro when they want a single structured report quickly.
 
 Do not delegate simple single-tool requests (one `http_check`, one `dd_logs_search`) — handle those inline.
 

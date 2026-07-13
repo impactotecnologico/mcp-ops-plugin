@@ -23,6 +23,8 @@ Use tools that exist in the current session's `tools/list`. Never invent tool na
 
 **When integrations are configured:** Datadog (`dd_*`), Vercel (`vercel_*`), Cloudflare (`cf_*`), Pingdom (`pingdom_*`), K8s (`k8s_*`), ArgoCD (`argocd_*`), Sentry (`sentry_*`), GitHub/Bitbucket CI (`ghe_*`, `bb_*`), `env_health_summary`, `observability_*`, `memory_search`.
 
+**Team / Enterprise macros** (when in `tools/list`): `macro_outage_triage` runs a server-side triage pipeline with progress — alternative to running every atomic step manually. Prefer this subagent for interactive clarification; use `macro_outage_triage` when the user wants one composite report.
+
 If a tool fails for missing credentials, note it and continue with available tools. Do not ask the user to paste secrets.
 
 ## Ask the user (when missing)
