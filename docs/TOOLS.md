@@ -6,6 +6,26 @@ All others require the corresponding integration to be configured first (see [IN
 
 ---
 
+## MCP resources
+
+Nine **read-only** resources are registered on the gateway (not in this plugin bundle). Cursor can fetch them after MCP Connect. Use them for policies and catalog context — not as a substitute for live tool calls.
+
+| URI | MIME | Purpose |
+|-----|------|---------|
+| `opsphere://rules/operational` | markdown | Full tool catalog + tenant scope (same substance as server instructions) |
+| `opsphere://tools/catalog` | json | Enabled modules and prompt index for your plan/tenant |
+| `opsphere://playbooks/index` | markdown | All MCP prompts by category (e.g. `diagnose-sonarqube-quality-gate`, `investigate-website-outage`) |
+| `opsphere://tenant/account-context` | markdown | Per-account cloud catalog (`system_prompt_context`) |
+| `opsphere://policies/change-approval` | markdown | Approval rules before mutating CDN / cache / system_update |
+| `opsphere://policies/secrets-handling` | markdown | Secret handling and redaction |
+| `opsphere://policies/incident-response` | markdown | Incident lifecycle |
+| `opsphere://taxonomy/severity` | markdown | SEV1–4 taxonomy |
+| `opsphere://inventory/critical-assets` | markdown | Critical assets inventory |
+
+**Agent guidance:** prefer **`deployment_status`**, **`macro_*`** (Team+), or atomic tools for live state. Fetch **`opsphere://tenant/account-context`** when the default connect summary is not enough. Fetch **`opsphere://playbooks/index`** to list guided prompts. There is intentionally **no** one resource per tool — the operational catalog is `opsphere://rules/operational`.
+
+---
+
 ## Network Diagnostics [built-in]
 
 ### `dns_lookup`
@@ -261,6 +281,37 @@ List the latest CI/CD pipeline runs for a GitLab project.
 Diagnose a failed pipeline: identify the failed job and show log excerpts.
 
 **Example**: _"Why did the last GitLab pipeline fail?"_
+
+---
+
+## SonarQube
+
+Requires: `SONAR_TOKEN`, `SONAR_HOST_URL` (optional `SONAR_ORGANIZATION` for SonarCloud, `SONAR_DEFAULT_PROJECT`).
+
+Read-only code quality: quality gates, measures, branches, issues, and security hotspots.
+
+### `sq_quality_gate_status`
+Quality gate OK/ERROR for a project, optionally per branch or pull request.
+
+**Example**: _"Did the quality gate pass for breitling:storefront on main?"_
+
+---
+
+### `sq_measures_summary`
+Curated overall and/or new-code metrics (bugs, vulnerabilities, coverage, ratings).
+
+**Example**: _"Show Sonar coverage and new-code bugs for breitling:storefront"_
+
+---
+
+### `sq_issues_search`
+Search code issues; use `inNewCodePeriod=true` for new-code violations only.
+
+**Example**: _"List critical Sonar issues in new code for breitling:storefront"_
+
+---
+
+**Guided prompt** (when listed in `opsphere://playbooks/index`): `diagnose-sonarqube-quality-gate` — structured QG failure triage with suggested `sq_*` tool order.
 
 ---
 
