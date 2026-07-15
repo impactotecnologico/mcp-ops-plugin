@@ -315,6 +315,53 @@ Search code issues; use `inNewCodePeriod=true` for new-code violations only.
 
 ---
 
+## PagerDuty
+
+Requires: `PAGERDUTY_API_TOKEN` (REST API User token — **not** Events routing key). Optional `PAGERDUTY_API_BASE_URL`, `PAGERDUTY_DEFAULT_SERVICE_ID`.
+
+Read-only incidents: open incidents, timeline, services, schedules. Complements Datadog monitors via `alerts_active(source=pagerduty)`.
+
+### `pd_incidents_search`
+Search incidents by status, urgency, time window, service, or team.
+
+**Example**: _"List open PagerDuty incidents in the last 24 hours"_
+
+---
+
+### `pd_incident_log_entries`
+Incident timeline for RCA (acknowledge, assign, resolve events).
+
+**Example**: _"Show the timeline for PagerDuty incident PXXXXXX"_
+
+---
+
+## Prometheus
+
+Requires: `PROMETHEUS_BASE_URL`; optional bearer or basic auth, `PROMETHEUS_TIMEOUT_MS`.
+
+Read-only PromQL, alerts, rules, scrape targets, and series discovery. Complements Datadog (logs/APM) for native infra/K8s metrics.
+
+### `prom_alerts`
+Pending and firing alerts evaluated by Prometheus.
+
+**Example**: _"What Prometheus alerts are firing right now?"_
+
+---
+
+### `prom_targets`
+Scrape target health — use `state=unhealthy` to find failed jobs.
+
+**Example**: _"Which Prometheus scrape targets are unhealthy?"_
+
+---
+
+### `prom_query`
+Instant PromQL query (`up`, `rate()`, aggregations).
+
+**Example**: _"Is job storefront-api up in Prometheus?"_
+
+---
+
 ## Cloudflare
 
 Requires: `CLOUDFLARE_API_TOKEN`.

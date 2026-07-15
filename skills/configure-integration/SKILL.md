@@ -1,6 +1,6 @@
 ---
 name: configure-integration
-description: Connect Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, GitLab, or AWS — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider, or when a tool reports missing credentials.
+description: Connect Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, GitLab, PagerDuty, Prometheus, or AWS — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider, or when a tool reports missing credentials.
 ---
 
 # Configure Integration
@@ -324,11 +324,81 @@ It uses four MCP tools from the backend:
 
 ---
 
+## Provider: PagerDuty
+
+**Required credentials**:
+
+| Key | Required | Description | Where to find it |
+|-----|----------|-------------|-----------------|
+| `PAGERDUTY_API_TOKEN` | Yes | REST API User token | PagerDuty → Integrations → Developer Tools → API Access Keys |
+| `PAGERDUTY_API_BASE_URL` | No | REST API base (default `https://api.pagerduty.com`) | Usually omit |
+| `PAGERDUTY_DEFAULT_SERVICE_ID` | No | Default service filter for incident search | Service → Settings → Service ID |
+
+**Important**: Use a **REST API User token** (`Authorization: Token token=...`). Do **not** use an **Events API v2 routing key** — routing keys only trigger/resolve events and cannot list incidents.
+
+**Setup steps**:
+
+1. Ask for the REST API token from PagerDuty Developer Tools.
+2. Optionally ask for a default service ID if the tenant wants incident searches scoped to one service.
+3. Call `ops_configure_integration`:
+   ```
+   ops_configure_integration(provider: "pagerduty", credentials: {
+     "PAGERDUTY_API_TOKEN": "<api_token>",
+     "PAGERDUTY_DEFAULT_SERVICE_ID": "<optional>"
+   })
+   ```
+4. Call `ops_test_integration(provider: "pagerduty")` — verifies `GET /services?limit=1`.
+5. On success: "PagerDuty is connected! You can use `pd_incidents_search` and `alerts_active(source=pagerduty)`."
+
+**Common issues**:
+- 401 → invalid token or using a routing key instead of REST API token.
+- Empty incident list → no open triggered/acknowledged incidents, or wrong service filter.
+
+---
+
+## Provider: Prometheus
+
+**Required credentials**:
+
+| Key | Required | Description | Where to find it |
+|-----|----------|-------------|-----------------|
+| `PROMETHEUS_BASE_URL` | Yes | Prometheus server URL (no trailing slash) | e.g. `http://localhost:9090`, in-cluster `http://prometheus:9090` |
+| `PROMETHEUS_BEARER_TOKEN` | No | Bearer auth if behind proxy | Reverse proxy / OAuth gateway |
+| `PROMETHEUS_BASIC_USER` | No | HTTP basic username | Optional |
+| `PROMETHEUS_BASIC_PASSWORD` | No | HTTP basic password | Optional |
+
+**Setup steps**:
+
+1. Ask for the Prometheus base URL reachable from the gateway (VPN/cluster network).
+2. Ask if authentication is required (none / bearer / basic).
+3. Call `ops_configure_integration`:
+   ```
+   ops_configure_integration(provider: "prometheus", credentials: {
+     "PROMETHEUS_BASE_URL": "http://localhost:9090"
+   })
+   ```
+4. Call `ops_test_integration(provider: "prometheus")` — verifies `/api/v1/status/buildinfo`.
+5. On success: "Prometheus is connected! You can use `prom_query`, `prom_alerts`, `prom_targets`, and related `prom_*` tools."
+
+**Local smoke** (developer):
+
+```bash
+docker run --rm -p 9090:9090 prom/prometheus:latest
+export PROMETHEUS_BASE_URL=http://localhost:9090
+curl -s "$PROMETHEUS_BASE_URL/api/v1/query?query=up"
+```
+
+**Common issues**:
+- Connection refused → URL not reachable from gateway (use VPN or internal URL).
+- 401 → missing or wrong bearer/basic credentials.
+
+---
+
 ## Handling "Missing Credentials" Errors
 
 If a user tries a tool and gets an error about missing credentials or an unconfigured integration:
 
-1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `ghe_` → GitHub, `bb_` → Bitbucket, `gl_` → GitLab, `cf_` → Cloudflare, `jira_` → Jira, `sentry_` → Sentry, `aws_` → AWS).
+1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `ghe_` → GitHub, `bb_` → Bitbucket, `gl_` → GitLab, `pd_` → PagerDuty, `prom_` → Prometheus, `cf_` → Cloudflare, `jira_` → Jira, `sentry_` → Sentry, `aws_` → AWS).
 2. Call `ops_list_integrations` to confirm the provider is not configured.
 3. Offer to set it up: "It looks like [Provider] is not configured yet. Would you like me to help you connect it?"
 4. Follow the provider-specific steps above.

@@ -26,6 +26,8 @@ These tools are available once authenticated and integrations are configured:
 | Issue Tracking | Jira | `jira_issue_get`, `jira_issues_search` |
 | Error Tracking | Sentry | `sentry_issues_list`, `sentry_issues_search` |
 | Code Quality | SonarQube (paid) | `sq_quality_gate_status`, `sq_measures_summary`, `sq_issues_search` — prompt `diagnose-sonarqube-quality-gate` when in playbooks |
+| On-call / Incidents | PagerDuty (paid) | `pd_incidents_search`, `alerts_active(source=pagerduty)` — incident workflow complement to Datadog monitors |
+| Metrics / PromQL | Prometheus (paid) | `prom_alerts`, `prom_targets`, `prom_query` — native scrape targets and firing rules |
 | Cloud | AWS | `aws_sts_whoami`, `aws_cli_query` |
 | Network (built-in) | — | `dns_lookup`, `http_check`, `cert_status` |
 | Integration Mgmt | — | `ops_configure_integration`, `ops_list_integrations`, `ops_test_integration`, `ops_remove_integration` |
