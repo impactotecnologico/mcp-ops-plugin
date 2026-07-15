@@ -33,6 +33,8 @@ Copy or paraphrase the following:
 > - _"Write a post-mortem"_ or **`/postmortem-writer`** — RCA + optional incident memory (all plans)
 > - **`/integration-status`** — see which providers are connected
 >
+> **MCP resources** (gateway): `opsphere://playbooks/index` lists guided prompts; `opsphere://tenant/account-context` has full cloud-catalog context per account. See [TOOLS.md#mcp-resources](../docs/TOOLS.md#mcp-resources).
+>
 > **Docs:** [INSTALL.md](../docs/INSTALL.md) · [TOOLS.md](../docs/TOOLS.md) · [TROUBLESHOOTING.md](../docs/TROUBLESHOOTING.md)
 
 ---

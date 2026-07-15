@@ -2,7 +2,7 @@
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Version](https://img.shields.io/badge/version-1.0.5-blue)](https://github.com/impactotecnologico/mcp-ops-plugin/releases)
+[![Version](https://img.shields.io/badge/version-1.0.6-blue)](https://github.com/impactotecnologico/mcp-ops-plugin/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/impactotecnologico/mcp-ops-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/impactotecnologico/mcp-ops-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
@@ -70,6 +70,22 @@ mcp-cursor.opsphere.io/mcp      ← ALL tool execution happens here
       └── DNS / HTTP / TLS built-ins
 ```
 
+### MCP resources (gateway)
+
+After Connect, the gateway exposes **9 read-only MCP resources** (policies, catalog, playbooks). They complement tools — you do not need a resource per integration.
+
+| Resource | Purpose |
+|----------|---------|
+| `opsphere://rules/operational` | Tool catalog + your tenant scope (injected into server instructions) |
+| `opsphere://tools/catalog` | Enabled modules + prompt list (JSON) |
+| `opsphere://playbooks/index` | Guided workflows — outage, pipeline, SonarQube quality gate, Cloudflare audit, … |
+| `opsphere://tenant/account-context` | Full cloud-catalog context per account (infra names, regions, capabilities) |
+| `opsphere://policies/*` | Change approval, secrets handling, incident response |
+| `opsphere://taxonomy/severity` | SEV1–4 severity taxonomy |
+| `opsphere://inventory/critical-assets` | Brands, accounts, regions, apps inventory |
+
+The plugin rule [`onboarding-guide.mdc`](rules/onboarding-guide.mdc) tells the agent when to fetch these vs calling tools directly. Details: **[docs/TOOLS.md#mcp-resources](docs/TOOLS.md#mcp-resources)**.
+
 ---
 
 ## Subagents
@@ -129,6 +145,7 @@ The onboarding rule tells the main agent **when to delegate** vs handle inline, 
 | **Cloudflare** | Zone status · DNS records · firewall events | API Token |
 | **Jira** | Issue search · issue detail · comments | API Token |
 | **Sentry** | Issues list · issue search · project stats | Auth Token |
+| **SonarQube** | Quality gate · measures · issues · hotspots (paid) | Token + host URL |
 | **AWS** | Identity check · read-only CLI queries | Access Key + Secret Key |
 | **Network (built-in)** | DNS lookup · HTTP check · TLS cert · TCP | Nothing — always works |
 
@@ -158,6 +175,7 @@ Opsphere plugin AWS integration uses **IAM Access Key + Secret Access Key** — 
 | `"Why did GitHub Actions fail on main?"` | Paid: **`/ci-investigator`**; Community: `ghe_actions_latest` or upgrade at [pricing](https://opsphere.io/pricing) |
 | `"Find Jira issues assigned to me"` | Searches Jira with JQL and returns summaries |
 | `"What GitHub Actions ran on main today?"` | Lists latest workflow runs with status |
+| `"Why did SonarQube fail on main?"` | `sq_quality_gate_status` → `sq_issues_search` (when SonarQube module enabled) |
 | `"Show my usage"` | Displays plan, trial status, and daily tool calls |
 | `"Which integrations do I have set up?"` | Lists configured vs. pending providers |
 | `"Configure my AWS"` | Guided IAM key setup (Access Key + Secret Key — not SSO) |

@@ -25,6 +25,7 @@ These tools are available once authenticated and integrations are configured:
 | CDN / DNS | Cloudflare | `cf_quick_status`, `cf_dns_records` |
 | Issue Tracking | Jira | `jira_issue_get`, `jira_issues_search` |
 | Error Tracking | Sentry | `sentry_issues_list`, `sentry_issues_search` |
+| Code Quality | SonarQube (paid) | `sq_quality_gate_status`, `sq_measures_summary`, `sq_issues_search` — prompt `diagnose-sonarqube-quality-gate` when in playbooks |
 | Cloud | AWS | `aws_sts_whoami`, `aws_cli_query` |
 | Network (built-in) | — | `dns_lookup`, `http_check`, `cert_status` |
 | Integration Mgmt | — | `ops_configure_integration`, `ops_list_integrations`, `ops_test_integration`, `ops_remove_integration` |
@@ -40,6 +41,24 @@ These tools are available once authenticated and integrations are configured:
 **Memory tools** appear only when the `memory` module is enabled for your tenant (`tenant_tools`, profile `cursor`). They store **distilled** notes from past sessions — not live ops truth. Always verify current state with Datadog, K8s, Vercel, or other live tools after reading memory.
 
 **Work context** is injected automatically when MCP connects (default cloud account + index of others). After signup, if `ops_my_usage` shows work context as not configured, run the `set-work-context` skill. For full text of a non-default account, use `ops_get_work_context` or resource `opsphere://tenant/account-context`.
+
+### MCP resources (gateway — read via @ or Fetch MCP Resource)
+
+Nine read-only resources ship with the remote MCP server. They are **not** duplicated in this plugin repo — Cursor fetches them from the gateway after Connect.
+
+| URI | When to read |
+|-----|----------------|
+| `opsphere://rules/operational` | Full tool catalog + tenant scope (same as server instructions; refreshes with catalog) |
+| `opsphere://tools/catalog` | JSON: enabled modules + prompt index for your tenant |
+| `opsphere://playbooks/index` | All MCP prompts grouped by category (outage, pipeline, SonarQube, …) |
+| `opsphere://tenant/account-context` | Full per-account `system_prompt_context` (infra names, regions, capabilities) |
+| `opsphere://policies/change-approval` | Before mutating Cloudflare / Akamai / `system_update` |
+| `opsphere://policies/secrets-handling` | Credential handling and redaction |
+| `opsphere://policies/incident-response` | Incident lifecycle and roles |
+| `opsphere://taxonomy/severity` | SEV1–4 definitions and confidence |
+| `opsphere://inventory/critical-assets` | Canonical brands, accounts, regions, apps |
+
+**When to use resources vs tools:** use **`deployment_status`**, **`macro_*`**, or atomic tools for live checks. Use **`opsphere://tenant/account-context`** when you need full catalog prose for a non-default account. Use **`opsphere://playbooks/index`** to discover guided prompts (e.g. `diagnose-sonarqube-quality-gate`). Do not expect one resource per tool — the catalog lives in `opsphere://rules/operational`.
 
 ---
 
@@ -66,6 +85,8 @@ If a tool returns an error about missing credentials or an unconfigured provider
    - `vercel_` → Vercel
    - `ghe_` → GitHub
    - `bb_` → Bitbucket
+   - `gl_` → GitLab
+   - `sq_` → SonarQube
    - `cf_` → Cloudflare
    - `jira_` → Jira
    - `sentry_` → Sentry
@@ -186,7 +207,8 @@ Users might say things like:
 - "Show PR #42 status in Bitbucket"
 - "Find Jira issues assigned to me"
 - "What GitHub Actions ran today on the main branch?"
-- "Why did the pipeline fail on main?" — on paid plans, delegate to `ci-investigator`; on Community, `bb_pipeline_diagnose` or upgrade
+- "Why did the pipeline fail on main?" — on paid plans, delegate to `ci-investigator`; on Community, `bb_pipeline_diagnose` or `gl_pipeline_diagnose` or upgrade
+- "Why did SonarQube fail the quality gate?" — `sq_quality_gate_status` + `sq_issues_search` (inNewCodePeriod=true) when SonarQube is configured
 - "Diagnose the failed GitHub Actions workflow" — paid: `/ci-investigator`; Community: `ghe_actions_latest` inline or upgrade
 - "Show my usage" — triggers `ops_my_usage`
 - "Which integrations do I have configured?" — triggers `ops_list_integrations`
