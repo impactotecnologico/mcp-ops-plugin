@@ -1,6 +1,6 @@
 ---
 name: configure-integration
-description: Connect Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, or AWS — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider, or when a tool reports missing credentials.
+description: Connect Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, GitLab, or AWS — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider, or when a tool reports missing credentials.
 ---
 
 # Configure Integration
@@ -160,6 +160,37 @@ It uses four MCP tools from the backend:
 
 ---
 
+## Provider: GitLab
+
+**Required credentials**:
+
+| Key | Required | Description | Where to find it |
+|-----|----------|-------------|-----------------|
+| `GITLAB_TOKEN` | Yes | Personal Access Token | User Settings → Access Tokens |
+| `GITLAB_BASE_URL` | No | API base URL | Default `https://gitlab.com/api/v4`; set for self-hosted GitLab |
+| `GITLAB_GROUP` | No | Default group/namespace | Used by `gl_projects_list` when namespace is omitted |
+
+**Setup steps**:
+
+1. Ask whether they use gitlab.com or self-hosted GitLab.
+2. Direct to User Settings → Access Tokens → create token with `read_api` and `read_repository` scopes.
+3. Call `ops_configure_integration`:
+   ```
+   ops_configure_integration(provider: "gitlab", credentials: {
+     "GITLAB_TOKEN": "<token>",
+     "GITLAB_BASE_URL": "https://gitlab.com/api/v4",
+     "GITLAB_GROUP": "<optional-group-slug>"
+   })
+   ```
+4. Call `ops_test_integration(provider: "gitlab")` to verify.
+5. On success: "GitLab is connected! You can now use `gl_pipelines_latest` and `gl_pipeline_diagnose`."
+
+**Common issues**:
+- 401 → invalid or expired token, or missing scopes.
+- 404 on self-hosted → verify `GITLAB_BASE_URL` ends with `/api/v4`.
+
+---
+
 ## Provider: Cloudflare
 
 **Required credentials**:
@@ -297,7 +328,7 @@ It uses four MCP tools from the backend:
 
 If a user tries a tool and gets an error about missing credentials or an unconfigured integration:
 
-1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `ghe_` → GitHub, `bb_` → Bitbucket, `cf_` → Cloudflare, `jira_` → Jira, `sentry_` → Sentry, `aws_` → AWS).
+1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `ghe_` → GitHub, `bb_` → Bitbucket, `gl_` → GitLab, `cf_` → Cloudflare, `jira_` → Jira, `sentry_` → Sentry, `aws_` → AWS).
 2. Call `ops_list_integrations` to confirm the provider is not configured.
 3. Offer to set it up: "It looks like [Provider] is not configured yet. Would you like me to help you connect it?"
 4. Follow the provider-specific steps above.

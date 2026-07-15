@@ -13,7 +13,7 @@
       "name": "Opsphere MCP Plugin",
       "type": "Opsphere",
       "source": ".",
-      "description": "Thin client — all MCP tools run on the Opsphere gateway. Monitor Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, AWS from Cursor. OAuth2 remote MCP; auditable manifest-only bundle (MIT).",
+      "description": "Thin client — all MCP tools run on the Opsphere gateway. Monitor Datadog, Vercel, GitHub, GitLab, Cloudflare, Jira, Sentry, Bitbucket, AWS from Cursor. OAuth2 remote MCP; auditable manifest-only bundle (MIT).",
       "version": "1.0.5",
       "author": {
         "name": "Opsphere",
@@ -34,6 +34,7 @@
         "sentry",
         "jira",
         "bitbucket",
+        "gitlab",
         "infrastructure",
         "observability",
         "mcp",

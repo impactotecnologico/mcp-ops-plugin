@@ -21,6 +21,7 @@
     "sentry",
     "jira",
     "bitbucket",
+    "gitlab",
     "infrastructure",
     "observability",
     "mcp",

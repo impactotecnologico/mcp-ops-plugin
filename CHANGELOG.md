@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+- **GitLab integration** (`gl_*` tools): merge requests, pipelines, branches, tags, and project list via GitLab REST API v4. Configure with `GITLAB_TOKEN` (optional `GITLAB_BASE_URL`, `GITLAB_GROUP`). Documented in `configure-integration` skill.
+
 ## [1.0.5] - 2026-07-11
 
 ### Added

@@ -246,6 +246,24 @@ Diagnose a failed pipeline: identify the failed step and show its log output.
 
 ---
 
+## GitLab
+
+Requires: `GITLAB_TOKEN` (optional `GITLAB_BASE_URL`, `GITLAB_GROUP`).
+
+### `gl_pipelines_latest`
+List the latest CI/CD pipeline runs for a GitLab project.
+
+**Example**: _"Show the last 3 pipelines for acme/backend"_
+
+---
+
+### `gl_pipeline_diagnose`
+Diagnose a failed pipeline: identify the failed job and show log excerpts.
+
+**Example**: _"Why did the last GitLab pipeline fail?"_
+
+---
+
 ## Cloudflare
 
 Requires: `CLOUDFLARE_API_TOKEN`.
