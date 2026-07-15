@@ -9,6 +9,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ### Added
 - **GitLab integration** (`gl_*` tools): merge requests, pipelines, branches, tags, and project list via GitLab REST API v4. Configure with `GITLAB_TOKEN` (optional `GITLAB_BASE_URL`, `GITLAB_GROUP`). Documented in `configure-integration` skill.
 
+## [1.0.6] - 2026-07-15
+
+### Added
+
+- **MCP resources** — document the nine read-only gateway URIs (`opsphere://rules/operational`, `opsphere://tools/catalog`, `opsphere://playbooks/index`, `opsphere://tenant/account-context`, policies, severity taxonomy, critical assets) in [README.md](README.md), [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc), [docs/TOOLS.md](docs/TOOLS.md#mcp-resources), and [`commands/opsphere-welcome.md`](commands/opsphere-welcome.md).
+- **SonarQube guidance** (paid gateway module): `sq_*` prefix in onboarding provider mapping; Code Quality row in tool categories; SonarQube row in README integrations table; example prompt for quality-gate failures; reference to guided prompt `diagnose-sonarqube-quality-gate` in [docs/TOOLS.md](docs/TOOLS.md).
+
+### Changed
+
+- [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc): clarifies when to fetch MCP resources vs call live tools (`deployment_status`, `macro_*`, atomic tools).
+- Example prompts: GitLab pipeline diagnose alongside Bitbucket; SonarQube quality gate question.
+
 ## [1.0.5] - 2026-07-11
 
 ### Added
