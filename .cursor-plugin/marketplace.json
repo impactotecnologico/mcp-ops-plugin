@@ -1,0 +1,47 @@
+{
+  "name": "opsphere",
+  "owner": {
+    "name": "Opsphere",
+    "email": "contact@opsphere.io"
+  },
+  "metadata": {
+    "description": "Thin client remote MCP plugin — all tools execute on Opsphere gateway (mcp-cursor.opsphere.io). DevOps intelligence for Cursor.",
+    "version": "1.0.5"
+  },
+  "plugins": [
+    {
+      "name": "Opsphere MCP Plugin",
+      "type": "Opsphere",
+      "source": ".",
+      "description": "Thin client — all MCP tools run on the Opsphere gateway. Monitor Datadog, Vercel, GitHub, GitLab, Cloudflare, Jira, Sentry, Bitbucket, AWS from Cursor. OAuth2 remote MCP; auditable manifest-only bundle (MIT).",
+      "version": "1.0.5",
+      "author": {
+        "name": "Opsphere",
+        "email": "contact@opsphere.io"
+      },
+      "homepage": "https://opsphere.io",
+      "repository": "https://github.com/impactotecnologico/mcp-ops-plugin",
+      "license": "MIT",
+      "logo": "assets/logo-icon.svg",
+      "keywords": [
+        "devops",
+        "monitoring",
+        "datadog",
+        "vercel",
+        "cloudflare",
+        "aws",
+        "github",
+        "sentry",
+        "jira",
+        "bitbucket",
+        "gitlab",
+        "infrastructure",
+        "observability",
+        "mcp",
+        "operational-intelligence",
+        "opsphere"
+      ],
+      "category": "DevOps"
+    }
+  ]
+}

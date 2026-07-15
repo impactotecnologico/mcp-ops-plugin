@@ -1,0 +1,11 @@
+{
+  "name": "opsphere-cursor-plugin",
+  "version": "1.0.5",
+  "private": true,
+  "description": "Opsphere DevOps intelligence plugin for Cursor (manifest, rules, skills — no npm runtime deps)",
+  "scripts": {
+    "validate": "bash scripts/ci-validate.sh",
+    "test": "npm run validate",
+    "audit": "node -e \"console.log('No npm dependencies — audit skipped')\""
+  }
+}

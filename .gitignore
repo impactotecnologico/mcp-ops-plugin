@@ -1,0 +1,27 @@
+# Internal planning documents — never commit
+_internal/
+docs/PRE-PUBLISH-AUDIT.md
+
+# Source design files (Adobe Illustrator, GIMP, etc.)
+logos/
+
+# Environment and secrets
+.env
+.env.*
+*.env
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+package-lock.json
+yarn.lock
+
+# Editor
+.vscode/
+.idea/
+
+# Logs
+*.log

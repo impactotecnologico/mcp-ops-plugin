@@ -1,0 +1,30 @@
+name: CI
+
+# Public hygiene checks for marketplace bundle (flags #5–6):
+# - scripts/ci-validate.sh — manifests, no secrets/hooks/exfiltration patterns
+# - Gitleaks — full git history secret scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate manifests and public-repo hygiene
+        run: npm test
+
+      - name: Gitleaks (full history)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
