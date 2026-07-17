@@ -200,11 +200,29 @@ client_id = "codex-mcp"
 
 Same as Cursor: `@ci-investigation` calls `ops_my_usage` first — Team plan required for pipeline diagnose tools. Upgrade at **https://opsphere.io/pricing** or use read-only triage steps documented in the skill.
 
-### ChatGPT desktop — "Authentication not compatible"
+### ChatGPT desktop — no "Connect" on the plugin detail page
 
-**Cause**: The desktop plugin reads `.mcp.json` only; it cannot set the extra Codex CLI headers or `client_id` from this repo.
+**Expected**: The store/detail view shows **Try now** / **Probar ahora**, not a standalone Connect button. OAuth runs **on install** (`authentication: ON_INSTALL` in the marketplace) or when the chat first needs MCP.
 
-**Workaround**: Use the **Codex CLI** path above. Desktop OAuth may improve in a future plugin release.
+**Flow**:
+
+1. Install Opsphere from the marketplace tab.
+2. Complete the browser login if prompted during install.
+3. Open a chat with Opsphere (Try now) or type `/mcp` in Codex mode to see server status.
+4. If MCP is disconnected, use **Authenticate** in MCP settings or re-install after updating the plugin.
+
+The bundled `.mcp.json` includes `oauth.client_id`, `http_headers.User-Agent`, and `oauth_resource` (same as `scripts/codex-mcp-config.sh`). Restart ChatGPT desktop after updating the plugin files.
+
+### ChatGPT desktop — "Authentication not compatible" or MCP startup incomplete
+
+**Cause**: Stale plugin cache, or an older `.mcp.json` without OAuth metadata.
+
+**Fix**:
+
+1. Update to the latest plugin commit (`.mcp.json` must include `codex-mcp` client id and `User-Agent`).
+2. Quit and restart ChatGPT desktop.
+3. Re-install the plugin or trigger OAuth from MCP settings.
+4. Optional fallback: run `./scripts/codex-mcp-config.sh` once (shared `~/.codex/config.toml` with desktop).
 
 ---
 

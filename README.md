@@ -302,7 +302,7 @@ See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for the full guide.
 
 ## Codex / ChatGPT
 
-Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.0** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
+Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.1** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
 
 ### Quick start (Codex CLI)
 
@@ -365,6 +365,7 @@ Removing the plugin does not automatically delete your Opsphere account or serve
 - **Status**: [status.opsphere.io](https://status.opsphere.io)
 - **Support**: [contact@opsphere.io](mailto:contact@opsphere.io)
 - **Architecture (remote MCP)**: [docs/REMOTE-MCP-ARCHITECTURE.md](docs/REMOTE-MCP-ARCHITECTURE.md)
+- **Codex publish (Fase 5)**: [docs/PRE-PUBLISH-AUDIT.md](docs/PRE-PUBLISH-AUDIT.md) · [docs/CODEX-TEST-CASES.md](docs/CODEX-TEST-CASES.md)
 - **Plans & subagents**: [docs/PLANS.md](docs/PLANS.md)
 - **Tool reference**: [docs/TOOLS.md](docs/TOOLS.md)
 - **Security & Trust**: [SECURITY.md](SECURITY.md) · [docs/SECURITY-AND-TRUST.md](docs/SECURITY-AND-TRUST.md)

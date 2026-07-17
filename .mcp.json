@@ -2,7 +2,14 @@
   "mcp_servers": {
     "opsphere": {
       "url": "https://mcp-cursor.opsphere.io/mcp",
-      "auth": "oauth"
+      "auth": "oauth",
+      "http_headers": {
+        "User-Agent": "codex-mcp/1.0"
+      },
+      "oauth_resource": "https://mcp-cursor.opsphere.io/mcp",
+      "oauth": {
+        "client_id": "codex-mcp"
+      }
     }
   }
 }

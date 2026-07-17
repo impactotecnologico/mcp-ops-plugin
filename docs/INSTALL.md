@@ -105,7 +105,7 @@ See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for common issues.
 
 ## Codex / ChatGPT
 
-Opsphere ships a **Codex plugin** manifest at `.codex-plugin/plugin.json` (version **1.0.0**, separate from Cursor). Both clients use the same gateway: `https://mcp-cursor.opsphere.io/mcp`.
+Opsphere ships a **Codex plugin** manifest at `.codex-plugin/plugin.json` (version **1.0.1**, separate from Cursor). Both clients use the same gateway: `https://mcp-cursor.opsphere.io/mcp`.
 
 ### Codex CLI (recommended path)
 
@@ -133,11 +133,16 @@ or `@configure-integration help me connect Datadog`.
 
 Opsphere is **not** in the public OpenAI Plugins Directory yet (Fase 5). Users add the **Git marketplace** from the repo; the search bar at the top of Plugins only searches the public directory.
 
+The plugin bundles a full `.mcp.json` (OAuth `client_id`, `User-Agent`, `oauth_resource`) — same metadata as `scripts/codex-mcp-config.sh`. Users do **not** need to edit `~/.codex/config.toml` for desktop.
+
 1. **Settings → Security → Developer mode** (on).
 2. Open **Plugins** → tab **Add marketplace** (not the search box).
 3. Paste: `https://github.com/impactotecnologico/mcp-ops-plugin` → confirm.
 4. A new marketplace tab **Opsphere** appears → select **Opsphere** → **Install**.
-5. **Connect** → browser login → chat: *"call ops_my_usage"*.
+5. Complete OAuth in the browser if prompted (**on install** — there is no separate Connect button on the detail page).
+6. **Try now** / open an Opsphere chat → ask e.g. *"What is my Opsphere plan?"* or use `@endpoint-health`.
+
+**Connect vs Try now:** The detail page shows **Try now**, not Connect. OAuth is triggered at install (`authentication: ON_INSTALL`) or from MCP settings / `/mcp` if the session expired.
 
 CLI equivalent (no local clone required):
 
@@ -157,7 +162,9 @@ Catalog file in repo: `.agents/plugins/marketplace.json` (`source: "./"` — plu
 
 Then: restart ChatGPT → **Plugins** → **Opsphere** → **Connect** (MCP OAuth).
 
-Personal marketplace entry: `~/.agents/plugins/marketplace.json` → `../.codex/plugins/opsphere`.
+Personal marketplace entry: `~/.agents/plugins/marketplace.json` → `./.codex/plugins/opsphere` (paths resolve from `$HOME`; run `npx @openai/codex plugin marketplace list` to confirm).
+
+**Do not** use `"source": "github"` / `"repo": "org/name"` in `marketplace.json` — Codex only accepts `local`, `url`, or `"./"` (see bundled `openai-bundled` catalog). The in-app Plugin Creator may write an invalid schema; prefer `npx @openai/codex plugin marketplace add impactotecnologico/mcp-ops-plugin --ref main`.
 
 ### Re-authentication (Codex)
 

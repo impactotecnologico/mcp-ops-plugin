@@ -7,8 +7,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
-- **Codex / ChatGPT plugin** (`.codex-plugin/plugin.json` v1.0.0): `.mcp.json`, eight skills (`@incident-investigation`, `@endpoint-health`, `@ci-investigation`, `@postmortem-writer`, plus existing integration/macro skills), `scripts/codex-install.sh` and `scripts/codex-mcp-config.sh`, CI validation for Codex manifests.
 - **GitLab integration** (`gl_*` tools): merge requests, pipelines, branches, tags, and project list via GitLab REST API v4. Configure with `GITLAB_TOKEN` (optional `GITLAB_BASE_URL`, `GITLAB_GROUP`). Documented in `configure-integration` skill.
+
+## [1.0.1] - 2026-07-17 (Codex plugin — `.codex-plugin/plugin.json`)
+
+### Added
+- [docs/CODEX-TEST-CASES.md](docs/CODEX-TEST-CASES.md) — seven E2E scenarios for OpenAI directory reviewers (OAuth, `ops_my_usage`, skills, re-auth).
+- Demo Community account for reviewers (`demo@opsphere.io`) documented in test cases §5.
+
+### Changed
+- Codex plugin manifest **1.0.0 → 1.0.1** after CLI E2E sign-off (Fase 3).
+- `.mcp.json` bundles `oauth.client_id`, `http_headers.User-Agent`, and `oauth_resource` for ChatGPT desktop (no CLI-only `config.toml` required).
+- `.codex-plugin/plugin.json` adds `interface.websiteURL`, `developerName`, and `category` for the install surface.
+
+## [1.0.0] - 2026-07-17 (Codex plugin initial — `.codex-plugin/plugin.json`)
+
+### Added
+- **Codex / ChatGPT plugin**: `.mcp.json`, eight skills (`@incident-investigation`, `@endpoint-health`, `@ci-investigation`, `@postmortem-writer`, plus existing integration/macro skills), `scripts/codex-install.sh` and `scripts/codex-mcp-config.sh`, CI validation for Codex manifests.
 
 ## [1.0.6] - 2026-07-15
 

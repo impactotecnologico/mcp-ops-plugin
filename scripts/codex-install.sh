@@ -45,7 +45,7 @@ entry = {
     "name": "opsphere",
     "source": {
         "source": "local",
-        "path": "../.codex/plugins/opsphere",
+        "path": "./.codex/plugins/opsphere",
     },
     "policy": {
         "installation": "AVAILABLE",
