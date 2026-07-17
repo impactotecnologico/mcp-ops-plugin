@@ -1,0 +1,8 @@
+{
+  "mcp_servers": {
+    "opsphere": {
+      "url": "https://mcp-cursor.opsphere.io/mcp",
+      "auth": "oauth"
+    }
+  }
+}

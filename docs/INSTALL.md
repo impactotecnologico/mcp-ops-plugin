@@ -100,3 +100,47 @@ Tokens are valid for **24 hours**. When your session expires, Cursor will show t
 ## Troubleshooting installation
 
 See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for common issues.
+
+---
+
+## Codex / ChatGPT
+
+Opsphere ships a **Codex plugin** manifest at `.codex-plugin/plugin.json` (version **1.0.0**, separate from Cursor). Both clients use the same gateway: `https://mcp-cursor.opsphere.io/mcp`.
+
+### Codex CLI (recommended path)
+
+From a clone of this repository:
+
+```bash
+./scripts/codex-mcp-config.sh
+npx @openai/codex mcp login opsphere
+```
+
+The config script appends to `~/.codex/config.toml`:
+
+- `http_headers.User-Agent = codex-mcp/1.0` (required for OAuth discovery with Codex CLI)
+- `[mcp_servers.opsphere.oauth] client_id = "codex-mcp"` (preset client id for Codex CLI)
+
+Verify:
+
+```text
+Call ops_my_usage
+```
+
+or `@configure-integration help me connect Datadog`.
+
+### ChatGPT desktop (local marketplace)
+
+```bash
+./scripts/codex-install.sh
+```
+
+Then: restart ChatGPT → **Settings → Security → Developer mode** → **Plugins** → **Opsphere** → **Connect** (MCP OAuth).
+
+Personal marketplace entry: `~/.agents/plugins/marketplace.json` → `../.codex/plugins/opsphere`.
+
+### Re-authentication (Codex)
+
+When the token expires (~24h), run `npx @openai/codex mcp login opsphere` again.
+
+See [TROUBLESHOOTING.md#codex--chatgpt-cli](TROUBLESHOOTING.md#codex--chatgpt-cli) for 403, redirect_uri, and plan-gate errors.

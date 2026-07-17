@@ -293,21 +293,21 @@ Read-only code quality: quality gates, measures, branches, issues, and security 
 ### `sq_quality_gate_status`
 Quality gate OK/ERROR for a project, optionally per branch or pull request.
 
-**Example**: _"Did the quality gate pass for breitling:storefront on main?"_
+**Example**: _"Did the quality gate pass for acme:storefront on main?"_
 
 ---
 
 ### `sq_measures_summary`
 Curated overall and/or new-code metrics (bugs, vulnerabilities, coverage, ratings).
 
-**Example**: _"Show Sonar coverage and new-code bugs for breitling:storefront"_
+**Example**: _"Show Sonar coverage and new-code bugs for acme:storefront"_
 
 ---
 
 ### `sq_issues_search`
 Search code issues; use `inNewCodePeriod=true` for new-code violations only.
 
-**Example**: _"List critical Sonar issues in new code for breitling:storefront"_
+**Example**: _"List critical Sonar issues in new code for acme:storefront"_
 
 ---
 
