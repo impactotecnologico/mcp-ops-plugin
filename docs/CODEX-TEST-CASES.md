@@ -72,7 +72,7 @@ Reviewers may instead **self-sign-up** with any email (except blocked corporate 
 **Prompt in Codex chat:**
 
 ```text
-Call the MCP tool ops_my_usage with no parameters.
+What is my Opsphere plan and usage? Summarize in plain language — do not show raw JSON.
 ```
 
 **Expected:**
@@ -217,9 +217,9 @@ curl -sS -H 'User-Agent: codex-mcp/1.0' \
 3. Open plugin detail → **Try now** (no Connect button on this page — expected).
 4. Ask: *"What is my Opsphere plan and usage?"* or `@endpoint-health` on a hostname.
 
-**Expected:** Model calls `ops_my_usage` or skill tools; no `No authorization support detected`.
+**Expected:** Model calls `ops_my_usage` or skill tools; no `No authorization support detected`. Response is **conversational prose**, not a raw `json` code block of the MCP envelope.
 
-**Fail if:** MCP never authenticates after install; check **Settings → MCP** or `/mcp` for reconnect.
+**Fail if:** MCP never authenticates after install; check **Settings → MCP** or `/mcp` for reconnect. **Fail if:** assistant dumps full tool JSON unless user asked for debug output.
 
 ---
 
