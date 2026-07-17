@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
+- **Codex / ChatGPT plugin** (`.codex-plugin/plugin.json` v1.0.0): `.mcp.json`, eight skills (`@incident-investigation`, `@endpoint-health`, `@ci-investigation`, `@postmortem-writer`, plus existing integration/macro skills), `scripts/codex-install.sh` and `scripts/codex-mcp-config.sh`, CI validation for Codex manifests.
 - **GitLab integration** (`gl_*` tools): merge requests, pipelines, branches, tags, and project list via GitLab REST API v4. Configure with `GITLAB_TOKEN` (optional `GITLAB_BASE_URL`, `GITLAB_GROUP`). Documented in `configure-integration` skill.
 
 ## [1.0.6] - 2026-07-15

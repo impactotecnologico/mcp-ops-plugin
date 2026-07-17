@@ -46,7 +46,7 @@ tracked_match_exists() {
 echo "=== Opsphere plugin — public repo validation ==="
 
 # 1. Required manifest files
-for f in .cursor-plugin/plugin.json mcp.json README.md CHANGELOG.md LICENSE; do
+for f in .cursor-plugin/plugin.json .codex-plugin/plugin.json .mcp.json mcp.json README.md CHANGELOG.md LICENSE; do
   [[ -f "$f" ]] || { red "missing $f"; continue; }
   ok "$f exists"
 done
@@ -57,7 +57,7 @@ done
 [[ -f assets/icon.png ]] && ok "assets/icon.png"
 
 # 3. JSON syntax
-for j in .cursor-plugin/plugin.json .cursor-plugin/marketplace.json mcp.json; do
+for j in .cursor-plugin/plugin.json .cursor-plugin/marketplace.json .codex-plugin/plugin.json .mcp.json mcp.json; do
   [[ -f "$j" ]] || continue
   python3 -m json.tool "$j" >/dev/null || red "invalid JSON: $j"
 done
@@ -92,11 +92,21 @@ sys.exit(1 if bad else 0)
 fi
 
 # 6. scripts/ — maintainer CI only (no runtime shell in bundle)
-EXTRA_SCRIPTS="$(find scripts -type f ! -name 'ci-validate.sh' 2>/dev/null | head -1 || true)"
-if [[ -n "$EXTRA_SCRIPTS" ]]; then
-  red "unexpected files in scripts/ (only ci-validate.sh allowed): $EXTRA_SCRIPTS"
+ALLOWED_SCRIPTS=(ci-validate.sh codex-install.sh codex-mcp-config.sh)
+EXTRA_SCRIPTS=()
+while IFS= read -r script; do
+  [[ -z "$script" ]] && continue
+  base="$(basename "$script")"
+  allowed=0
+  for a in "${ALLOWED_SCRIPTS[@]}"; do
+    [[ "$base" == "$a" ]] && { allowed=1; break; }
+  done
+  [[ "$allowed" -eq 0 ]] && EXTRA_SCRIPTS+=("$script")
+done < <(find scripts -type f 2>/dev/null || true)
+if [[ "${#EXTRA_SCRIPTS[@]}" -gt 0 ]]; then
+  red "unexpected files in scripts/: ${EXTRA_SCRIPTS[*]}"
 else
-  ok "scripts/ contains only ci-validate.sh"
+  ok "scripts/ contains only allowed maintainer scripts"
 fi
 
 # 7. Sensitive patterns in tracked files (not docs about env var *names*)
@@ -129,6 +139,8 @@ fi
 
 # 10. mcp.json public endpoint only
 if search_quiet 'mcp-cursor\.opsphere\.io' mcp.json; then ok "mcp.json uses public gateway URL"; else red "unexpected mcp.json URL"; fi
+if search_quiet 'mcp-cursor\.opsphere\.io' .mcp.json; then ok ".mcp.json uses public gateway URL"; else red "unexpected .mcp.json URL"; fi
+if search_quiet '"auth"[[:space:]]*:[[:space:]]*"oauth"' .mcp.json; then ok ".mcp.json uses oauth auth"; else red ".mcp.json must set auth oauth"; fi
 
 # 11–14. Cursor submission checklist (frontmatter, logo, paths, version sync)
 if ROOT="$ROOT" python3 <<'PY'
@@ -252,7 +264,7 @@ else
   FAIL=1
 fi
 
-# 15. Deployment catalog skills document Team plugin restriction (Fase 5 golden)
+# 15. Deployment catalog skills document Team plugin restriction
 for skill in skills/set-work-context/SKILL.md skills/configure-deployment-catalog/SKILL.md; do
   if [[ -f "$skill" ]] && search_quiet 'WorkContextForbiddenError' "$skill"; then
     ok "$skill documents WorkContextForbiddenError"
@@ -260,6 +272,85 @@ for skill in skills/set-work-context/SKILL.md skills/configure-deployment-catalo
     red "$skill must document WorkContextForbiddenError for Team tenants"
   fi
 done
+
+# 16. Codex plugin manifest (independent version from Cursor)
+if ROOT="$ROOT" python3 <<'PY'
+import glob
+import json
+import os
+import re
+import sys
+
+ROOT = os.environ.get("ROOT", ".")
+failures: list[str] = []
+
+
+def fail(msg: str) -> None:
+    failures.append(msg)
+    print(f"FAIL: {msg}")
+
+
+codex_path = os.path.join(ROOT, ".codex-plugin/plugin.json")
+if not os.path.isfile(codex_path):
+    fail("missing .codex-plugin/plugin.json")
+else:
+    with open(codex_path, encoding="utf-8") as f:
+        codex = json.load(f)
+    version = codex.get("version")
+    if not version or not re.match(r"^\d+\.\d+\.\d+", str(version)):
+        fail(f".codex-plugin/plugin.json invalid version: {version!r}")
+    else:
+        print(f"OK: .codex-plugin/plugin.json version ({version})")
+    skills_ref = codex.get("skills")
+    if skills_ref != "./skills/":
+        fail(f".codex-plugin/plugin.json skills must be ./skills/ (got {skills_ref!r})")
+    mcp_ref = codex.get("mcpServers")
+    if mcp_ref != "./.mcp.json":
+        fail(f".codex-plugin/plugin.json mcpServers must be ./.mcp.json (got {mcp_ref!r})")
+    iface = codex.get("interface") or {}
+    icon = iface.get("composerIcon") or iface.get("logo")
+    if icon and not os.path.isfile(os.path.join(ROOT, icon.lstrip("./"))):
+        fail(f".codex-plugin composerIcon/logo not found: {icon}")
+    elif icon:
+        print(f"OK: .codex-plugin interface icon exists ({icon})")
+
+codex_skills = {
+    "incident-investigation",
+    "endpoint-health",
+    "ci-investigation",
+    "postmortem-writer",
+    "configure-integration",
+    "set-work-context",
+    "configure-deployment-catalog",
+    "run-macro-workflows",
+}
+for name in sorted(codex_skills):
+  path = os.path.join(ROOT, "skills", name, "SKILL.md")
+  if not os.path.isfile(path):
+    fail(f"Codex skill missing: skills/{name}/SKILL.md")
+    continue
+  with open(path, encoding="utf-8") as f:
+    content = f.read()
+  if not content.startswith("---"):
+    fail(f"Codex skill missing frontmatter: skills/{name}/SKILL.md")
+    continue
+  parts = content.split("---", 2)
+  fm = parts[1]
+  if not re.search(r"^name:\s*" + re.escape(name) + r"\s*$", fm, re.MULTILINE):
+    fail(f"Codex skill name mismatch: skills/{name}/SKILL.md")
+  if not re.search(r"^description:\s*\S", fm, re.MULTILINE):
+    fail(f"Codex skill missing description: skills/{name}/SKILL.md")
+
+if not failures:
+  print("OK: Codex skills frontmatter (8 skills)")
+
+sys.exit(1 if failures else 0)
+PY
+then
+  :
+else
+  FAIL=1
+fi
 
 echo "=== done (failures: $FAIL) ==="
 exit "$FAIL"

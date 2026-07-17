@@ -1,0 +1,31 @@
+{
+  "name": "opsphere",
+  "version": "1.0.0",
+  "description": "DevOps intelligence — remote MCP gateway with guided operational skills.",
+  "author": {
+    "name": "Opsphere",
+    "email": "contact@opsphere.io",
+    "url": "https://opsphere.io"
+  },
+  "homepage": "https://opsphere.io",
+  "repository": "https://github.com/impactotecnologico/mcp-ops-plugin",
+  "license": "MIT",
+  "keywords": ["devops", "mcp", "observability", "incident-triage"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Opsphere",
+    "shortDescription": "DevOps intelligence for ChatGPT",
+    "longDescription": "Remote MCP gateway with incident investigation, endpoint health, CI investigation, integration setup, and post-mortem skills. Same gateway as the Cursor plugin (mcp-cursor.opsphere.io).",
+    "defaultPrompt": [
+      "@incident-investigation investigate why checkout is failing",
+      "@configure-integration help me connect Datadog",
+      "What is my Opsphere plan and usage?"
+    ],
+    "brandColor": "#0D9488",
+    "composerIcon": "./assets/logo-icon.svg",
+    "logo": "./assets/logo-icon.svg",
+    "privacyPolicyURL": "https://opsphere.io/en/privacy",
+    "termsOfServiceURL": "https://opsphere.io/en/terms"
+  }
+}

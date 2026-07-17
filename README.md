@@ -256,7 +256,7 @@ Full details: **[SECURITY.md](SECURITY.md)** (encryption, retention, isolation, 
 
 - Open **Cursor Settings → MCP** and look for the Opsphere entry. If there is no Connect button, try reloading the window (`Cmd+Shift+P → Reload Window`).
 - Check gateway reachability: `curl https://mcp-cursor.opsphere.io/health`
-- If the gateway is down, check [status.opsphere.io](https://status.opsphere.io). **Production ECS** scales the gateway down outside **06:00–22:00 Europe/Madrid** on weekdays and is off on weekends — a failed health check during those windows is expected, not an incident.
+- If the gateway is down, check [status.opsphere.io](https://status.opsphere.io).
 
 </details>
 
@@ -297,6 +297,41 @@ Full details: **[SECURITY.md](SECURITY.md)** (encryption, retention, isolation, 
 </details>
 
 See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for the full guide.
+
+---
+
+## Codex / ChatGPT
+
+Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.0** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
+
+### Quick start (Codex CLI)
+
+```bash
+git clone https://github.com/impactotecnologico/mcp-ops-plugin.git
+cd mcp-ops-plugin
+./scripts/codex-install.sh      # optional: ChatGPT desktop local marketplace
+./scripts/codex-mcp-config.sh     # ~/.codex/config.toml (User-Agent + client_id)
+npx @openai/codex mcp login opsphere
+```
+
+Verify: ask Codex to call **`ops_my_usage`** or use **`@configure-integration`**.
+
+### Skills (`@` in Codex chat)
+
+| Skill | Use when |
+|-------|----------|
+| `@incident-investigation` | Outages, downtime, widespread 5xx |
+| `@endpoint-health` | Single URL up/down, DNS, TLS expiry |
+| `@ci-investigation` | Failed GitHub Actions / Bitbucket / GitLab pipelines |
+| `@postmortem-writer` | RCA / post-mortem after an incident |
+| `@configure-integration` | Connect Datadog, Vercel, AWS, etc. |
+| `@set-work-context` | Account work context (Team plans) |
+| `@configure-deployment-catalog` | Deployment sources (Community vs Team) |
+| `@run-macro-workflows` | Team/Enterprise macro workflows |
+
+Cursor **agents** (`/outage-triage`, etc.) map to the first four skills above; keep `agents/` and ported skills in sync when editing.
+
+Full install paths (desktop marketplace, troubleshooting): **[docs/INSTALL.md](docs/INSTALL.md#codex--chatgpt)** · **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md#codex--chatgpt-cli)**
 
 ---
 

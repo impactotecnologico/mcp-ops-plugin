@@ -157,6 +157,57 @@ Run **`ops_my_usage`** to confirm your plan name.
 
 See [INSTALL.md](INSTALL.md) step 1.
 
+---
+
+## Codex / ChatGPT CLI
+
+### `codex mcp login` → "No authorization support detected"
+
+**Cause**: OAuth discovery failed or the request was blocked before it reached Opsphere.
+
+**Fix**:
+
+1. Run `./scripts/codex-mcp-config.sh` so `~/.codex/config.toml` includes the Opsphere MCP block.
+2. Confirm `https://mcp-cursor.opsphere.io/health` responds.
+3. Retry `npx @openai/codex mcp login opsphere`.
+
+### OAuth authorize or token → HTTP 403
+
+**Cause**: Edge security rules may block Codex loopback callbacks during OAuth.
+
+**Fix**: Contact **contact@opsphere.io** if login fails after step 1. Do not edit the authorize URL manually — the token step must use the same redirect the client registered.
+
+### "Dynamic client registration not supported"
+
+**Cause**: Codex CLI needs a preset `client_id` for this MCP server.
+
+**Fix**: Add to `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.opsphere.oauth]
+client_id = "codex-mcp"
+```
+
+(`codex-mcp-config.sh` does this automatically.)
+
+### `ops_my_usage` / tools return 403 on `initialize`
+
+**Cause**: Missing `User-Agent` header or expired OAuth token.
+
+**Fix**: Re-run `./scripts/codex-mcp-config.sh` and `npx @openai/codex mcp login opsphere`.
+
+### CI Investigation blocked on Community plan
+
+Same as Cursor: `@ci-investigation` calls `ops_my_usage` first — Team plan required for pipeline diagnose tools. Upgrade at **https://opsphere.io/pricing** or use read-only triage steps documented in the skill.
+
+### ChatGPT desktop — "Authentication not compatible"
+
+**Cause**: The desktop plugin reads `.mcp.json` only; it cannot set the extra Codex CLI headers or `client_id` from this repo.
+
+**Workaround**: Use the **Codex CLI** path above. Desktop OAuth may improve in a future plugin release.
+
+---
+
 ## Still stuck?
 
 Contact us at **contact@opsphere.io** with:
