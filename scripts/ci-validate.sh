@@ -141,6 +141,11 @@ fi
 if search_quiet 'mcp-cursor\.opsphere\.io' mcp.json; then ok "mcp.json uses public gateway URL"; else red "unexpected mcp.json URL"; fi
 if search_quiet 'mcp-cursor\.opsphere\.io' .mcp.json; then ok ".mcp.json uses public gateway URL"; else red "unexpected .mcp.json URL"; fi
 if search_quiet '"auth"[[:space:]]*:[[:space:]]*"oauth"' .mcp.json; then ok ".mcp.json uses oauth auth"; else red ".mcp.json must set auth oauth"; fi
+if search_quiet 'codex-mcp' .mcp.json && search_quiet 'User-Agent' .mcp.json && search_quiet 'oauth_resource' .mcp.json; then
+  ok ".mcp.json bundles Codex OAuth client_id, User-Agent, oauth_resource"
+else
+  red ".mcp.json must include oauth.client_id, http_headers.User-Agent, oauth_resource for ChatGPT desktop"
+fi
 
 # 11–14. Cursor submission checklist (frontmatter, logo, paths, version sync)
 if ROOT="$ROOT" python3 <<'PY'

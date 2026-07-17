@@ -1,6 +1,6 @@
 {
   "name": "opsphere",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "DevOps intelligence — remote MCP gateway with guided operational skills.",
   "author": {
     "name": "Opsphere",
@@ -17,6 +17,9 @@
     "displayName": "Opsphere",
     "shortDescription": "DevOps intelligence for ChatGPT",
     "longDescription": "Remote MCP gateway with incident investigation, endpoint health, CI investigation, integration setup, and post-mortem skills. Same gateway as the Cursor plugin (mcp-cursor.opsphere.io).",
+    "developerName": "Opsphere",
+    "category": "Developer Tools",
+    "websiteURL": "https://opsphere.io",
     "defaultPrompt": [
       "@incident-investigation investigate why checkout is failing",
       "@configure-integration help me connect Datadog",
