@@ -57,7 +57,7 @@ done
 [[ -f assets/icon.png ]] && ok "assets/icon.png"
 
 # 3. JSON syntax
-for j in .cursor-plugin/plugin.json .cursor-plugin/marketplace.json .codex-plugin/plugin.json .mcp.json mcp.json; do
+for j in .cursor-plugin/plugin.json .cursor-plugin/marketplace.json .codex-plugin/plugin.json .agents/plugins/marketplace.json .mcp.json mcp.json; do
   [[ -f "$j" ]] || continue
   python3 -m json.tool "$j" >/dev/null || red "invalid JSON: $j"
 done
