@@ -185,6 +185,21 @@ When the user asks about their plan, usage, trial status, remaining calls, or up
 
 - Use `ops_my_usage` — no parameters required.
 - It returns: plan name, trial end date, days remaining, daily usage (used / limit / resets at), **monthly usage (UTC month)**, enabled MCP tool count, configured integrations, and upgrade link.
+- **Presentation:** Use skill **`plan-and-usage`**. Summarize in conversational prose — **never** dump the raw MCP JSON envelope or a `json` code block unless the user explicitly asks for raw/debug output.
+
+---
+
+## Response presentation (all MCP tools — mandatory)
+
+Opsphere tools return human-readable markdown inside MCP `content[].text`. The chat UI should feel like talking to an SRE, not reading an API trace.
+
+| Do | Don't |
+|----|-------|
+| Parse tool `text` and answer in natural language | Paste `{ "content": [...] }` or full tool JSON |
+| Use headings, bullets, short tables | Wrap the entire tool result in a `json` code block |
+| Hide transport details unless debugging | Show JSON-RPC, `type`, or `isError` unless asked |
+
+**Exception:** Only show raw JSON when the user explicitly asks (e.g. "raw MCP response for debugging").
 
 ---
 

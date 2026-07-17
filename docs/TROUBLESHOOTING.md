@@ -213,7 +213,17 @@ Same as Cursor: `@ci-investigation` calls `ops_my_usage` first — Team plan req
 
 The bundled `.mcp.json` includes `oauth.client_id`, `http_headers.User-Agent`, and `oauth_resource` (same as `scripts/codex-mcp-config.sh`). Restart ChatGPT desktop after updating the plugin files.
 
-### ChatGPT desktop — "Authentication not compatible" or MCP startup incomplete
+### ChatGPT desktop — raw JSON instead of conversational reply
+
+**Cause**: Prompt asked for "full JSON result", or the model echoed the MCP envelope instead of parsing `content[].text`.
+
+**Fix**:
+
+1. Use natural prompts: *"What is my Opsphere plan and usage?"* or `@plan-and-usage`.
+2. Avoid: *"show me the full JSON result"* unless debugging.
+3. New chat after updating the plugin — skill **`plan-and-usage`** instructs conversational formatting.
+
+---
 
 **Cause**: Stale plugin cache, or an older `.mcp.json` without OAuth metadata.
 
