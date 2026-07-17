@@ -1,0 +1,19 @@
+{
+  "name": "opsphere-remote",
+  "interface": { "displayName": "Opsphere" },
+  "plugins": [
+    {
+      "name": "opsphere",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/impactotecnologico/mcp-ops-plugin.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
