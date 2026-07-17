@@ -129,13 +129,33 @@ Call ops_my_usage
 
 or `@configure-integration help me connect Datadog`.
 
-### ChatGPT desktop (local marketplace)
+### ChatGPT desktop (Git marketplace — end-user path)
+
+Opsphere is **not** in the public OpenAI Plugins Directory yet (Fase 5). Users add the **Git marketplace** from the repo; the search bar at the top of Plugins only searches the public directory.
+
+1. **Settings → Security → Developer mode** (on).
+2. Open **Plugins** → tab **Add marketplace** (not the search box).
+3. Paste: `https://github.com/impactotecnologico/mcp-ops-plugin` → confirm.
+4. A new marketplace tab **Opsphere** appears → select **Opsphere** → **Install**.
+5. **Connect** → browser login → chat: *"call ops_my_usage"*.
+
+CLI equivalent (no local clone required):
+
+```bash
+npx @openai/codex plugin marketplace add impactotecnologico/mcp-ops-plugin --ref main
+```
+
+Then restart ChatGPT desktop and open the **Opsphere** marketplace tab.
+
+Catalog file in repo: `.agents/plugins/marketplace.json` (`source: "./"` — plugin root is the repository root).
+
+### ChatGPT desktop (local dev copy)
 
 ```bash
 ./scripts/codex-install.sh
 ```
 
-Then: restart ChatGPT → **Settings → Security → Developer mode** → **Plugins** → **Opsphere** → **Connect** (MCP OAuth).
+Then: restart ChatGPT → **Plugins** → **Opsphere** → **Connect** (MCP OAuth).
 
 Personal marketplace entry: `~/.agents/plugins/marketplace.json` → `../.codex/plugins/opsphere`.
 
