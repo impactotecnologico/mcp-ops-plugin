@@ -33,7 +33,7 @@ Opsphere is intentionally split into two parts:
 | **Cursor plugin** (this repo) | Your machine | Yes — MIT, manifest-only |
 | **Opsphere gateway** (SaaS) | `https://mcp-cursor.opsphere.io` | No — proprietary backend |
 
-The plugin is a **thin client**; **all MCP tool execution runs on the gateway**. See [docs/REMOTE-MCP-ARCHITECTURE.md](docs/REMOTE-MCP-ARCHITECTURE.md) for flow diagrams and the complete domain list.
+The plugin bundle is **manifest-only** (markdown + JSON); **all MCP tool execution runs on the gateway**. See [docs/REMOTE-MCP-ARCHITECTURE.md](docs/REMOTE-MCP-ARCHITECTURE.md) for flow diagrams and the complete domain list.
 
 **Blast radius if the remote service were compromised:** an attacker with full gateway access could, in the worst case, read stored integration credentials and invoke tools on behalf of tenants. We mitigate this with tenant isolation, encryption at rest, least-privilege tool gating, audit logging, and operational controls described below. Users who need zero third-party credential custody should not use remote MCP integrations.
 

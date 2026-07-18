@@ -1,10 +1,10 @@
-# Opsphere — DevOps Intelligence for Cursor
+# Opsphere — DevOps & SRE Intelligence for Cursor
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Version](https://img.shields.io/badge/version-1.0.6-blue)](https://github.com/impactotecnologico/mcp-ops-plugin/releases)
+[![Version](https://img.shields.io/badge/version-1.0.6-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![CI](https://github.com/impactotecnologico/mcp-ops-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/impactotecnologico/mcp-ops-plugin/actions/workflows/ci.yml)
+[![CI](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
 
 ![Opsphere banner](assets/banners/banner1-dark.png)
@@ -13,7 +13,7 @@
 
 ## What is Opsphere?
 
-Opsphere is a **thin client** DevOps plugin for Cursor: rules, skills, agents, and `mcp.json` only — **all MCP tools run on the remote Opsphere gateway** (`mcp-cursor.opsphere.io`). It connects your monitoring, deployment, and issue-tracking tools to the AI agent so you can ask in natural language:
+Opsphere is a **DevOps and SRE intelligence plugin** for Cursor. It connects your monitoring, deployment, and issue-tracking stack to the AI agent through a **secure remote MCP gateway** (`mcp-cursor.opsphere.io`). The plugin bundle ships rules, skills, agents, and `mcp.json`; tool execution and credential storage run on the gateway. Ask in natural language:
 
 - _"Search Datadog logs for payment errors in the last hour"_
 - _"What's failing in Sentry right now?"_
@@ -21,7 +21,7 @@ Opsphere is a **thin client** DevOps plugin for Cursor: rules, skills, agents, a
 - _"Check DNS for mysite.com across all resolvers"_
 - _"Diagnose the failed Bitbucket pipeline"_
 
-Everything runs through a **secure remote MCP server** — intentional by design. No tool logic in the plugin bundle. No credentials stored locally. OAuth2 + PKCE via Cursor Connect.
+Everything runs through a **secure remote MCP server** — by design. Credentials are not stored in the plugin bundle or your workspace. OAuth2 + PKCE via Cursor Connect.
 
 Architecture diagram and domain list: **[docs/REMOTE-MCP-ARCHITECTURE.md](docs/REMOTE-MCP-ARCHITECTURE.md)**.
 
@@ -61,7 +61,7 @@ Remote MCP: Cursor calls **one endpoint** — `https://mcp-cursor.opsphere.io/mc
 You (Cursor chat)
       │
       ▼
-Opsphere plugin (thin client)   ← rules, skills, commands — MIT, no tool code
+Opsphere plugin (rules, skills, MCP config)   ← MIT bundle; guides the agent
       │   OAuth2 Bearer token (Cursor-managed)
       ▼
 mcp-cursor.opsphere.io/mcp      ← ALL tool execution happens here
@@ -119,7 +119,7 @@ Plan details and subagent rows: **[docs/PLANS.md](docs/PLANS.md)**. CI blocked o
 
 ## Rules, skills & commands
 
-The plugin is a **thin client**: behavior comes from bundled markdown, not local tool code.
+The plugin bundle is **markdown and JSON only** — agent guidance, skills, and MCP configuration. Tool implementations live on the gateway.
 
 | Layer | Path | Role |
 |-------|------|------|
@@ -228,7 +228,7 @@ Full comparison: **[docs/PLANS.md](docs/PLANS.md)**.
 
 ## Security & Trust
 
-Opsphere is a **remote MCP SaaS**: this repo is the open-source Cursor client (MIT); tool execution and credential storage run on [mcp-cursor.opsphere.io](https://mcp-cursor.opsphere.io).
+Opsphere is a **remote MCP SaaS**: this repo is the open-source Cursor plugin bundle (MIT); tool execution and credential storage run on [mcp-cursor.opsphere.io](https://mcp-cursor.opsphere.io).
 
 | Topic | Summary |
 |-------|---------|
@@ -302,13 +302,13 @@ See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for the full guide.
 
 ## Codex / ChatGPT
 
-Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.1** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
+Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.2** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
 
 ### Quick start (Codex CLI)
 
 ```bash
-git clone https://github.com/impactotecnologico/mcp-ops-plugin.git
-cd mcp-ops-plugin
+git clone https://github.com/opsphere-io/opsphere-plugin.git
+cd opsphere-plugin
 ./scripts/codex-install.sh      # optional: ChatGPT desktop local marketplace
 ./scripts/codex-mcp-config.sh     # ~/.codex/config.toml (User-Agent + client_id)
 npx @openai/codex mcp login opsphere

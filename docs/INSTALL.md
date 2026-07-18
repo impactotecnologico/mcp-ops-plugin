@@ -23,8 +23,8 @@ After install, type **`/opsphere-welcome`** in chat for a quick start guide (or 
 Cursor’s [plugin submission checklist](https://cursor.com/docs/reference/plugins) expects the plugin to be tested locally. From a clone of this repository:
 
 ```bash
-git clone https://github.com/impactotecnologico/mcp-ops-plugin.git
-cd mcp-ops-plugin
+git clone https://github.com/opsphere-io/opsphere-plugin.git
+cd opsphere-plugin
 npm test   # optional: same validation as CI
 
 mkdir -p ~/.cursor/plugins/local
@@ -105,7 +105,7 @@ See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for common issues.
 
 ## Codex / ChatGPT
 
-Opsphere ships a **Codex plugin** manifest at `.codex-plugin/plugin.json` (version **1.0.1**, separate from Cursor). Both clients use the same gateway: `https://mcp-cursor.opsphere.io/mcp`.
+Opsphere ships a **Codex plugin** manifest at `.codex-plugin/plugin.json` (version **1.0.2**, separate from Cursor). Both clients use the same gateway: `https://mcp-cursor.opsphere.io/mcp`.
 
 ### Codex CLI (recommended path)
 
@@ -137,7 +137,7 @@ The plugin bundles a full `.mcp.json` (OAuth `client_id`, `User-Agent`, `oauth_r
 
 1. **Settings → Security → Developer mode** (on).
 2. Open **Plugins** → tab **Add marketplace** (not the search box).
-3. Paste: `https://github.com/impactotecnologico/mcp-ops-plugin` → confirm.
+3. Paste: `https://github.com/opsphere-io/opsphere-plugin` → confirm.
 4. A new marketplace tab **Opsphere** appears → select **Opsphere** → **Install**.
 5. Complete OAuth in the browser if prompted (**on install** — there is no separate Connect button on the detail page).
 6. **Try now** / open an Opsphere chat → ask e.g. *"What is my Opsphere plan?"* or use `@endpoint-health`.
@@ -147,7 +147,7 @@ The plugin bundles a full `.mcp.json` (OAuth `client_id`, `User-Agent`, `oauth_r
 CLI equivalent (no local clone required):
 
 ```bash
-npx @openai/codex plugin marketplace add impactotecnologico/mcp-ops-plugin --ref main
+npx @openai/codex plugin marketplace add opsphere-io/opsphere-plugin --ref main
 ```
 
 Then restart ChatGPT desktop and open the **Opsphere** marketplace tab.
@@ -164,7 +164,7 @@ Then: restart ChatGPT → **Plugins** → **Opsphere** → **Connect** (MCP OAut
 
 Personal marketplace entry: `~/.agents/plugins/marketplace.json` → `./.codex/plugins/opsphere` (paths resolve from `$HOME`; run `npx @openai/codex plugin marketplace list` to confirm).
 
-**Do not** use `"source": "github"` / `"repo": "org/name"` in `marketplace.json` — Codex only accepts `local`, `url`, or `"./"` (see bundled `openai-bundled` catalog). The in-app Plugin Creator may write an invalid schema; prefer `npx @openai/codex plugin marketplace add impactotecnologico/mcp-ops-plugin --ref main`.
+**Do not** use `"source": "github"` / `"repo": "org/name"` in `marketplace.json` — Codex only accepts `local`, `url`, or `"./"` (see bundled `openai-bundled` catalog). The in-app Plugin Creator may write an invalid schema; prefer `npx @openai/codex plugin marketplace add opsphere-io/opsphere-plugin --ref main`.
 
 ### Re-authentication (Codex)
 

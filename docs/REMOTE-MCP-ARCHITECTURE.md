@@ -1,6 +1,6 @@
 # Remote MCP architecture
 
-Opsphere for Cursor is a **thin client** plugin. **All MCP tool execution runs on the Opsphere gateway** — not on your machine. This repository ships only rules, skills, commands, and `mcp.json`; there is no opaque bytecode or hidden backend in the bundle.
+Opsphere for Cursor is a **remote MCP plugin**. **All MCP tool execution runs on the Opsphere gateway** — not on your machine. This repository ships rules, skills, commands, and `mcp.json` (markdown and JSON only); there is no opaque bytecode or hidden backend in the bundle.
 
 ---
 
@@ -102,7 +102,7 @@ When you configure an integration, the **gateway** calls provider APIs (e.g. `ap
 | `scripts/ci-validate.sh` (CI only) | Compiled binaries |
 | CI: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) (validate + Gitleaks) | Hidden network clients / exfiltration |
 
-Everything in the [public GitHub repo](https://github.com/impactotecnologico/mcp-ops-plugin) is readable Markdown or JSON. **No opaque code.** Automated checks on every push confirm no secrets, no install hooks, and no exfiltration patterns in the bundle (`npm test` + Gitleaks).
+Everything in the [public GitHub repo](https://github.com/opsphere-io/opsphere-plugin) is readable Markdown or JSON. **No opaque code.** Automated checks on every push confirm no secrets, no install hooks, and no exfiltration patterns in the bundle (`npm test` + Gitleaks).
 
 ---
 

@@ -8,11 +8,11 @@ Use the block below in the Cursor Marketplace **security review / submission not
 
 **Product model**
 
-Opsphere is a **remote MCP SaaS gateway**. This repository contains only the Cursor plugin (MIT): rules, skills, commands, and `mcp.json` pointing to `https://mcp-cursor.opsphere.io/mcp`. The proprietary backend is not in this repo by design — same pattern as other remote MCP servers (hosted API + thin IDE client). Full architecture: [docs/REMOTE-MCP-ARCHITECTURE.md](REMOTE-MCP-ARCHITECTURE.md).
+Opsphere is a **remote MCP SaaS gateway**. This repository contains only the Cursor plugin bundle (MIT): rules, skills, commands, and `mcp.json` pointing to `https://mcp-cursor.opsphere.io/mcp`. The proprietary backend is not in this repo by design — same pattern as other remote MCP servers (hosted API + IDE plugin manifest). Full architecture: [docs/REMOTE-MCP-ARCHITECTURE.md](REMOTE-MCP-ARCHITECTURE.md).
 
 **Remote MCP + OAuth (reviewer note — Cursor flag #3)**
 
-- **Intentional design:** thin client; **all tools run on Opsphere gateway** — not locally.
+- **Intentional design:** plugin bundle is manifest-only; **all tools run on Opsphere gateway** — not locally.
 - **Single MCP endpoint:** `https://mcp-cursor.opsphere.io/mcp` (see `mcp.json`). OAuth on same host. No hidden URLs in the bundle.
 - **No opaque code:** the submitted bundle is Markdown + JSON only — fully auditable on GitHub. No binaries, no install hooks, no embedded SDKs calling third parties from the client.
 - **Trust model:** same class of risk as any **authenticated remote MCP** (or delegating to Datadog CLI / cloud APIs from an agent) — API access is centralized in one gateway with tenant isolation, rather than N separate local integrations.
@@ -80,7 +80,7 @@ Run locally: `npm test` (same as CI validate job).
 - `package.json` has no `preinstall` / `postinstall` / `prepare` scripts; **zero npm runtime dependencies**
 - Welcome via **`/opsphere-welcome`** (user-invoked Markdown command — no bash at runtime)
 - Only `scripts/ci-validate.sh` in `scripts/` (maintainer CI — **not** invoked by Cursor at runtime)
-- Public repo: https://github.com/impactotecnologico/mcp-ops-plugin
+- Public repo: https://github.com/opsphere-io/opsphere-plugin
 
 **Policies**
 
@@ -100,4 +100,4 @@ Users who configure integrations delegate API access to Opsphere to proxy calls 
 
 ## Short version (if character limit)
 
-Thin client remote MCP (MIT). All tools on `mcp-cursor.opsphere.io`. No opaque bundle code. **Security agent confirmed no secrets, no install hooks, no exfiltration in bundle.** CI: `scripts/ci-validate.sh` + Gitleaks on every push ([`.github/workflows/ci.yml`](../.github/workflows/ci.yml)). OAuth PKCE. See REMOTE-MCP-ARCHITECTURE.md
+Remote MCP plugin (MIT). All tools on `mcp-cursor.opsphere.io`. Markdown + JSON bundle only. **Security agent confirmed no secrets, no install hooks, no exfiltration in bundle.** CI: `scripts/ci-validate.sh` + Gitleaks on every push ([`.github/workflows/ci.yml`](../.github/workflows/ci.yml)). OAuth PKCE. See REMOTE-MCP-ARCHITECTURE.md

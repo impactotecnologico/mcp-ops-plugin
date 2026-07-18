@@ -1,14 +1,14 @@
 {
   "name": "opsphere",
   "version": "1.0.2",
-  "description": "DevOps and SRE intelligence for ChatGPT — remote MCP gateway for Datadog, Vercel, GitHub, AWS, incident triage, CI/CD pipelines, deployment status, and post-mortems.",
+  "description": "DevOps and SRE intelligence for ChatGPT Codex — search Datadog logs, triage outages, diagnose CI/CD pipelines, check deployments, and manage AWS, Kubernetes, GitHub, Jira, Sentry, and Cloudflare through a secure remote MCP gateway.",
   "author": {
     "name": "Opsphere",
     "email": "contact@opsphere.io",
     "url": "https://opsphere.io"
   },
   "homepage": "https://opsphere.io",
-  "repository": "https://github.com/impactotecnologico/mcp-ops-plugin",
+  "repository": "https://github.com/opsphere-io/opsphere-plugin",
   "license": "MIT",
   "keywords": [
     "devops",
@@ -18,6 +18,7 @@
     "model-context-protocol",
     "chatgpt",
     "codex",
+    "openai",
     "observability",
     "monitoring",
     "incident-triage",
@@ -27,6 +28,7 @@
     "datadog",
     "vercel",
     "github",
+    "github-actions",
     "bitbucket",
     "gitlab",
     "aws",
@@ -38,20 +40,20 @@
     "jira",
     "ci-cd",
     "pipelines",
-    "github-actions",
     "deployment",
     "infrastructure",
     "platform-engineering",
     "endpoint-health",
     "dns",
-    "tls"
+    "tls",
+    "opsphere"
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "Opsphere",
-    "shortDescription": "DevOps & SRE MCP — Datadog, Vercel, GitHub, AWS, incidents & CI",
-    "longDescription": "Opsphere connects ChatGPT to your operational stack through a secure remote MCP gateway (mcp-cursor.opsphere.io). First-time setup walks you through account status, work context, and your first integration. Then use guided skills to investigate outages and site-down incidents, run DNS/HTTP/TLS endpoint health checks, diagnose failed GitHub Actions and Bitbucket pipelines, search Datadog logs and errors, check Vercel and multi-platform deployment status, triage Sentry and Jira, and write structured post-mortems. Configure Datadog, AWS, GitHub, Cloudflare, Jira, Sentry, Bitbucket, and more from chat — credentials stay encrypted on the gateway, never in the plugin bundle. Community plan with trial; same tools as the Opsphere Cursor plugin.",
+    "displayName": "Opsphere — DevOps & SRE Intelligence",
+    "shortDescription": "DevOps & SRE MCP for Codex — Datadog, outages, CI/CD, AWS, K8s & deploys",
+    "longDescription": "Opsphere connects ChatGPT Codex to your operational stack through a secure remote MCP gateway. Onboarding walks you through plan status, work context, and your first integration. Then use guided skills to investigate site-down incidents and outages, run DNS/HTTP/TLS endpoint health checks, diagnose failed GitHub Actions and Bitbucket pipelines, search Datadog logs and errors, check Vercel and multi-platform deployment status, triage Sentry issues and Jira tickets, and write structured post-mortems. Configure Datadog, AWS, GitHub, Cloudflare, Jira, Sentry, Bitbucket, and more from chat — credentials stay encrypted on the gateway. Community plan with free trial; same operational tools as the Opsphere Cursor plugin.",
     "developerName": "Opsphere",
     "category": "Developer Tools",
     "websiteURL": "https://opsphere.io",

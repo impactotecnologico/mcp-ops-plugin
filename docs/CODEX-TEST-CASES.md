@@ -1,6 +1,6 @@
 # Codex CLI — test cases for OpenAI reviewers
 
-**Plugin:** Opsphere (`opsphere@opsphere` 1.0.1)  
+**Plugin:** Opsphere (`opsphere@opsphere` 1.0.2)  
 **MCP gateway:** `https://mcp-cursor.opsphere.io/mcp`  
 **Official client paths:** **Codex CLI** (validated E2E) and **ChatGPT desktop** (install + Try now; OAuth on install).
 
@@ -13,7 +13,7 @@
 ### 1. Install plugin marketplace
 
 ```bash
-npx @openai/codex plugin marketplace add impactotecnologico/mcp-ops-plugin --ref main
+npx @openai/codex plugin marketplace add opsphere-io/opsphere-plugin --ref main
 ```
 
 Enable **Opsphere** in Codex plugins (`opsphere@opsphere`).
@@ -23,8 +23,8 @@ Enable **Opsphere** in Codex plugins (`opsphere@opsphere`).
 From a clone or use the helper script:
 
 ```bash
-git clone https://github.com/impactotecnologico/mcp-ops-plugin.git
-cd mcp-ops-plugin
+git clone https://github.com/opsphere-io/opsphere-plugin.git
+cd opsphere-plugin
 ./scripts/codex-mcp-config.sh
 ```
 
@@ -48,20 +48,14 @@ npx @openai/codex
 
 **Success:** no banner `MCP startup incomplete (failed: opsphere)`.
 
-### 5. Demo account (OpenAI reviewers)
+### 5. Sign in (OpenAI reviewers)
 
-Use these credentials at the OAuth browser step (`codex mcp login opsphere` → **Log in**):
+At the OAuth browser step (`codex mcp login opsphere`):
 
-| Field | Value |
-|-------|-------|
-| Email | `demo@opsphere.io` |
-| Password | `Demo.1234` |
-| Tenant slug | `demo-c3c991` |
-| Plan | Community (read-only, ~30 MCP tools) |
+- **Self-sign-up** with any email (free Community trial, no credit card) — recommended for reviewers.
+- Or email **contact@opsphere.io** to request sandbox credentials (not published in this repo).
 
-Gateway signup requires passwords **≥ 8 characters** (`Demo.1` alone is rejected).
-
-Reviewers may instead **self-sign-up** with any email (except blocked corporate domains).
+Gateway signup requires passwords **≥ 8 characters**.
 
 ---
 
@@ -79,10 +73,10 @@ What is my Opsphere plan and usage? Summarize in plain language — do not show 
 
 | Field | Expected value |
 |-------|----------------|
-| Plan | `Community` (or `Professional` if demo upgraded) |
+| Plan | `Community` (or paid plan if upgraded) |
 | Status | Active |
 | Daily usage | `N / 100` calls |
-| Integrations | `0` (fresh account) or sandbox list for demo tenant |
+| Integrations | `0` (fresh account) or configured list for your tenant |
 | Work context | `Not configured` (acceptable) |
 | Upgrade link | `https://opsphere.io/pricing` |
 
@@ -208,11 +202,11 @@ curl -sS -H 'User-Agent: codex-mcp/1.0' \
 
 **Goal:** End-user UI path (not CLI).
 
-**Prerequisites:** Developer mode on; plugin **1.0.1+** with enriched `.mcp.json`.
+**Prerequisites:** Developer mode on; plugin **1.0.2+** with enriched `.mcp.json`.
 
 **Steps:**
 
-1. Add Git marketplace: `https://github.com/impactotecnologico/mcp-ops-plugin`
+1. Add Git marketplace: `https://github.com/opsphere-io/opsphere-plugin`
 2. Install **Opsphere** → complete OAuth if browser opens (on install).
 3. Open plugin detail → **Try now** (no Connect button on this page — expected).
 4. Ask: *"What is my Opsphere plan and usage?"* or `@endpoint-health` on a hostname.
@@ -243,7 +237,7 @@ curl -sS -H 'User-Agent: codex-mcp/1.0' \
 | Symptom | Fix |
 |---------|-----|
 | No **Connect** on plugin detail page | Expected — OAuth on **Install** or **Try now** / MCP settings |
-| Desktop shows plugin **1.0.0** | Reinstall from marketplace after pull **1.0.1+** |
+| Desktop shows plugin **1.0.0** | Reinstall from marketplace after pull **1.0.2+** |
 | `No authorization support detected` | Update plugin; `.mcp.json` must include `client_id` + `User-Agent` |
 | `MCP startup incomplete` | Run `mcp login` **before** starting Codex; use new session |
 | Tools not exposed after login in same chat | Exit Codex; login in terminal; start fresh session |
@@ -256,4 +250,4 @@ Full guide: [TROUBLESHOOTING.md#codex--chatgpt-cli](TROUBLESHOOTING.md#codex--ch
 ## Contact
 
 **Opsphere:** contact@opsphere.io  
-**Repository:** https://github.com/impactotecnologico/mcp-ops-plugin
+**Repository:** https://github.com/opsphere-io/opsphere-plugin
