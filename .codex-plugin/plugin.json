@@ -1,7 +1,7 @@
 {
   "name": "opsphere",
   "version": "1.0.2",
-  "description": "DevOps and SRE intelligence for ChatGPT Codex — search Datadog logs, triage outages, diagnose CI/CD pipelines, check deployments, and manage AWS, Kubernetes, GitHub, Jira, Sentry, and Cloudflare through a secure remote MCP gateway.",
+  "description": "DevOps and SRE intelligence for ChatGPT Codex — investigate incidents, search Datadog logs, diagnose CI/CD pipelines, check deployments, and operate across AWS, Kubernetes, GitHub, Jira, Sentry, Cloudflare, and more through a secure remote MCP gateway.",
   "author": {
     "name": "Opsphere",
     "email": "contact@opsphere.io",
@@ -45,6 +45,7 @@
     "platform-engineering",
     "endpoint-health",
     "dns",
+    "http",
     "tls",
     "opsphere"
   ],
@@ -52,15 +53,16 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Opsphere — DevOps & SRE Intelligence",
-    "shortDescription": "DevOps & SRE MCP for Codex — Datadog, outages, CI/CD, AWS, K8s & deploys",
-    "longDescription": "Opsphere connects ChatGPT Codex to your operational stack through a secure remote MCP gateway. Onboarding walks you through plan status, work context, and your first integration. Then use guided skills to investigate site-down incidents and outages, run DNS/HTTP/TLS endpoint health checks, diagnose failed GitHub Actions and Bitbucket pipelines, search Datadog logs and errors, check Vercel and multi-platform deployment status, triage Sentry issues and Jira tickets, and write structured post-mortems. Configure Datadog, AWS, GitHub, Cloudflare, Jira, Sentry, Bitbucket, and more from chat — credentials stay encrypted on the gateway. Community plan with free trial; same operational tools as the Opsphere Cursor plugin.",
+    "shortDescription": "Investigate incidents, CI/CD, deployments, logs, AWS and Kubernetes",
+    "longDescription": "Opsphere connects ChatGPT Codex to your operational stack through a secure remote MCP gateway. Start with the welcome guide, connect your account, define your work context, and configure your first integration. Then use guided skills to investigate outages, run DNS, HTTP, and TLS endpoint health checks, diagnose failed GitHub Actions and Bitbucket pipelines, search Datadog logs, inspect Vercel and multi-platform deployments, triage Sentry issues and Jira tickets, and produce structured postmortems. Configure Datadog, AWS, GitHub, Cloudflare, Jira, Sentry, Bitbucket, and other supported providers directly from chat. Credentials remain encrypted on the Opsphere gateway, and no hidden scripts execute from the plugin. Includes a Community plan with a free trial and the same operational tool ecosystem available through the Opsphere Cursor plugin.",
     "developerName": "Opsphere",
     "category": "Developer Tools",
     "websiteURL": "https://opsphere.io",
     "defaultPrompt": [
-      "@plan-and-usage check my account and summarize my plan in plain language",
-      "@set-work-context help me describe my stack, environments, and tools",
-      "@configure-integration guide me through connecting Datadog, AWS, or GitHub"
+      "@opsphere-welcome show me what Opsphere can do and help me get started",
+      "@plan-and-usage check my account and summarize my plan, usage, and available capabilities in plain language",
+      "@configure-integration guide me through connecting Datadog, AWS, GitHub, or another supported integration",
+      "@set-work-context help me define my stack, environments, repositories, deployment platforms, and operational tools"
     ],
     "brandColor": "#0D9488",
     "composerIcon": "./assets/logo-icon.svg",
