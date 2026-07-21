@@ -6,8 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-07-20 (Codex plugin — OpenAI directory submission)
+
 ### Added
-- **GitLab integration** (`gl_*` tools): merge requests, pipelines, branches, tags, and project list via GitLab REST API v4. Configure with `GITLAB_TOKEN` (optional `GITLAB_BASE_URL`, `GITLAB_GROUP`). Documented in `configure-integration` skill.
+- Official public repository: [opsphere-io/opsphere-plugin](https://github.com/opsphere-io/opsphere-plugin) (sync from private `main` via `.github/workflows/sync-official.yml`).
+- `@plan-and-usage` skill and enriched Codex marketplace SEO copy in `.codex-plugin/plugin.json`.
+
+### Changed
+- All public doc/repo links updated from `impactotecnologico/mcp-ops-plugin` → `opsphere-io/opsphere-plugin`.
+- `SECURITY.md` vulnerability contact → `contact@opsphere.io`.
+- CI: Gitleaks runs via MIT `gitleaks` CLI (org repos cannot use `gitleaks-action@v2` without `GITLEAKS_LICENSE`).
+- [docs/PRE-PUBLISH-AUDIT.md](docs/PRE-PUBLISH-AUDIT.md) refreshed for OpenAI directory sign-off.
 
 ## [1.0.1] - 2026-07-17 (Codex plugin — `.codex-plugin/plugin.json`)
 

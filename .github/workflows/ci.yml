@@ -24,7 +24,10 @@ jobs:
       - name: Validate manifests and public-repo hygiene
         run: npm test
 
+      # gitleaks/gitleaks-action@v2 requires GITLEAKS_LICENSE on org-owned repos
+      # (opsphere-io). The MIT gitleaks CLI has the same detection rules.
       - name: Gitleaks (full history)
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          GITLEAKS_VERSION=8.24.2
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" | tar -xz gitleaks
+          ./gitleaks detect --source . --verbose
