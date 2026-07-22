@@ -1,6 +1,6 @@
 ---
 name: configure-integration
-description: Connect Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, GitLab, or AWS — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider, or when a tool reports missing credentials.
+description: Connect Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, GitLab, Algolia, or AWS — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider, or when a tool reports missing credentials.
 ---
 
 # Configure Integration
@@ -324,11 +324,50 @@ It uses four MCP tools from the backend:
 
 ---
 
+## Provider: Algolia
+
+**Required credentials** (Search API tools only — `alg_status` / `alg_incidents` need **no** credentials):
+
+| Key | Required | Description | Where to find it |
+|-----|----------|-------------|-----------------|
+| `ALGOLIA_APPLICATION_ID` | Yes | Application ID | Algolia Dashboard → Settings → API Keys |
+| `ALGOLIA_API_KEY` | Yes | Restricted Search API key | API Keys → create key with ACLs below |
+| `ALGOLIA_DEFAULT_INDEX` | No | Default index when tools omit `index` | e.g. `products`, `storefront` |
+
+> **Security:** Use a **restricted** API key — **not** the Admin API key. Required ACLs: `listIndexes`, `search`, `settings`, `logs` (for `alg_logs`). The Search API base URL is derived from the Application ID — do not ask the user for a custom API URL.
+
+**Setup steps**:
+
+1. Ask: "I need your Algolia Application ID and a restricted Search API key."
+2. Direct to Algolia Dashboard → Settings → API Keys → copy Application ID.
+3. Create a new API key with ACLs: `listIndexes`, `search`, `settings`, `logs`. Restrict to the indices the team uses when possible.
+4. Optionally ask for a default index name (storefront/catalog index).
+5. Call `ops_configure_integration`:
+   ```
+   ops_configure_integration(provider: "algolia", credentials: {
+     "ALGOLIA_APPLICATION_ID": "<app_id>",
+     "ALGOLIA_API_KEY": "<restricted_key>",
+     "ALGOLIA_DEFAULT_INDEX": "<index>"
+   })
+   ```
+   Omit `ALGOLIA_DEFAULT_INDEX` if not needed.
+6. Call `ops_test_integration(provider: "algolia")` to verify (lists indices).
+7. On success: "Algolia is connected! You can use `alg_indices_list`, `alg_index_settings`, `alg_search`, `alg_object_get`, and `alg_logs`. Global status checks (`alg_status`, `alg_incidents`) work without credentials."
+
+**Common issues**:
+- 401 / 403 → invalid key or missing ACL. Recreate a restricted key with the ACLs above.
+- 404 on index → wrong index name or record not indexed. Use `alg_indices_list` to confirm names.
+- `alg_logs` quota → each log fetch consumes Algolia operations; prefer `alg_search` / `alg_object_get` first.
+
+**Outage triage tip:** For storefront search issues, call `alg_status` + `alg_incidents` **before** blaming application code — they report **global** Algolia platform health, not your app ID alone.
+
+---
+
 ## Handling "Missing Credentials" Errors
 
 If a user tries a tool and gets an error about missing credentials or an unconfigured integration:
 
-1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `ghe_` → GitHub, `bb_` → Bitbucket, `gl_` → GitLab, `cf_` → Cloudflare, `jira_` → Jira, `sentry_` → Sentry, `aws_` → AWS).
+1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `ghe_` → GitHub, `bb_` → Bitbucket, `gl_` → GitLab, `cf_` → Cloudflare, `jira_` → Jira, `sentry_` → Sentry, `alg_` → Algolia Search API, `aws_` → AWS). **`alg_status` and `alg_incidents` never require credentials** — if those fail, it is not a missing-integration error.
 2. Call `ops_list_integrations` to confirm the provider is not configured.
 3. Offer to set it up: "It looks like [Provider] is not configured yet. Would you like me to help you connect it?"
 4. Follow the provider-specific steps above.

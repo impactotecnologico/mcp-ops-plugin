@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+- **Algolia integration** (paid gateway module): `alg_*` Search API tools documented in [docs/TOOLS.md](docs/TOOLS.md); built-in `alg_status` / `alg_incidents` for global platform monitoring (no credentials). Provider setup in [`skills/configure-integration/SKILL.md`](skills/configure-integration/SKILL.md); onboarding table, prefix mapping, and example prompts in [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc).
+
 ## [1.0.2] - 2026-07-20 (Codex plugin — OpenAI directory submission)
 
 ### Added

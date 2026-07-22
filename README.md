@@ -147,8 +147,9 @@ The onboarding rule tells the main agent **when to delegate** vs handle inline, 
 | **Jira** | Issue search · issue detail · comments | API Token |
 | **Sentry** | Issues list · issue search · project stats | Auth Token |
 | **SonarQube** | Quality gate · measures · issues · hotspots (paid) | Token + host URL |
+| **Algolia** | Index inventory · search · record lookup · API logs (paid); global status/incidents built-in | App ID + restricted API key |
 | **AWS** | Identity check · read-only CLI queries | Access Key + Secret Key |
-| **Network (built-in)** | DNS lookup · HTTP check · TLS cert · TCP | Nothing — always works |
+| **Network (built-in)** | DNS lookup · HTTP check · TLS cert · TCP · Algolia platform status | Nothing — always works |
 
 ### AWS with the plugin
 
@@ -177,6 +178,9 @@ Opsphere plugin AWS integration uses **IAM Access Key + Secret Access Key** — 
 | `"Find Jira issues assigned to me"` | Searches Jira with JQL and returns summaries |
 | `"What GitHub Actions ran on main today?"` | Lists latest workflow runs with status |
 | `"Why did SonarQube fail on main?"` | `sq_quality_gate_status` → `sq_issues_search` (when SonarQube module enabled) |
+| `"Is Algolia having an outage?"` | `alg_status` + `alg_incidents` (built-in — no setup) |
+| `"Why is this SKU missing from search?"` | `alg_object_get` → `alg_search` (when Algolia module enabled) |
+| `"Configure my Algolia"` | Guided setup: App ID + restricted Search API key (not Admin) |
 | `"Show my usage"` | Displays plan, trial status, and daily tool calls |
 | `"Which integrations do I have set up?"` | Lists configured vs. pending providers |
 | `"Configure my AWS"` | Guided IAM key setup (Access Key + Secret Key — not SSO) |

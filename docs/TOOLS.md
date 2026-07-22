@@ -49,6 +49,20 @@ Verify the TLS certificate for a hostname: expiry date, issuer, and validity.
 
 ---
 
+### `alg_status` [built-in]
+Algolia **global platform** status by cluster (`operational`, `degraded_performance`, `partial_outage`, `major_outage`). Public monitoring API — **no tenant credentials**. Use during search/outage triage before blaming your app.
+
+**Example**: _"Is Algolia having an outage?"_
+
+---
+
+### `alg_incidents` [built-in]
+Recent Algolia platform incidents by cluster. Public monitoring API — no credentials. Pair with `alg_status` during upstream triage.
+
+**Example**: _"Show recent Algolia incidents"_
+
+---
+
 ## Integration Management [built-in]
 
 ### `ops_configure_integration`
@@ -312,6 +326,49 @@ Search code issues; use `inNewCodePeriod=true` for new-code violations only.
 ---
 
 **Guided prompt** (when listed in `opsphere://playbooks/index`): `diagnose-sonarqube-quality-gate` — structured QG failure triage with suggested `sq_*` tool order.
+
+---
+
+## Algolia
+
+**Built-in (no credentials):** `alg_status`, `alg_incidents` — global Algolia infrastructure monitoring.
+
+**Search API (paid module):** requires `ALGOLIA_APPLICATION_ID`, `ALGOLIA_API_KEY` (restricted key — not Admin), optional `ALGOLIA_DEFAULT_INDEX`.
+
+Read-only search triage: indices, settings, query reproduction, record lookup, API logs.
+
+### `alg_indices_list`
+List indices (name, entries, data size, last build).
+
+**Example**: _"List my Algolia indices"_
+
+---
+
+### `alg_index_settings`
+Read index settings (ranking, replicas, synonym references).
+
+**Example**: _"Show Algolia settings for the products index"_
+
+---
+
+### `alg_search`
+Run a search query (`hitsPerPage` capped at 20 on the gateway).
+
+**Example**: _"Search Algolia for SKU 12345 in the storefront index"_
+
+---
+
+### `alg_object_get`
+Fetch a single record by `objectID` — verify a SKU/record is indexed.
+
+**Example**: _"Is product SKU-ABC indexed in Algolia?"_
+
+---
+
+### `alg_logs`
+Recent Algolia API operations (last 7 days). **Consumes operations quota** — use sparingly.
+
+**Example**: _"Show recent Algolia indexing errors for the products index"_
 
 ---
 
