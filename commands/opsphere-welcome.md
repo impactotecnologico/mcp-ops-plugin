@@ -21,6 +21,8 @@ Copy or paraphrase the following:
 > - Run **`/opsphere-setup`** — connect your account (OAuth) and configure your first integration.
 > - Or say: _"Set up my Opsphere account"_
 >
+> **Plugin red or OAuth error?** Run **`/opsphere-reconnect`** (marketplace: use the plugin card in **Settings → Extensions**, not always **Settings → MCP**).
+>
 > **Already connected? Try:**
 > - _"Is example.com up?"_ or **`/endpoint-health`** — DNS + HTTP + TLS for one host (all plans)
 > - _"¿Cuál fue el último despliegue?"_ / _"What was the last deployment?"_ — **`deployment_status`** (multi-platform: Vercel, CI, S3, ECS…)
@@ -41,6 +43,7 @@ Copy or paraphrase the following:
 
 ## Agent follow-up
 
-1. If the user has not connected MCP yet, point them to **Cursor Settings → MCP → Connect** next to Opsphere.
-2. If they want full onboarding, offer to run the **`opsphere-setup`** command flow.
-3. Do not execute `scripts/check-auth.sh` or any bash script — it has been removed from the plugin.
+1. If the user has not connected MCP yet, point them to the **Opsphere plugin card** in **Settings → Extensions** (Sign in / Connect). Local dev installs may use **Settings → MCP → Connect**.
+2. If OAuth fails or the plugin is red, offer **`/opsphere-reconnect`**.
+3. If they want full onboarding, offer to run the **`opsphere-setup`** command flow.
+4. Do not execute `scripts/check-auth.sh` or any bash script — it has been removed from the plugin.

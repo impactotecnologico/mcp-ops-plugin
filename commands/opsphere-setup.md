@@ -24,7 +24,9 @@ Authentication is handled automatically by Cursor — there is no need to paste 
 
 Tell the user:
 
-> "To connect Opsphere, click the **Connect** button next to the Opsphere server in **Cursor Settings → MCP**. A browser window will open where you can sign up or log in. Once you complete the sign-in, Cursor will store the token automatically and reconnect here."
+> "To connect Opsphere, open **Settings → Extensions** (or the Marketplace tab), find the **Opsphere** plugin, and click **Sign in** / **Connect**. A browser window opens for sign-up or log-in. Cursor stores the token automatically.
+>
+> **Note:** With the marketplace plugin, Opsphere often does **not** show as a separate server under **Settings → MCP** — use the plugin card for connection status (green = connected)."
 
 Wait for the user to confirm they have connected. Then call `ops_my_usage` again to verify.
 
@@ -33,7 +35,9 @@ If the user asks what to do in the browser:
 - **New user**: switch to the **Sign up** tab, enter an email and password, click **Create account**.
 - **Returning user**: stay on the **Log in** tab, enter credentials, click **Log in**.
 
-> Opsphere uses refresh-token rotation, so Cursor renews sessions automatically in the background.
+> Access tokens last **24 hours**. Cursor should refresh them automatically via OAuth. If the plugin turns red or tools return 401, run **`/opsphere-reconnect`** — the gateway does not rotate refresh tokens (by design, to support Cursor's refresh behavior).
+
+If OAuth keeps failing after reconnect, run the **`opsphere-reconnect`** command flow instead of repeating setup from scratch.
 
 ---
 

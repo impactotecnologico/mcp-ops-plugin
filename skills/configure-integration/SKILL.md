@@ -326,7 +326,14 @@ It uses four MCP tools from the backend:
 
 ## Provider: Algolia
 
-**Required credentials** (Search API tools only — `alg_status` / `alg_incidents` need **no** credentials):
+**Preferred setup (multi-environment):** Opsphere admin → **Cloud Catalog** → per environment:
+- `algolia_application_id` (from Algolia Dashboard → API Keys for that Application)
+- `algolia_default_index` (optional)
+- Restricted Search API key (saved as `{env_slug}:api_key`, encrypted)
+
+Each INT/TST/PRE/PRD Application has its **own** Application ID and restricted key — do not reuse Admin keys across apps.
+
+**Legacy single-app setup** (chat `ops_configure_integration` only):
 
 | Key | Required | Description | Where to find it |
 |-----|----------|-------------|-----------------|
@@ -352,7 +359,9 @@ It uses four MCP tools from the backend:
    ```
    Omit `ALGOLIA_DEFAULT_INDEX` if not needed.
 6. Call `ops_test_integration(provider: "algolia")` to verify (lists indices).
-7. On success: "Algolia is connected! You can use `alg_indices_list`, `alg_index_settings`, `alg_search`, `alg_object_get`, and `alg_logs`. Global status checks (`alg_status`, `alg_incidents`) work without credentials."
+7. On success: "Algolia is connected! Use `alg_search`, `alg_object_get`, etc. with `env` when querying a specific tier. Global checks (`alg_status`, `alg_incidents`) need no credentials."
+
+**Multi-env tip:** For tenants with Cloud Catalog, direct admins to configure each environment in the admin portal instead of a single global App ID. Test a tier with `ops_test_integration(provider="algolia", env="TST")`.
 
 **Common issues**:
 - 401 / 403 → invalid key or missing ACL. Recreate a restricted key with the ACLs above.

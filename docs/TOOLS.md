@@ -458,19 +458,23 @@ Search code issues; use `inNewCodePeriod=true` for new-code violations only.
 
 **Built-in (no credentials):** `alg_status`, `alg_incidents` — global Algolia infrastructure monitoring.
 
-**Search API (paid module):** requires `ALGOLIA_APPLICATION_ID`, `ALGOLIA_API_KEY` (restricted key — not Admin), optional `ALGOLIA_DEFAULT_INDEX`.
+**Search API (paid module):** per-environment config in **Cloud Catalog** (`algolia_application_id`, `algolia_default_index`, `{env}:api_key`). Legacy global credentials still work as fallback. All credentialed tools accept optional `env` (INT/TST/PRE/PRD or catalog slug).
 
 Read-only search triage: indices, settings, query reproduction, record lookup, API logs.
 
 ### `alg_indices_list`
 List indices (name, entries, data size, last build).
 
-**Example**: _"List my Algolia indices"_
+**Parameters:** `env?` — target catalog environment (defaults to account default).
+
+**Example**: _"List my Algolia indices in TST"_
 
 ---
 
 ### `alg_index_settings`
 Read index settings (ranking, replicas, synonym references).
+
+**Parameters:** `env?`, `index?` (defaults to environment default index).
 
 **Example**: _"Show Algolia settings for the products index"_
 
@@ -479,6 +483,8 @@ Read index settings (ranking, replicas, synonym references).
 ### `alg_search`
 Run a search query (`hitsPerPage` capped at 20 on the gateway).
 
+**Parameters:** `query` (required), `env?`, `index?`, `hitsPerPage?`, `filters?`.
+
 **Example**: _"Search Algolia for SKU 12345 in the storefront index"_
 
 ---
@@ -486,12 +492,16 @@ Run a search query (`hitsPerPage` capped at 20 on the gateway).
 ### `alg_object_get`
 Fetch a single record by `objectID` — verify a SKU/record is indexed.
 
+**Parameters:** `objectID` (required), `env?`, `index?`.
+
 **Example**: _"Is product SKU-ABC indexed in Algolia?"_
 
 ---
 
 ### `alg_logs`
 Recent Algolia API operations (last 7 days). **Consumes operations quota** — use sparingly.
+
+**Parameters:** `env?`, `index?`, `type?`, `offset?`, `length?`.
 
 **Example**: _"Show recent Algolia indexing errors for the products index"_
 

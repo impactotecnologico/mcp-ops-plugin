@@ -139,6 +139,11 @@ fi
 
 # 10. mcp.json public endpoint only
 if search_quiet 'mcp-cursor\.opsphere\.io' mcp.json; then ok "mcp.json uses public gateway URL"; else red "unexpected mcp.json URL"; fi
+if search_quiet 'cursor-mcp' mcp.json && search_quiet '"scopes"' mcp.json; then
+  ok "mcp.json bundles cursor-mcp CLIENT_ID and OAuth scopes"
+else
+  red "mcp.json must include auth.CLIENT_ID cursor-mcp and scopes (e.g. mcp:tools)"
+fi
 if search_quiet 'mcp-cursor\.opsphere\.io' .mcp.json; then ok ".mcp.json uses public gateway URL"; else red "unexpected .mcp.json URL"; fi
 if search_quiet '"auth"[[:space:]]*:[[:space:]]*"oauth"' .mcp.json; then ok ".mcp.json uses oauth auth"; else red ".mcp.json must set auth oauth"; fi
 if search_quiet 'codex-mcp' .mcp.json && search_quiet 'User-Agent' .mcp.json && search_quiet 'oauth_resource' .mcp.json; then

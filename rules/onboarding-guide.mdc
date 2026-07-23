@@ -135,10 +135,11 @@ If `aws_cli_query` fails with **"Error loading SSO Token"**, the agent attempted
 
 ## When to Suggest Signup / Re-login
 
-If the MCP connection fails with **401 Unauthorized** or tools are not visible:
+If the MCP connection fails with **401 Unauthorized**, the plugin card is **red**, or logs mention **MCP OAuth refresh error**:
 
-- The user likely has not set up an account yet, or their token has expired (tokens last 24 hours).
-- Suggest: "It looks like you need to authenticate. Say **'Set up my Opsphere account'**, run **`/opsphere-setup`**, or **`/opsphere-welcome`** for a quick start."
+- The user likely has not set up an account yet, their access token expired (24 hours), or OAuth refresh failed (e.g. after a Cursor crash).
+- Suggest: run **`/opsphere-reconnect`**, or **Sign in** on the **Opsphere plugin card** in **Settings → Extensions** (marketplace installs often do not show Opsphere under **Settings → MCP**).
+- For first-time setup: **`/opsphere-setup`**, **`/opsphere-welcome`**, or _"Set up my Opsphere account"_.
 
 For brand-new installs (no Connect yet), you may suggest **`/opsphere-welcome`** before full setup — it lists example prompts without running any shell scripts.
 

@@ -44,6 +44,7 @@ Architecture diagram and domain list: **[docs/REMOTE-MCP-ARCHITECTURE.md](docs/R
 |---------|-------------|
 | **`/opsphere-welcome`** | Just installed — quick tips and example prompts |
 | **`/opsphere-setup`** | First-run OAuth + first integration (step by step) |
+| **`/opsphere-reconnect`** | Plugin red / OAuth refresh error — recover session |
 | **`/integration-status`** | See which providers are connected |
 
 Type **`/opsphere-welcome`** after install for example prompts including subagents (`/outage-triage`, `/endpoint-health`, `/ci-investigator`, `/postmortem-writer`).
@@ -128,7 +129,7 @@ The plugin bundle is **markdown and JSON only** — agent guidance, skills, and 
 | **Skills** | [`skills/configure-integration/`](skills/configure-integration/) | Step-by-step provider setup → `ops_configure_integration` |
 | | [`skills/set-work-context/`](skills/set-work-context/) | Tenant work context (`ops_set_work_context`) |
 | | [`skills/run-macro-workflows/`](skills/run-macro-workflows/) | Team+ composite `macro_*` tools (outage, endpoint, env health) |
-| **Commands** | [`commands/`](commands/) | `/opsphere-welcome`, `/opsphere-setup`, `/integration-status` |
+| **Commands** | [`commands/`](commands/) | `/opsphere-welcome`, `/opsphere-setup`, `/opsphere-reconnect`, `/integration-status` |
 | **Subagents** | [`agents/`](agents/) | Focused investigation and post-mortem flows (table above) |
 
 The onboarding rule tells the main agent **when to delegate** vs handle inline, to call `ops_my_usage` before premium subagents when plan is unknown, and **not** to paste secrets outside the configure flow.

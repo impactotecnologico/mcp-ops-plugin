@@ -20,7 +20,7 @@ Use tools that exist in the current session's `tools/list`. Never invent tool na
 
 **Always available after login (no integration setup):** `dns_lookup`, `http_check`, `cert_status`, `tcp_connect`, `dnssec_check`, `ops_my_usage`.
 
-**When integrations are configured:** Datadog (`dd_*`), Vercel (`vercel_*`), Railway (`railway_*`), Cloudflare (`cf_*`), Pingdom (`pingdom_*`), K8s (`k8s_*`), ArgoCD (`argocd_*`), Sentry (`sentry_*`), GitHub/Bitbucket CI (`ghe_*`, `bb_*`), `env_health_summary`, `observability_*`, `memory_search`.
+**When integrations are configured:** Datadog (`dd_*`), Vercel (`vercel_*`), Railway (`railway_*`), Algolia (`alg_*` with `env` for Search API), Cloudflare (`cf_*`), Pingdom (`pingdom_*`), K8s (`k8s_*`), ArgoCD (`argocd_*`), Sentry (`sentry_*`), GitHub/Bitbucket CI (`ghe_*`, `bb_*`), `env_health_summary`, `observability_*`, `memory_search`.
 
 **Team / Enterprise macros** (when in `tools/list`): `macro_outage_triage` runs a server-side triage pipeline with progress — alternative to running every atomic step manually. Prefer this subagent for interactive clarification; use `macro_outage_triage` when the user wants one composite report.
 
@@ -49,11 +49,12 @@ Reuse facts already in the thread. Batch at most **2–4 questions** per turn. I
 2. **Active alerts** — `alerts_active` when available (Datadog monitors in alert/warn).
 3. **External uptime** — `pingdom_summary` with `hostnameContains` when relevant; `synthetics_summary_by_location` if available.
 4. **Network edge** — `http_check` → `dns_lookup` (multiple resolvers) → `cert_status` → `dnssec_check` → `cf_quick_status` for the zone when Cloudflare is configured.
-5. **Deploy correlation** — **`deployment_status(scope=auto)`** during the outage window when available; else `vercel_deploys_latest` / `vercel_project_status` for a named Vercel project, or `railway_deployments_latest` / `railway_project_status` when Railway is in scope. **Do not** use deployment status alone to close an outage — correlate timing with errors and edge checks.
-6. **Railway-hosted workloads** — when `railway_*` tools exist and the incident targets Railway: `railway_health_summary` or `railway_incident_diagnosis` → `railway_deployment_get` + `railway_logs` / `railway_errors_recent`; combine `railway_domains` with `dns_lookup` / `http_check` / `cert_status` for edge verification. Env var **values** are never returned — only names via `railway_env_list`.
-7. **Application layer** — `dd_errors_by_service` then `dd_errors_recent` and/or `dd_logs_search` in the **same time window** as the reported incident.
-8. **Workload evidence only** — if errors or alerts point to backend on K8s: `k8s_find_pod` → `k8s_pod_previous_logs` / `k8s_logs` → `argocd_app_unhealthy` when K8s/ArgoCD tools exist.
-9. **Prior context** — `memory_search` with `scopes: ["incident", "decision", "repository"]` when memory tools are enabled; if `items` is empty, retry **once** with hostname/service/env tokens (gateway also expands synonyms server-side); treat results as hints, not live truth.
+5. **Algolia / search** — for storefront or search symptoms: `alg_status` + `alg_incidents` first (global, no credentials). When `alg_*` Search API tools exist, pass `env` matching the incident tier → `alg_search` / `alg_object_get` to verify indexing; `alg_logs` only if needed (quota).
+6. **Deploy correlation** — **`deployment_status(scope=auto)`** during the outage window when available; else `vercel_deploys_latest` / `vercel_project_status` for a named Vercel project, or `railway_deployments_latest` / `railway_project_status` when Railway is in scope. **Do not** use deployment status alone to close an outage — correlate timing with errors and edge checks.
+7. **Railway-hosted workloads** — when `railway_*` tools exist and the incident targets Railway: `railway_health_summary` or `railway_incident_diagnosis` → `railway_deployment_get` + `railway_logs` / `railway_errors_recent`; combine `railway_domains` with `dns_lookup` / `http_check` / `cert_status` for edge verification. Env var **values** are never returned — only names via `railway_env_list`.
+8. **Application layer** — `dd_errors_by_service` then `dd_errors_recent` and/or `dd_logs_search` in the **same time window** as the reported incident.
+9. **Workload evidence only** — if errors or alerts point to backend on K8s: `k8s_find_pod` → `k8s_pod_previous_logs` / `k8s_logs` → `argocd_app_unhealthy` when K8s/ArgoCD tools exist.
+10. **Prior context** — `memory_search` with `scopes: ["incident", "decision", "repository"]` when memory tools are enabled; if `items` is empty, retry **once** with hostname/service/env tokens (gateway also expands synonyms server-side); treat results as hints, not live truth.
 
 ## Heuristics
 

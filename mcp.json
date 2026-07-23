@@ -3,7 +3,8 @@
     "opsphere": {
       "url": "https://mcp-cursor.opsphere.io/mcp",
       "auth": {
-        "CLIENT_ID": "cursor-mcp"
+        "CLIENT_ID": "cursor-mcp",
+        "scopes": ["mcp:tools"]
       }
     }
   }

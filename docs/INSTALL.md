@@ -18,6 +18,8 @@ Install Opsphere from the Cursor Marketplace:
 
 After install, type **`/opsphere-welcome`** in chat for a quick start guide (or **`/opsphere-setup`** for full onboarding). The plugin does **not** run shell scripts on workspace open.
 
+> **Marketplace vs Settings → MCP:** When you install Opsphere from the **Cursor Marketplace**, connection status is on the **Opsphere plugin card** in **Settings → Extensions** (green + tool count = connected). Opsphere often **does not** appear as a separate row under **Settings → MCP**. Use **Sign in** / **Connect** on the plugin card, or run **`/opsphere-reconnect`** if the card turns red.
+
 ### Test locally (before marketplace install)
 
 Cursor’s [plugin submission checklist](https://cursor.com/docs/reference/plugins) expects the plugin to be tested locally. From a clone of this repository:
@@ -37,15 +39,24 @@ To remove the local copy: `rm -rf ~/.cursor/plugins/local/opsphere` and reload a
 
 ## Step 2 — Connect your account
 
-Once installed, Cursor will detect that Opsphere requires authentication and show a **Connect** button next to the MCP server in Settings → MCP.
+### Marketplace install (most users)
+
+1. Open **Settings → Extensions** (or the Marketplace tab).
+2. Find **Opsphere** — the card should offer **Sign in** / **Connect** on first use.
+3. Complete sign-up or log-in in the browser; the window closes automatically.
+
+Connection status: **green** on the plugin card with a tool count (e.g. 216 tools). You do **not** need a separate entry under **Settings → MCP**.
+
+### Local dev install (`~/.cursor/plugins/local/opsphere`)
+
+Cursor may show **Connect** next to the `opsphere` server under **Settings → MCP**:
 
 1. Click **Connect** (or **Sign in to opsphere**).
-2. A browser window opens with the Opsphere sign-in page.
-3. **New user**: fill in your email and password in the **Sign up** tab and click **Create account**.
-   **Returning user**: switch to the **Log in** tab, enter your credentials, and click **Log in**.
-4. The browser window closes automatically. Cursor stores the token and connects.
+2. Complete browser sign-in as above.
 
 > Authentication is handled entirely by Cursor — you never need to copy or paste a token.
+
+If the plugin turns red or tools return 401, run **`/opsphere-reconnect`** in chat.
 
 ---
 
@@ -93,7 +104,9 @@ Repeat for any other provider you use (Vercel, GitHub, Cloudflare, Jira, Sentry,
 
 ## Re-authentication
 
-Tokens are valid for **24 hours**. When your session expires, Cursor will show the **Connect** button again — click it to open a new browser sign-in window. Your integrations and settings are preserved.
+Tokens are valid for **24 hours**. When your session expires or the plugin card turns **red**, use **Sign in** / **Connect** on the **Opsphere plugin card** (**Settings → Extensions**), or run **`/opsphere-reconnect`** in chat. Your integrations and settings are preserved.
+
+For local dev installs, **Settings → MCP → Connect** also works.
 
 ---
 

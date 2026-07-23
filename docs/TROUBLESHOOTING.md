@@ -1,17 +1,45 @@
 # Troubleshooting
 
+## Plugin shows red / MCP OAuth refresh error (Cursor Marketplace)
+
+**Symptom**: The Opsphere plugin card in **Settings → Extensions** is **red** (or shows no tools). Chat tools fail with `401 Unauthorized`. Cursor logs (Developer Tools → Console) may show:
+
+```text
+MCP OAuth refresh lock acquired
+MCP OAuth SDK refresh catch branch
+MCP OAuth refresh error
+```
+
+**Cause**: Access tokens expire after **24 hours**. Cursor renews them in the background via `POST /oauth/token`. After a **crash**, stale OAuth state, or a burst of refresh requests, renewal can fail (including HTTP **429** rate limit on the gateway).
+
+**Fix** (in order):
+
+1. Run **`/opsphere-reconnect`** in chat — step-by-step recovery.
+2. On the **Opsphere plugin card**, click **Sign in** / **Connect** / **Reconnect** and complete browser login.
+3. **Developer: Reload Window**, then ask _"What is my Opsphere plan?"_ to verify.
+4. If still broken: uninstall the plugin, reload, reinstall from Marketplace, sign in again.
+5. If you previously used a **manual MCP** entry with an API key in `~/.cursor/mcp.json`, remove the duplicate `opsphere` server so only the plugin registers the gateway.
+
+**Where to look**: Marketplace installs usually **do not** list Opsphere under **Settings → MCP**. Use the **plugin card** (green + tool count = OK).
+
+**Gateway health** (optional): `curl https://mcp-cursor.opsphere.io/health` → `{"status":"ok"}` means the service is up; OAuth can still need re-auth on the client.
+
+---
+
 ## MCP server not connecting
 
-**Symptom**: The Opsphere MCP server shows as "disconnected" in Cursor Settings → MCP, or tools don't appear in the agent.
+**Symptom**: Opsphere tools don't appear in the agent, or the connection shows as disconnected.
 
 **Checks**:
-1. Look for a **Connect** or **Sign in to opsphere** button in Cursor Settings → MCP. Click it to authenticate.
-2. Test the gateway is reachable:
+1. **Marketplace plugin**: check the **Opsphere plugin card** in **Settings → Extensions** (green + tools). Use **Sign in** / **Connect** on the card — not necessarily **Settings → MCP**.
+2. **Local dev install** (`~/.cursor/plugins/local/opsphere`): look for **Connect** in **Cursor Settings → MCP**.
+3. Test the gateway is reachable:
    ```bash
    curl https://mcp-cursor.opsphere.io/health
    ```
    Expected response: `{"status":"ok"}`
-3. If unreachable, check your internet connection or try again in a few minutes.
+4. If unreachable, check your internet connection or try again in a few minutes.
+5. For persistent OAuth errors, run **`/opsphere-reconnect`**.
 
 ---
 
@@ -20,10 +48,12 @@
 **Symptom**: Cursor doesn't show a Connect button after installing the plugin.
 
 **Checks**:
-1. Reload Cursor: **Command Palette → Developer: Reload Window**.
-2. Go to **Cursor Settings → MCP** and confirm the `opsphere` server is listed.
-3. If the server shows an error icon, click it to see the error detail.
-4. Make sure you have Cursor version 0.50.0 or later.
+1. **Marketplace plugin**: OAuth is on the **plugin card** in **Extensions**, not always under **Settings → MCP**. Look for **Sign in** / **Connect** there.
+2. Reload Cursor: **Command Palette → Developer: Reload Window**.
+3. For local dev copies only: **Cursor Settings → MCP** should list `opsphere` — click Connect if shown.
+4. If the server or plugin shows an error icon, open details or Developer Tools → Console for `MCP OAuth refresh error`.
+5. Make sure you have Cursor version 0.50.0 or later.
+6. Run **`/opsphere-reconnect`** if the plugin stays red after reload.
 
 ---
 
@@ -33,7 +63,7 @@
 
 **Cause**: Your access token has expired (tokens last 24 hours).
 
-**Fix**: In Cursor Settings → MCP, click **Connect** (or **Sign in to opsphere**) to open a new browser sign-in window and get a fresh token. No need to copy or paste anything.
+**Fix**: Re-authenticate from the **Opsphere plugin card** (**Settings → Extensions**) or run **`/opsphere-reconnect`**. For local dev installs, **Settings → MCP → Connect** also works. No need to copy or paste a token.
 
 ---
 
@@ -153,7 +183,8 @@ Run **`ops_my_usage`** to confirm your plan name.
 **Expected behavior**: Opsphere does **not** run shell scripts on workspace open (removed for security review). Instead:
 
 1. Type **`/opsphere-welcome`** in chat for quick tips and example prompts.
-2. Or **`/opsphere-setup`** for full OAuth + integration onboarding.
+2. **`/opsphere-setup`** for full OAuth + integration onboarding.
+3. **`/opsphere-reconnect`** if the plugin is red or you see OAuth refresh errors.
 
 See [INSTALL.md](INSTALL.md) step 1.
 
@@ -223,7 +254,7 @@ The bundled `.mcp.json` includes `oauth.client_id`, `http_headers.User-Agent`, a
 2. Avoid: *"show me the full JSON result"* unless debugging.
 3. New chat after updating the plugin — skill **`plan-and-usage`** instructs conversational formatting.
 
----
+### ChatGPT desktop — stale OAuth metadata
 
 **Cause**: Stale plugin cache, or an older `.mcp.json` without OAuth metadata.
 
