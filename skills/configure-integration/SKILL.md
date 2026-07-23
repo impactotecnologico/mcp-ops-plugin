@@ -1,6 +1,6 @@
 ---
 name: configure-integration
-description: Connect Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, GitLab, Algolia, Railway, or AWS — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider, or when a tool reports missing credentials.
+description: Connect Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, SonarQube, Bitbucket, GitLab, Algolia, Railway, or AWS — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider, or when a tool reports missing credentials.
 ---
 
 # Configure Integration
@@ -278,6 +278,42 @@ It uses four MCP tools from the backend:
 
 ---
 
+## Provider: SonarQube
+
+**Required credentials**:
+
+| Key | Required | Description | Where to find it |
+|-----|----------|-------------|-----------------|
+| `SONAR_TOKEN` | Yes | User token (Browse on target projects) | SonarQube / SonarCloud → My Account → Security → Generate Tokens |
+| `SONAR_HOST_URL` | Yes | Server base URL | SonarCloud: `https://sonarcloud.io` — self-hosted: your server root URL |
+| `SONAR_ORGANIZATION` | No | SonarCloud organization key | Organization → Information (SonarCloud only) |
+| `SONAR_DEFAULT_PROJECT` | No | Default project key | Used when tools omit `project` |
+
+> **SonarCloud:** `SONAR_HOST_URL` must be `https://sonarcloud.io`, not a project overview URL. Tokens need **Browse** on the projects you query (org-admin is not required for `sq_projects_search` with a URL or `sq_last_scan_summary`).
+
+**Setup steps**:
+
+1. Ask: "Are you on SonarCloud or self-hosted SonarQube?"
+2. For SonarCloud: direct to https://sonarcloud.io/account/security → Generate token (no admin scope required for read-only triage).
+3. Collect `SONAR_HOST_URL` (`https://sonarcloud.io` or self-hosted base URL) and optional organization key.
+4. Call `ops_configure_integration`:
+   ```
+   ops_configure_integration(provider: "sonarqube", credentials: {
+     "SONAR_TOKEN": "<token>",
+     "SONAR_HOST_URL": "https://sonarcloud.io",
+     "SONAR_ORGANIZATION": "<org-key>"
+   })
+   ```
+5. Call `ops_test_integration(provider: "sonarqube")` to verify.
+6. On success: "SonarQube is connected! Try `sq_projects_search` with a SonarCloud URL, then `sq_last_scan_summary` for last scan results."
+
+**Common issues**:
+- Empty project list with text search → token may lack Browse on projects; use a full SonarCloud overview URL in `sq_projects_search(q=...)`.
+- `SONAR_HOST_URL is missing` → credential key must be `SONAR_HOST_URL`, not `SONAR_URL`.
+- 401 → expired or revoked token; generate a new one.
+
+---
+
 ## Provider: AWS
 
 **Required credentials**:
@@ -410,7 +446,7 @@ Each INT/TST/PRE/PRD Application has its **own** Application ID and restricted k
 
 If a user tries a tool and gets an error about missing credentials or an unconfigured integration:
 
-1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `railway_` → Railway, `ghe_` → GitHub, `bb_` → Bitbucket, `gl_` → GitLab, `cf_` → Cloudflare, `jira_` → Jira, `sentry_` → Sentry, `alg_` → Algolia Search API, `aws_` → AWS). **`alg_status` and `alg_incidents` never require credentials** — if those fail, it is not a missing-integration error.
+1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `railway_` → Railway, `ghe_` → GitHub, `bb_` → Bitbucket, `gl_` → GitLab, `sq_` → SonarQube, `cf_` → Cloudflare, `jira_` → Jira, `sentry_` → Sentry, `alg_` → Algolia Search API, `aws_` → AWS). **`alg_status` and `alg_incidents` never require credentials** — if those fail, it is not a missing-integration error.
 2. Call `ops_list_integrations` to confirm the provider is not configured.
 3. Offer to set it up: "It looks like [Provider] is not configured yet. Would you like me to help you connect it?"
 4. Follow the provider-specific steps above.

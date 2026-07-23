@@ -52,7 +52,7 @@ Call `ops_my_usage` and tell the user:
 
 Example message:
 
-> "You're connected! Your 30-day free trial has X days remaining. You have access to tools for Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, and AWS — plus DNS, HTTP, and TLS diagnostics that work immediately.
+> "You're connected! Your 30-day free trial has X days remaining. You have access to tools for Datadog, Vercel, GitHub, SonarQube, Cloudflare, Jira, Sentry, Bitbucket, and AWS — plus DNS, HTTP, and TLS diagnostics that work immediately.
 >
 > Would you like to connect your first integration? Just say 'Configure my Datadog' or whichever provider you use."
 

@@ -29,6 +29,8 @@ Copy or paraphrase the following:
 > - _"Check my latest Vercel deploys"_ — Vercel-only detail (or use deployment_status first)
 > - _"Search Datadog logs for errors in the last hour"_
 > - _"Configure my Datadog"_
+> - _"Configure my SonarQube"_ — SonarCloud or self-hosted; then try a SonarCloud project URL
+> - _"What were the last Sonar scan results?"_ — `sq_projects_search` + `sq_last_scan_summary` (when SonarQube module enabled)
 > - _"Configure my AWS"_ — IAM Access Key + Secret Key (not SSO)
 > - _"Is the site down?"_ or **`/outage-triage`** — multi-step incident triage (all plans)
 > - _"Why did CI fail on main?"_ or **`/ci-investigator`** — pipeline diagnosis (Professional+; Community: upgrade info)

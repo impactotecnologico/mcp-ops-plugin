@@ -81,7 +81,7 @@ After the plan gate, before CI tool calls, ensure you can target the right pipel
 | Topic | Example question |
 |-------|------------------|
 | **Platform** | GitHub Actions, Bitbucket, or both? |
-| **Repository** | Repo slug (and GHE `owner` or Bitbucket `workspace` if not default)? |
+| **Repository** | GitHub: `owner/repo` slug (e.g. `acme/backend`); Bitbucket: repo + `workspace` if not default? |
 | **Branch** | Which branch failed (e.g. `main`, `release/1.2`)? |
 | **Workflow / pipeline** | Workflow file name or pipeline label, if not "latest"? |
 | **PR or run** | PR number or specific pipeline/run UUID? |
@@ -98,7 +98,7 @@ Follow in order; skip steps when tools are unavailable or the user already gave 
 2. **Prior context** — `memory_search` with `scopes: ["repository", "decision", "session"]` when memory tools exist; treat results as hints, not live truth.
 3. **Detect platform** — use user context; if unclear, prefer the platform they named. If both apply, run both diagnose paths (one diagnose call per platform unless the user asks for a specific run).
 4. **Bitbucket** — `bb_pipelines_latest` (repo, optional branch) → `bb_pipeline_diagnose` (repo, optional uuid from latest or user input).
-5. **GitHub** — `ghe_actions_latest` (repo, optional owner/workflow/branch) → `ghe_actions_diagnose` (repo, optional owner/workflow/branch). Prefer a single diagnose call; use `ghe_workflow_runs_list` only when the user targets a specific workflow or branch.
+5. **GitHub** — `ghe_repo_summary(repo=owner/repo)` when context helps → `ghe_actions_latest` (repo as `owner/repo`, optional workflow/branch) → `ghe_actions_diagnose` (same). Prefer a single diagnose call; use `ghe_workflow_runs_list` only when the user targets a specific workflow or branch.
 6. **Change context** — when PR/commit correlation helps and tools exist: `ghe_pr_detail`, `ghe_pr_files`, `bb_pr_diffstat`, or `bb_pr_commits`.
 7. **Deploy correlation** — prefer **`deployment_status(scope=auto)`** when the failure may relate to a recent release across platforms; use `vercel_deploys_latest` only for explicit Vercel-only correlation or when `deployment_status` is unavailable.
 8. **Report** — structured output below.

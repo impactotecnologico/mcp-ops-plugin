@@ -359,12 +359,14 @@ Multi-project overview: status rollup across accessible projects.
 
 Requires: `GHE_TOKEN` (and optionally `GHE_BASE_URL` for self-hosted instances).
 
+For **github.com**, only `GHE_TOKEN` is required — the gateway defaults to `https://api.github.com`. Pass `repo` as `owner/repo` (e.g. `acme/storefront`).
+
 **Subagent (paid plans):** For failed workflows or multi-step CI triage on **Professional / Team / Enterprise**, use **`/ci-investigator`** — read-only structured report with `ghe_actions_diagnose`. Community: use `ghe_actions_latest` inline or upgrade; see [PLANS.md](PLANS.md).
 
 ### `ghe_repo_summary`
-Get a repository summary: default branch, latest commit, open PRs.
+Get a repository summary: default branch, latest commit, open PRs. Accepts `repo` as repository name or `owner/repo` slug.
 
-**Example**: _"Summarize the main repo"_
+**Example**: _"Summarize acme/storefront on GitHub"_
 
 ---
 
@@ -427,7 +429,23 @@ Diagnose a failed pipeline: identify the failed job and show log excerpts.
 
 Requires: `SONAR_TOKEN`, `SONAR_HOST_URL` (optional `SONAR_ORGANIZATION` for SonarCloud, `SONAR_DEFAULT_PROJECT`).
 
-Read-only code quality: quality gates, measures, branches, issues, and security hotspots.
+For **SonarCloud**, set `SONAR_HOST_URL` to `https://sonarcloud.io` (not a project URL). Project parameters accept a SonarCloud overview URL, `org_project` key, or plain project key.
+
+Read-only code quality: project lookup, last-scan snapshot, quality gates, measures, branches, issues, and security hotspots.
+
+### `sq_projects_search`
+Find a project by SonarCloud URL, `org_project` key, or text query. For exact URL/key lookup, uses Browse-safe APIs (works without org-admin).
+
+**Example**: _"Find project https://sonarcloud.io/project/overview?id=acme_storefront"_
+
+---
+
+### `sq_last_scan_summary`
+One-call snapshot of the latest analysis: date, quality gate status, overall + new-code metrics, and open-issue counts by severity/type. **Prefer this** when the user asks for last scan results, último análisis, or metrics after finding a project.
+
+**Example**: _"What were the last Sonar scan results for acme_storefront?"_
+
+---
 
 ### `sq_quality_gate_status`
 Quality gate OK/ERROR for a project, optionally per branch or pull request.
@@ -443,12 +461,24 @@ Curated overall and/or new-code metrics (bugs, vulnerabilities, coverage, rating
 
 ---
 
+### `sq_analyses_latest`
+Recent analysis history (timestamps, versions). For a full snapshot use `sq_last_scan_summary` instead.
+
+**Example**: _"When was acme:storefront last scanned?"_
+
+---
+
 ### `sq_issues_search`
 Search code issues; use `inNewCodePeriod=true` for new-code violations only.
 
 **Example**: _"List critical Sonar issues in new code for acme:storefront"_
 
 ---
+
+**Recommended conversational flow**
+
+1. User pastes SonarCloud URL → `sq_projects_search(q=<URL>)` → `sq_last_scan_summary(project=<key>)`
+2. Quality gate failed → `sq_last_scan_summary` or `sq_quality_gate_status` → `sq_issues_search(inNewCodePeriod=true)`
 
 **Guided prompt** (when listed in `opsphere://playbooks/index`): `diagnose-sonarqube-quality-gate` — structured QG failure triage with suggested `sq_*` tool order.
 

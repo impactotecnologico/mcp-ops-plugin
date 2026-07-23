@@ -82,7 +82,7 @@ After the plan gate, before CI tool calls, ensure you can target the right pipel
 | Topic | Example question |
 |-------|------------------|
 | **Platform** | GitHub Actions, Bitbucket, or both? |
-| **Repository** | Repo slug (and GHE `owner` or Bitbucket `workspace` if not default)? |
+| **Repository** | Repo slug as `owner/repo` for GitHub (`ghe_repo_summary`, `ghe_actions_*`) or Bitbucket `workspace` if not default? |
 | **Branch** | Which branch failed (e.g. `main`, `release/1.2`)? |
 | **Workflow / pipeline** | Workflow file name or pipeline label, if not "latest"? |
 | **PR or run** | PR number or specific pipeline/run UUID? |

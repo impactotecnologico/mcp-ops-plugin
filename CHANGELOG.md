@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
+- **SonarQube conversational flows** (paid gateway module): `sq_projects_search` with SonarCloud URLs, `sq_last_scan_summary` for one-call last-scan snapshots; SonarQube provider section in [`skills/configure-integration/SKILL.md`](skills/configure-integration/SKILL.md); onboarding examples and [docs/TOOLS.md](docs/TOOLS.md) updates.
+- **GitHub github.com**: `ghe_repo_summary` accepts `owner/repo` slug; github.com works with `GHE_TOKEN` only (no `GHE_BASE_URL`).
 - **Railway integration** (gateway module; available on Community when enabled and configured): 17 read-only `railway_*` tools documented in [docs/TOOLS.md](docs/TOOLS.md) — projects, services, deployments, logs, metrics, env variable names, domains, volumes, health summary, and incident diagnosis. Provider setup in [`skills/configure-integration/SKILL.md`](skills/configure-integration/SKILL.md); onboarding table, prefix mapping, and example prompts in [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc).
 - **Algolia integration** (paid gateway module): `alg_*` Search API tools documented in [docs/TOOLS.md](docs/TOOLS.md); built-in `alg_status` / `alg_incidents` for global platform monitoring (no credentials). Provider setup in [`skills/configure-integration/SKILL.md`](skills/configure-integration/SKILL.md); onboarding table, prefix mapping, and example prompts in [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc).
 

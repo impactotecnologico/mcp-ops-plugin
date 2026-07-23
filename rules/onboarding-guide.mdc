@@ -26,7 +26,7 @@ These tools are available once authenticated and integrations are configured:
 | CDN / DNS | Cloudflare | `cf_quick_status`, `cf_dns_records` |
 | Issue Tracking | Jira | `jira_issue_get`, `jira_issues_search` |
 | Error Tracking | Sentry | `sentry_issues_list`, `sentry_issues_search` |
-| Code Quality | SonarQube (paid) | `sq_quality_gate_status`, `sq_measures_summary`, `sq_issues_search` — prompt `diagnose-sonarqube-quality-gate` when in playbooks |
+| Code Quality | SonarQube (paid) | `sq_projects_search` (URL or key) → `sq_last_scan_summary` for last scan; `sq_quality_gate_status` + `sq_issues_search` for QG drill-down — prompt `diagnose-sonarqube-quality-gate` when in playbooks |
 | Search | Algolia (paid) | `alg_indices_list`, `alg_index_settings`, `alg_search`, `alg_object_get`, `alg_logs` — configure with App ID + restricted API key |
 | Cloud | AWS | `aws_sts_whoami`, `aws_cli_query` |
 | Network (built-in) | — | `dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents` |
@@ -233,7 +233,10 @@ Users might say things like:
 - "Find Jira issues assigned to me"
 - "What GitHub Actions ran today on the main branch?"
 - "Why did the pipeline fail on main?" — on paid plans, delegate to `ci-investigator`; on Community, `bb_pipeline_diagnose` or `gl_pipeline_diagnose` or upgrade
-- "Why did SonarQube fail the quality gate?" — `sq_quality_gate_status` + `sq_issues_search` (inNewCodePeriod=true) when SonarQube is configured
+- "Find this SonarCloud project" / paste `sonarcloud.io` URL — `sq_projects_search(q=<full URL>)` then `sq_last_scan_summary(project=<key or URL>)`
+- "What were the last scan results?" / "último escaneo" — `sq_last_scan_summary` (one call: QG + metrics + issue counts); use `sq_projects_search` first if project key is unknown
+- "Why did SonarQube fail the quality gate?" — `sq_last_scan_summary` or `sq_quality_gate_status` + `sq_issues_search` (inNewCodePeriod=true) when SonarQube is configured
+- "Summarize GitHub repo acme/backend" — `ghe_repo_summary(repo=acme/backend)` on github.com (no `GHE_BASE_URL` needed)
 - "Why is SKU X missing from search?" — `alg_object_get` + `alg_search` when Algolia is configured; `alg_status` if suspecting upstream outage
 - "Configure my Algolia" — triggers the `configure-integration` skill (restricted API key, not Admin)
 - "Diagnose the failed GitHub Actions workflow" — paid: `/ci-investigator`; Community: `ghe_actions_latest` inline or upgrade

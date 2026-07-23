@@ -267,6 +267,31 @@ The bundled `.mcp.json` includes `oauth.client_id`, `http_headers.User-Agent`, a
 
 ---
 
+## SonarQube — empty project search or missing last scan
+
+**Symptom**: `sq_projects_search` returns no projects, or the agent cannot answer "last scan results" after finding a project.
+
+**Checks**:
+
+1. **Credential key** — must be `SONAR_HOST_URL` (not `SONAR_URL`). SonarCloud: `https://sonarcloud.io`.
+2. **Token scope** — user token needs **Browse** on target projects. Org-wide `/projects/search` requires org admin; pass the **full SonarCloud overview URL** to `sq_projects_search(q=...)` instead.
+3. **Flow** — after resolving the project: call `sq_last_scan_summary(project=<key or URL>)` (one call). Use `sq_analyses_latest` only for raw analysis history.
+4. **Reconnect** — run `configure-integration` → `ops_configure_integration(provider: "sonarqube", ...)` → `ops_test_integration`.
+
+---
+
+## GitHub — repo not found on github.com
+
+**Symptom**: `ghe_repo_summary` or `ghe_actions_*` returns 404 for a public repo.
+
+**Checks**:
+
+1. For **github.com**, `GHE_BASE_URL` is optional (defaults to `https://api.github.com`).
+2. Pass `repo` as **`owner/repo`** (e.g. `acme/storefront`), not just the repository name.
+3. Token needs `repo` scope (classic) or repository access (fine-grained).
+
+---
+
 ## Still stuck?
 
 Contact us at **contact@opsphere.io** with:

@@ -182,7 +182,9 @@ Opsphere plugin AWS integration uses **IAM Access Key + Secret Access Key** — 
 | `"Why did GitHub Actions fail on main?"` | Paid: **`/ci-investigator`**; Community: `ghe_actions_latest` or upgrade at [pricing](https://opsphere.io/pricing) |
 | `"Find Jira issues assigned to me"` | Searches Jira with JQL and returns summaries |
 | `"What GitHub Actions ran on main today?"` | Lists latest workflow runs with status |
-| `"Why did SonarQube fail on main?"` | `sq_quality_gate_status` → `sq_issues_search` (when SonarQube module enabled) |
+| `"Why did SonarQube fail on main?"` | `sq_last_scan_summary` or `sq_quality_gate_status` → `sq_issues_search` (when SonarQube module enabled) |
+| `"Find this SonarCloud project"` (paste URL) | `sq_projects_search(q=<URL>)` → `sq_last_scan_summary` |
+| `"Summarize acme/backend on GitHub"` | `ghe_repo_summary(repo=acme/backend)` — github.com needs only `GHE_TOKEN` |
 | `"Is Algolia having an outage?"` | `alg_status` + `alg_incidents` (built-in — no setup) |
 | `"Why is this SKU missing from search?"` | `alg_object_get` → `alg_search` (when Algolia module enabled) |
 | `"Configure my Algolia"` | Guided setup: App ID + restricted Search API key (not Admin) |
