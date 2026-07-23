@@ -274,9 +274,10 @@ The bundled `.mcp.json` includes `oauth.client_id`, `http_headers.User-Agent`, a
 **Checks**:
 
 1. **Credential key** — must be `SONAR_HOST_URL` (not `SONAR_URL`). SonarCloud: `https://sonarcloud.io`.
-2. **Token scope** — user token needs **Browse** on target projects. Org-wide `/projects/search` requires org admin; pass the **full SonarCloud overview URL** to `sq_projects_search(q=...)` instead.
-3. **Flow** — after resolving the project: call `sq_last_scan_summary(project=<key or URL>)` (one call). Use `sq_analyses_latest` only for raw analysis history.
-4. **Reconnect** — run `configure-integration` → `ops_configure_integration(provider: "sonarqube", ...)` → `ops_test_integration`.
+2. **Organization** — `SONAR_ORGANIZATION` is optional if project keys use `org_project` format (`cepsadigital_my-repo`); the gateway infers org from the key or SonarCloud URL.
+3. **Token scope** — user token needs **Browse** on target projects. Org-wide `/projects/search` requires org admin; pass the **full SonarCloud overview URL** to `sq_projects_search(q=...)` instead.
+4. **Flow** — after resolving the project: call `sq_last_scan_summary(project=<key or URL>)` (one call). Use `sq_analyses_latest` only for raw analysis history.
+5. **Reconnect** — run `configure-integration` → `ops_configure_integration(provider: "sonarqube", ...)` → `ops_test_integration`.
 
 ---
 

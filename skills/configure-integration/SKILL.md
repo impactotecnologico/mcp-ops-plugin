@@ -289,7 +289,7 @@ It uses four MCP tools from the backend:
 | `SONAR_ORGANIZATION` | No | SonarCloud organization key | Organization → Information (SonarCloud only) |
 | `SONAR_DEFAULT_PROJECT` | No | Default project key | Used when tools omit `project` |
 
-> **SonarCloud:** `SONAR_HOST_URL` must be `https://sonarcloud.io`, not a project overview URL. Tokens need **Browse** on the projects you query (org-admin is not required for `sq_projects_search` with a URL or `sq_last_scan_summary`).
+> **SonarCloud:** `SONAR_HOST_URL` must be `https://sonarcloud.io`, not a project overview URL. `SONAR_ORGANIZATION` is optional when project keys use the `org_project` format (e.g. `cepsadigital_my-repo`) — the gateway infers the org from the key or URL.
 
 **Setup steps**:
 
