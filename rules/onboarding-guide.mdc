@@ -20,6 +20,7 @@ These tools are available once authenticated and integrations are configured:
 | Monitoring | Datadog | `dd_logs_search`, `dd_errors_by_service`, `dd_errors_recent`, `dd_synthetics_summary` |
 | Deployments | Multi-stack (catalog) | **`deployment_status`** (preferred) — Vercel, CI, GitOps, S3+CloudFront, ECS from your configured sources |
 | Deployments | Vercel (direct) | `vercel_deploys_latest`, `vercel_project_status` — only when user asks Vercel-only or `deployment_status` gaps suggest it |
+| Deployments | Railway (direct) | `railway_projects_list`, `railway_project_status`, `railway_deployments_latest`, `railway_logs`, `railway_health_summary`, `railway_incident_diagnosis` — 17 read-only tools when Railway module is enabled |
 | Source Control | GitHub Enterprise | `ghe_repo_summary`, `ghe_actions_latest` |
 | Source Control | Bitbucket | `bb_pipelines_latest`, `bb_pipeline_diagnose` |
 | CDN / DNS | Cloudflare | `cf_quick_status`, `cf_dns_records` |
@@ -84,6 +85,7 @@ If a tool returns an error about missing credentials or an unconfigured provider
 1. Identify the provider from the tool name prefix:
    - `dd_` → Datadog
    - `vercel_` → Vercel
+   - `railway_` → Railway
    - `ghe_` → GitHub
    - `bb_` → Bitbucket
    - `gl_` → GitLab
@@ -210,6 +212,10 @@ Opsphere tools return human-readable markdown inside MCP `content[].text`. The c
 Users might say things like:
 
 - "Check my latest Vercel deploys"
+- "What's the status of my Railway project?" — `railway_project_status` or `railway_health_summary` when Railway is configured
+- "Show failed Railway deployments in production" — `railway_deployments_latest` with status filter
+- "Diagnose my Railway API outage" — `railway_incident_diagnosis` → `railway_logs`
+- "Configure my Railway" — triggers the `configure-integration` skill (account, workspace, or project API token)
 - "¿Cuál fue el último despliegue?" / "What was the last deployment?" — **`deployment_status(scope=auto)`** first
 - "When did we last publish to production?" — **`deployment_status`**
 - "Search Datadog logs for errors in the last hour"
@@ -248,9 +254,10 @@ Users might say things like:
 ### When to use memory (agent behavior)
 
 1. **Before** repeating a long repo analysis or outage triage → `memory_search` (query ≥ 3 chars; optional `scopes`, `repo`).
-2. **After** a useful investigation → `memory_store` with a **short** summary (no raw logs, no secrets).
-3. **When outdated** → `memory_invalidate` with `status: stale` (owner or admin).
-4. **Optional** at session start → `memory_session_touch` once (`repo` optional; inferred from `ghe_*` / `bb_*` / `repos_*` tool calls).
+2. **If empty results** → reformulate **once** with concrete tokens (service, env, repo, HTTP code) or different `scopes`. The gateway auto-retries with synonym expansion; do not call `memory_search` more than one extra time unless the user asks.
+3. **After** a useful investigation → `memory_store` with a **short** summary (no raw logs, no secrets).
+4. **When outdated** → `memory_invalidate` with `status: stale` (owner or admin).
+5. **Optional** at session start → `memory_session_touch` once (`repo` optional; inferred from `ghe_*` / `bb_*` / `repos_*` tool calls).
 
 Default scopes for partners: **session** + **user**. Use `scope=repository` only with explicit `repo` `org/name`. Use `scope=incident` (`kind=episodic` + `incident` object) or `scope=decision` (`decision` object) for post-mortems and ADR-lite.
 

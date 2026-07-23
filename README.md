@@ -141,6 +141,7 @@ The onboarding rule tells the main agent **when to delegate** vs handle inline, 
 |---|---|---|
 | **Datadog** | Search logs · count errors by service · check synthetics | API Key + App Key |
 | **Vercel** | Latest deploys · project status · env vars | API Token |
+| **Railway** | Projects · services · deployments · logs · metrics · env names · incident diagnosis | API token (account, workspace, or project) |
 | **GitHub** | Repo summary · Actions runs · PRs | Personal Access Token |
 | **Bitbucket** | Pipeline list · pipeline diagnosis · PR search | App Password |
 | **Cloudflare** | Zone status · DNS records · firewall events | API Token |
@@ -170,6 +171,9 @@ Opsphere plugin AWS integration uses **IAM Access Key + Secret Access Key** — 
 | `"How is PRE doing?"` / env health | **`macro_env_health`** (Team+) when in `tools/list` |
 | `"Write a post-mortem for today's outage"` | **`/postmortem-writer`** — draft + optional incident memory |
 | `"Show my latest Vercel deploys"` | Vercel-only: last deployments with status, branch, timestamp |
+| `"What's the status of my Railway project?"` | `railway_project_status` or `railway_health_summary` (when Railway module enabled) |
+| `"Diagnose my Railway production outage"` | `railway_incident_diagnosis` → `railway_logs` |
+| `"Configure my Railway"` | Guided setup: account, workspace, or project API token |
 | `"What was the last deployment?"` / `"¿Último despliegue?"` | **`deployment_status(scope=auto)`** — Vercel, CI, GitOps, S3+CloudFront, ECS from catalog |
 | `"Search Datadog logs for payment errors in the last hour"` | Queries Datadog Logs v2 with your filter |
 | `"What's failing in Sentry right now?"` | Lists unresolved issues by severity |

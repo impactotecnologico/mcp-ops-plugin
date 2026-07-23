@@ -35,6 +35,7 @@
         "postmortem",
         "datadog",
         "vercel",
+        "railway",
         "github",
         "github-actions",
         "bitbucket",

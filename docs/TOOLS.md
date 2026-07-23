@@ -230,6 +230,131 @@ Get a project summary including environment variables and latest deploys.
 
 ---
 
+## Railway
+
+Requires: `RAILWAY_API_TOKEN` (account, workspace, or project token). Optional `RAILWAY_API_URL` (default `https://backboard.railway.com/graphql/v2`).
+
+Read-only operational integration via Railway Public API (GraphQL v2): projects, services, deployments, logs, metrics, env variable names, domains, volumes, and incident diagnostics. Variable **values** are never returned — only names. Combine `railway_domains` with `dns_lookup` / `http_check` / `cert_status` for live DNS/TLS/HTTP verification.
+
+### `railway_projects_list`
+List projects accessible to the API token (scope depends on token type).
+
+**Example**: _"List my Railway projects"_
+
+---
+
+### `railway_environments_list`
+List environments in a project (`project` accepts ID or unique name).
+
+**Example**: _"What environments exist in my storefront project?"_
+
+---
+
+### `railway_services_list`
+List services and service instances in a project; optional environment filter and latest deployment summary.
+
+**Example**: _"List Railway services in production for storefront"_
+
+---
+
+### `railway_project_status`
+Operational summary: environments, services, latest deployments, optional domains/volumes. SUCCESS does not prove HTTP health.
+
+**Example**: _"What's the status of my Railway storefront project?"_
+
+---
+
+### `railway_service_status`
+Detailed status for a service in an environment: instance, latest deployment, optional domains/metrics/recent deployments.
+
+**Example**: _"Is the API service healthy on Railway production?"_
+
+---
+
+### `railway_deployments_latest`
+Recent deployments with optional environment, service, status, and time filters.
+
+**Example**: _"Show failed Railway deploys in the last 24 hours"_
+
+---
+
+### `railway_deployment_get`
+Deployment detail by ID; optional build/runtime logs.
+
+**Example**: _"Get details for Railway deployment abc123"_
+
+---
+
+### `railway_logs`
+Historical build, runtime, or environment logs (secrets redacted). Requires `deployment_id` or `project`+`environment`.
+
+**Example**: _"Show Railway runtime logs for the latest API deployment"_
+
+---
+
+### `railway_errors_recent`
+Grouped summary of recent error (and optional warn) logs. Requires `project`+`environment`.
+
+**Example**: _"What errors appeared in Railway production in the last hour?"_
+
+---
+
+### `railway_metrics_summary`
+Service resource metrics (CPU, memory, network, disk) via official metrics query.
+
+**Example**: _"Show Railway CPU and memory for the API service"_
+
+---
+
+### `railway_env_list`
+List environment variable **names** only (never values). Optional service scope.
+
+**Example**: _"Which env vars are set on Railway staging?"_
+
+---
+
+### `railway_env_diff`
+Compare variable names between two environments (no values).
+
+**Example**: _"Diff Railway env vars between staging and production"_
+
+---
+
+### `railway_domains`
+List Railway and custom domains for services. Does not verify DNS/TLS/HTTP.
+
+**Example**: _"What domains are attached to my Railway API service?"_
+
+---
+
+### `railway_volumes`
+List persistent volumes and mounts (read-only).
+
+**Example**: _"Show Railway volumes for the database service"_
+
+---
+
+### `railway_health_summary`
+Deterministic health rollup across services and deployments; optional recent errors and metrics.
+
+**Example**: _"Give me a Railway health summary for storefront production"_
+
+---
+
+### `railway_incident_diagnosis`
+Correlated read-only diagnosis across deployments, logs, and metrics. Returns hypotheses — not confirmed root cause.
+
+**Example**: _"Diagnose why my Railway API is failing in production"_
+
+---
+
+### `railway_dashboard`
+Multi-project overview: status rollup across accessible projects.
+
+**Example**: _"Show my Railway dashboard across all projects"_
+
+---
+
 ## GitHub Enterprise
 
 Requires: `GHE_TOKEN` (and optionally `GHE_BASE_URL` for self-hosted instances).

@@ -1,6 +1,6 @@
 ---
 name: configure-integration
-description: Connect Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, GitLab, Algolia, or AWS — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider, or when a tool reports missing credentials.
+description: Connect Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, GitLab, Algolia, Railway, or AWS — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider, or when a tool reports missing credentials.
 ---
 
 # Configure Integration
@@ -363,11 +363,45 @@ It uses four MCP tools from the backend:
 
 ---
 
+## Provider: Railway
+
+**Required credentials**:
+
+| Key | Required | Description | Where to find it |
+|-----|----------|-------------|-----------------|
+| `RAILWAY_API_TOKEN` | Yes | API token (account, workspace, or project scope) | Railway → Account Settings → Tokens |
+| `RAILWAY_API_URL` | No | GraphQL endpoint | Default `https://backboard.railway.com/graphql/v2` — only override for custom endpoints |
+
+> **Token scope:** Account tokens see all accessible projects. Workspace tokens limit visibility to one workspace. Project tokens limit visibility to a single project — use the narrowest token that covers the user's needs.
+
+**Setup steps**:
+
+1. Ask: "I need your Railway API token. Do you want account-wide, workspace, or project scope?"
+2. Direct to Railway → Account Settings → Tokens → Create Token. Explain scope trade-offs (account vs workspace vs project).
+3. Call `ops_configure_integration`:
+   ```
+   ops_configure_integration(provider: "railway", credentials: {
+     "RAILWAY_API_TOKEN": "<token>"
+   })
+   ```
+   Omit `RAILWAY_API_URL` unless the user has a non-default GraphQL endpoint.
+4. Call `ops_test_integration(provider: "railway")` to verify.
+5. On success: "Railway is connected! You can use `railway_projects_list`, `railway_project_status`, `railway_deployments_latest`, `railway_logs`, `railway_health_summary`, and 12 more read-only tools."
+
+**Common issues**:
+- 401 → token is invalid or revoked. Create a new token in Railway.
+- 403 → token scope is too narrow for the requested project. Use a workspace or account token, or a project token for that specific project.
+- Empty project list → project token may not include the target project, or workspace filter is wrong.
+
+**Incident tip:** Start with `railway_health_summary` or `railway_incident_diagnosis`, then drill into `railway_deployment_get` + `railway_logs`. Combine `railway_domains` with `dns_lookup` / `http_check` for live edge verification.
+
+---
+
 ## Handling "Missing Credentials" Errors
 
 If a user tries a tool and gets an error about missing credentials or an unconfigured integration:
 
-1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `ghe_` → GitHub, `bb_` → Bitbucket, `gl_` → GitLab, `cf_` → Cloudflare, `jira_` → Jira, `sentry_` → Sentry, `alg_` → Algolia Search API, `aws_` → AWS). **`alg_status` and `alg_incidents` never require credentials** — if those fail, it is not a missing-integration error.
+1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `railway_` → Railway, `ghe_` → GitHub, `bb_` → Bitbucket, `gl_` → GitLab, `cf_` → Cloudflare, `jira_` → Jira, `sentry_` → Sentry, `alg_` → Algolia Search API, `aws_` → AWS). **`alg_status` and `alg_incidents` never require credentials** — if those fail, it is not a missing-integration error.
 2. Call `ops_list_integrations` to confirm the provider is not configured.
 3. Offer to set it up: "It looks like [Provider] is not configured yet. Would you like me to help you connect it?"
 4. Follow the provider-specific steps above.
