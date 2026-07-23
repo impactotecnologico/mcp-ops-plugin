@@ -235,6 +235,8 @@ Users might say things like:
 - "Why did the pipeline fail on main?" — on paid plans, delegate to `ci-investigator`; on Community, `bb_pipeline_diagnose` or `gl_pipeline_diagnose` or upgrade
 - "Find this SonarCloud project" / paste `sonarcloud.io` URL — `sq_projects_search(q=<full URL>)` then `sq_last_scan_summary(project=<key>)`
 - "What were the last scan results?" / "último escaneo" / names `org_project` key — `sq_last_scan_summary(project=<key>)` directly (org inferred from key; no `SONAR_ORGANIZATION` required)
+- "Qué code smells / qué issues" — `sq_issues_search(project, types=[CODE_SMELL|BUG|...])` (summary only gives counts)
+- "Código duplicado" / "where is duplication" — `sq_duplications_show(project)`
 - "Why did SonarQube fail the quality gate?" — `sq_last_scan_summary` or `sq_quality_gate_status` + `sq_issues_search` (inNewCodePeriod=true) when SonarQube is configured
 - "Summarize GitHub repo acme/backend" — `ghe_repo_summary(repo=acme/backend)` on github.com (no `GHE_BASE_URL` needed)
 - "Why is SKU X missing from search?" — `alg_object_get` + `alg_search` when Algolia is configured; `alg_status` if suspecting upstream outage

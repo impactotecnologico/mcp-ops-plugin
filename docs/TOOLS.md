@@ -469,9 +469,16 @@ Recent analysis history (timestamps, versions). For a full snapshot use `sq_last
 ---
 
 ### `sq_issues_search`
-Search code issues; use `inNewCodePeriod=true` for new-code violations only.
+Search code issues with file, line, rule, and message. Use `types: ["CODE_SMELL"]` for code smells, `types: ["BUG"]` for bugs. Use `inNewCodePeriod=true` for new-code violations only.
 
-**Example**: _"List critical Sonar issues in new code for acme:storefront"_
+**Example**: _"List critical Sonar issues in new code for acme:storefront"_ / _"Qué code smells hay en acme_storefront"_
+
+---
+
+### `sq_duplications_show`
+Files with duplicated lines and duplication blocks (line ranges + duplicate file paths). Default expands top 5 files. Use `file` for a single file, `topFiles: 0` for list-only.
+
+**Example**: _"Where is duplicated code in acme_storefront?"_ / _"Código duplicado en acme_storefront"_
 
 ---
 
@@ -479,6 +486,8 @@ Search code issues; use `inNewCodePeriod=true` for new-code violations only.
 
 1. User pastes SonarCloud URL → `sq_projects_search(q=<URL>)` → `sq_last_scan_summary(project=<key>)`
 2. Quality gate failed → `sq_last_scan_summary` or `sq_quality_gate_status` → `sq_issues_search(inNewCodePeriod=true)`
+3. "Qué code smells / issues" → `sq_issues_search(project, types=[CODE_SMELL])`
+4. "Código duplicado / where duplicated" → `sq_duplications_show(project)`
 
 **Guided prompt** (when listed in `opsphere://playbooks/index`): `diagnose-sonarqube-quality-gate` — structured QG failure triage with suggested `sq_*` tool order.
 
