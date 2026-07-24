@@ -1,0 +1,138 @@
+---
+description: CGC obligatorio — explorar código mcp-ops-* vía grafo antes que Grep/Read
+alwaysApply: true
+---
+
+# CodeGraphContext — uso obligatorio (mcp-ops-*)
+
+**MCP:** `user-CodeGraphContext` · **Raíz:** `$MCP_ROOT` = `/home/josejariza/mcp` · **9 repos indexados**
+
+## Regla principal (no negociable)
+
+En repos `mcp-ops-*`, **la primera herramienta de exploración de código es siempre CGC**, no Grep, Glob, Task/explore ni Read de archivos enteros.
+
+El usuario **no tiene que pedir** que uses CGC. Si la pregunta implica entender código, **úsalo sin preguntar**.
+
+**Alcance:** cualquier símbolo, caller o flujo puede estar en **cualquiera de los 9 repos** — no asumas un solo repo aunque el usuario nombre uno.
+
+## Los 9 repos (buscar en todos cuando haga falta)
+
+`mcp-ops-b` · `mcp-ops-db` · `mcp-ops-infra` · `mcp-ops-plugin` · `mcp-ops-web-admin` · `mcp-ops-web-admin-api` · `mcp-ops-web-chat` · `mcp-ops-web-public` · `mcp-ops-web-status`
+
+Rutas: `$MCP_ROOT/mcp-ops-<nombre>`.
+
+## Disparadores — CGC ANTES que cualquier otra cosa
+
+- «¿dónde está…?», «¿quién llama a…?», «¿qué usa…?», «impacto de cambiar…»
+- localizar símbolo, handler, tool, agente, endpoint, migración, cron, Lambda
+- trazar flujo entre módulos o repos
+- implementar/refactorizar sin archivos conocidos
+
+## Si el MCP CGC no responde (loading / needsAuth / sin tools)
+
+**No digas “CGC no está disponible” y saltes a Grep en el primer fallo.**
+
+```
+1. GetMcpTools(server=user-CodeGraphContext)
+2. Si serverStatus=loading|needsAuth o solo aparece mcp_auth → CallMcpTool(mcp_auth) UNA vez
+3. Esperar 3–5 s → GetMcpTools de nuevo → CallMcpTool(find_code, …)
+4. Solo si tras mcp_auth + 1 reintento sigue fallando → Grep/Read (y avisar: MCP CGC caído/contendido)
+```
+
+Causas habituales: descriptor MCP incompleto tras reinicio de Cursor; hooks `cgc index --force` bloqueando FalkorDB; proceso `cgc mcp start` zombie.
+
+## Protocolo obligatorio (turno 1)
+
+### A) Usuario nombra un repo (ej. «en ops-b»)
+
+```
+1. find_code(símbolo, repo_path=ese repo, fuzzy_search=false)
+2. Si 0 resultados → repetir find_code en los otros 8 repos (prioridad: ops-db, web-chat, admin-api, infra)
+3. Donde functions_by_name tenga match → analyze_code_relationships(find_callers, target, repo_path, context=ruta)
+4. En repos donde solo haya content_matches (import/uso) → anotar como caller/uso, no usar find_callers ahí
+5. Read máx. 1–3 archivos que CGC ya identificó
+```
+
+### B) Usuario no nombra repo
+
+```
+1. list_indexed_repositories (1 vez) si hace falta
+2. find_code(símbolo, repo_path=..., fuzzy_search=false) en cada repo candidato hasta encontrar definición + usos
+   Orden sugerido: ops-b → ops-db → web-chat → admin-api → web-admin → infra → plugin → web-public → web-status
+3. find_callers solo en el repo donde está la DEFINICIÓN (functions_by_name)
+4. find_code en el resto de repos para usos/imports cross-repo
+```
+
+### Reglas de herramienta
+
+| Situación | Herramienta |
+|-----------|-------------|
+| Localizar símbolo / usos | `find_code` (nombre corto, ej. `purgeOldWorkflowRuns`) |
+| Callers de función **definida** en ese repo | `analyze_code_relationships(find_callers)` |
+| Símbolo importado (`from 'mcp-ops-db'`, etc.) | `find_code` en repo consumidor — **no** `find_callers` ahí |
+| `find_callers` → 0 pero hay content_matches | Normal en imports cross-repo; ampliar búsqueda a otros repos |
+
+**Prohibido en turno 1:** `Grep`/`Glob`/`Task explore` para localizar símbolos · `find_code` sin `repo_path` · queries largas tipo `export async function foo` · `Read` >80 líneas sin CGC previo.
+
+## Cross-repo (limitación CGC)
+
+`find_callers` **no cruza repos** vía `import 'mcp-ops-db'` ni paquetes npm entre clones.
+
+Patrón habitual: definición en **ops-db** → usos en **ops-b**, **web-chat**, **admin-api**.
+
+Para «¿quién llama a X en ops-b?»:
+1. `find_code("X", ops-b)` → content_matches (crons, handlers…)
+2. `find_code("X", ops-db)` → definición
+3. Opcional: `find_callers` en ops-db (solo callers **dentro** de db)
+4. Repetir `find_code("X", …)` en web-chat, admin-api, etc. si el impacto es global
+
+## Limitaciones conocidas (no arreglables — mitigar así)
+
+| Limitación | Mitigación obligatoria |
+|------------|------------------------|
+| **`async function*`** (generators: `runTurn`, `runGraph`) | No aparecen como Function. Buscar callers del flujo: `callOrchestratorAgent`, `agentsComplete`, `createLLMClient`, o `find_code` por nombre en content_matches. |
+| **`find_callers` no cruza repos** | Barrido `find_code(símbolo)` en los **9 repos**. Definición en un repo, usos en otros = content_matches, no `find_callers`. |
+| **Llamadas dinámicas** (`obj[method]()`, reflexión) | CGC puede fallar. Tras CGC agotado en 9 repos → **un** Grep acotado + Read del archivo sospechoso. |
+| **Índice = último commit** | Cambios sin commit no están en el grafo. Tras editar mucho sin commit → avisar o sugerir commit / `cgc index --force`. |
+| **Respuestas `source` grandes** | Siempre `repo_path` + `fuzzy_search=false`. No pedir el archivo entero en `find_code`; Read solo tras acotar. |
+| **Sin métrica tokens CGC vs Grep** | Maximizar ahorro: 2–4 llamadas CGC + Read ≤3 archivos; no repetir CGC en el mismo turno si ya hay rutas. |
+| **MCP `loading` / sin tools** | `mcp_auth` + reintento (sección arriba). No declarar “no disponible” al primer fallo. |
+| **Hooks reindexan (`index --force`)** | Contienden FalkorDB con el MCP. Si CGC cuelga ~1–2 min tras pull/commit → reintentar; ver `/tmp/cgc-hook.log`. |
+
+## Si find_code devuelve 0 en todos los repos
+
+1. `get_repository_stats` en repos sospechosos (web-chat ≥390 files)
+2. **Un** `Grep` global para confirmar en disco
+3. Índice stale → `FORCE=--force $MCP_ROOT/scripts/cgc-index-all-mcp-ops.sh` o `$MCP_ROOT/scripts/cgc-verify.sh`
+4. Revisar tabla de limitaciones arriba antes de asumir que el símbolo no existe
+
+## Excepciones — NO usar CGC
+
+| Caso | Usar |
+|------|------|
+| `docs/`, `docs/may-2026/`, OpenSpec | Read / Grep |
+| Ops en vivo (Datadog, K8s, AWS, Vercel) | MCP Ops plugin |
+| `.env`, credenciales, `infra/local` | No indexado |
+| Usuario @-archivo concreto para editar | Read directo |
+
+## Alias rápidos
+
+ops-b/backend · ops-db/db · infra · plugin · web-admin/admin · admin-api · web-chat/chat · web-public/public · web-status/status
+
+## Atajos de dominio
+
+**Mistral (web-chat):** `agentsComplete`, `createLLMClient` — no `MistralClient`.
+
+**Workflow (web-chat):** `callOrchestratorAgent`, `runGraph` — `runTurn` puede no indexarse (generator).
+
+**ops-db:** muchas funciones exportadas; buscar definición aquí si ops-b/web-chat/admin-api solo importan.
+
+## Ejemplo correcto (cross-repo)
+
+> ¿Quién llama a `purgeOldWorkflowRuns` en ops-b?
+
+1. `find_code("purgeOldWorkflowRuns", ops-b)` → `credential-cleanup.ts`, `workflow-trace-cleanup.ts`
+2. `find_code("purgeOldWorkflowRuns", ops-db)` → `retention.ts` (definición)
+3. `find_callers` en ops-db → callers internos de db solamente
+4. `find_code("purgeOldWorkflowRuns", web-chat)` / `admin-api` → por si hay más usos
+5. Read solo los crons si hace falta detalle — **sin Grep previo**
