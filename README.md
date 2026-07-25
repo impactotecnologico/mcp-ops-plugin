@@ -2,8 +2,8 @@
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.6-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
-[![Codex plugin](https://img.shields.io/badge/Codex-1.0.2-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.7-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Codex plugin](https://img.shields.io/badge/Codex-1.0.3-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
@@ -74,7 +74,7 @@ mcp-cursor.opsphere.io/mcp      ← ALL tool execution happens here
 
 ### MCP resources (gateway)
 
-After Connect, the gateway exposes **9 read-only MCP resources** (policies, catalog, playbooks). They complement tools — you do not need a resource per integration.
+After Connect, the gateway exposes **11 read-only MCP resources** (policies, catalog, playbooks; plus Hub-only `opsphere://hub/*` when on Connection Hub). They complement tools — you do not need a resource per integration.
 
 | Resource | Purpose |
 |----------|---------|
@@ -82,6 +82,8 @@ After Connect, the gateway exposes **9 read-only MCP resources** (policies, cata
 | `opsphere://tools/catalog` | Enabled modules + prompt list (JSON) |
 | `opsphere://playbooks/index` | Guided workflows — outage, pipeline, SonarQube quality gate, Cloudflare audit, … |
 | `opsphere://tenant/account-context` | Full cloud-catalog context per account (infra names, regions, capabilities) |
+| `opsphere://hub/active-context` | **Hub only** — active `context_id` and linked connection for this MCP session |
+| `opsphere://hub/connections` | **Hub only** — linked client workspaces (same as `ops_accounts_list`) |
 | `opsphere://policies/*` | Change approval, secrets handling, incident response |
 | `opsphere://taxonomy/severity` | SEV1–4 severity taxonomy |
 | `opsphere://inventory/critical-assets` | Brands, accounts, regions, apps inventory |
@@ -128,6 +130,8 @@ The plugin bundle is **markdown and JSON only** — agent guidance, skills, and 
 | **Always-on rule** | [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc) | Tool catalog, integration triggers, **subagent delegation**, macro workflows, Community error codes (`TRIAL_EXPIRED`, `RATE_LIMIT_EXCEEDED`, `READ_ONLY_PLAN`, `SINGLE_ENVIRONMENT_ONLY`), memory hygiene, AWS (IAM keys, not SSO), credential rules |
 | **Skills** | [`skills/configure-integration/`](skills/configure-integration/) | Step-by-step provider setup → `ops_configure_integration` |
 | | [`skills/set-work-context/`](skills/set-work-context/) | Tenant work context (`ops_set_work_context`) |
+| | [`skills/link-account/`](skills/link-account/) | Connection Hub — link/unlink client workspaces (OAuth) |
+| | [`skills/open-work-context/`](skills/open-work-context/) | Connection Hub — `context_id` for tenant-scoped tools |
 | | [`skills/run-macro-workflows/`](skills/run-macro-workflows/) | Team+ composite `macro_*` tools (outage, endpoint, env health) |
 | **Commands** | [`commands/`](commands/) | `/opsphere-welcome`, `/opsphere-setup`, `/opsphere-reconnect`, `/integration-status` |
 | **Subagents** | [`agents/`](agents/) | Focused investigation and post-mortem flows (table above) |

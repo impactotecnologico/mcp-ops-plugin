@@ -1,6 +1,6 @@
 {
   "name": "opsphere",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "DevOps and SRE intelligence for ChatGPT Codex — investigate incidents, search Datadog logs, diagnose CI/CD pipelines, check deployments, and operate across AWS, Kubernetes, GitHub, Jira, Sentry, Cloudflare, and more through a secure remote MCP gateway.",
   "author": {
     "name": "Opsphere",
@@ -62,7 +62,9 @@
       "@opsphere-welcome show me what Opsphere can do and help me get started",
       "@plan-and-usage check my account and summarize my plan, usage, and available capabilities in plain language",
       "@configure-integration guide me through connecting Datadog, AWS, GitHub, or another supported integration",
-      "@set-work-context help me define my stack, environments, repositories, deployment platforms, and operational tools"
+      "@set-work-context help me define my stack, environments, repositories, deployment platforms, and operational tools",
+      "@link-account help me link another client Opsphere workspace to my Connection Hub",
+      "@open-work-context open a work context on a linked client so I can run Datadog or deployment tools"
     ],
     "brandColor": "#0D9488",
     "composerIcon": "./assets/logo-icon.svg",

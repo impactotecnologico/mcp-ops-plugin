@@ -89,6 +89,16 @@ or ask:
 
 The agent will ask for a short description of your stack (projects, providers, environments). **Do not paste API keys here** — only free-form context. You can skip and configure it later.
 
+### Connection Hub (multi-account)
+
+If you operate **multiple client workspaces** (consulting, MSP, multi-brand), new signups may use a **Connection Hub** — one OAuth login in Cursor or Codex, many linked tenants.
+
+1. After connect, say: _"Link another client workspace"_ — the agent runs the **`link-account`** skill (`ops_account_link_start` → browser OAuth).
+2. Before Datadog, K8s, deploys, or integrations on a client, say: _"Open work context for [client]"_ — **`open-work-context`** skill (`ops_context_open` → `context_id`).
+3. To switch clients: close context and open another (agent handles `ops_context_close` / `ops_context_open`).
+
+Hub accounts do **not** replace per-client integration setup — configure Datadog/AWS/etc. on each linked workspace (with an open `context_id`). See [TOOLS.md — Connection Hub](TOOLS.md#connection-hub-multi-account-broker).
+
 ---
 
 ## Step 4 — Configure your first integration
@@ -118,7 +128,7 @@ See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for common issues.
 
 ## Codex / ChatGPT
 
-Opsphere ships a **Codex plugin** manifest at `.codex-plugin/plugin.json` (version **1.0.2**, separate from Cursor). Both clients use the same gateway: `https://mcp-cursor.opsphere.io/mcp`.
+Opsphere ships a **Codex plugin** manifest at `.codex-plugin/plugin.json` (version **1.0.3**, separate from Cursor). Both clients use the same gateway: `https://mcp-cursor.opsphere.io/mcp`. Skills under `skills/` are shared (including **`link-account`** and **`open-work-context`** for Connection Hub users).
 
 ### Codex CLI (recommended path)
 

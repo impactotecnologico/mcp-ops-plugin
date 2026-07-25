@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Opsphere — DevOps Operational Intelligence
 
-Opsphere connects your DevOps tools to Cursor. Query logs, check deploys, search issues, diagnose incidents, and manage integrations — all from the chat, without leaving the IDE.
+Opsphere connects your DevOps tools to **Cursor** and **Codex**. Query logs, check deploys, search issues, diagnose incidents, and manage integrations — all from the chat, without leaving the IDE.
 
 The backend is a remote MCP server. All tool calls go to the Opsphere gateway. No tool logic runs locally.
 
@@ -33,6 +33,7 @@ These tools are available once authenticated and integrations are configured:
 | Integration Mgmt | — | `ops_configure_integration`, `ops_list_integrations`, `ops_test_integration`, `ops_remove_integration` |
 | Plan & Usage | — | `ops_my_usage` |
 | Work context | — | `ops_set_work_context`, `ops_get_work_context` |
+| **Connection Hub** (broker) | — | `ops_accounts_list`, `ops_account_link_start`, `ops_account_unlink`, `ops_context_open`, `ops_context_close` — only when `tools/list` includes them |
 | Operational memory | — | `memory_search`, `memory_store`, `memory_session_touch`, `memory_invalidate` |
 | **Macro workflows** (Team+) | — | `macro_outage_triage`, `macro_endpoint_health`, `macro_env_health` — composite read-only runs with SSE progress |
 
@@ -44,9 +45,11 @@ These tools are available once authenticated and integrations are configured:
 
 **Work context** is injected automatically when MCP connects (default cloud account + index of others). After signup, if `ops_my_usage` shows work context as not configured, run the `set-work-context` skill. For full text of a non-default account, use `ops_get_work_context` or resource `opsphere://tenant/account-context`.
 
+**Connection Hub** (when `ops_accounts_list` is in `tools/list`): new signups may get a Hub anchor tenant — not an operational workspace. Link client workspaces with skill **`link-account`**, then **`open-work-context`** before any tenant-scoped tool. Pass `context_id` on every scoped call; use `ops_context_close` before switching. Hub rejects `ops_configure_integration` / `ops_set_work_context` without an open context on a linked tenant.
+
 ### MCP resources (gateway — read via @ or Fetch MCP Resource)
 
-Nine read-only resources ship with the remote MCP server. They are **not** duplicated in this plugin repo — Cursor fetches them from the gateway after Connect.
+Eleven read-only resources ship with the remote MCP server (nine universal + two Hub-only). They are **not** duplicated in this plugin repo — Cursor/Codex fetch them from the gateway after Connect.
 
 | URI | When to read |
 |-----|----------------|
@@ -54,6 +57,8 @@ Nine read-only resources ship with the remote MCP server. They are **not** dupli
 | `opsphere://tools/catalog` | JSON: enabled modules + prompt index for your tenant |
 | `opsphere://playbooks/index` | All MCP prompts grouped by category (outage, pipeline, SonarQube, …) |
 | `opsphere://tenant/account-context` | Full per-account `system_prompt_context` (infra names, regions, capabilities) |
+| `opsphere://hub/active-context` | **Hub only** — active `context_id`, connection label, expiry |
+| `opsphere://hub/connections` | **Hub only** — linked connections list (same data as `ops_accounts_list`) |
 | `opsphere://policies/change-approval` | Before mutating Cloudflare / Akamai / `system_update` |
 | `opsphere://policies/secrets-handling` | Credential handling and redaction |
 | `opsphere://policies/incident-response` | Incident lifecycle and roles |
@@ -99,6 +104,18 @@ If a tool returns an error about missing credentials or an unconfigured provider
 2. Suggest: "It looks like [Provider] is not configured yet. Say **'Configure my [Provider]'** and I will walk you through it."
 
 3. Use the `configure-integration` skill for the full setup flow.
+
+---
+
+## Connection Hub — agent rules (when broker tools are in `tools/list`)
+
+1. **Detect Hub:** `ops_accounts_list` present, or initialize instructions contain `Connection Hub — work context`.
+2. **Link clients:** skill **`link-account`** → `ops_account_link_start` → user completes OAuth in browser (no tokens in chat).
+3. **Before operational work:** skill **`open-work-context`** → `ops_context_open` → pass returned `context_id` on **every** tenant-scoped and `macro_*` tool call.
+4. **Switch tenant:** `ops_context_close(context_id)` then `ops_context_open` for the other `linked_connection_id`.
+5. **Integrations / work context:** only on a **linked** tenant with open `context_id` — never on the Hub anchor alone.
+6. **GLOBAL without context:** `ops_*` broker tools, `dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents`.
+7. If `BROKER_CONTEXT_REQUIRED` → open context and retry; do not invent tenant names.
 
 ---
 
@@ -228,6 +245,8 @@ Users might say things like:
 - "Configure my AWS" — IAM Access Key + Secret Key (not SSO)
 - "List my S3 buckets" — `aws_cli_query` directly after AWS is configured (no SSO step)
 - "Tell Opsphere what I usually work with" — triggers the `set-work-context` skill
+- "Link another client workspace" / "add a customer account" — skill **`link-account`** (Hub only)
+- "Switch to my other client" / "open work context for …" — skill **`open-work-context`** (Hub only)
 - "How do I configure deployment sources?" — triggers **`configure-deployment-catalog`** skill
 - "Show PR #42 status in Bitbucket"
 - "Find Jira issues assigned to me"

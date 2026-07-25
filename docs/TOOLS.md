@@ -8,7 +8,7 @@ All others require the corresponding integration to be configured first (see [IN
 
 ## MCP resources
 
-Nine **read-only** resources are registered on the gateway (not in this plugin bundle). Cursor can fetch them after MCP Connect. Use them for policies and catalog context — not as a substitute for live tool calls.
+Eleven **read-only** resources are registered on the gateway when Connection Broker is enabled (nine always; two additional on Connection Hub). Cursor and Codex can fetch them after MCP Connect. Use them for policies and catalog context — not as a substitute for live tool calls.
 
 | URI | MIME | Purpose |
 |-----|------|---------|
@@ -16,6 +16,8 @@ Nine **read-only** resources are registered on the gateway (not in this plugin b
 | `opsphere://tools/catalog` | json | Enabled modules and prompt index for your plan/tenant |
 | `opsphere://playbooks/index` | markdown | All MCP prompts by category (e.g. `diagnose-sonarqube-quality-gate`, `investigate-website-outage`) |
 | `opsphere://tenant/account-context` | markdown | Per-account cloud catalog (`system_prompt_context`) |
+| `opsphere://hub/active-context` | json | **Hub only** — active `context_id`, connection label, expiry for this MCP session |
+| `opsphere://hub/connections` | json | **Hub only** — linked connections (same data as `ops_accounts_list`) |
 | `opsphere://policies/change-approval` | markdown | Approval rules before mutating CDN / cache / system_update |
 | `opsphere://policies/secrets-handling` | markdown | Secret handling and redaction |
 | `opsphere://policies/incident-response` | markdown | Incident lifecycle |
@@ -113,6 +115,36 @@ Returns configured operational context for all cloud accounts (full text). Use w
 **Example**: _"What's my saved work context?"_
 
 **Resource**: `opsphere://tenant/account-context` (same full content, MCP resource).
+
+---
+
+## Connection Hub (multi-account broker)
+
+Available when your account is a **Connection Hub** (`ops_accounts_list` appears in `tools/list`). Same gateway for **Cursor** and **Codex**. Lets consultants and platform teams operate multiple client workspaces from one IDE login.
+
+| Tool | Parameters | Purpose |
+|------|------------|---------|
+| `ops_accounts_list` | — | List linked client workspaces (`id`, `label`, tenant `slug`, `status`) |
+| `ops_account_link_start` | — | OAuth `authorization_url` to link a new workspace (complete in browser) |
+| `ops_account_unlink` | `linked_connection_id` | Revoke a linked workspace |
+| `ops_context_open` | `linked_connection_id`, optional `chat_session_key` | Open server-side work context → returns `context_id` |
+| `ops_context_close` | `context_id` | Close context before switching clients |
+
+**Agent skills:** [`link-account`](../skills/link-account/SKILL.md) (link/unlink) · [`open-work-context`](../skills/open-work-context/SKILL.md) (open/switch `context_id`).
+
+**Rules:**
+
+- **Tenant-scoped** tools (`dd_*`, `k8s_*`, `deployment_status`, `macro_*`, integrations, memory, …) require `context_id` on every call.
+- **Global** tools work without `context_id`: broker `ops_*`, `dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents`.
+- The Hub anchor cannot store integration credentials — open a context on a linked workspace, then use `ops_configure_integration` or `configure-integration`.
+- OAuth link completion is **HTTP callback only** — there is no `ops_account_link_complete` tool.
+
+**Examples:**
+
+- _"Link another client workspace"_ → `link-account` skill
+- _"Switch to my staging client and search Datadog errors"_ → `open-work-context`, then `dd_logs_search` with `context_id`
+
+**Resources:** `opsphere://hub/active-context` · `opsphere://hub/connections`
 
 ---
 

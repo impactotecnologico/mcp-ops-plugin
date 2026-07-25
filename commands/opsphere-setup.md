@@ -72,6 +72,14 @@ If `ops_my_usage` shows **Work context: not configured yet**, run the `set-work-
 
 **Skip gracefully** if the user prefers later: "No problem — say 'update my work context' whenever you're ready."
 
+### Step 3.6 — Connection Hub (when broker tools are available)
+
+If `tools/list` includes `ops_accounts_list` (or initialize mentions **Connection Hub**):
+
+1. Call `ops_accounts_list`. If empty, offer skill **`link-account`** to link the first client workspace.
+2. Before operational tools on a client, run **`open-work-context`** so tenant-scoped calls include `context_id`.
+3. Do **not** call `ops_configure_integration` on the Hub anchor — open context on the linked tenant first.
+
 ---
 
 ## Step 4 — Configure the first integration (optional)
