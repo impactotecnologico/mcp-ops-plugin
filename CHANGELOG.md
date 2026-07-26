@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
+- **Cursor slash commands** `/link-account` and `/open-work-context` — parity with Codex `@link-account` / `@open-work-context` default prompts.
 - **Connection Hub (multi-account broker):** skills [`link-account`](skills/link-account/SKILL.md) and [`open-work-context`](skills/open-work-context/SKILL.md) for Cursor and Codex; onboarding rules, [docs/TOOLS.md](docs/TOOLS.md#connection-hub-multi-account-broker), and [docs/INSTALL.md](docs/INSTALL.md#connection-hub-multi-account) updates; Hub MCP resources `opsphere://hub/active-context` and `opsphere://hub/connections` documented.
 - **SonarQube conversational flows** (paid gateway module): `sq_projects_search` with SonarCloud URLs, `sq_last_scan_summary` for one-call last-scan snapshots; SonarQube provider section in [`skills/configure-integration/SKILL.md`](skills/configure-integration/SKILL.md); onboarding examples and [docs/TOOLS.md](docs/TOOLS.md) updates.
 - **GitHub github.com**: `ghe_repo_summary` accepts `owner/repo` slug; github.com works with `GHE_TOKEN` only (no `GHE_BASE_URL`).

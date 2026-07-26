@@ -46,6 +46,8 @@ Architecture diagram and domain list: **[docs/REMOTE-MCP-ARCHITECTURE.md](docs/R
 | **`/opsphere-setup`** | First-run OAuth + first integration (step by step) |
 | **`/opsphere-reconnect`** | Plugin red / OAuth refresh error — recover session |
 | **`/integration-status`** | See which providers are connected |
+| **`/link-account`** | Connection Hub — link/unlink a client workspace (OAuth) |
+| **`/open-work-context`** | Connection Hub — open `context_id` on a linked client |
 
 Type **`/opsphere-welcome`** after install for example prompts including subagents (`/outage-triage`, `/endpoint-health`, `/ci-investigator`, `/postmortem-writer`).
 
