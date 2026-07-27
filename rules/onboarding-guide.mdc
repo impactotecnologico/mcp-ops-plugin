@@ -282,7 +282,7 @@ Users might say things like:
 2. **If empty results** → reformulate **once** with concrete tokens (service, env, repo, HTTP code) or different `scopes`. The gateway auto-retries with synonym expansion; do not call `memory_search` more than one extra time unless the user asks.
 3. **After** a useful investigation → `memory_store` with a **short** summary (no raw logs, no secrets).
 4. **When outdated** → `memory_invalidate` with `status: stale` (owner or admin).
-5. **Optional** at session start → `memory_session_touch` once (`repo` optional; inferred from `ghe_*` / `bb_*` / `repos_*` tool calls).
+5. **Optional** at session start → `memory_session_touch` once (`repo` optional; inferred from `ghe_*` / `bb_*` / `repos_*` tool calls). On **Connection Hub**, pass `external_session_key` equal to `ops_context_open` `chat_session_key` (gateway injects it when omitted).
 
 Default scopes for partners: **session** + **user**. Use `scope=repository` only with explicit `repo` `org/name`. Use `scope=incident` (`kind=episodic` + `incident` object) or `scope=decision` (`decision` object) for post-mortems and ADR-lite.
 

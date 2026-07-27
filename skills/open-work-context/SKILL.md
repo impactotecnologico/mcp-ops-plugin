@@ -14,7 +14,7 @@ On a **Connection Hub**, operational tools (`dd_*`, `k8s_*`, `vercel_*`, `deploy
 | Tool | Parameters | Purpose |
 |------|------------|---------|
 | `ops_accounts_list` | — | List linked connections; pick `id` (UUID) |
-| `ops_context_open` | `linked_connection_id`, optional `chat_session_key` | Returns `context_id`, `expires_at` |
+| `ops_context_open` | `linked_connection_id`, optional `chat_session_key` | Returns `context_id`, `expires_at`. Use a stable `chat_session_key` per Cursor chat tab. |
 | `ops_context_close` | `context_id` | Close context before switching tenants |
 
 **MCP resources (read-only):**
@@ -47,15 +47,21 @@ Pass `context_id` as a **tool argument** on every tenant-scoped and macro call. 
 2. Otherwise call `ops_accounts_list`.
    - **One connection** → use its `id` without asking.
    - **Multiple** → ask which client (show `label` + tenant `slug` from the tool result).
-3. Call `ops_context_open(linked_connection_id: "<uuid>")`.
+3. Call `ops_context_open` with optional `chat_session_key` — a **stable id for this Cursor chat tab** (reuse across the session; required for workspace pinning when switching connections).
 4. Store the returned `context_id` for this chat session. Mention `expires_at` only if the user asks or the session is long-running.
-5. Run tenant-scoped tools with the same `context_id` until the user switches or closes.
+5. **Optional** at chat start: `memory_session_touch(context_id: "ctx_…")` — on Hub the gateway sets `external_session_key` from `chat_session_key` when you omit it; pass the same value explicitly if you prefer.
+6. Run tenant-scoped tools with the same `context_id` until the user switches or closes.
 
 Example:
 
 ```
-ops_context_open(linked_connection_id: "550e8400-e29b-41d4-a716-446655440000")
+ops_context_open(
+  linked_connection_id: "550e8400-e29b-41d4-a716-446655440000",
+  chat_session_key: "cursor-chat-<stable-per-tab-id>"
+)
 → context_id: "ctx_…"
+
+memory_session_touch(context_id: "ctx_…", repo: "org/repo")  // external_session_key auto-aligned on Hub
 
 dd_logs_search(context_id: "ctx_…", q: "status:error", from: "now-1h")
 ```
@@ -76,6 +82,16 @@ With an open `context_id`:
 - **`set-work-context`** → `ops_set_work_context` on the linked tenant (Hub anchor rejects it).
 
 Without `context_id`, `ops_configure_integration` on Hub returns `HUB_OPERATIONAL_DENIED` — open context first.
+
+## Memory + chat pinning (Connection Hub)
+
+Broker **workspace pinning** (`chat_session_key` on `ops_context_open`) and operational memory **session scope** share the same stable chat id:
+
+| Broker | Memory |
+|--------|--------|
+| `ops_context_open(…, chat_session_key: "…")` | `memory_session_touch(…, external_session_key: "…")` |
+
+**Recommended:** pass the same stable key to both when opening a Hub chat. If you omit `external_session_key` on `memory_session_touch`, the gateway injects it from the active broker context’s `chat_session_key` (when present). Explicit `external_session_key` from the caller always wins.
 
 ## Errors
 

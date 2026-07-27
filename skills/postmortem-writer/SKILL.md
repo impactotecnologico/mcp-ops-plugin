@@ -29,7 +29,7 @@ Use tools that exist in the current session's `tools/list`. Never invent tool na
 |------|---------|
 | `memory_search` | Prior incidents, decisions, or session notes (`scopes`: `incident`, `decision`, `repository`, `session`, `user`) |
 | `memory_store` | Save episodic incident memory after user approves the draft |
-| `memory_session_touch` | Optional — bind `repo` / `environment` before store |
+| `memory_session_touch` | Optional — bind `repo` / `environment` before store. Hub: `external_session_key` = `chat_session_key` from `ops_context_open` (auto-injected when omitted) |
 | `memory_invalidate` | Mark superseded prior incident memory if user provides an ID |
 
 **Read-only evidence refresh** (optional, skip if absent or incident already documented):

@@ -175,6 +175,8 @@ Persist a short distilled fact (not raw logs). Rate-limited (50 stores/user/day)
 ### `memory_session_touch`
 Optional heartbeat at session start; binds repo context when you pass `repo` or when inferred from recent `ghe_*` / `bb_*` / `repos_*` calls.
 
+**Connection Hub:** use the same stable id for `ops_context_open` `chat_session_key` and `external_session_key` here (gateway auto-injects `external_session_key` from broker context when omitted).
+
 **Example**: _"Touch memory session for org/my-repo"_
 
 ---
