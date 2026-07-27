@@ -90,6 +90,57 @@ MCP OAuth refresh error
 
 ---
 
+## Connection Hub / Broker (multi-account)
+
+Applies when `tools/list` includes `ops_accounts_list` — you are on a **Connection Hub**, not a legacy single-tenant workspace.
+
+### BROKER_CONTEXT_REQUIRED
+
+**Symptom**: A tenant-scoped tool (Datadog, K8s, Vercel, `deployment_status`, integrations, etc.) returns `BROKER_CONTEXT_REQUIRED` or mentions a missing `context_id`.
+
+**Cause**: On a Hub, operational tools run against a **linked client workspace**. You must open a server-side work context first and pass `context_id` on every scoped call.
+
+**Fix** (in order):
+
+1. Run **`/open-work-context`** in chat (or ask the agent to follow skill **`open-work-context`**).
+2. Call `ops_context_open` with a `linked_connection_id` from `ops_accounts_list`.
+3. Retry the original tool with `context_id` in arguments (the agent should do this automatically).
+4. Before switching clients, call `ops_context_close` for the active context.
+
+**Related commands**: **`/link-account`** — link a new client workspace before opening context.
+
+---
+
+### Double login (Hub OAuth vs client link)
+
+**Symptom**: You signed in to Opsphere in Cursor, but linking a client or opening context asks you to log in again in the browser.
+
+**Cause**: This is expected. The Hub has its own OAuth identity. Each **linked client workspace** is a separate OAuth grant — you sign in as that client's Opsphere user when linking, not with the Hub password in chat.
+
+**Fix**:
+
+- Complete the browser OAuth when `ops_account_link_start` returns an `authorization_url`.
+- Do **not** paste codes, refresh tokens, or passwords into chat.
+- After linking, use **`open-work-context`** — you should not need to link again for the same connection.
+
+---
+
+### Account link failed
+
+**Symptom**: Browser shows an error after `ops_account_link_start`, or `ops_accounts_list` does not show the new connection.
+
+| Error / symptom | What to do |
+|-----------------|------------|
+| `BROKER_DISABLED` | Connection Broker is not enabled on the gateway yet — contact Opsphere support. |
+| `MCP_SESSION_REQUIRED` | Reconnect MCP: **`/opsphere-reconnect`** (Cursor) or sign in again on the plugin card. |
+| Browser OAuth error | Run **`/link-account`** again; open a fresh `authorization_url`. Never paste secrets in chat. |
+| Connection missing after success page | Wait a few seconds, then call `ops_accounts_list` again. |
+| `LINKED_CONNECTION_NOT_FOUND` | Refresh the list with `ops_accounts_list`; re-link if the connection was revoked. |
+
+**Skills**: [`link-account`](../skills/link-account/SKILL.md) · [`open-work-context`](../skills/open-work-context/SKILL.md)
+
+---
+
 ## READ_ONLY_PLAN error
 
 **Symptom**: A tool call returns `READ_ONLY_PLAN`.
