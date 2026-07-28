@@ -598,6 +598,60 @@ List DNS records for a Cloudflare zone.
 
 ---
 
+### `cf_workers_scripts_list`
+List Worker scripts in the Cloudflare account (distinct from zone Workers routes).
+
+**Parameters:** `accountId?`, `zoneOrId?` (to resolve account).
+
+**Example**: _"List Cloudflare Worker scripts"_
+
+---
+
+### `cf_logpush_jobs_list`
+List Logpush jobs for a zone (Datadog, Scrunch, S3 destinations).
+
+**Parameters:** `zone` (required).
+
+**Example**: _"Show Logpush jobs for breitling.com"_
+
+---
+
+### `cf_snippets_list`
+List Snippets deployed on a zone.
+
+**Parameters:** `zone` (required).
+
+**Example**: _"List Cloudflare snippets on www-storefront.breitling.com"_
+
+---
+
+### `cf_rules_lists_list`
+List account Rules Lists (IP allowlists used in WAF as `ip.src in $name`).
+
+**Parameters:** `accountId?`, `zoneOrId?`, `kind?` (`ip`, `hostname`, `asn`, `redirect`).
+
+**Example**: _"List Cloudflare IP rules lists"_
+
+---
+
+### `cf_account_ruleset_entrypoint_get`
+Read account-level ruleset entrypoint (managed WAF, rate limiting, bulk redirects).
+
+**Parameters:** `phase` (`http_request_firewall_managed`, `http_ratelimit`, `http_request_redirect`), `accountId?`, `zoneOrId?`.
+
+**Example**: _"Show account bulk redirect rules on Cloudflare"_
+
+---
+
+### `cf_zone_settings_get`
+Get zone settings (all settings or one by `settingId` like `ssl`, `security_level`).
+
+**Parameters:** `zone` (required), `settingId?`.
+
+**Example**: _"What is the SSL mode for breitling.com?"_
+
+---
+
 ## Jira
 
 Requires: `JIRA_DOMAIN`, `JIRA_EMAIL`, `JIRA_API_TOKEN`.
