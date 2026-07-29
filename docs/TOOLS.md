@@ -712,6 +712,64 @@ Call **without** `profile`. Add `--region <region>` in the command when the user
 
 ---
 
+### `aws_athena_query`
+Run a **read-only** Athena SQL query (Start → poll → GetQueryResults). Requires `workGroup` and/or `outputLocation` (`s3://…`). Optional: `database`, `catalog`, `maxRows` (default 100, max 500), `region`.
+
+**Example**: _"Run SELECT … on Athena database analytics"_
+
+Prefer this over `aws_cli_query` for Athena. SQL must be SELECT / WITH…SELECT / SHOW / DESCRIBE / EXPLAIN — no DML/DDL/UNLOAD/CTAS.
+
+---
+
+### `aws_s3_find`
+List objects in a bucket by `prefix` or exact `key` (ListObjectsV2, one page). Does **not** download object bodies. Optional: `delimiter`, `maxKeys` (default 50, max 200), `region`.
+
+**Example**: _"Find keys under logs/2026/ in bucket acme-logs"_
+
+Prefer this over `aws_cli_query` / `s3api list-objects` for prefix/key discovery.
+
+---
+
+### `aws_dynamodb_describe_table`
+Describe table structure (key schema, GSIs/LSIs, status, approx size). No item data.
+
+**Example**: _"What are the partition/sort keys on table orders?"_
+
+Use before `aws_dynamodb_query` when key attribute names are unknown.
+
+---
+
+### `aws_dynamodb_query`
+Query a DynamoDB table or GSI (**Query only** — no Scan). Requires `keyConditionExpression` and `expressionAttributeValues` with PK (and SK when needed). Optional: `indexName`, `filterExpression`, `limit`, `region`.
+
+**Example**: _"Query table orders where pk = USER#123"_
+
+If KeyCondition is unknown, call `aws_dynamodb_describe_table` first — never invent a Scan.
+
+---
+
+### `aws_rds_data_query`
+Run **read-only** SQL via Aurora **RDS Data API** (HTTPS). Requires cluster `resourceArn` + Secrets Manager `secretArn` (secret stays in the customer account — Opsphere never stores the DB password). Optional: `database`, `schema`, `maxRows`, `region`. Data API must be enabled on the cluster.
+
+**Example**: _"SELECT count(*) FROM orders WHERE status = 'failed' via Data API"_
+
+Out of scope: classic RDS without Data API, TCP/VPC connections, write SQL.
+
+---
+
+### AWS data tools — troubleshooting
+
+| Symptom | Likely cause | What to do |
+|---------|--------------|------------|
+| `AccessDenied` / permission errors | IAM/SSO role of the logged-in user lacks the API action | Ask admin to grant Athena / S3 List / DynamoDB / `rds-data:ExecuteStatement` as needed — re-login will **not** fix missing permission sets |
+| Athena needs output location | Workgroup has no result config | Pass `workGroup` with enforced output **or** `outputLocation=s3://…` |
+| DynamoDB query fails on key | Wrong KeyCondition / attribute names | Run `aws_dynamodb_describe_table`, then query with HASH (+ RANGE if present) |
+| RDS Data API errors / HTTP 400 | Cluster without Data API, bad ARN, or secret | Confirm Aurora Data API enabled; pass correct `resourceArn` + `secretArn`. Non–Data API RDS is out of scope |
+
+All five use the same credentials as other AWS tools (static IAM on the free plugin tier; SSO/profile when your plan provides an active session). Call **without** `profile` on the free plugin tier.
+
+---
+
 ## Macro Workflows (Team / Enterprise)
 
 Composite read-only tools that run multi-step investigations on the gateway with **SSE progress** (Streamable HTTP). Require Cursor 2026+ for progress UI in the IDE.
