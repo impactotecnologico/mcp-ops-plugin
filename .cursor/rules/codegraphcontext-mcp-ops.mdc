@@ -41,6 +41,24 @@ Rutas: `$MCP_ROOT/mcp-ops-<nombre>`.
 
 Causas habituales: descriptor MCP incompleto tras reinicio de Cursor; hooks `cgc index --force` bloqueando FalkorDB; proceso `cgc mcp start` zombie.
 
+## Working tree sucio / cambios sin commit — NO abandonar CGC
+
+**Prohibido** decir «el índice puede estar desactualizado / incompleto (cambios sin commit)» y saltar a Grep/Read/Glob como exploración principal.
+
+```
+1. Sigue usando find_code / find_callers (navegación del grafo sigue valiendo)
+2. Si WIP de este chat o git dirty en el repo objetivo y find_code no ve símbolos nuevos:
+   a. Preferido: bash $MCP_ROOT/scripts/cgc-refresh-dirty.sh
+      (o CGC_REFRESH_REPOS=mcp-ops-web-admin bash …) — reindex --force solo de dirty
+   b. Alternativa MCP: list_watched_paths → si hace falta, unwatch_directory de repos idle
+      → watch_directory(path=repo activo). El MCP aguanta ~2 watches concurrentes.
+   c. Luego reintenta find_code
+3. Para verificar TUS propios edits de este turno → Read de las rutas que ya conoces
+4. Grep solo si tras refresh/watch el símbolo sigue en 0 en todos los repos
+```
+
+Tras reinicio del MCP Cursor los watches se pierden; no hace falta re-watch los 9 (límite ~2). Activa watch solo del repo en el que estás editando, o usa `cgc-refresh-dirty.sh`.
+
 ## Protocolo obligatorio (turno 1)
 
 ### A) Usuario nombra un repo (ej. «en ops-b»)
@@ -93,7 +111,7 @@ Para «¿quién llama a X en ops-b?»:
 | **`async function*`** (generators: `runTurn`, `runGraph`) | No aparecen como Function. Buscar callers del flujo: `callOrchestratorAgent`, `agentsComplete`, `createLLMClient`, o `find_code` por nombre en content_matches. |
 | **`find_callers` no cruza repos** | Barrido `find_code(símbolo)` en los **9 repos**. Definición en un repo, usos en otros = content_matches, no `find_callers`. |
 | **Llamadas dinámicas** (`obj[method]()`, reflexión) | CGC puede fallar. Tras CGC agotado en 9 repos → **un** Grep acotado + Read del archivo sospechoso. |
-| **Índice = último commit** | Cambios sin commit no están en el grafo. Tras editar mucho sin commit → avisar o sugerir commit / `cgc index --force`. |
+| **WIP sin commit** | **No** es excusa para abandonar CGC. `cgc-refresh-dirty.sh` o `watch_directory` (~2 máx) + seguir con `find_code`. Read solo de rutas ya conocidas. |
 | **Respuestas `source` grandes** | Siempre `repo_path` + `fuzzy_search=false`. No pedir el archivo entero en `find_code`; Read solo tras acotar. |
 | **Sin métrica tokens CGC vs Grep** | Maximizar ahorro: 2–4 llamadas CGC + Read ≤3 archivos; no repetir CGC en el mismo turno si ya hay rutas. |
 | **MCP `loading` / sin tools** | `mcp_auth` + reintento (sección arriba). No declarar “no disponible” al primer fallo. |

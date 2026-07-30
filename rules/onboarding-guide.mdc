@@ -182,6 +182,20 @@ If the gateway returns error code `RATE_LIMIT_EXCEEDED`:
 
 ---
 
+## Admin portal vs plugin
+
+| Concern | Community | Team / Enterprise (and Professional) |
+|---------|-----------|--------------------------------------|
+| **Integrations** (Datadog, AWS keys, GitHub token, …) | Configure in chat with `ops_configure_integration` | Prefer admin portal Cloud Catalog / credentials; plugin still works when `catalog_config_surface` allows |
+| **MCP tool modules** (enable K8s, ArgoCD, macros, …) | Fixed by plan matrix — admin **Tools** toggles for out-of-plan modules are disabled | Org admins manage modules in **https://admin.opsphere.io** → Tools |
+| **`ops_my_usage`** | Shows plan, usage, enabled tool count; `catalog_config_surface: plugin` | May show `catalog_config_surface: admin_portal` — point users to the admin portal for catalog/module changes |
+
+If a **Community** user asks to enable Kubernetes, ArgoCD, macros, or other premium modules in the admin Tools page: explain those modules are **not included** in Community. Suggest [opsphere.io/pricing](https://opsphere.io/pricing). Do not invent workarounds that toggle premium modules.
+
+If the gateway returns `PLAN_TOOL_NOT_INCLUDED`: the tool is outside the subscription allow-list — same upgrade guidance.
+
+---
+
 ## Read-Only Plan (READ_ONLY_PLAN)
 
 If the gateway returns error code `READ_ONLY_PLAN`:
@@ -189,6 +203,7 @@ If the gateway returns error code `READ_ONLY_PLAN`:
 - The user's **Community** plan blocks mutating tools (CDN writes, cache purge, workflow dispatch, etc.).
 - Suggest upgrade at **https://opsphere.io/pricing** for write access.
 - Do not retry with the same tool.
+- Integration setup tools (`ops_configure_integration`, `ops_remove_integration`, memory session helpers) remain allowed.
 
 ---
 

@@ -15,6 +15,8 @@ It uses four MCP tools from the backend:
 
 > **Security:** Collect credentials one at a time in conversation, but pass them to the gateway **only** in `ops_configure_integration`. Do not ask users to paste keys in unrelated messages, work context, or memory.
 
+> **Integrations ≠ admin MCP modules.** Configuring Datadog/GitHub/etc. here stores credentials so existing plan tools can call those APIs. It does **not** enable premium MCP modules (Kubernetes, ArgoCD, macros, …). Module eligibility is controlled by the subscription plan; Team+ admins manage modules in the admin portal Tools page.
+
 ## General Flow
 
 1. **Check current status**: Call `ops_list_integrations` to see what is already configured.

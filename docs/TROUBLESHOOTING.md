@@ -141,6 +141,21 @@ Applies when `tools/list` includes `ops_accounts_list` — you are on a **Connec
 
 ---
 
+## PLAN_TOOL_NOT_INCLUDED error
+
+**Symptom**: A tool call returns `PLAN_TOOL_NOT_INCLUDED`, or the Admin portal shows a module as **Not in plan** with the toggle disabled.
+
+**Cause**: The tool or module is outside your subscription tier (e.g. Kubernetes on Community, ArgoCD on Professional). The gateway blocks execution even if the module was left enabled from an older configuration.
+
+**Fix**:
+
+- In **Admin → Tools**, enable only modules marked as included in your plan, or upgrade at **https://opsphere.io/pricing**.
+- Platform admins can override module toggles for support; tenant admins cannot enable out-of-plan modules.
+
+Run **`ops_my_usage`** to confirm your plan name.
+
+---
+
 ## READ_ONLY_PLAN error
 
 **Symptom**: A tool call returns `READ_ONLY_PLAN`.

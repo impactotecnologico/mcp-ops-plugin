@@ -41,7 +41,9 @@ Copy or paraphrase the following:
 >
 > **MCP resources** (gateway): `opsphere://playbooks/index` lists guided prompts; `opsphere://tenant/account-context` has full cloud-catalog context per account. See [TOOLS.md#mcp-resources](../docs/TOOLS.md#mcp-resources).
 >
-> **Docs:** [INSTALL.md](../docs/INSTALL.md) · [TOOLS.md](../docs/TOOLS.md) · [TROUBLESHOOTING.md](../docs/TROUBLESHOOTING.md)
+> **Docs:** [INSTALL.md](../docs/INSTALL.md) · [TOOLS.md](../docs/TOOLS.md) · [TROUBLESHOOTING.md](../docs/TROUBLESHOOTING.md) · [PLANS.md](../docs/PLANS.md)
+>
+> **Admin Tools (Team+):** enabling extra MCP modules (K8s, ArgoCD, macros, …) is done in the [admin portal](https://admin.opsphere.io) on paid plans. Community integrations are configured in chat (`ops_configure_integration`).
 
 ---
 

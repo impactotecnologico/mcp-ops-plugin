@@ -38,3 +38,4 @@ Dumping `{ "content": [ { "type": "text", "text": "..." } ] }` or a `json` code 
 - If work context is **not configured**, offer `set-work-context`.
 - If integrations are **0**, offer `configure-integration` for Datadog, AWS, GitHub, etc.
 - On **Community**, mention read-only limits only when relevant to the user's next question.
+- If the user asks to **enable K8s / ArgoCD / macros / other premium modules** in the admin portal while on **Community**: explain those modules are outside the Community allow-list. Point to [opsphere.io/pricing](https://opsphere.io/pricing). Do not suggest toggling them in admin Tools — the UI and API block it for non–platform admins.
