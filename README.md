@@ -2,8 +2,8 @@
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.7-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
-[![Codex plugin](https://img.shields.io/badge/Codex-1.0.3-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.8-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Codex plugin](https://img.shields.io/badge/Codex-1.0.4-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)

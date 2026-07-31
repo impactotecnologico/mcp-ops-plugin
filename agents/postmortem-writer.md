@@ -40,6 +40,9 @@ Use tools that exist in the current session's `tools/list`. Never invent tool na
 | `dd_logs_search` | Narrow log window around incident time |
 | `dd_errors_by_service` / `dd_errors_recent` | Error counts during window (paid catalogs) |
 | `alerts_active` | Monitors still firing at write time |
+| `pd_incidents_search` / `pd_incident_log_entries` | PagerDuty incident timeline when PD is configured |
+| `prom_alerts` | Firing/pending Prometheus alerts at write time |
+| `aws_cloudwatch_logs_search` / `azure_log_analytics_query` | AWS CloudWatch or Azure Log Analytics in the incident window (read-only) |
 | `deployment_status` | Deploy correlation (multi-platform, preferred) |
 | `vercel_deploys_latest` | Vercel-only deploy correlation |
 | `ghe_actions_latest` / `bb_pipelines_latest` | CI correlation |

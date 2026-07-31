@@ -4,7 +4,7 @@ All notable changes to Opsphere will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
-## [Unreleased]
+## [1.0.8] - 2026-07-31 (New tools)
 
 ### Added
 - **Cursor slash commands** `/link-account` and `/open-work-context` — parity with Codex `@link-account` / `@open-work-context` default prompts.

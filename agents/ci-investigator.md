@@ -32,6 +32,8 @@ Use tools that exist in the current session's `tools/list`. Never invent tool na
 
 **Context (when in `tools/list`):** `ghe_repo_summary`, `ghe_pr_detail`, `ghe_pr_files`, `ghe_pr_diff`, `ghe_workflow_runs_list`, `ghe_actions_latest_jobs`, `ghe_actions_latest_logs`, `bb_pr_diffstat`, `bb_pr_diff`, `bb_pr_commits`, **`deployment_status`**, `vercel_deploys_latest`, `memory_search`.
 
+**SonarQube (when in `tools/list` and failure is quality-gate / code-analysis related):** `sq_projects_search` → `sq_quality_gate_status` or `sq_last_scan_summary` → `sq_issues_search` (e.g. `inNewCodePeriod=true`, `severities=BLOCKER,CRITICAL`). Do not use Sonar tools for pure infra/runtime pipeline failures unless the user points to a QG step.
+
 If a tool fails for missing credentials, note it in **Gaps** and continue with other available tools. Do not ask the user to paste secrets.
 
 ## Plan gate (mandatory — step 0)
@@ -102,7 +104,8 @@ Follow in order; skip steps when tools are unavailable or the user already gave 
 5. **GitHub** — `ghe_actions_latest` (repo, optional owner/workflow/branch) → `ghe_actions_diagnose` (repo, optional owner/workflow/branch). Prefer a single diagnose call; use `ghe_workflow_runs_list` only when the user targets a specific workflow or branch.
 6. **Change context** — when PR/commit correlation helps and tools exist: `ghe_pr_detail`, `ghe_pr_files`, `bb_pr_diffstat`, or `bb_pr_commits`.
 7. **Deploy correlation** — prefer **`deployment_status(scope=auto)`** when the failure may relate to a recent release across platforms; use `vercel_deploys_latest` only for explicit Vercel-only correlation or when `deployment_status` is unavailable.
-8. **Report** — structured output below.
+8. **SonarQube quality gate** — when the user or diagnose output mentions SonarQube / quality gate / code analysis failure and `sq_*` tools exist: `sq_quality_gate_status` or `sq_last_scan_summary` → `sq_issues_search` for blocking issues.
+9. **Report** — structured output below.
 
 ## Heuristics
 

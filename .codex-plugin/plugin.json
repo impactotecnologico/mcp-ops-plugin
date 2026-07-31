@@ -1,6 +1,6 @@
 {
   "name": "opsphere",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "DevOps and SRE intelligence for ChatGPT Codex — investigate incidents, search Datadog logs, diagnose CI/CD pipelines, check deployments, and operate across AWS, Kubernetes, GitHub, Jira, Sentry, Cloudflare, and more through a secure remote MCP gateway.",
   "author": {
     "name": "Opsphere",
