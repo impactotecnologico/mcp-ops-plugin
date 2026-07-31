@@ -770,6 +770,57 @@ All five use the same credentials as other AWS tools (static IAM on the free plu
 
 ---
 
+## Azure data query tools (P0)
+
+Requires: active **Azure delegated session** in web chat (`azure_user_login_start` + `azure_user_login_poll`). Same user RBAC as `azure_cli_query` — no new Opsphere credentials.
+
+### `azure_log_analytics_query`
+Run **read-only** KQL against a Log Analytics workspace (`workspaceId` + `kql`). Optional: `timespan` (e.g. `PT1H`), `startTime`/`endTime`, `maxRows` (default 100, max 500), `azure_tenant_id`.
+
+**Example**: _"Query App Insights exceptions in the last hour"_
+
+Prefer this over `azure_cli_query` for Log Analytics / App Insights incidents. Mutation KQL is blocked at the gateway.
+
+---
+
+### `azure_blob_find`
+List blobs in a container by `prefix` or exact `key` (single page). Does **not** download bodies. Requires Storage Blob Data Reader (or equivalent) on the container. Optional: `maxResults` (default 50, max 200), `azure_tenant_id`.
+
+**Example**: _"Find blobs under logs/2026/ in storage account acmestore container app-logs"_
+
+Prefer this over `azure_cli_query("storage blob list …")` for prefix/key discovery.
+
+---
+
+### `azure_keyvault_secrets_list`
+List secret **metadata** in a Key Vault (`vaultUrl`). Never returns secret values. Optional: `maxResults`, `azure_tenant_id`.
+
+**Example**: _"What secrets exist in vault https://myvault.vault.azure.net?"_
+
+Use before `azure_keyvault_secret_metadata` when names are unknown.
+
+---
+
+### `azure_keyvault_secret_metadata`
+Metadata for one secret by `secretName` (enabled, expiry, tags). Never returns the `value`. Optional: `azure_tenant_id`.
+
+**Example**: _"When does secret db-connection-string expire?"_
+
+Prefer over `azure_cli_query("keyvault secret show …")` — generic CLI blocks secret show/download.
+
+### Azure data tools — troubleshooting
+
+| Symptom | Likely cause | What to do |
+|---------|--------------|------------|
+| Auth / login required | No delegated Azure session | `azure_user_login_start` → user completes device code → `azure_user_login_poll` until `completed` |
+| Log Analytics 403 | Missing Log Analytics Reader on workspace | Grant RBAC on workspace/resource group |
+| Blob 403 | Missing Storage Blob Data Reader | Grant on container/account or use `azure_cli_query` fallback |
+| Key Vault 403 | Missing list/get metadata permission | Grant Key Vault Secrets User (metadata) — values are never returned by these tools |
+
+Community tenants: these four tools stay in `disabledTools` until enabled on the tenant plan (same pattern as AWS data tools).
+
+---
+
 ## Macro Workflows (Team / Enterprise)
 
 Composite read-only tools that run multi-step investigations on the gateway with **SSE progress** (Streamable HTTP). Require Cursor 2026+ for progress UI in the IDE.
