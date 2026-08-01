@@ -28,7 +28,7 @@ These tools are available once authenticated and integrations are configured:
 | Error Tracking | Sentry | `sentry_issues_list`, `sentry_issues_search` |
 | Code Quality | SonarQube (paid) | `sq_projects_search` (URL or key) → `sq_last_scan_summary` for last scan; `sq_quality_gate_status` + `sq_issues_search` for QG drill-down — prompt `diagnose-sonarqube-quality-gate` when in playbooks |
 | Search | Algolia (paid) | `alg_indices_list`, `alg_index_settings`, `alg_search`, `alg_object_get`, `alg_logs` — configure with App ID + restricted API key |
-| Cloud | AWS | `aws_sts_whoami`, `aws_cli_query` |
+| Cloud | AWS | `aws_sts_whoami`, `aws_cli_query`, `aws_bedrock_agent_diagnose`, `aws_lambda_agent_diagnose` (Bedrock Agents — paid `aws` module) |
 | Network (built-in) | — | `dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents` |
 | Integration Mgmt | — | `ops_configure_integration`, `ops_list_integrations`, `ops_test_integration`, `ops_remove_integration` |
 | Plan & Usage | — | `ops_my_usage` |
@@ -55,7 +55,7 @@ Eleven read-only resources ship with the remote MCP server (nine universal + two
 |-----|----------------|
 | `opsphere://rules/operational` | Full tool catalog + tenant scope (same as server instructions; refreshes with catalog) |
 | `opsphere://tools/catalog` | JSON: enabled modules + prompt index for your tenant |
-| `opsphere://playbooks/index` | All MCP prompts grouped by category (outage, pipeline, SonarQube, …) |
+| `opsphere://playbooks/index` | All MCP prompts grouped by category (outage, pipeline, SonarQube, Bedrock `investigate-bedrock-agent`, …) |
 | `opsphere://tenant/account-context` | Full per-account `system_prompt_context` (infra names, regions, capabilities) |
 | `opsphere://hub/active-context` | **Hub only** — active `context_id`, connection label, expiry |
 | `opsphere://hub/connections` | **Hub only** — linked connections list (same data as `ops_accounts_list`) |
@@ -65,7 +65,20 @@ Eleven read-only resources ship with the remote MCP server (nine universal + two
 | `opsphere://taxonomy/severity` | SEV1–4 definitions and confidence |
 | `opsphere://inventory/critical-assets` | Canonical brands, accounts, regions, apps |
 
-**When to use resources vs tools:** use **`deployment_status`**, **`macro_*`**, or atomic tools for live checks. Use **`opsphere://tenant/account-context`** when you need full catalog prose for a non-default account. Use **`opsphere://playbooks/index`** to discover guided prompts (e.g. `diagnose-sonarqube-quality-gate`). Do not expect one resource per tool — the catalog lives in `opsphere://rules/operational`.
+**When to use resources vs tools:** use **`deployment_status`**, **`macro_*`**, or atomic tools for live checks. Use **`opsphere://tenant/account-context`** when you need full catalog prose for a non-default account. Use **`opsphere://playbooks/index`** to discover guided prompts (e.g. `diagnose-sonarqube-quality-gate`, `investigate-bedrock-agent`). Do not expect one resource per tool — the catalog lives in `opsphere://rules/operational`.
+
+---
+
+## Amazon Bedrock Agents (paid `aws` module)
+
+For **Bedrock Agent**, **action group**, **knowledge base**, or **agent alias** issues (not **Agent Core** — clarify scope if the user mentions Agent Core):
+
+1. Call **`aws_bedrock_agent_diagnose`** first (`agentId`, `region` e.g. `eu-central-1`).
+2. For each Lambda in `lambdas[]`, call **`aws_lambda_agent_diagnose`** (`functionName`, same `region`).
+3. If findings cite CloudWatch errors, use **`aws_cloudwatch_logs_search`** on the cited log group.
+4. When listed in playbooks, use MCP prompt **`investigate-bedrock-agent`**.
+
+Requires AWS IAM keys via `ops_configure_integration` (plugin tier — no SSO `profile`). Env var **values** from Lambda diagnose are never returned.
 
 ---
 
@@ -259,6 +272,7 @@ Users might say things like:
 - "Configure my Datadog" — triggers the `configure-integration` skill
 - "Configure my AWS" — IAM Access Key + Secret Key (not SSO)
 - "List my S3 buckets" — `aws_cli_query` directly after AWS is configured (no SSO step)
+- "What's wrong with my Bedrock agent?" / paste `agentId` — `aws_bedrock_agent_diagnose` → `aws_lambda_agent_diagnose` per Lambda; prompt `investigate-bedrock-agent` when in playbooks (paid `aws` module; not Agent Core)
 - "Tell Opsphere what I usually work with" — triggers the `set-work-context` skill
 - "Link another client workspace" / "add a customer account" — skill **`link-account`** (Hub only)
 - "Switch to my other client" / "open work context for …" — skill **`open-work-context`** (Hub only)

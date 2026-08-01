@@ -32,6 +32,8 @@ Use tools that exist in the current session's `tools/list`. Never invent tool na
 
 **Context (when in `tools/list`):** `ghe_repo_summary`, `ghe_pr_detail`, `ghe_pr_files`, `ghe_pr_diff`, `ghe_workflow_runs_list`, `ghe_actions_latest_jobs`, `ghe_actions_latest_logs`, `bb_pr_diffstat`, `bb_pr_diff`, `bb_pr_commits`, **`deployment_status`**, `vercel_deploys_latest`, `memory_search`.
 
+**AWS Bedrock Agents (when in `tools/list` and user mentions Bedrock agent / action group):** `aws_bedrock_agent_diagnose` first → `aws_lambda_agent_diagnose` for each Lambda in `lambdas[]` → `aws_cloudwatch_logs_search` if logs cited. MCP prompt `investigate-bedrock-agent` when available. Not Agent Core — clarify scope.
+
 **SonarQube (when in `tools/list` and failure is quality-gate / code-analysis related):** `sq_projects_search` → `sq_quality_gate_status` or `sq_last_scan_summary` → `sq_issues_search` (e.g. `inNewCodePeriod=true`, `severities=BLOCKER,CRITICAL`). Do not use Sonar tools for pure infra/runtime pipeline failures unless the user points to a QG step.
 
 If a tool fails for missing credentials, note it in **Gaps** and continue with other available tools. Do not ask the user to paste secrets.

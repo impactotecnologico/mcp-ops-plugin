@@ -2,8 +2,8 @@
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.8-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
-[![Codex plugin](https://img.shields.io/badge/Codex-1.0.4-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.9-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Codex plugin](https://img.shields.io/badge/Codex-1.0.5-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
@@ -19,6 +19,7 @@ Opsphere is a **DevOps and SRE intelligence plugin** for Cursor. It connects you
 - _"Search Datadog logs for payment errors in the last hour"_
 - _"What's failing in Sentry right now?"_
 - _"What was the last deployment in production?"_ — `deployment_status` across your configured platforms
+- _"What's wrong with my Bedrock agent?"_ — diagnose agent + action-group Lambdas (paid `aws` module)
 - _"Check DNS for mysite.com across all resolvers"_
 - _"Diagnose the failed Bitbucket pipeline"_
 
@@ -82,7 +83,7 @@ After Connect, the gateway exposes **11 read-only MCP resources** (policies, cat
 |----------|---------|
 | `opsphere://rules/operational` | Tool catalog + your tenant scope (injected into server instructions) |
 | `opsphere://tools/catalog` | Enabled modules + prompt list (JSON) |
-| `opsphere://playbooks/index` | Guided workflows — outage, pipeline, SonarQube quality gate, Cloudflare audit, … |
+| `opsphere://playbooks/index` | Guided workflows — outage, pipeline, SonarQube, Cloudflare audit, Bedrock agents (`investigate-bedrock-agent`), … |
 | `opsphere://tenant/account-context` | Full cloud-catalog context per account (infra names, regions, capabilities) |
 | `opsphere://hub/active-context` | **Hub only** — active `context_id` and linked connection for this MCP session |
 | `opsphere://hub/connections` | **Hub only** — linked client workspaces (same as `ops_accounts_list`) |
@@ -156,12 +157,14 @@ The onboarding rule tells the main agent **when to delegate** vs handle inline, 
 | **Sentry** | Issues list · issue search · project stats | Auth Token |
 | **SonarQube** | Quality gate · measures · issues · hotspots (paid) | Token + host URL |
 | **Algolia** | Index inventory · search · record lookup · API logs (paid); global status/incidents built-in | App ID + restricted API key |
-| **AWS** | Identity check · read-only CLI queries | Access Key + Secret Key |
+| **AWS** | Identity check · read-only CLI · Bedrock Agent / Lambda diagnose (paid `aws` module) | Access Key + Secret Key |
 | **Network (built-in)** | DNS lookup · HTTP check · TLS cert · TCP · Algolia platform status | Nothing — always works |
 
 ### AWS with the plugin
 
 Opsphere plugin AWS integration uses **IAM Access Key + Secret Access Key** — not AWS SSO. Say _"Configure my AWS"_ to store your keys on the gateway (encrypted). After setup, ask things like _"List my S3 buckets"_ or _"Who am I in AWS?"_ — the agent calls `aws_cli_query` / `aws_sts_whoami` **without** SSO or `profile`. Local `aws sso login` on your laptop does not apply; tools run on the remote gateway. Specify AWS region in your request when needed (default region is not stored during setup).
+
+On **paid plans** with the `aws` module enabled, Opsphere can **diagnose Amazon Bedrock Agents** (not Agent Core): `aws_bedrock_agent_diagnose` for agent status, aliases, action groups, IAM, knowledge bases, and findings → `aws_lambda_agent_diagnose` for each backing Lambda → optional CloudWatch logs. Guided MCP prompt: **`investigate-bedrock-agent`** (listed in `opsphere://playbooks/index`). Details: [docs/TOOLS.md](docs/TOOLS.md#aws_bedrock_agent_diagnose).
 
 > Full tool catalog on paid plans — including Kubernetes, ArgoCD, Azure Service Bus, Akamai, Confluence, and more.
 
@@ -198,6 +201,7 @@ Opsphere plugin AWS integration uses **IAM Access Key + Secret Access Key** — 
 | `"Which integrations do I have set up?"` | Lists configured vs. pending providers |
 | `"Configure my AWS"` | Guided IAM key setup (Access Key + Secret Key — not SSO) |
 | `"List my S3 buckets"` | Read-only `aws_cli_query` using configured keys (no SSO step) |
+| `"What's wrong with Bedrock agent AGENT12345?"` | `aws_bedrock_agent_diagnose` → `aws_lambda_agent_diagnose` per action-group Lambda; prompt `investigate-bedrock-agent` (paid `aws` module) |
 | `"Do we have memory about this outage?"` | `memory_search` (when the memory module is enabled for your tenant) |
 | `"Save this investigation for next time"` | `memory_store` — short distilled summary, not raw logs |
 
@@ -320,7 +324,7 @@ See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for the full guide.
 
 ## Codex / ChatGPT
 
-Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.2** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
+Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.5** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
 
 ### Quick start (Codex CLI)
 

@@ -32,6 +32,7 @@ Copy or paraphrase the following:
 > - _"Configure my SonarQube"_ — SonarCloud or self-hosted; then try a SonarCloud project URL
 > - _"What were the last Sonar scan results?"_ — `sq_projects_search` + `sq_last_scan_summary` (when SonarQube module enabled)
 > - _"Configure my AWS"_ — IAM Access Key + Secret Key (not SSO)
+> - _"What's wrong with my Bedrock agent?"_ — `aws_bedrock_agent_diagnose` → Lambdas (paid `aws` module; prompt `investigate-bedrock-agent`)
 > - **`/link-account`** or _"Link another client workspace"_ — Connection Hub only
 > - **`/open-work-context`** or _"Switch work context to my other client"_ — Connection Hub only
 > - _"Is the site down?"_ or **`/outage-triage`** — multi-step incident triage (all plans)

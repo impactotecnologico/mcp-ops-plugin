@@ -4,6 +4,21 @@ All notable changes to Opsphere will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.0.9] - 2026-08-01 (Bedrock Agents documentation)
+
+### Added
+- **Amazon Bedrock Agents** (gateway `aws` module): document `aws_bedrock_agent_diagnose` and `aws_lambda_agent_diagnose` in [docs/TOOLS.md](docs/TOOLS.md); guided MCP prompt `investigate-bedrock-agent` in playbooks index.
+- README discovery: Bedrock example prompts, AWS integration row, playbooks reference, and link to TOOLS.md.
+- [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc): Bedrock Agents flow (agent diagnose → Lambda diagnose → logs); example prompts; tool category row.
+- [`commands/opsphere-welcome.md`](commands/opsphere-welcome.md): Bedrock agent example prompt.
+- [`agents/ci-investigator.md`](agents/ci-investigator.md): cross-reference when user mentions Bedrock (not pure CI).
+
+### Changed
+- Cursor plugin **1.0.8 → 1.0.9**; Codex plugin **1.0.4 → 1.0.5** (`plugin.json`, `marketplace.json`, `package.json`).
+
+### Note
+- Bedrock diagnose tools execute on the **remote gateway** after `mcp-ops-b` deploy and tenant `aws` module enablement — this plugin release is documentation and agent guidance only.
+
 ## [1.0.8] - 2026-07-31 (New tools)
 
 ### Added

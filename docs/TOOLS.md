@@ -14,7 +14,7 @@ Eleven **read-only** resources are registered on the gateway when Connection Bro
 |-----|------|---------|
 | `opsphere://rules/operational` | markdown | Full tool catalog + tenant scope (same substance as server instructions) |
 | `opsphere://tools/catalog` | json | Enabled modules and prompt index for your plan/tenant |
-| `opsphere://playbooks/index` | markdown | All MCP prompts by category (e.g. `diagnose-sonarqube-quality-gate`, `investigate-website-outage`) |
+| `opsphere://playbooks/index` | markdown | All MCP prompts by category (e.g. `diagnose-sonarqube-quality-gate`, `investigate-website-outage`, `investigate-bedrock-agent`) |
 | `opsphere://tenant/account-context` | markdown | Per-account cloud catalog (`system_prompt_context`) |
 | `opsphere://hub/active-context` | json | **Hub only** — active `context_id`, connection label, expiry for this MCP session |
 | `opsphere://hub/connections` | json | **Hub only** — linked connections (same data as `ops_accounts_list`) |
@@ -525,6 +525,8 @@ Files with duplicated lines and duplication blocks (line ranges + duplicate file
 
 **Guided prompt** (when listed in `opsphere://playbooks/index`): `diagnose-sonarqube-quality-gate` — structured QG failure triage with suggested `sq_*` tool order.
 
+**Bedrock Agents** (AWS module, paid plans with `aws` enabled): `aws_bedrock_agent_diagnose` → `aws_lambda_agent_diagnose` per action-group Lambda. Prompt: `investigate-bedrock-agent`. Not Agent Core — clarify scope if the user mentions Agent Core.
+
 ---
 
 ## Algolia
@@ -767,6 +769,30 @@ Out of scope: classic RDS without Data API, TCP/VPC connections, write SQL.
 | RDS Data API errors / HTTP 400 | Cluster without Data API, bad ARN, or secret | Confirm Aurora Data API enabled; pass correct `resourceArn` + `secretArn`. Non–Data API RDS is out of scope |
 
 All five use the same credentials as other AWS tools (static IAM on the free plugin tier; SSO/profile when your plan provides an active session). Call **without** `profile` on the free plugin tier.
+
+---
+
+### `aws_bedrock_agent_diagnose`
+Diagnose an **Amazon Bedrock Agent**: status, alias, action groups, backing Lambdas, IAM execution role, knowledge bases, deterministic findings, resource graph, and `suggestions[]`. Read-only (`bedrock-agent`, `lambda`, `iam`, `logs`).
+
+**Parameters:** `agentId` (required), optional `agentAliasId`, `agentVersion`, `region`, `profile`, `hours` (default 2).
+
+**Example:** _"What's wrong with Bedrock agent AGENT12345?"_
+
+Prefer this over `aws_cli_query` for operational agent triage. Then run `aws_lambda_agent_diagnose` for each Lambda in `lambdas[]`.
+
+**Guided prompt:** `investigate-bedrock-agent` (when listed in `opsphere://playbooks/index`).
+
+---
+
+### `aws_lambda_agent_diagnose`
+Diagnose a **Lambda** used by a Bedrock Agent action group: runtime, timeout, memory, IAM policy names, CloudWatch error samples, signals (OOM, public invoke, deprecated runtime). Environment variable **values** are never returned — keys only.
+
+**Parameters:** `functionName` (required), optional `hours` (default 2), `profile`, `region`, `logTail` (default 15).
+
+**Example:** _"Diagnose Lambda my-bedrock-action-fn for the agent"_
+
+Pair with `aws_bedrock_agent_diagnose` — do not skip agent-level context when the user mentions Bedrock.
 
 ---
 
