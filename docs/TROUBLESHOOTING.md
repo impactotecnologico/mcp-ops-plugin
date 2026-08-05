@@ -10,7 +10,7 @@ MCP OAuth SDK refresh catch branch
 MCP OAuth refresh error
 ```
 
-**Cause**: Access tokens expire after **24 hours**. Cursor renews them in the background via `POST /oauth/token`. After a **crash**, stale OAuth state, or a burst of refresh requests, renewal can fail (including HTTP **429** rate limit on the gateway).
+**Cause**: Access tokens expire after **24 hours**. Cursor renews them in the background via `POST /oauth/token`. After a crash or stale OAuth state, renewal can fail. **`invalid_grant` is terminal for the saved refresh credential**: repeated retries cannot repair it and a new browser login is required. HTTP **429** means retries must stop until `Retry-After` before reconnecting once.
 
 **Fix** (in order):
 
@@ -19,6 +19,8 @@ MCP OAuth refresh error
 3. **Developer: Reload Window**, then ask _"What is my Opsphere plan?"_ to verify.
 4. If still broken: uninstall the plugin, reload, reinstall from Marketplace, sign in again.
 5. If you previously used a **manual MCP** entry with an API key in `~/.cursor/mcp.json`, remove the duplicate `opsphere` server so only the plugin registers the gateway.
+
+Your Opsphere account, integrations, work context, and history remain intact; reconnecting replaces only the client-side MCP authorization.
 
 **Where to look**: Marketplace installs usually **do not** list Opsphere under **Settings → MCP**. Use the **plugin card** (green + tool count = OK).
 

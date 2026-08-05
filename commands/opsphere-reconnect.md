@@ -1,11 +1,19 @@
 ---
 name: opsphere-reconnect
-description: Recover OAuth when the Opsphere plugin shows red, tools fail with 401, or Cursor logs "MCP OAuth refresh error". Run after a crash or ~24h since last sign-in.
+description: Recover OAuth when Opsphere disconnects, tools fail with 401, or Cursor/Codex reports invalid_grant or an OAuth refresh error.
 ---
 
 # Opsphere Reconnect
 
-Guide the user through recovering MCP OAuth when the **marketplace plugin** shows disconnected (red), tools return 401, or Cursor logs mention **OAuth refresh error**. Do **not** run shell commands on the user's machine.
+Guide the user through recovering MCP OAuth when the plugin shows disconnected, tools return 401, or Cursor/Codex reports **OAuth refresh error** or **`invalid_grant`**. This command is local plugin content, so the instructions must remain useful even when the MCP server and its tools are unavailable. Do **not** run shell commands on the user's machine.
+
+## First decision — terminal grant or transient failure
+
+- **`invalid_grant`**, unknown/revoked/expired refresh token: terminal for that saved credential. Repeating tool calls or waiting will not repair it; require a new browser login.
+- **429 / `too_many_requests`**: stop retries for at least the advertised `Retry-After`, then reconnect once. Do not create a retry loop.
+- **5xx / network error**: check gateway reachability and retry once before replacing credentials.
+
+Never imply that `invalid_grant` means the Opsphere account, integrations, or work context were deleted. Only the local MCP authorization must be renewed.
 
 ---
 
@@ -17,7 +25,11 @@ Otherwise suggest they run it once in a terminal. **Health OK only means the gat
 
 ---
 
-## Step 2 — Check plugin status (not Settings → MCP)
+## Step 2 — Identify the client
+
+Ask or infer whether the user is in **Cursor**, the **Codex desktop plugin**, or **Codex CLI**, then follow only the matching path.
+
+### Cursor Marketplace
 
 Tell the user:
 
@@ -29,6 +41,8 @@ Tell the user:
 ---
 
 ## Step 3 — Re-authenticate
+
+### Cursor
 
 In order, until green:
 
@@ -43,14 +57,35 @@ If still red after step 3:
 
 If the user migrated from a **manual MCP entry** (API key in `~/.cursor/mcp.json`), tell them to remove any leftover `opsphere` server there so only the plugin registers the gateway.
 
+### Codex desktop / ChatGPT
+
+1. Open **Plugins**, select **Opsphere**, and click **Connect** or **Reconnect**.
+2. Complete the browser login.
+3. Start a **new task** after reconnecting so the MCP tools are loaded with the new authorization.
+4. In the new task ask: _"What is my Opsphere plan and usage?"_
+
+If the plugin UI still shows disconnected, disable/re-enable or reinstall the Opsphere plugin, reconnect, and open another new task. Do not ask the user to paste tokens or edit the plugin manifest.
+
+### Codex CLI
+
+Guide the user to run these commands in their own terminal, outside the active Codex session:
+
+```bash
+npx @openai/codex mcp logout opsphere
+npx @openai/codex mcp login opsphere
+```
+
+Then start a new Codex session. An already-running session does not reload MCP authorization. If `logout` reports no stored login, continue with `login`.
+
 ---
 
 ## Step 4 — Verify with a tool call
 
-Call `ops_my_usage` (no parameters).
+Only after reconnection and, for Codex, in a new task/session, call `ops_my_usage` (no parameters). If the MCP is still disconnected, do not keep attempting the tool; return to the matching client path in Step 3.
 
 - **Success**: tell the user they are reconnected; mention access tokens last **24 hours** and Cursor should refresh automatically — if refresh fails again, run **`/opsphere-reconnect`**.
-- **401 / error**: repeat Step 3 or suggest contacting **contact@opsphere.io** with Cursor version and whether they see `MCP OAuth refresh error` in **Help → Toggle Developer Tools → Console**.
+- **401 / `invalid_grant`**: the client is still using the old credential; disconnect/logout fully, reconnect, and restart the client session once.
+- **Other error**: repeat the relevant Step 3 once or suggest contacting **contact@opsphere.io** with the client name/version, approximate UTC time, and the error class only. Never include tokens.
 
 ---
 
@@ -64,7 +99,7 @@ MCP OAuth SDK refresh catch branch
 MCP OAuth refresh error
 ```
 
-Explain: Cursor tried to renew the access token and the gateway returned an error or rate limit (429). Re-auth from the **plugin card** (Step 3) fixes stale tokens. After a **Cursor crash**, OAuth state may be inconsistent — Reload Window + reconnect is normal.
+Explain: Cursor tried to renew the access token and the gateway returned an error. `invalid_grant` requires a new browser login; 429 requires stopping retries before reconnecting. After a **Cursor crash**, OAuth state may be inconsistent — Reload Window + reconnect is normal.
 
 ---
 

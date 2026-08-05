@@ -191,6 +191,13 @@ Personal marketplace entry: `~/.agents/plugins/marketplace.json` → `./.codex/p
 
 ### Re-authentication (Codex)
 
-When the token expires (~24h), run `npx @openai/codex mcp login opsphere` again.
+When the token expires (~24h) or refresh returns `invalid_grant`, renew the saved authorization outside the running Codex session:
+
+```bash
+npx @openai/codex mcp logout opsphere
+npx @openai/codex mcp login opsphere
+```
+
+Then start a **new Codex session/task** and call `ops_my_usage`. Existing sessions do not reload MCP authorization. In Codex desktop, use **Plugins → Opsphere → Connect/Reconnect**, complete browser login, and open a new task. Do not paste OAuth tokens into chat or configuration files.
 
 See [TROUBLESHOOTING.md#codex--chatgpt-cli](TROUBLESHOOTING.md#codex--chatgpt-cli) for 403, redirect_uri, and plan-gate errors.

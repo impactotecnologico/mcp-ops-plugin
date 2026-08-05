@@ -45,7 +45,7 @@ Architecture diagram and domain list: **[docs/REMOTE-MCP-ARCHITECTURE.md](docs/R
 |---------|-------------|
 | **`/opsphere-welcome`** | Just installed — quick tips and example prompts |
 | **`/opsphere-setup`** | First-run OAuth + first integration (step by step) |
-| **`/opsphere-reconnect`** | Plugin red / OAuth refresh error — recover session |
+| **`/opsphere-reconnect`** | Plugin red, 401 or `invalid_grant` — recover Cursor/Codex OAuth safely |
 | **`/integration-status`** | See which providers are connected |
 | **`/link-account`** | Connection Hub — link/unlink a client workspace (OAuth) |
 | **`/open-work-context`** | Connection Hub — open `context_id` on a linked client |
