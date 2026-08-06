@@ -4,6 +4,14 @@ All notable changes to Opsphere will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.0.10] - 2026-08-06 (OAuth reconnect recovery)
+
+### Changed
+- `/opsphere-reconnect` now distinguishes terminal `invalid_grant` failures from rate limiting and transient network/server failures.
+- Added explicit recovery paths for Cursor, Codex Desktop/ChatGPT, and Codex CLI, including post-login verification with `ops_my_usage`.
+- Updated installation and troubleshooting guidance so recovery works even while the MCP server is disconnected.
+- Cursor plugin **1.0.9 → 1.0.10**; Codex plugin **1.0.5 → 1.0.6** (`plugin.json`, `marketplace.json`, `package.json`).
+
 ## [1.0.9] - 2026-08-01 (Bedrock Agents documentation)
 
 ### Added

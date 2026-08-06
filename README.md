@@ -2,8 +2,8 @@
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.9-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
-[![Codex plugin](https://img.shields.io/badge/Codex-1.0.5-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.10-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Codex plugin](https://img.shields.io/badge/Codex-1.0.6-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
@@ -324,7 +324,7 @@ See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for the full guide.
 
 ## Codex / ChatGPT
 
-Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.5** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
+Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.6** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
 
 ### Quick start (Codex CLI)
 
