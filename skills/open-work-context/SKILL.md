@@ -29,7 +29,7 @@ On a **Connection Hub**, operational tools (`dd_*`, `k8s_*`, `vercel_*`, `deploy
 | Class | Needs `context_id`? | Examples |
 |-------|---------------------|----------|
 | **GLOBAL** | No | `ops_*` (including broker tools), `dns_lookup`, `http_check`, `cert_status`, `tcp_connect`, `dnssec_check` |
-| **TENANT_SCOPED** | **Yes** | `dd_*`, `k8s_*`, `vercel_*`, `ghe_*`, `bb_*`, `deployment_status`, `memory_*`, most integrations |
+| **TENANT_SCOPED** | **Yes** | `dd_*`, `k8s_*`, `vercel_*`, `ghe_*`, `bb_*`, `deployment_status`, `memory_*`, `alg_status`, `alg_incidents`, most integrations |
 | **MACRO** | **Yes** | `macro_outage_triage`, `macro_endpoint_health`, `macro_env_health` |
 
 Pass `context_id` as a **tool argument** on every tenant-scoped and macro call. For `ops_context_close`, `context_id` is required in the tool payload (do not strip it).

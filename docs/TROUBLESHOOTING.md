@@ -158,6 +158,23 @@ Run **`ops_my_usage`** to confirm your plan name.
 
 ---
 
+## Execution policy denials (JSON-RPC)
+
+The gateway enforces per-tenant execution policies on every `tools/call`. The plugin does **not** apply limits locally.
+
+| Symptom | Code / reason | Fix |
+|---------|---------------|-----|
+| "Execution policy is not available" | `-32003` / `execution_policy_missing` | Admin must configure execution policy for your tenant — contact support |
+| Tool blocked by plan/runtime | `-32003` / `execution_module_not_enabled` | Check plan with `ops_my_usage`; upgrade or enable module in admin |
+| Sensitive action blocked | `-32003` / `execution_sensitive_action_denied` | Use read-only tools or ask admin to allow sensitive actions |
+| Budget exhausted | `-32004` / `max_tool_calls`, `max_cost_units`, `max_macro_calls` | Wait until `resetsAt` in the error body; narrow investigation scope |
+| Subprocess busy | `BROKER_SUBPROCESS_BUSY` | Retry after a few seconds — another tool call is using the broker worker |
+| Linked workspace revoked | `WORKSPACE_ACCESS_REVOKED` | Re-link with **`/link-account`** or open a different connection |
+
+**Agent rule:** never send `max_tool_calls`, `profile_id`, `plan`, or other policy fields in tool arguments — the gateway ignores client-supplied limits and may reject malformed requests.
+
+---
+
 ## READ_ONLY_PLAN error
 
 **Symptom**: A tool call returns `READ_ONLY_PLAN`.

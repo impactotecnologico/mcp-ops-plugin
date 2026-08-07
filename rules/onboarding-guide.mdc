@@ -127,8 +127,9 @@ If a tool returns an error about missing credentials or an unconfigured provider
 3. **Before operational work:** skill **`open-work-context`** → `ops_context_open` → pass returned `context_id` on **every** tenant-scoped and `macro_*` tool call.
 4. **Switch tenant:** `ops_context_close(context_id)` then `ops_context_open` for the other `linked_connection_id`.
 5. **Integrations / work context:** only on a **linked** tenant with open `context_id` — never on the Hub anchor alone.
-6. **GLOBAL without context:** `ops_*` broker tools, `dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents`.
-7. If `BROKER_CONTEXT_REQUIRED` → open context and retry; do not invent tenant names.
+6. **GLOBAL without context:** `ops_*` broker tools, `dns_lookup`, `http_check`, `cert_status`, `tcp_connect`, `dnssec_check`.
+7. **TENANT_SCOPED on Hub** (require `context_id`): all integration tools, `deployment_status`, `macro_*`, `memory_*`, `alg_status`, `alg_incidents`, and every other non-broker tool not listed as GLOBAL above.
+8. If `BROKER_CONTEXT_REQUIRED` → open context and retry; do not invent tenant names.
 
 ---
 
@@ -192,6 +193,26 @@ If the gateway returns error code `RATE_LIMIT_EXCEEDED`:
 - Tell the user how many calls they have used and when the limit resets (from `details.resetsAt` in the error body).
 - Suggest: "You can check your full plan status with `ops_my_usage`."
 - Do not retry the request automatically.
+
+---
+
+## Execution policy (informative only — gateway enforces)
+
+The gateway applies **execution policies** on every `tools/call` for your tenant and runtime (`cursor` for this plugin). Limits come from PostgreSQL — **never** send policy fields in tool arguments.
+
+**Never include in `tools/call` arguments:** `tenant_id`, `plan`, `profile_id`, `max_tool_calls`, `max_cost_units`, `max_duration_ms`, `max_retries`, `max_macro_calls`, `allow_sensitive_actions`, `enabled_tools`, `policy_version`, `subscription_id`, `runtime_profile`.
+
+Use `ops_my_usage` for plan/usage visibility. The gateway is the only authority for allow/deny.
+
+### JSON-RPC execution denials
+
+| Code | `data.reason` (examples) | Agent action |
+|------|--------------------------|--------------|
+| `-32003` | `execution_policy_missing` | Tell user policy is not configured; contact admin — do not retry blindly |
+| `-32003` | `execution_module_not_enabled` | Tool/module not on plan — suggest `ops_my_usage` or upgrade |
+| `-32003` | `execution_sensitive_action_denied` | Pick a read-only alternative or ask admin to allow sensitive actions |
+| `-32003` | `BROKER_CONTEXT_*` | Open Hub context (`open-work-context`) and pass `context_id` |
+| `-32004` | `max_tool_calls`, `max_cost_units`, `max_macro_calls` | Budget exhausted — wait for `resetsAt` or reduce scope; do not spam retries |
 
 ---
 

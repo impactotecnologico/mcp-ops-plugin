@@ -365,5 +365,23 @@ else
   FAIL=1
 fi
 
+# 17. Execution policy agent contract documented
+if search_quiet 'execution_policy_missing|execution_module_not_enabled|execution_budget_exhausted|-32003' rules/onboarding-guide.mdc; then
+  ok "onboarding-guide documents execution policy denials"
+else
+  red "onboarding-guide.mdc must document execution policy JSON-RPC denials (-32003/-32004)"
+fi
+if search_quiet 'Never include in .tools/call. arguments' rules/onboarding-guide.mdc || \
+   search_quiet 'Never include in `tools/call` arguments' rules/onboarding-guide.mdc; then
+  ok "onboarding-guide warns against sending policy fields in tools/call"
+else
+  red "onboarding-guide must tell agents never to send policy authority fields in tools/call"
+fi
+if search_quiet 'BROKER_SUBPROCESS_BUSY|WORKSPACE_ACCESS_REVOKED' docs/TROUBLESHOOTING.md; then
+  ok "TROUBLESHOOTING documents broker subprocess and workspace errors"
+else
+  red "docs/TROUBLESHOOTING.md must document BROKER_SUBPROCESS_BUSY and WORKSPACE_ACCESS_REVOKED"
+fi
+
 echo "=== done (failures: $FAIL) ==="
 exit "$FAIL"

@@ -135,7 +135,8 @@ Available when your account is a **Connection Hub** (`ops_accounts_list` appears
 **Rules:**
 
 - **Tenant-scoped** tools (`dd_*`, `k8s_*`, `deployment_status`, `macro_*`, integrations, memory, …) require `context_id` on every call.
-- **Global** tools work without `context_id`: broker `ops_*`, `dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents`.
+- **Global** tools work without `context_id`: broker `ops_*`, `dns_lookup`, `http_check`, `cert_status`, `tcp_connect`, `dnssec_check`.
+- **Tenant-scoped on Hub** (including `alg_status`, `alg_incidents`, integrations, `deployment_status`, `macro_*`, `memory_*`) require `context_id` on every call.
 - The Hub anchor cannot store integration credentials — open a context on a linked workspace, then use `ops_configure_integration` or `configure-integration`.
 - OAuth link completion is **HTTP callback only** — there is no `ops_account_link_complete` tool.
 
