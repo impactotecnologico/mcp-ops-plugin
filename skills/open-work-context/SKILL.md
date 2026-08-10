@@ -48,7 +48,8 @@ Pass `context_id` as a **tool argument** on every tenant-scoped and macro call. 
    - **One connection** → use its `id` without asking.
    - **Multiple** → ask which client (show `label` + tenant `slug` from the tool result).
 3. Call `ops_context_open` with optional `chat_session_key` — a **stable id for this Cursor chat tab** (reuse across the session; required for workspace pinning when switching connections).
-4. Store the returned `context_id` for this chat session. Mention `expires_at` only if the user asks or the session is long-running.
+4. **If the result includes `tools_discovery.stale: true`**, call MCP `tools/list` **before** any tenant-scoped tool — the advertised tool set changed (GLOBAL Hub ∪ workspace tools).
+5. Store the returned `context_id` for this chat session. Mention `expires_at` only if the user asks or the session is long-running.
 5. **Optional** at chat start: `memory_session_touch(context_id: "ctx_…")` — on Hub the gateway sets `external_session_key` from `chat_session_key` when you omit it; pass the same value explicitly if you prefer.
 6. Run tenant-scoped tools with the same `context_id` until the user switches or closes.
 
@@ -69,8 +70,10 @@ dd_logs_search(context_id: "ctx_…", q: "status:error", from: "now-1h")
 ## Switch or close flow
 
 1. If an active `context_id` exists, call `ops_context_close(context_id: "ctx_…")`.
-2. Call `ops_context_open` with the new `linked_connection_id`.
-3. Use the new `context_id` on subsequent scoped tools.
+2. If close returns `tools_discovery.stale: true`, call MCP `tools/list` (discovery reverts toward GLOBAL-only).
+3. Call `ops_context_open` with the new `linked_connection_id`.
+4. If open returns `tools_discovery.stale: true`, call MCP `tools/list` again before scoped tools.
+5. Use the new `context_id` on subsequent scoped tools.
 
 Do **not** reuse a stale `context_id` after switch — always close or open fresh.
 
@@ -102,6 +105,7 @@ Broker **workspace pinning** (`chat_session_key` on `ops_context_open`) and oper
 | `LINKED_CONNECTION_NOT_FOUND` | `ops_accounts_list`; user may need `link-account` skill |
 | `MCP_SESSION_REQUIRED` | Reconnect MCP (`/opsphere-reconnect` or Codex `mcp login opsphere`) |
 | `HUB_OPERATIONAL_DENIED` | Open work context for a linked workspace first |
+| `tools_discovery.stale` on open/close | Call MCP `tools/list` before tenant-scoped tools (Cursor does not auto-refresh tools) |
 
 ## Avoid
 
