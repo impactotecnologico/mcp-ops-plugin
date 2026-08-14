@@ -1,115 +1,81 @@
 ---
 name: open-work-context
-description: Open, use, and switch server-side work contexts on a Connection Hub (context_id for tenant-scoped MCP tools). Use when ops_context_open is available, initialize shows no active context, or BROKER_CONTEXT_REQUIRED errors appear.
+description: Switch to an external linked workspace on paid Connection Hub plans. Not required for Community Personal Workspace (auto-active). Do not coach normal users to pass context_id.
 ---
 
-# Open Work Context (Connection Hub)
+# Open Work Context — External Workspace Switch
 
-On a **Connection Hub**, operational tools (`dd_*`, `k8s_*`, `vercel_*`, `deployment_status`, `macro_*`, `memory_*`, etc.) require a valid **`context_id`** bound to one **linked connection**. The gateway enforces this on every tenant-scoped call — the model cannot switch tenants by naming them.
+This skill is for **switching to an external linked workspace** on plans that allow additional links.
 
-> **Legacy single-tenant:** If `ops_context_open` is **not** in `tools/list`, skip this skill — your JWT already maps to one tenant.
+It is **not** part of Community onboarding. After signup/login, **Personal Workspace is already Active** — start using tools without this skill.
 
-## Tools
+## Concepts
 
-| Tool | Parameters | Purpose |
-|------|------------|---------|
-| `ops_accounts_list` | — | List linked connections; pick `id` (UUID) |
-| `ops_context_open` | `linked_connection_id`, optional `chat_session_key` | Returns `context_id`, `expires_at`. Use a stable `chat_session_key` per Cursor chat tab. |
-| `ops_context_close` | `context_id` | Close context before switching tenants |
+| Term | Meaning |
+|------|---------|
+| **Personal Workspace** | Default operational workspace — automatic; no manual open |
+| **External Workspace** | Extra linked workspace — switch only when user asks |
+| **Work Context** | Provider/stack notes (`ops_set_work_context`) — unrelated to this skill |
 
-**MCP resources (read-only):**
-
-- `opsphere://hub/active-context` — current `context_id`, connection label, expiry
-- `opsphere://hub/connections` — same list as `ops_accounts_list`
-
-**Bootstrap:** After MCP `initialize`, server `instructions` may include `Connection Hub — work context` with the active `context_id` when one exists.
-
-## Tool classes on Hub (mandatory)
-
-| Class | Needs `context_id`? | Examples |
-|-------|---------------------|----------|
-| **GLOBAL** | No | `ops_*` (including broker tools), `dns_lookup`, `http_check`, `cert_status`, `tcp_connect`, `dnssec_check` |
-| **TENANT_SCOPED** | **Yes** | `dd_*`, `k8s_*`, `vercel_*`, `ghe_*`, `bb_*`, `deployment_status`, `memory_*`, `alg_status`, `alg_incidents`, most integrations |
-| **MACRO** | **Yes** | `macro_outage_triage`, `macro_endpoint_health`, `macro_env_health` |
-
-Pass `context_id` as a **tool argument** on every tenant-scoped and macro call. For `ops_context_close`, `context_id` is required in the tool payload (do not strip it).
+> **Community:** Skip this skill for normal work. If `ops_my_usage` shows Personal Workspace active, you are done.
+>
+> **Legacy single-tenant:** If `ops_context_open` is **not** in `tools/list`, skip this skill.
 
 ## When to run
 
-1. User asks for logs, deploys, K8s, or any integration work on a **specific** linked client.
-2. Initialize instructions say _"No active context"_ or suggest `ops_context_open`.
-3. A tool returns `BROKER_CONTEXT_REQUIRED` or mentions missing `context_id`.
-4. User says _"switch to [client]"_ or _"work on the other account"_.
+1. User on a **paid** Hub explicitly asks to work on a **different linked** (external) workspace.
+2. User says _"switch to [client]"_ and `ops_accounts_list` shows multiple non-personal connections.
+3. Do **not** run after Community signup, returning login, or when only Personal Workspace exists.
 
-## Open flow
+## When NOT to run
 
-1. If `context_id` is already in initialize instructions or `opsphere://hub/active-context`, **reuse it** for tenant-scoped calls unless the user asks to switch.
-2. Otherwise call `ops_accounts_list`.
-   - **One connection** → use its `id` without asking.
-   - **Multiple** → ask which client (show `label` + tenant `slug` from the tool result).
-3. Call `ops_context_open` with optional `chat_session_key` — a **stable id for this Cursor chat tab** (reuse across the session; required for workspace pinning when switching connections).
-4. **If the result includes `tools_discovery.stale: true`**, call MCP `tools/list` **before** any tenant-scoped tool — the advertised tool set changed (GLOBAL Hub ∪ workspace tools).
-5. Store the returned `context_id` for this chat session. Mention `expires_at` only if the user asks or the session is long-running.
-5. **Optional** at chat start: `memory_session_touch(context_id: "ctx_…")` — on Hub the gateway sets `external_session_key` from `chat_session_key` when you omit it; pass the same value explicitly if you prefer.
-6. Run tenant-scoped tools with the same `context_id` until the user switches or closes.
+- Community first-time or returning login
+- "Make me operational" / setup — use `/opsphere-setup` status steps instead
+- Coaching the user to copy or paste internal session IDs
+- Fixing missing tools by inventing manual context steps (prefer `/opsphere-reconnect`)
 
-Example:
+## Tools (advanced / paid switch)
 
-```
-ops_context_open(
-  linked_connection_id: "550e8400-e29b-41d4-a716-446655440000",
-  chat_session_key: "cursor-chat-<stable-per-tab-id>"
-)
-→ context_id: "ctx_…"
+| Tool | Purpose |
+|------|---------|
+| `ops_accounts_list` | List personal + external connections |
+| `ops_context_open` | Bind session to a chosen **external** link (gateway-managed) |
+| `ops_context_close` | Leave an external switch before opening another |
 
-memory_session_touch(context_id: "ctx_…", repo: "org/repo")  // external_session_key auto-aligned on Hub
+Prefer describing outcomes to the user as **"switched to workspace X"** — not as "here is your context_id".
 
-dd_logs_search(context_id: "ctx_…", q: "status:error", from: "now-1h")
-```
+Internal IDs may appear in tool payloads for the model; **do not** teach end users to pass them on every call for Community Personal Workspace work.
 
-## Switch or close flow
+## Switch flow (paid / multi-external)
 
-1. If an active `context_id` exists, call `ops_context_close(context_id: "ctx_…")`.
-2. If close returns `tools_discovery.stale: true`, call MCP `tools/list` (discovery reverts toward GLOBAL-only).
-3. Call `ops_context_open` with the new `linked_connection_id`.
-4. If open returns `tools_discovery.stale: true`, call MCP `tools/list` again before scoped tools.
-5. Use the new `context_id` on subsequent scoped tools.
+1. Call `ops_accounts_list`. Identify Personal vs external from the tool result.
+2. Ask which **external** workspace if more than one (labels/slugs only).
+3. Call `ops_context_open` with that `linked_connection_id` (optional stable chat key if the tool requires it).
+4. If the result includes `tools_discovery.stale: true`, call MCP `tools/list` before scoped tools.
+5. Confirm to the user which workspace is active by **label/slug**.
+6. Continue operational tools. Do not narrate broker internals (`expires_at`, pinning, etc.) unless the user asks for diagnostics.
 
-Do **not** reuse a stale `context_id` after switch — always close or open fresh.
+## Community / auto-context
 
-## Integrations and work context on linked tenants
+If the user only has Personal Workspace:
 
-With an open `context_id`:
+> "Your **Personal Workspace** is already active. You can call Opsphere tools now — no extra open step."
 
-- **`configure-integration`** → `ops_configure_integration` runs against the **linked** tenant (not the Hub).
-- **`set-work-context`** → `ops_set_work_context` on the linked tenant (Hub anchor rejects it).
-
-Without `context_id`, `ops_configure_integration` on Hub returns `HUB_OPERATIONAL_DENIED` — open context first.
-
-## Memory + chat pinning (Connection Hub)
-
-Broker **workspace pinning** (`chat_session_key` on `ops_context_open`) and operational memory **session scope** share the same stable chat id:
-
-| Broker | Memory |
-|--------|--------|
-| `ops_context_open(…, chat_session_key: "…")` | `memory_session_touch(…, external_session_key: "…")` |
-
-**Recommended:** pass the same stable key to both when opening a Hub chat. If you omit `external_session_key` on `memory_session_touch`, the gateway injects it from the active broker context’s `chat_session_key` (when present). Explicit `external_session_key` from the caller always wins.
+If they want additional workspaces → skill **`link-account`** (upgrade CTA on Community).
 
 ## Errors
 
-| Code / message | Action |
-|----------------|--------|
-| `BROKER_CONTEXT_REQUIRED` | Call `ops_context_open`, retry with `context_id` |
-| `BROKER_CONTEXT_INVALID` / expired | `ops_context_open` again |
-| `LINKED_CONNECTION_NOT_FOUND` | `ops_accounts_list`; user may need `link-account` skill |
-| `MCP_SESSION_REQUIRED` | Reconnect MCP (`/opsphere-reconnect` or Codex `mcp login opsphere`) |
-| `HUB_OPERATIONAL_DENIED` | Open work context for a linked workspace first |
-| `tools_discovery.stale` on open/close | Call MCP `tools/list` before tenant-scoped tools (Cursor does not auto-refresh tools) |
+| Code | Action |
+|------|--------|
+| `BROKER_CONTEXT_REQUIRED` / invalid | Prefer `/opsphere-reconnect`. For paid external switch only, retry open. Do not coach Community users to manually attach IDs. |
+| `LINKED_CONNECTION_NOT_FOUND` | `ops_accounts_list`; may need `link-account` on paid plans |
+| `BROKER_LINK_LIMIT_EXCEEDED` | Upgrade CTA — Personal Workspace remains included |
+| `MCP_SESSION_REQUIRED` | `/opsphere-reconnect` |
+| `HUB_OPERATIONAL_DENIED` | Reconnect; ensure Personal Workspace / correct external is active |
 
 ## Avoid
 
-- Guessing `context_id` or `linked_connection_id` — only from gateway responses.
-- Omitting `context_id` on scoped tools when multiple connections exist.
-- Calling tenant-scoped tools while still on Hub with no context.
-- Naming specific customer tenants in skill text — use labels/slugs from `ops_accounts_list` only.
+- Presenting this skill as required after Sign up free / login
+- "Pass context_id to every tenant-scoped tool" as Community guidance
+- Confusing this with **Work Context** (`ops_set_work_context`)
+- Unlinking or "opening" Personal Workspace as if it were missing

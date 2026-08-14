@@ -92,7 +92,7 @@ sys.exit(1 if bad else 0)
 fi
 
 # 6. scripts/ — maintainer CI only (no runtime shell in bundle)
-ALLOWED_SCRIPTS=(ci-validate.sh codex-install.sh codex-mcp-config.sh)
+ALLOWED_SCRIPTS=(ci-validate.sh codex-install.sh codex-mcp-config.sh phase6-ux-invariants.mjs)
 EXTRA_SCRIPTS=()
 while IFS= read -r script; do
   [[ -z "$script" ]] && continue
@@ -381,6 +381,13 @@ if search_quiet 'BROKER_SUBPROCESS_BUSY|WORKSPACE_ACCESS_REVOKED' docs/TROUBLESH
   ok "TROUBLESHOOTING documents broker subprocess and workspace errors"
 else
   red "docs/TROUBLESHOOTING.md must document BROKER_SUBPROCESS_BUSY and WORKSPACE_ACCESS_REVOKED"
+fi
+
+# Phase 6 Community UX content invariants
+if node scripts/phase6-ux-invariants.mjs; then
+  ok "phase6 UX content invariants"
+else
+  red "phase6 UX content invariants failed"
 fi
 
 echo "=== done (failures: $FAIL) ==="

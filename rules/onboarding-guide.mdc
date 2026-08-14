@@ -43,9 +43,24 @@ These tools are available once authenticated and integrations are configured:
 
 **Memory tools** appear only when the `memory` module is enabled for your tenant (`tenant_tools`, profile `cursor`). They store **distilled** notes from past sessions — not live ops truth. Always verify current state with Datadog, K8s, Vercel, or other live tools after reading memory.
 
-**Work context** is injected automatically when MCP connects (default cloud account + index of others). After signup, if `ops_my_usage` shows work context as not configured, run the `set-work-context` skill. For full text of a non-default account, use `ops_get_work_context` or resource `opsphere://tenant/account-context`.
+**Three distinct concepts (never mix them):**
 
-**Connection Hub** (when `ops_accounts_list` is in `tools/list`): new signups may get a Hub anchor tenant — not an operational workspace. Link client workspaces with skill **`link-account`**, then **`open-work-context`** before any tenant-scoped tool. Pass `context_id` on every scoped call; use `ops_context_close` before switching. Hub rejects `ops_configure_integration` / `ops_set_work_context` without an open context on a linked tenant.
+| Concept | What it is | User-facing |
+|---------|------------|-------------|
+| **Personal Workspace** | Automatic operational workspace created at signup | Always **Active** after Community signup — no manual link |
+| **Work Context** | Optional provider/account/environment notes (`ops_set_work_context`) | May be "not configured" — that does **not** mean Personal Workspace is broken |
+| **External Workspace** | Extra workspace linked via Connection Hub OAuth | Community quota = **0**; upgrade required |
+
+**Work context** (provider notes) is injected automatically when MCP connects when configured. After signup, if `ops_my_usage` shows Work context as not configured, optionally run `set-work-context`. That is optional personalization — tools already work on the Personal Workspace.
+
+**Connection Hub** (when `ops_accounts_list` is in `tools/list`):
+
+- After **Sign up free / login**, Hub + **Personal Workspace** already exist. The account is **operational immediately**.
+- Do **not** ask the user to create/link Personal Workspace, copy IDs, or run `ops_context_open` for normal Community use.
+- Call `ops_accounts_list` / `ops_my_usage` to confirm status — expect Personal Workspace active.
+- **Community** cannot link additional (external) workspaces — if the user asks, explain upgrade (Developer+ when enabled / paid plans). Never present "0/0" without that explanation.
+- **Do not** teach `context_id` / `broker_context` to normal users. Session resolution is automatic for Personal Workspace when auto-context is on.
+- Switching to an **external** workspace (paid plans with linked clients) is the only case for skill **`open-work-context`** — and only when the user explicitly wants another linked workspace.
 
 ### MCP resources (gateway — read via @ or Fetch MCP Resource)
 
@@ -122,14 +137,15 @@ If a tool returns an error about missing credentials or an unconfigured provider
 
 ## Connection Hub — agent rules (when broker tools are in `tools/list`)
 
-1. **Detect Hub:** `ops_accounts_list` present, or initialize instructions contain `Connection Hub — work context`.
-2. **Link clients:** skill **`link-account`** → `ops_account_link_start` → user completes OAuth in browser (no tokens in chat).
-3. **Before operational work:** skill **`open-work-context`** → `ops_context_open` → pass returned `context_id` on **every** tenant-scoped and `macro_*` tool call.
-4. **Switch tenant:** `ops_context_close(context_id)` then `ops_context_open` for the other `linked_connection_id`.
-5. **Integrations / work context:** only on a **linked** tenant with open `context_id` — never on the Hub anchor alone.
-6. **GLOBAL without context:** `ops_*` broker tools, `dns_lookup`, `http_check`, `cert_status`, `tcp_connect`, `dnssec_check`.
-7. **TENANT_SCOPED on Hub** (require `context_id`): all integration tools, `deployment_status`, `macro_*`, `memory_*`, `alg_status`, `alg_incidents`, and every other non-broker tool not listed as GLOBAL above.
-8. If `BROKER_CONTEXT_REQUIRED` → open context and retry; do not invent tenant names.
+1. **Detect Hub:** `ops_accounts_list` present (Community and paid Hub accounts).
+2. **After signup/login:** assume **Personal Workspace is Active**. Confirm with `ops_my_usage` / `ops_accounts_list`. Start operational tools immediately — no link step, no `ops_context_open`, no `context_id` coaching.
+3. **Personal Workspace** is product-managed. Never offer unlink/delete of the personal link. `PERSONAL_WORKSPACE_UNLINK_FORBIDDEN` → explain it is part of the account.
+4. **External link (Community):** if user asks to add another workspace → upgrade CTA: _"Your Personal Workspace is included. Linking additional workspaces requires Developer or higher."_ Keep error code `BROKER_LINK_LIMIT_EXCEEDED` for diagnostics. Do **not** run `ops_account_link_start` on Community when quota is 0.
+5. **External link (paid / Developer when enabled):** skill **`link-account`** → browser OAuth only; never paste tokens in chat. Personal Workspace does **not** count toward external quota.
+6. **Switch to an external workspace (paid only, user-initiated):** skill **`open-work-context`**. Do not use this for normal Community Personal Workspace work.
+7. **Integrations / Work Context prose:** configure on the active Personal Workspace (or the external workspace the user switched to). Prefer `configure-integration` / `set-work-context` without mentioning internal IDs.
+8. **Developer plan:** only mention Developer features when `ops_my_usage` / plan status shows Developer is active. If Developer rollout is off, do not promise Developer capabilities.
+9. Never invent tenant names, `linked_connection_id`, or `context_id`.
 
 ---
 
@@ -183,6 +199,23 @@ If the gateway returns error code `TRIAL_EXPIRED`:
 - Tell the user: "Your 30-day free trial has expired. Visit **https://opsphere.io/pricing** to continue using Opsphere."
 - Do not retry the request.
 - Do not suggest re-login — re-authentication will not fix an expired trial.
+- Keep the code `TRIAL_EXPIRED` available if the user asks for support diagnostics.
+
+## Workspace suspended (WORKSPACE_SUSPENDED)
+
+If the gateway returns `WORKSPACE_SUSPENDED` (or tenant status suspended):
+
+- Tell the user the account/workspace is **suspended** and to contact Opsphere support or their org admin.
+- Do **not** present this as an expired trial.
+
+## Business error UX (keep codes for diagnostics)
+
+| Code | User-facing guidance |
+|------|----------------------|
+| `BROKER_LINK_LIMIT_EXCEEDED` | Personal Workspace is included; linking **additional** workspaces requires Developer or higher. Point to pricing. |
+| `PERSONAL_WORKSPACE_UNLINK_FORBIDDEN` | Personal Workspace is part of the account and cannot be unlinked. |
+| `PLAN_WORKSPACE_NOT_INCLUDED` | That external workspace / plan feature is not included — upgrade. |
+| `MACROS_PAID_ONLY` | Macros require a paid plan (Team+). |
 
 ---
 
@@ -211,7 +244,7 @@ Use `ops_my_usage` for plan/usage visibility. The gateway is the only authority 
 | `-32003` | `execution_policy_missing` | Tell user policy is not configured; contact admin — do not retry blindly |
 | `-32003` | `execution_module_not_enabled` | Tool/module not on plan — suggest `ops_my_usage` or upgrade |
 | `-32003` | `execution_sensitive_action_denied` | Pick a read-only alternative or ask admin to allow sensitive actions |
-| `-32003` | `BROKER_CONTEXT_*` | Open Hub context (`open-work-context`) and pass `context_id` |
+| `-32003` | `BROKER_CONTEXT_*` | Reconnect MCP (`/opsphere-reconnect`). For **external** workspace switch on paid plans only, use `open-work-context`. Do **not** coach Community users to pass `context_id` manually. |
 | `-32004` | `max_tool_calls`, `max_cost_units`, `max_macro_calls` | Budget exhausted — wait for `resetsAt` or reduce scope; do not spam retries |
 
 ---
@@ -222,7 +255,7 @@ Use `ops_my_usage` for plan/usage visibility. The gateway is the only authority 
 |---------|-----------|--------------------------------------|
 | **Integrations** (Datadog, AWS keys, GitHub token, …) | Configure in chat with `ops_configure_integration` | Prefer admin portal Cloud Catalog / credentials; plugin still works when `catalog_config_surface` allows |
 | **MCP tool modules** (enable K8s, ArgoCD, macros, …) | Fixed by plan matrix — admin **Tools** toggles for out-of-plan modules are disabled | Org admins manage modules in **https://admin.opsphere.io** → Tools |
-| **`ops_my_usage`** | Shows plan, usage, enabled tool count; `catalog_config_surface: plugin` | May show `catalog_config_surface: admin_portal` — point users to the admin portal for catalog/module changes |
+| **`ops_my_usage`** | Plan, trial/daily usage, Personal Workspace, Work Context (separate), integrations; Community operational catalog — **never** invent "N MCP tools enabled" | May show `catalog_config_surface: admin_portal` — point users to the admin portal for catalog/module changes |
 
 If a **Community** user asks to enable Kubernetes, ArgoCD, macros, or other premium modules in the admin Tools page: explain those modules are **not included** in Community. Suggest [opsphere.io/pricing](https://opsphere.io/pricing). Do not invent workarounds that toggle premium modules.
 
@@ -255,7 +288,8 @@ If the gateway returns error code `SINGLE_ENVIRONMENT_ONLY`:
 When the user asks about their plan, usage, trial status, remaining calls, or upgrade options:
 
 - Use `ops_my_usage` — no parameters required.
-- It returns: plan name, trial end date, days remaining, daily usage (used / limit / resets at), **monthly usage (UTC month)**, enabled MCP tool count, configured integrations, and upgrade link.
+- It returns: plan, trial/status, daily/monthly usage, **Personal Workspace** status, **Work Context** (separate), integrations, additional workspace quota, upgrade link.
+- **Do not** invent a public tool count like "20 MCP tools enabled" or "31 MCP tools enabled". Summarize catalog as the plan's operational tools / modules from the tool text.
 - **Presentation:** Use skill **`plan-and-usage`**. Summarize in conversational prose — **never** dump the raw MCP JSON envelope or a `json` code block unless the user explicitly asks for raw/debug output.
 
 ---
@@ -295,8 +329,8 @@ Users might say things like:
 - "List my S3 buckets" — `aws_cli_query` directly after AWS is configured (no SSO step)
 - "What's wrong with my Bedrock agent?" / paste `agentId` — `aws_bedrock_agent_diagnose` → `aws_lambda_agent_diagnose` per Lambda; prompt `investigate-bedrock-agent` when in playbooks (paid `aws` module; not Agent Core)
 - "Tell Opsphere what I usually work with" — triggers the `set-work-context` skill
-- "Link another client workspace" / "add a customer account" — skill **`link-account`** (Hub only)
-- "Switch to my other client" / "open work context for …" — skill **`open-work-context`** (Hub only)
+- "Link another client workspace" / "add a customer account" — skill **`link-account`** (paid Hub / when external quota allows; Community → upgrade CTA)
+- "Switch to my other linked workspace" — skill **`open-work-context`** (paid external switch only; not needed for Community Personal Workspace)
 - "How do I configure deployment sources?" — triggers **`configure-deployment-catalog`** skill
 - "Show PR #42 status in Bitbucket"
 - "Find Jira issues assigned to me"

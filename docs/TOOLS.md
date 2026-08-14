@@ -118,34 +118,35 @@ Returns configured operational context for all cloud accounts (full text). Use w
 
 ---
 
-## Connection Hub (multi-account broker)
+## Connection Hub (Personal Workspace + external links)
 
-Available when your account is a **Connection Hub** (`ops_accounts_list` appears in `tools/list`). Same gateway for **Cursor** and **Codex**. Lets consultants and platform teams operate multiple client workspaces from one IDE login.
+Available when `ops_accounts_list` appears in `tools/list` (Community and paid Hub accounts).
 
-| Tool | Parameters | Purpose |
-|------|------------|---------|
-| `ops_accounts_list` | — | List linked client workspaces (`id`, `label`, tenant `slug`, `status`) |
-| `ops_account_link_start` | — | OAuth `authorization_url` to link a new workspace (complete in browser) |
-| `ops_account_unlink` | `linked_connection_id` | Revoke a linked workspace |
-| `ops_context_open` | `linked_connection_id`, optional `chat_session_key` | Open server-side work context → returns `context_id` |
-| `ops_context_close` | `context_id` | Close context before switching clients |
+| Tool | Purpose |
+|------|---------|
+| `ops_accounts_list` | List Personal Workspace + any external links |
+| `ops_account_link_start` | Start OAuth to link an **external** workspace (when plan quota allows) |
+| `ops_account_unlink` | Revoke an **external** link (Personal Workspace cannot be unlinked) |
+| `ops_context_open` / `ops_context_close` | Advanced: switch to an **external** linked workspace (paid). Not required for Community Personal Workspace |
+| `ops_my_usage` | Plan, Personal Workspace, Work Context (separate), integrations, quotas |
 
-**Agent skills:** [`link-account`](../skills/link-account/SKILL.md) (link/unlink) · [`open-work-context`](../skills/open-work-context/SKILL.md) (open/switch `context_id`).
+**Agent skills:** [`link-account`](../skills/link-account/SKILL.md) · [`open-work-context`](../skills/open-work-context/SKILL.md) (external switch only).
 
-**Rules:**
+**Product rules:**
 
-- **Tenant-scoped** tools (`dd_*`, `k8s_*`, `deployment_status`, `macro_*`, integrations, memory, …) require `context_id` on every call.
-- **Global** tools work without `context_id`: broker `ops_*`, `dns_lookup`, `http_check`, `cert_status`, `tcp_connect`, `dnssec_check`.
-- **Tenant-scoped on Hub** (including `alg_status`, `alg_incidents`, integrations, `deployment_status`, `macro_*`, `memory_*`) require `context_id` on every call.
-- The Hub anchor cannot store integration credentials — open a context on a linked workspace, then use `ops_configure_integration` or `configure-integration`.
-- OAuth link completion is **HTTP callback only** — there is no `ops_account_link_complete` tool.
+- After signup/login, **Personal Workspace is Active** — use operational tools without a manual open step.
+- **Work Context** (`ops_set_work_context`) is optional provider/stack notes — distinct from Personal Workspace.
+- **Community** external link quota is 0 — upgrade CTA; do not present Personal Workspace as blocked.
+- Do not teach end users to pass internal session IDs for normal Community calls.
+- Configure integrations on the Personal Workspace (or the external workspace you switched to on paid plans).
 
 **Examples:**
 
-- _"Link another client workspace"_ → `link-account` skill
-- _"Switch to my staging client and search Datadog errors"_ → `open-work-context`, then `dd_logs_search` with `context_id`
+- _"Show my usage"_ → Personal Workspace Active + Work Context status
+- _"Link another workspace"_ on Community → upgrade explanation
+- _"Switch to my staging client"_ (paid multi-link) → `open-work-context`
 
-**Resources:** `opsphere://hub/active-context` · `opsphere://hub/connections`
+**Resources:** `opsphere://hub/active-context` · `opsphere://hub/connections` (diagnostics; prefer labels over raw IDs in user chat)
 
 ---
 
@@ -243,7 +244,7 @@ Returns `deployments[]` (newest first) and `gaps[]` when a platform is missing o
 3. Read `gaps[]` — Community: `set-work-context` + `configure-integration`; Team: admin **https://admin.opsphere.io** (see `ops_my_usage` → Catalog configuration).
 4. Use `vercel_deploys_latest` only for explicit Vercel-only questions or when gaps direct you there.
 
-**Community:** included in the ~30-tool catalog.
+**Community:** included in the Community operational catalog.
 
 ---
 

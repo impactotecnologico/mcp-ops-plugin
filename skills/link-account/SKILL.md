@@ -1,76 +1,95 @@
 ---
 name: link-account
-description: Link a client workspace to your Connection Hub via OAuth (multi-account Cursor/Codex). Use when ops_accounts_list is available, the user wants to add or remove a linked tenant, or after Hub signup with zero connections.
+description: Link or unlink an external workspace on Connection Hub (paid plans). Community users get an upgrade CTA — Personal Workspace is already included and must not be linked manually.
 ---
 
 # Link Account (Connection Hub)
 
-Guide a **Connection Hub** owner through linking or unlinking **client workspaces** (independent OAuth identities). One Opsphere install can operate many linked tenants without logging out.
+Guide linking or unlinking **external workspaces** on a Connection Hub. Personal Workspace is automatic and separate.
 
-> **Not a Connection Hub?** If `tools/list` does **not** include `ops_accounts_list`, you are on a **legacy single-tenant** account — use normal OAuth login only; this skill does not apply.
+## Concepts (mandatory)
+
+| Concept | Meaning |
+|---------|---------|
+| **Personal Workspace** | Product-managed workspace created at signup — already linked; never "add" or unlink it |
+| **External Workspace** | Extra workspace via OAuth link — counts against plan quota |
+| **Work Context** | Optional provider/stack notes (`ops_set_work_context`) — not a workspace link |
+
+> If `tools/list` does **not** include `ops_accounts_list`, this skill does not apply — use normal OAuth via `/opsphere-setup`.
 
 ## Tools
 
 | Tool | Purpose |
 |------|---------|
-| `ops_accounts_list` | List active linked connections (`id`, `label`, tenant `slug`, `status`) |
-| `ops_account_link_start` | Returns `authorization_url` — user completes OAuth in the browser |
-| `ops_account_unlink` | Revoke a link (`linked_connection_id` UUID) |
-
-There is **no** `ops_account_link_complete` tool — grants are stored only on the **HTTP OAuth callback** after the user finishes in the browser.
+| `ops_accounts_list` | List connections (personal + external) |
+| `ops_account_link_start` | Returns `authorization_url` for an **external** link |
+| `ops_account_unlink` | Revoke an **external** link only |
+| `ops_my_usage` | Plan, Personal Workspace status, additional-workspace quota |
 
 ## Security (mandatory)
 
 1. **Never** ask the user to paste OAuth codes, refresh tokens, or passwords into chat.
 2. **Never** store link credentials in `memory_store`, `ops_set_work_context`, or local files.
-3. Show only the **authorization URL** from `ops_account_link_start` and instruct the user to open it in a browser.
+3. Show only the **authorization URL** from `ops_account_link_start`.
 4. Confirm success with connection **label / slug** — do not echo tokens.
-
-## Hub vs linked workspace
-
-| On Connection Hub (no active `context_id`) | On linked workspace (after `ops_context_open`) |
-|--------------------------------------------|------------------------------------------------|
-| `ops_accounts_list`, link/unlink, `ops_my_usage`, network tools | Datadog, K8s, Vercel, `deployment_status`, integrations, memory, macros |
-| **Denied:** `ops_configure_integration`, `ops_remove_integration`, `ops_set_work_context` | Use `configure-integration` and `set-work-context` on the **linked** tenant |
-
-After linking, run skill **`open-work-context`** before operational work.
 
 ## When to run
 
-1. User says _"link a client"_, _"add another account"_, _"connect my customer's Opsphere"_.
-2. After Hub signup when `ops_accounts_list` returns `accounts: []`.
-3. User wants to **remove** a linked workspace → `ops_account_unlink`.
+1. User says _"link another workspace"_, _"add a client account"_, _"connect another Opsphere workspace"_ on a plan that allows external links.
+2. User wants to **remove an external** workspace → `ops_account_unlink` (never the Personal Workspace).
 
-## Link flow
+## Community / zero external quota (mandatory)
 
-1. Call `ops_accounts_list` — show existing connections (if any).
-2. Explain briefly: each link is a separate OAuth login to that client's Opsphere workspace; credentials stay on the gateway encrypted.
+1. Call `ops_my_usage` (and optionally `ops_accounts_list`).
+2. If Personal Workspace is active and additional linked workspaces are **not** available (Community / `BROKER_LINK_LIMIT_EXCEEDED` / max external = 0):
+
+> "You're connected on **Community**. Your **Personal Workspace** is included and already active — you can use Opsphere tools now.
+>
+> Linking **additional** workspaces requires **Developer** or higher. See [opsphere.io/pricing](https://opsphere.io/pricing)."
+
+3. Do **not** call `ops_account_link_start`.
+4. Do **not** imply the Personal Workspace is missing or blocked.
+5. Do **not** present raw "0/0" without the upgrade explanation.
+6. Preserve code `BROKER_LINK_LIMIT_EXCEEDED` for diagnostics/support if the tool returned it.
+
+## Do not treat Personal Workspace as empty Hub
+
+- `ops_accounts_list` showing only the Personal Workspace is **success**, not a reason to link.
+- Never say the Hub is "not an operational workspace" after Community signup.
+- Never ask the user to copy `linked_connection_id` or open a manual context for normal use.
+
+## External link flow (paid / quota available)
+
+1. Call `ops_accounts_list` — show personal vs external clearly from labels/kinds in the tool result.
+2. Confirm plan allows another external link via `ops_my_usage`.
 3. Call `ops_account_link_start` (no parameters).
-4. Parse `authorization_url` from the tool result and tell the user:
+4. Give the user `authorization_url` to open in a browser.
+5. After confirmation, call `ops_accounts_list` again.
+6. Offer to continue working — Personal Workspace stays default; switching to the new external workspace is only if the user asks (**`open-work-context`**).
 
-> "Open this link in your browser, sign in to the **client workspace** you want to link, and approve access. When the page confirms success, come back here."
+## Unlink flow (external only)
 
-5. Wait for user confirmation, then call `ops_accounts_list` again to verify the new connection.
-6. Offer **`open-work-context`** to start working on the new link.
+1. Call `ops_accounts_list` — user picks an **external** connection.
+2. If the target is Personal Workspace / protected personal → refuse with:
 
-### If link fails
+> "Your Personal Workspace is part of your Opsphere account and cannot be unlinked."
 
-| Symptom | Action |
-|---------|--------|
-| `BROKER_DISABLED` | Connection Broker not enabled on gateway yet — contact Opsphere support. |
-| `MCP_SESSION_REQUIRED` | User must reconnect MCP (`/opsphere-reconnect` or Codex `mcp login opsphere`). |
-| Browser shows error | Retry `ops_account_link_start`; do not collect secrets in chat. |
-| Connection missing after OAuth | Wait a few seconds; call `ops_accounts_list` again. |
+   Keep code `PERSONAL_WORKSPACE_UNLINK_FORBIDDEN` for diagnostics if returned.
+3. Otherwise confirm and call `ops_account_unlink(linked_connection_id: "<uuid>")`.
 
-## Unlink flow
+## Errors
 
-1. Call `ops_accounts_list` — user picks which connection to remove.
-2. Confirm: _"This revokes Opsphere's access to that workspace from your Hub. Continue?"_
-3. Call `ops_account_unlink(linked_connection_id: "<uuid>")`.
-4. Confirm by label/slug only.
+| Code | Action |
+|------|--------|
+| `BROKER_LINK_LIMIT_EXCEEDED` | Upgrade CTA (Personal Workspace included). |
+| `PERSONAL_WORKSPACE_UNLINK_FORBIDDEN` | Explain personal cannot be removed. |
+| `PLAN_WORKSPACE_NOT_INCLUDED` | Feature not on current plan — pricing. |
+| `BROKER_DISABLED` | Contact Opsphere support. |
+| `MCP_SESSION_REQUIRED` | `/opsphere-reconnect`. |
 
 ## Avoid
 
-- Inventing tenant names or connection IDs — always from `ops_accounts_list`.
-- Calling `ops_configure_integration` on the Hub anchor tenant.
-- Hardcoding any tenant slug or customer name in instructions — use live tool output only.
+- Linking because "accounts look empty" after signup.
+- Teaching `context_id` / `ops_context_open` as part of Community onboarding.
+- Promising **Developer** features unless plan status shows Developer is active.
+- Inventing connection IDs — always from live tool output.

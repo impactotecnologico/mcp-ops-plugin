@@ -35,7 +35,7 @@ Tell the user:
 
 > With the **Cursor Marketplace plugin**, Opsphere usually does **not** appear as a separate row under **Settings → MCP**. Check the **Opsphere plugin card** in **Settings → Extensions** (or the Marketplace tab):
 >
-> - **Green** with a tool count (e.g. 216 tools) = MCP connected.
+> - **Green** = MCP connected (client may show a tool count; trust gateway/catalog over any single UI number).
 > - **Red** or missing tools = OAuth needs recovery (this command).
 
 ---

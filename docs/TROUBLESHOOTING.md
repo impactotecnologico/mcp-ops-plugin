@@ -94,36 +94,38 @@ Your Opsphere account, integrations, work context, and history remain intact; re
 
 ## Connection Hub / Broker (multi-account)
 
-Applies when `tools/list` includes `ops_accounts_list` — you are on a **Connection Hub**, not a legacy single-tenant workspace.
+Applies when `tools/list` includes `ops_accounts_list`.
 
-### BROKER_CONTEXT_REQUIRED
+### Community / Personal Workspace first
 
-**Symptom**: A tenant-scoped tool (Datadog, K8s, Vercel, `deployment_status`, integrations, etc.) returns `BROKER_CONTEXT_REQUIRED` or mentions a missing `context_id`.
+After signup or returning login, **Personal Workspace should already be Active**. Prefer **`/opsphere-reconnect`** if tools fail after reconnect. Do **not** treat a missing manual `context_id` as the first fix for Community.
 
-**Cause**: On a Hub, operational tools run against a **linked client workspace**. You must open a server-side work context first and pass `context_id` on every scoped call.
+### BROKER_CONTEXT_REQUIRED / session issues
+
+**Symptom**: A tenant-scoped tool returns `BROKER_CONTEXT_REQUIRED` or similar session errors.
 
 **Fix** (in order):
 
-1. Run **`/open-work-context`** in chat (or ask the agent to follow skill **`open-work-context`**).
-2. Call `ops_context_open` with a `linked_connection_id` from `ops_accounts_list`.
-3. Retry the original tool with `context_id` in arguments (the agent should do this automatically).
-4. Before switching clients, call `ops_context_close` for the active context.
+1. Run **`/opsphere-reconnect`** (or Sign in on the plugin card).
+2. Confirm `ops_my_usage` shows Personal Workspace Active.
+3. **Paid plans only**, if you intentionally use an **external** linked workspace: run **`/open-work-context`** to switch to that workspace.
+4. Do not coach Community users to copy/paste internal session IDs for normal calls.
 
-**Related commands**: **`/link-account`** — link a new client workspace before opening context.
+**Related**: **`/link-account`** — external workspaces when the plan allows; Community → upgrade CTA (`BROKER_LINK_LIMIT_EXCEEDED`). Personal Workspace cannot be unlinked (`PERSONAL_WORKSPACE_UNLINK_FORBIDDEN`).
 
 ---
 
-### Double login (Hub OAuth vs client link)
+### Double login (Hub OAuth vs external link)
 
-**Symptom**: You signed in to Opsphere in Cursor, but linking a client or opening context asks you to log in again in the browser.
+**Symptom**: You signed in to Opsphere in Cursor, but linking an **external** workspace asks you to log in again in the browser.
 
-**Cause**: This is expected. The Hub has its own OAuth identity. Each **linked client workspace** is a separate OAuth grant — you sign in as that client's Opsphere user when linking, not with the Hub password in chat.
+**Cause**: Expected for **external** links only. Personal Workspace does not require a second OAuth after signup.
 
 **Fix**:
 
-- Complete the browser OAuth when `ops_account_link_start` returns an `authorization_url`.
+- Complete browser OAuth when `ops_account_link_start` returns an `authorization_url`.
 - Do **not** paste codes, refresh tokens, or passwords into chat.
-- After linking, use **`open-work-context`** — you should not need to link again for the same connection.
+- Community users who only need Personal Workspace should not start this flow.
 
 ---
 
@@ -217,7 +219,7 @@ Run **`ops_my_usage`** to confirm your plan name.
 
 **Cause**: The integration for that provider hasn't been configured yet.
 
-**Fix**: Say _"Configure my [Provider]"_ in the chat. The agent will walk you through the setup using the `configure-integration` skill.
+**Fix**: Run `/integration-status` first. Say _"Configure my [Provider]"_ only for providers listed under **available to connect**. Do not treat upgrade/beta providers as a credentials-only gap.
 
 ---
 

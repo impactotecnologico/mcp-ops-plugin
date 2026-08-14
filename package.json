@@ -4,8 +4,9 @@
   "private": true,
   "description": "Opsphere DevOps & SRE intelligence plugin for Cursor (manifest, rules, skills — no npm runtime deps)",
   "scripts": {
-    "validate": "bash scripts/ci-validate.sh",
+    "validate": "bash scripts/ci-validate.sh && node scripts/phase6-ux-invariants.mjs",
     "test": "npm run validate",
+    "test:phase6": "node scripts/phase6-ux-invariants.mjs",
     "audit": "node -e \"console.log('No npm dependencies — audit skipped')\""
   }
 }

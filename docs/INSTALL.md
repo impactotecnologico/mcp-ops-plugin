@@ -45,7 +45,7 @@ To remove the local copy: `rm -rf ~/.cursor/plugins/local/opsphere` and reload a
 2. Find **Opsphere** — the card should offer **Sign in** / **Connect** on first use.
 3. Complete sign-up or log-in in the browser; the window closes automatically.
 
-Connection status: **green** on the plugin card with a tool count (e.g. 216 tools). You do **not** need a separate entry under **Settings → MCP**.
+Connection status: **green** on the plugin card. You do **not** need a separate entry under **Settings → MCP**. (Client UIs may show different tool counts than the raw server catalog — that is normal.)
 
 ### Local dev install (`~/.cursor/plugins/local/opsphere`)
 
@@ -89,15 +89,17 @@ or ask:
 
 The agent will ask for a short description of your stack (projects, providers, environments). **Do not paste API keys here** — only free-form context. You can skip and configure it later.
 
-### Connection Hub (multi-account)
+### Connection Hub (Personal Workspace + optional external)
 
-If you operate **multiple client workspaces** (consulting, MSP, multi-brand), new signups may use a **Connection Hub** — one OAuth login in Cursor or Codex, many linked tenants.
+After **Sign up free / login**, Community accounts get a **Connection Hub** with an automatic **Personal Workspace**. You are operational immediately — no second OAuth, no manual link, no copying IDs.
 
-1. After connect, say: _"Link another client workspace"_ — the agent runs the **`link-account`** skill (`ops_account_link_start` → browser OAuth).
-2. Before Datadog, K8s, deploys, or integrations on a client, say: _"Open work context for [client]"_ — **`open-work-context`** skill (`ops_context_open` → `context_id`).
-3. To switch clients: close context and open another (agent handles `ops_context_close` / `ops_context_open`).
+1. Confirm with _"Show my usage"_ (`ops_my_usage`) — expect **Personal Workspace: Active**.
+2. Optional: set **Work Context** (stack notes) — separate from Personal Workspace.
+3. Optional: configure integrations (_"Configure my Datadog"_).
+4. **Additional (external) workspaces** require a paid plan with link quota. On Community, asking to link another workspace should explain upgrade — Personal Workspace stays included.
+5. Switching between **external** linked workspaces (paid) uses **`open-work-context`**. Community Personal Workspace does **not** require a manual open step.
 
-Hub accounts do **not** replace per-client integration setup — configure Datadog/AWS/etc. on each linked workspace (with an open `context_id`). See [TOOLS.md — Connection Hub](TOOLS.md#connection-hub-multi-account-broker).
+See [TOOLS.md — Connection Hub](TOOLS.md#connection-hub-multi-account-broker).
 
 ---
 

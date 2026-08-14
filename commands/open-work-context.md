@@ -1,25 +1,20 @@
 ---
 name: open-work-context
-description: Open a work context on a linked client workspace (context_id for tenant-scoped tools). Connection Hub only.
+description: Switch to an external linked workspace (paid Hub). Not needed for Community Personal Workspace.
 ---
 
-# Open Work Context (Connection Hub)
+# Open Work Context (External Switch)
 
-Help the user pick a linked client workspace and obtain a **`context_id`** for tenant-scoped MCP tools. Parity with Codex `@open-work-context`.
-
-## Prerequisite
-
-Connection Hub only (`ops_accounts_list` and `ops_context_open` in `tools/list`). If missing, use `/opsphere-setup` for normal single-tenant work context (`ops_set_work_context`).
+Follow skill **[`skills/open-work-context/SKILL.md`](../skills/open-work-context/SKILL.md)**.
 
 ## Steps
 
-1. Read and follow skill **[`skills/open-work-context/SKILL.md`](../skills/open-work-context/SKILL.md)** end to end.
-2. Call `ops_accounts_list` if the user has not named which client to use.
-3. Call `ops_context_open` with the chosen `linked_connection_id`.
-4. Tell the user which workspace is active (label/slug from tool output) and remind them that **every** tenant-scoped tool call needs the returned `context_id`.
-5. Before switching clients, use `ops_context_close` on the current context.
+1. If Community / only Personal Workspace → tell the user it is already active; do **not** run a manual open step or teach `context_id`.
+2. If the user wants another workspace on Community → point to upgrade / **`/link-account`** CTA.
+3. Paid multi-link only: list connections, switch to the requested **external** workspace, confirm by label/slug.
+4. Do not confuse this with **Work Context** prose (`/opsphere-setup` Step 3.5 / `set-work-context`).
 
 ## Related
 
-- **`/link-account`** — add or remove linked workspaces first.
-- **`/integration-status`** — configure integrations on the **linked** tenant (not on the Hub anchor).
+- **`/link-account`** — add external workspaces when the plan allows
+- **`/opsphere-setup`** — signup/login status (Personal Workspace Active)

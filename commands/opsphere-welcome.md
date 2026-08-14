@@ -29,12 +29,11 @@ Copy or paraphrase the following:
 > - _"Check my latest Vercel deploys"_ — Vercel-only detail (or use deployment_status first)
 > - _"Search Datadog logs for errors in the last hour"_
 > - _"Configure my Datadog"_
-> - _"Configure my SonarQube"_ — SonarCloud or self-hosted; then try a SonarCloud project URL
-> - _"What were the last Sonar scan results?"_ — `sq_projects_search` + `sq_last_scan_summary` (when SonarQube module enabled)
 > - _"Configure my AWS"_ — IAM Access Key + Secret Key (not SSO)
+> - _"What were the last Sonar scan results?"_ — `sq_projects_search` + `sq_last_scan_summary` (only when SonarQube is enabled for your plan; check `/integration-status` first)
 > - _"What's wrong with my Bedrock agent?"_ — `aws_bedrock_agent_diagnose` → Lambdas (paid `aws` module; prompt `investigate-bedrock-agent`)
-> - **`/link-account`** or _"Link another client workspace"_ — Connection Hub only
-> - **`/open-work-context`** or _"Switch work context to my other client"_ — Connection Hub only
+> - **`/link-account`** — add an **external** workspace (paid plans; Community → upgrade info). Personal Workspace is already included.
+> - **`/open-work-context`** — switch to another **linked external** workspace (paid). Not needed for Community Personal Workspace.
 > - _"Is the site down?"_ or **`/outage-triage`** — multi-step incident triage (all plans)
 > - _"Why did CI fail on main?"_ or **`/ci-investigator`** — pipeline diagnosis (Professional+; Community: upgrade info)
 > - _"Write a post-mortem"_ or **`/postmortem-writer`** — RCA + optional incident memory (all plans)

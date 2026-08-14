@@ -5,7 +5,15 @@ description: Capture or update what the user usually works with so Opsphere can 
 
 # Set Work Context
 
-Help the user describe their operational environment in plain language. This is **not** credential setup — use `configure-integration` for API keys.
+Help the user describe their operational environment in plain language.
+
+This is **Work Context** (provider/account notes) — **not**:
+
+- Personal Workspace provisioning (already automatic)
+- External workspace linking (`link-account`)
+- Broker session / `context_id` (`open-work-context` is for paid external switch only)
+
+Use `configure-integration` for API keys.
 
 ## Tools
 

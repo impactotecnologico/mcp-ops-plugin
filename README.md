@@ -47,8 +47,8 @@ Architecture diagram and domain list: **[docs/REMOTE-MCP-ARCHITECTURE.md](docs/R
 | **`/opsphere-setup`** | First-run OAuth + first integration (step by step) |
 | **`/opsphere-reconnect`** | Plugin red, 401 or `invalid_grant` — recover Cursor/Codex OAuth safely |
 | **`/integration-status`** | See which providers are connected |
-| **`/link-account`** | Connection Hub — link/unlink a client workspace (OAuth) |
-| **`/open-work-context`** | Connection Hub — open `context_id` on a linked client |
+| **`/link-account`** | Link/unlink an **external** workspace (Community → upgrade CTA; Personal Workspace is automatic) |
+| **`/open-work-context`** | Switch to an **external** linked workspace (paid). Not needed for Community Personal Workspace |
 
 Type **`/opsphere-welcome`** after install for example prompts including subagents (`/outage-triage`, `/endpoint-health`, `/ci-investigator`, `/postmortem-writer`).
 
@@ -134,7 +134,7 @@ The plugin bundle is **markdown and JSON only** — agent guidance, skills, and 
 | **Skills** | [`skills/configure-integration/`](skills/configure-integration/) | Step-by-step provider setup → `ops_configure_integration` |
 | | [`skills/set-work-context/`](skills/set-work-context/) | Tenant work context (`ops_set_work_context`) |
 | | [`skills/link-account/`](skills/link-account/) | Connection Hub — link/unlink client workspaces (OAuth) |
-| | [`skills/open-work-context/`](skills/open-work-context/) | Connection Hub — `context_id` for tenant-scoped tools |
+| | [`skills/open-work-context/`](skills/open-work-context/) | Switch to an external linked workspace (paid); not needed for Community Personal Workspace |
 | | [`skills/run-macro-workflows/`](skills/run-macro-workflows/) | Team+ composite `macro_*` tools (outage, endpoint, env health) |
 | **Commands** | [`commands/`](commands/) | `/opsphere-welcome`, `/opsphere-setup`, `/opsphere-reconnect`, `/integration-status` |
 | **Subagents** | [`agents/`](agents/) | Focused investigation and post-mortem flows (table above) |
@@ -220,7 +220,7 @@ On **paid plans** with the `aws` module enabled, Opsphere can **diagnose Amazon 
 | ![OAuth login](assets/screenshots/oauth-login.png) | ![OAuth signup](assets/screenshots/oauth-signup.png) |
 | *Sign in with your existing account — browser-based OAuth2.* | *New user? Create a free account in seconds — no credit card required.* |
 | ![OAuth redirect](assets/screenshots/oauth-redirect.png) | ![Connected](assets/screenshots/connected-success.png) |
-| *Cursor captures the OAuth callback automatically.* | *Connected — trial active, ~30 tools enabled.* |
+| *Cursor captures the OAuth callback automatically.* | *Connected — Community, Personal Workspace Active.* |
 
 ### Tools in action
 
@@ -235,14 +235,15 @@ On **paid plans** with the `aws` module enabled, Opsphere can **diagnose Amazon 
 
 Opsphere includes a **30-day Community trial** with no credit card required:
 
-- **~30 MCP tools** (read-focused DevOps + memory + integration setup)
+- **Personal Workspace automatic** after Sign up free / login — operational immediately
+- **Community operational catalog** (gateway is source of truth; client UIs may display a different count)
 - **100 tool calls per day** (resets at midnight UTC)
-- **8 core integrations** (Datadog, Vercel, GitHub, Bitbucket, Cloudflare, Sentry, Jira, AWS)
+- **Core integrations** (Datadog, Vercel, GitHub, Bitbucket, Cloudflare, Sentry, Jira, AWS, … when allowed by plan)
 - **Network diagnostics** (`dns_lookup`, `http_check`, `cert_status`) — no setup required
-- **Subagents (all plans):** `/outage-triage`, `/endpoint-health`, `/postmortem-writer` — adapt to ~30 tools; `/ci-investigator` is **paid only**
-- **`ops_my_usage`** — plan name, trial, daily/monthly usage, tool count, upgrade link
+- **Subagents (all plans):** `/outage-triage`, `/endpoint-health`, `/postmortem-writer`; `/ci-investigator` is **paid only**
+- **`ops_my_usage`** — plan, trial, Personal Workspace, Work Context (separate), usage, integrations, upgrade link
 
-After your trial, upgrade at [opsphere.io/pricing](https://opsphere.io/pricing) for the **full catalog (~215 tools)**, unlimited daily calls, write access, and premium providers (Kubernetes, ArgoCD, Azure, Akamai, Pingdom, …).
+After your trial, upgrade at [opsphere.io/pricing](https://opsphere.io/pricing) for expanded catalog, unlimited daily calls, write access, external workspaces, and premium providers (Kubernetes, ArgoCD, Azure, Akamai, Pingdom, …).
 
 Full comparison: **[docs/PLANS.md](docs/PLANS.md)**.
 
@@ -312,9 +313,9 @@ Full details: **[SECURITY.md](SECURITY.md)** (encryption, retention, isolation, 
 <details>
 <summary>"Missing credentials" error for a tool</summary>
 
-- The integration for that provider is not yet configured.
-- Say _"Configure my [Provider]"_ and the agent will walk you through it.
-- Run `/integration-status` to see which providers are connected.
+- The integration for that provider is not yet configured, **or** it may require an upgrade / be unavailable on your plan.
+- Run `/integration-status` (or `ops_list_integrations`) and only say _"Configure my [Provider]"_ for providers listed under **available to connect**.
+- If the provider shows **requires upgrade** or **beta**, do not treat it as a missing-credentials-only problem.
 
 </details>
 

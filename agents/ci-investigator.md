@@ -52,7 +52,7 @@ If the response contains `**Plan**: Community`:
 
    The **CI Investigator** subagent (automated GitHub Actions and Bitbucket pipeline diagnosis with structured root-cause reports) is included on **Professional**, **Team**, and **Enterprise** plans.
 
-   Your current plan is **Community** (~30 tools, 100 calls/day, read-only). Upgrade for the full catalog (215+ tools), unlimited daily calls, and premium providers including deep CI diagnose (`ghe_actions_diagnose`).
+   Your current plan is **Community** (Personal Workspace included, 100 calls/day, read-only). Upgrade for the full catalog, unlimited daily calls, and premium providers including deep CI diagnose (`ghe_actions_diagnose`).
 
    **https://opsphere.io/pricing**
 

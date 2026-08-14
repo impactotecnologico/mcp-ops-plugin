@@ -1,6 +1,6 @@
 ---
 name: configure-integration
-description: Connect Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, SonarQube, Bitbucket, GitLab, Algolia, Railway, or AWS — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider, or when a tool reports missing credentials.
+description: Connect an eligible provider (Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, GitLab, Railway, AWS, …) when ops_list_integrations marks it available_to_connect — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider that is configure_cta-eligible, or when a tool reports missing credentials for an eligible module.
 ---
 
 # Configure Integration
@@ -9,7 +9,7 @@ This skill guides users through connecting their third-party services to Opspher
 It uses four MCP tools from the backend:
 
 - `ops_configure_integration(provider, credentials)` — **the only tool that persists integration secrets** on the gateway (encrypted, tenant-scoped)
-- `ops_list_integrations()` — shows configured vs. pending providers (masked previews only)
+- `ops_list_integrations()` — shows configured vs available-to-connect vs upgrade/beta (masked previews only); **trust this response for entitlement**
 - `ops_test_integration(provider)` — verifies credentials actually work
 - `ops_remove_integration(provider)` — removes all credentials for a provider
 
@@ -17,10 +17,12 @@ It uses four MCP tools from the backend:
 
 > **Integrations ≠ admin MCP modules.** Configuring Datadog/GitHub/etc. here stores credentials so existing plan tools can call those APIs. It does **not** enable premium MCP modules (Kubernetes, ArgoCD, macros, …). Module eligibility is controlled by the subscription plan; Team+ admins manage modules in the admin portal Tools page.
 
+> **Entitlement:** Always call `ops_list_integrations` first. Only guide "Configure my [Provider]" for entries with `configure_cta: true` / `summary.available_to_connect`. If status is `upgrade_required`, `beta`, or `enterprise_only`, explain that — do not collect credentials as if setup were allowed now.
+
 ## General Flow
 
-1. **Check current status**: Call `ops_list_integrations` to see what is already configured.
-2. **Identify the provider**: Determine which provider the user wants to configure.
+1. **Check current status**: Call `ops_list_integrations` to see what is already configured **and** what is eligible to connect on this plan.
+2. **Identify the provider**: Determine which provider the user wants to configure. If it is not in `available_to_connect`, stop and explain upgrade/unavailable — do not start credential collection.
 3. **Explain what is needed**: Tell the user which credentials are required and how to obtain them.
 4. **Collect credentials**: Ask for each value conversationally — one prompt per credential, not all at once.
 5. **Configure**: Call `ops_configure_integration` once with all credentials as a map.

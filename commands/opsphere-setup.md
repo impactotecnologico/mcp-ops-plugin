@@ -43,24 +43,26 @@ If OAuth keeps failing after reconnect, run the **`opsphere-reconnect`** command
 
 ## Step 3 — Share account status
 
-Call `ops_my_usage` and tell the user:
+Call `ops_my_usage` (and `ops_accounts_list` when available) and tell the user:
 
-- Whether they are on a free trial (and days remaining) or a paid plan.
-- Their daily tool call usage.
-- Which integrations are currently configured (call `ops_list_integrations`).
-- Whether **work context** is configured (see Step 3.5 if not).
+- **Opsphere connected**
+- Plan (e.g. Community) and trial/daily usage
+- **Personal Workspace: Active** (automatic after signup — no extra step)
+- **Work context** separately (may be not configured — optional; does **not** mean Personal Workspace is down)
+- Which integrations are configured (`ops_list_integrations`)
+- On Community: additional external workspaces require upgrade — Personal Workspace is included
 
 Example message:
 
-> "You're connected! Your 30-day free trial has X days remaining. You have access to tools for Datadog, Vercel, GitHub, SonarQube, Cloudflare, Jira, Sentry, Bitbucket, and AWS — plus DNS, HTTP, and TLS diagnostics that work immediately.
+> "You're connected on **Community**. Your **Personal Workspace** is Active — you can use Opsphere tools now.
 >
-> Would you like to connect your first integration? Just say 'Configure my Datadog' or whichever provider you use."
+> Work context is optional (not configured yet). Integrations: none yet — say 'Configure my Datadog' when you want.
+>
+> Network checks (DNS/HTTP/TLS) work immediately."
 
----
+### Step 3.5 — Work context (optional personalization)
 
-## Step 3.5 — Work context (recommended after first connect)
-
-If `ops_my_usage` shows **Work context: not configured yet**, run the `set-work-context` skill.
+If `ops_my_usage` shows **Work context: not configured**, you may run the `set-work-context` skill.
 
 1. Ask in natural language (never say "system_prompt_context"):
 
@@ -72,13 +74,16 @@ If `ops_my_usage` shows **Work context: not configured yet**, run the `set-work-
 
 **Skip gracefully** if the user prefers later: "No problem — say 'update my work context' whenever you're ready."
 
-### Step 3.6 — Connection Hub (when broker tools are available)
+Personal Workspace stays Active either way.
 
-If `tools/list` includes `ops_accounts_list` (or initialize mentions **Connection Hub**):
+### Step 3.6 — Connection Hub / external workspaces
 
-1. Call `ops_accounts_list`. If empty, offer skill **`link-account`** to link the first client workspace.
-2. Before operational tools on a client, run **`open-work-context`** so tenant-scoped calls include `context_id`.
-3. Do **not** call `ops_configure_integration` on the Hub anchor — open context on the linked tenant first.
+If `tools/list` includes `ops_accounts_list`:
+
+1. Call `ops_accounts_list` / check `ops_my_usage` Connection Hub section.
+2. Personal Workspace present → **success**. Do **not** offer `link-account` just because there are no external clients.
+3. If the user asks to link another workspace on Community → upgrade CTA (Developer or higher). Do not start OAuth link.
+4. Do **not** require `ops_context_open` or teach `context_id` for normal Community work.
 
 ---
 

@@ -6,7 +6,9 @@ Paid plans are provisioned by Opsphere — not self-serve Sign up.
 | | **Community** | **Professional** | **Team** | **Enterprise** |
 |---|:---:|:---:|:---:|:---:|
 | **Who** | Sign up / OAuth (individual) | Small teams (contact sales) | Org tenants (invite) | Custom contracts |
-| **MCP tools** | ~47 read-focused | Expanded catalog | Full catalog (~215) | Full + custom |
+| **Personal Workspace** | Automatic at signup | Automatic | Automatic | Automatic |
+| **External workspaces** | Not included (upgrade) | Per plan quota | Per plan quota | Custom |
+| **MCP tools** | Community operational catalog (gateway is source of truth) | Expanded catalog | Full catalog | Full + custom |
 | **Daily tool calls** | 100 / day (UTC) | Unlimited | Unlimited | Unlimited |
 | **Trial** | 30 days | — | — | — |
 | **Write / mutate infra** | No (read-only) | Yes | Yes | Yes |
@@ -23,13 +25,15 @@ Paid plans are provisioned by Opsphere — not self-serve Sign up.
 
 ## Community (free trial)
 
-- **Connect** via Cursor OAuth → creates an isolated tenant (`subscription_id: community`).
-- **~47 tools** across Datadog, Vercel, GitHub, GitLab, Bitbucket, Railway, Cloudflare, Sentry, Jira, AWS (CLI), diagnostics, memory, integration setup, and **`deployment_status`** (multi-platform latest deploy).
-- **Network tools** (`dns_lookup`, `http_check`, `cert_status`) work immediately — no credentials.
+- **Connect** via Cursor OAuth (Sign up free / login) → Hub + **Personal Workspace** automatic (`subscription_id: community`).
+- Operational tools available immediately — no manual Personal Workspace link and no manual session open for normal use.
+- **Work Context** is optional stack notes; **External workspaces** require upgrade.
+- Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately — no credentials.
 - Check status anytime: **`ops_my_usage`** or _"Show my usage"_ in chat.
 - **Basic CI in chat** — `bb_pipeline_diagnose`, `ghe_actions_latest` (not the **`/ci-investigator`** subagent; see below).
+- **Developer** plan features are only available when that plan is enabled for the account — do not assume Developer is globally on.
 
-After trial or when you need write access / full catalog → [opsphere.io/pricing](https://opsphere.io/pricing).
+After trial or when you need write access / external workspaces / full catalog → [opsphere.io/pricing](https://opsphere.io/pricing).
 
 ## Professional
 

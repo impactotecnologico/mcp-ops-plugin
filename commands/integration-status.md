@@ -1,52 +1,53 @@
 ---
 name: integration-status
-description: Show which of your 8 integrations are active, which tools they unlock, and get a recommended next step to expand your coverage
+description: Show which integrations are configured, available to connect on your plan, require upgrade, or are unavailable — and suggest a safe next configure step
 ---
 
 # Integration Status
 
-Check the current state of all Opsphere integrations and guide the user on what to configure next.
+Check the current state of Opsphere integrations using the **live** gateway response. Do not assume every catalog provider is configurable.
 
 ## Steps
 
 ### 1. Fetch current status
 
-Call `ops_list_integrations` to retrieve the live state of all providers.
+Call `ops_list_integrations` to retrieve the live state of providers for this account/plan.
 
-### 2. Present results clearly
+### 2. Present results from the response groups
 
-Format the response as a status table. For each provider, show:
+Use `summary` (and each entry’s `status` / `configure_cta`) — do **not** invent entitlement:
 
-- **Configured** (✅): all required credentials are present. List the tools that are now usable.
-- **Partial** (⚠️): some credentials are set but required ones are missing. Mention what is missing.
-- **Not configured** (❌): no credentials set. Briefly describe what the user would gain by connecting it.
+| Group | Field | Meaning |
+|-------|--------|---------|
+| Configured | `summary.configured` | Credentials present and usable on the current plan |
+| Available to connect | `summary.available_to_connect` | Plan/lifecycle eligible, still missing credentials |
+| Requires upgrade | `summary.requires_upgrade` | GA provider known but not in the current plan |
+| Unavailable / beta | `summary.unavailable_beta` | Not offered as a normal configure-now capability |
+| Configured but unavailable | `summary.configured_unavailable` | Credentials exist but plan/lifecycle currently blocks use |
 
-Example format:
+Example presentation:
 
 ```
-✅ Datadog       — dd_logs_search, dd_errors_by_service, dd_errors_recent
-✅ Vercel        — vercel_deploys_latest, vercel_project_status
-❌ GitHub        — pipeline status, repo summary, Actions runs
-❌ Bitbucket     — PR search, pipeline diagnosis
-❌ Cloudflare    — DNS records, zone health
-❌ Jira          — issue search, issue details
-❌ Sentry        — error tracking, issue list
-❌ AWS           — identity check, CLI queries
+Configured
+✅ Datadog
 
-✅ Network tools — dns_lookup, http_check, cert_status (always available)
+Available to connect now
+• Vercel, GitHub, Cloudflare, …
+
+Requires upgrade
+• Akamai, Pingdom, … (do not say “configure now”)
+
+Unavailable / beta
+• SonarQube, … (omit configure CTA)
 ```
 
-### 3. Suggest the next most valuable integration
+### 3. Suggest the next configure step (CTA rules)
 
-- If **nothing is configured**: recommend starting with Datadog.
-  > "I'd recommend starting with **Datadog** — it unlocks log search, error tracking, and synthetic monitoring. Say **'Configure my Datadog'** to get started."
-
-- If **some are configured**: suggest the next most impactful unconfigured one based on what is missing. For example, if Datadog is set but Vercel is not:
-  > "You already have Datadog connected. Want to add **Vercel** next? It would let you check deploy status directly from here."
-
-- If **all are configured**: celebrate and remind the user of what is available.
-  > "All integrations are connected. You have access to the full free-tier tool catalog. Try asking: 'Search Datadog logs for errors in the last hour' or 'Check my latest Vercel deploys'."
+- Offer **"Configure my [Provider]"** **only** for providers in `summary.available_to_connect` (or entries with `configure_cta: true`).
+- Never offer that CTA for `upgrade_required`, `beta`, `enterprise_only`, or `configured_unavailable`.
+- If `available_to_connect` is empty and `requires_upgrade` is non-empty, explain upgrade — do not walk the user through credentials for those providers.
+- Prefer `summary.configure_hint` when present.
 
 ### 4. Offer to configure
 
-After presenting the status, ask: "Would you like to configure any of these? Just say which provider and I will walk you through it."
+After presenting status, ask only about providers that are actually available to connect — e.g. "Would you like to configure one of the providers listed under available to connect?"
