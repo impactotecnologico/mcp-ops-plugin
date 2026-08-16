@@ -65,6 +65,27 @@ const checks = [
     require: [/Personal Workspace: Active/i],
   },
   {
+    file: 'commands/opsphere-reconnect.md',
+    forbid: [/invalid_grant.*automatically retry indefinitely/i],
+    require: [
+      /zero additional Opsphere tool calls/i,
+      /Opsphere unavailable/i,
+      /exactly once/i,
+      /30 s, 60 s, then 120 s/i,
+      /ten-minute negative cache/i,
+    ],
+  },
+  {
+    file: 'skills/reconnect/SKILL.md',
+    forbid: [/invalid_grant.*automatically retry indefinitely/i],
+    require: [
+      /zero additional Opsphere tool calls/i,
+      /exactly once/i,
+      /Opsphere unavailable/i,
+      /ten-minute negative cache/i,
+    ],
+  },
+  {
     file: 'docs/PLANS.md',
     forbid: [/OPS_DEVELOPER_PLAN_ENABLED=true/i],
     require: [/Personal Workspace/i, /Developer.*only available when/i],

@@ -4,6 +4,16 @@ All notable changes to Opsphere will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Changed
+- Added the Codex-native `@reconnect` skill so the same recovery policy is available outside Cursor slash commands.
+- Reconnection guidance now distinguishes terminal session expiry from Gateway/network unavailability.
+- `invalid_grant` stops all Opsphere tool retries until a new browser authentication and, for Codex, a new task/session.
+- Successful authentication is verified silently with one lightweight `ops_my_usage` call.
+- Transient 5xx/network failures use bounded 30 s / 60 s / 120 s backoff; 429 honors `Retry-After` and retries at most once.
+- Added reviewer scenarios and CI invariants for terminal grants, silent verification, and service failures.
+
 ## [1.0.10] - 2026-08-06 (OAuth reconnect recovery)
 
 ### Changed

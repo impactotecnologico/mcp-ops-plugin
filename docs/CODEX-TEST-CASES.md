@@ -161,6 +161,29 @@ What is my Opsphere plan and usage? Summarize in plain language — do not show 
 
 **Note:** Login **inside** an active Codex chat does not reload MCP — by design.
 
+### Test case 5a — Terminal grant does not retry
+
+With a deliberately invalid or revoked test refresh token:
+
+1. Trigger one authenticated Opsphere operation.
+2. Confirm the client receives `invalid_grant` and the assistant identifies **session expired / reconnect required**, not an Opsphere outage.
+3. Leave the task open without authenticating again.
+
+**Expected:** no further Opsphere tool calls, polling, or `ops_my_usage` verification occurs in that task. The user is directed to **Reconnect**. Do not use a real user's session for this test.
+
+### Test case 5b — Silent post-auth verification
+
+1. Complete a new browser login using the normal reconnect path.
+2. For Codex, open a new task/session and confirm authentication completed.
+
+**Expected:** the agent calls `ops_my_usage` exactly once without announcing the internal check, then reports that reconnection succeeded. It does not print plan/usage details unless requested.
+
+### Test case 5c — Service failure preserves credentials
+
+Against a controlled test endpoint returning 5xx or a simulated network failure, start the reconnect workflow.
+
+**Expected:** the assistant classifies **Opsphere unavailable**, does not instruct logout/reinstall, and performs at most three retries with 30 s / 60 s / 120 s bounded backoff. A 429 instead honors `Retry-After` and is retried at most once.
+
 ---
 
 ## Test case 6 — Configure integration (optional)

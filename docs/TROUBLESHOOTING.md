@@ -1,5 +1,22 @@
 # Troubleshooting
 
+## Session expired or Opsphere unavailable?
+
+These states require different recovery actions:
+
+| Signal | Meaning | Correct action |
+|--------|---------|----------------|
+| `invalid_grant`, unknown/expired/revoked token or revoked session | The saved client authorization is terminal; the Gateway can still be healthy | Stop all Opsphere tool retries, click **Reconnect**, complete a new browser login, and start a new Codex task/session when applicable |
+| HTTP 429 / `too_many_requests` | The client or source is temporarily rate limited | Honor `Retry-After` (at least 60 s if absent), then retry once; do not loop |
+| HTTP 5xx, timeout, DNS/TLS/network failure, or `/health` unavailable | Opsphere or the network may be unavailable; this is not proof that the session expired | Keep the credential and use bounded backoff: 30 s, 60 s, 120 s; then report the incident |
+| `/health` is OK but refresh returns `invalid_grant` | Service is reachable, saved refresh credential is not valid | Reconnect; waiting or repeated tool calls cannot repair it |
+
+After browser authentication, the plugin should validate the connection silently with **one** lightweight `ops_my_usage` call. If it succeeds, report only that reconnection is complete unless plan details were requested. Never call Opsphere tools again in the same task after `invalid_grant`; wait for confirmed authentication and, on Codex, a new task/session.
+
+The Gateway retains terminal refresh failures in a ten-minute negative cache. This reduces PostgreSQL queries but does not replace client-side retry suppression.
+
+---
+
 ## Plugin shows red / MCP OAuth refresh error (Cursor Marketplace)
 
 **Symptom**: The Opsphere plugin card in **Settings → Extensions** is **red** (or shows no tools). Chat tools fail with `401 Unauthorized`. Cursor logs (Developer Tools → Console) may show:

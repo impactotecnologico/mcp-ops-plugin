@@ -11,9 +11,17 @@ Guide the user through recovering MCP OAuth when the plugin shows disconnected, 
 
 - **`invalid_grant`**, unknown/revoked/expired refresh token: terminal for that saved credential. Repeating tool calls or waiting will not repair it; require a new browser login.
 - **429 / `too_many_requests`**: stop retries for at least the advertised `Retry-After`, then reconnect once. Do not create a retry loop.
-- **5xx / network error**: check gateway reachability and retry once before replacing credentials.
+- **5xx / network error**: Opsphere may be unavailable. Keep the saved credential, check gateway reachability, and use bounded backoff before one final retry.
 
 Never imply that `invalid_grant` means the Opsphere account, integrations, or work context were deleted. Only the local MCP authorization must be renewed.
+
+### Mandatory retry policy
+
+- After **`invalid_grant`**, make **zero additional Opsphere tool calls** in the current task. Do not poll, wait ten minutes, or retry `ops_my_usage`. Resume only after the user confirms a new browser authentication and, for Codex, opens a new task/session.
+- After **429**, honor `Retry-After`. If absent, wait at least 60 seconds. Retry at most once and never in a background loop.
+- After **5xx / network failure**, keep the credential and retry at most three times using 30 s, 60 s, then 120 s delays. Stop early if `/health` is unavailable; report a service incident instead of asking the user to reconnect.
+
+The Gateway's ten-minute negative cache protects PostgreSQL from repeated rejected refresh tokens. It does **not** make an invalid credential valid again.
 
 ---
 
@@ -49,7 +57,7 @@ In order, until green:
 1. On the **Opsphere plugin** card, click **Sign in**, **Connect**, or **Reconnect** (label varies by Cursor version).
 2. Complete the browser login (Sign up / Log in on the Opsphere page).
 3. **Command Palette → Developer: Reload Window** (`Cmd+Shift+P` on macOS).
-4. Ask in chat: _"What is my Opsphere plan?"_ — you will call `ops_my_usage` to verify.
+4. Return to chat and confirm that browser authentication completed. Perform the silent verification in Step 4.
 
 If still red after step 3:
 
@@ -62,7 +70,7 @@ If the user migrated from a **manual MCP entry** (API key in `~/.cursor/mcp.json
 1. Open **Plugins**, select **Opsphere**, and click **Connect** or **Reconnect**.
 2. Complete the browser login.
 3. Start a **new task** after reconnecting so the MCP tools are loaded with the new authorization.
-4. In the new task ask: _"What is my Opsphere plan and usage?"_
+4. In the new task, confirm that browser authentication completed. Perform the silent verification in Step 4.
 
 If the plugin UI still shows disconnected, disable/re-enable or reinstall the Opsphere plugin, reconnect, and open another new task. Do not ask the user to paste tokens or edit the plugin manifest.
 
@@ -79,12 +87,15 @@ Then start a new Codex session. An already-running session does not reload MCP a
 
 ---
 
-## Step 4 — Verify with a tool call
+## Step 4 — Verify silently with one lightweight call
 
-Only after reconnection and, for Codex, in a new task/session, call `ops_my_usage` (no parameters). If the MCP is still disconnected, do not keep attempting the tool; return to the matching client path in Step 3.
+Only after reconnection and, for Codex, in a new task/session, call `ops_my_usage` (no parameters) **exactly once**. Do not announce the internal verification call or ask the user to run it. Report only the resulting connection status and any action the user must take.
 
-- **Success**: tell the user they are reconnected; mention access tokens last **24 hours** and Cursor should refresh automatically — if refresh fails again, run **`/opsphere-reconnect`**.
+If the MCP is still disconnected, do not keep attempting the tool; return to the matching client path in Step 3.
+
+- **Success**: tell the user they are reconnected. Do not dump plan or usage details unless requested.
 - **401 / `invalid_grant`**: the client is still using the old credential; disconnect/logout fully, reconnect, and restart the client session once.
+- **5xx / network error**: classify it as **Opsphere unavailable**, preserve the credential, and apply the bounded transient policy above.
 - **Other error**: repeat the relevant Step 3 once or suggest contacting **contact@opsphere.io** with the client name/version, approximate UTC time, and the error class only. Never include tokens.
 
 ---

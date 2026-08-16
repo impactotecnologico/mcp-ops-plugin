@@ -336,6 +336,7 @@ codex_skills = {
     "plan-and-usage",
     "link-account",
     "open-work-context",
+    "reconnect",
 }
 for name in sorted(codex_skills):
   path = os.path.join(ROOT, "skills", name, "SKILL.md")
@@ -355,7 +356,7 @@ for name in sorted(codex_skills):
     fail(f"Codex skill missing description: skills/{name}/SKILL.md")
 
 if not failures:
-  print("OK: Codex skills frontmatter (11 skills)")
+  print(f"OK: Codex skills frontmatter ({len(codex_skills)} skills)")
 
 sys.exit(1 if failures else 0)
 PY
