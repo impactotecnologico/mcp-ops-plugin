@@ -51,6 +51,13 @@ Verify the TLS certificate for a hostname: expiry date, issuer, and validity.
 
 ---
 
+### `traceroute` [built-in]
+Run traceroute from the MCP gateway host to diagnose network path issues (requires `traceroute` in the container image).
+
+**Example**: _"Traceroute to api.mycompany.com"_
+
+---
+
 ### `alg_status` [built-in]
 Algolia **global platform** status by cluster (`operational`, `degraded_performance`, `partial_outage`, `major_outage`). Public monitoring API — **no tenant credentials**. Use during search/outage triage before blaming your app.
 
@@ -222,6 +229,13 @@ Get the status of all Datadog Synthetic tests.
 
 ---
 
+### `dd_metrics_query`
+Query Datadog metrics timeseries via `/api/v1/query` (CPU, latency, error rates).
+
+**Example**: _"Query avg trace errors for the edge service in the last hour"_
+
+---
+
 ## Deployment Status [built-in]
 
 Aggregates **latest deployment** across platforms configured for your tenant (Vercel, CI, GitOps, S3+CloudFront, ECS). **Preferred** for any "last deploy / release / publish" question in any language.
@@ -246,6 +260,13 @@ Returns `deployments[]` (newest first) and `gaps[]` when a platform is missing o
 
 **Community:** included in the Community operational catalog.
 
+### `ops_incident_rollup` [built-in]
+Read-only compact incident timeline: active Datadog alerts, `deployment_status`, and error spikes for an environment. For interactive triage with live SSE progress, use `macro_outage_triage` instead.
+
+**Parameters:** `env?`, `hours?` (default 6, max 48)
+
+**Example**: _"Give me an incident rollup for production in the last 6 hours"_
+
 ---
 
 ## Vercel
@@ -256,6 +277,13 @@ Requires: `VERCEL_TOKEN` (and optionally `VERCEL_TEAM_ID` for team projects).
 List the most recent deployments for a project.
 
 **Example**: _"Show my latest Vercel deploys for storefront-prod"_
+
+---
+
+### `vercel_deployment_logs`
+Build and runtime log events for a deployment (latest or explicit `deploymentId`).
+
+**Example**: _"Show build logs for the latest storefront-prod deploy"_
 
 ---
 
@@ -599,6 +627,13 @@ Quick health check for a Cloudflare zone: status, SSL, and nameservers.
 List DNS records for a Cloudflare zone.
 
 **Example**: _"Show DNS records for mycompany.com"_
+
+---
+
+### `cf_cache_purge`
+Purge cached assets for a zone (URLs, cache-tags, hosts, or path prefixes). **Destructive** — requires API token with Cache Purge permission.
+
+**Example**: _"Purge Cloudflare cache for https://mycompany.com/assets/logo.png"_
 
 ---
 
