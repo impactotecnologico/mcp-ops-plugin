@@ -673,6 +673,44 @@ List account Rules Lists (IP allowlists used in WAF as `ip.src in $name`).
 
 ---
 
+### `cf_load_balancers_list`
+List account Load Balancers (name, hostname, enabled, pool ids). Optional zone filter.
+
+**Parameters:** `accountId?`, `zoneOrId?`, `zone?`, `search?`, `page?`, `per_page?`.
+
+**Permission:** Account Load Balancers Read (configured on Breitling token).
+
+**Example**: _"List Cloudflare load balancers for breitling.com"_
+
+---
+
+### `cf_load_balancer_get`
+Load Balancer detail: pools, origins (healthy/unhealthy), steering, session affinity.
+
+**Parameters:** `loadBalancerId` (from `cf_load_balancers_list`), `zoneOrId` or `zone` (required — zone name or ID), `accountId?`.
+
+**Example**: _"Show Cloudflare LB detail for id …"_
+
+---
+
+### `cf_lb_pools_list`
+List account LB pools with origin health counts.
+
+**Parameters:** `accountId?`, `zoneOrId?`, `page?`, `per_page?`.
+
+**Example**: _"List Cloudflare LB pools and origin health"_
+
+---
+
+### `cf_lb_monitors_list`
+List account LB health monitors (path, interval, retries, expected codes).
+
+**Parameters:** `accountId?`, `zoneOrId?`, `page?`, `per_page?`.
+
+**Example**: _"List Cloudflare LB health monitors"_
+
+---
+
 ### `cf_account_ruleset_entrypoint_get`
 Read account-level ruleset entrypoint (managed WAF, rate limiting, bulk redirects).
 
