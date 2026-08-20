@@ -9,9 +9,11 @@ This skill guides users through connecting their third-party services to Opspher
 It uses four MCP tools from the backend:
 
 - `ops_configure_integration(provider, credentials)` — **the only tool that persists integration secrets** on the gateway (encrypted, tenant-scoped)
-- `ops_list_integrations()` — shows configured vs available-to-connect vs upgrade/beta (masked previews only); **trust this response for entitlement**
-- `ops_test_integration(provider)` — verifies credentials actually work
+- `ops_list_integrations()` — shows configured vs available-to-connect vs upgrade/beta (masked previews only) for the **active work context**; **trust this response for entitlement**
+- `ops_test_integration(provider)` — verifies credentials actually work on that same workspace
 - `ops_remove_integration(provider)` — removes all credentials for a provider
+
+> **Work context:** On Connection Hub, list/test/configure apply to the open workspace (Personal Workspace by default, or a linked tenant after `/open-work-context`). Open the right context before guiding setup.
 
 > **Security:** Collect credentials one at a time in conversation, but pass them to the gateway **only** in `ops_configure_integration`. Do not ask users to paste keys in unrelated messages, work context, or memory.
 

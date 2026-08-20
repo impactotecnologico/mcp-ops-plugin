@@ -13,7 +13,7 @@ Eleven **read-only** resources are registered on the gateway when Connection Bro
 | URI | MIME | Purpose |
 |-----|------|---------|
 | `opsphere://rules/operational` | markdown | Full tool catalog + tenant scope (same substance as server instructions) |
-| `opsphere://tools/catalog` | json | Enabled modules and prompt index for your plan/tenant |
+| `opsphere://tools/catalog` | json | Enabled modules and prompt index for the **active work context** (Personal Workspace by default; linked tenant after `/open-work-context`) |
 | `opsphere://playbooks/index` | markdown | All MCP prompts by category (e.g. `diagnose-sonarqube-quality-gate`, `investigate-website-outage`, `investigate-bedrock-agent`) |
 | `opsphere://tenant/account-context` | markdown | Per-account cloud catalog (`system_prompt_context`) |
 | `opsphere://hub/active-context` | json | **Hub only** — active `context_id`, connection label, expiry for this MCP session |
@@ -82,14 +82,14 @@ Store credentials for a provider securely. Accepts a map of credential keys.
 ---
 
 ### `ops_list_integrations`
-Show which providers are configured (with masked previews) and which are pending.
+Show which providers are configured (with masked previews) and which are pending for the **active work context** (Personal Workspace by default; linked tenant after `/open-work-context`).
 
 **Example**: _"Which integrations do I have set up?"_
 
 ---
 
 ### `ops_test_integration`
-Verify that stored credentials for a provider actually work by making a lightweight API call.
+Verify that stored credentials for a provider actually work by making a lightweight API call against the **active work context**.
 
 **Example**: _"Test my Vercel integration"_
 
@@ -105,7 +105,7 @@ Remove all stored credentials for a provider.
 ## Plan & Usage [built-in]
 
 ### `ops_my_usage`
-Show current plan (`Community`, `Team`, …), trial end date, days remaining, daily and monthly tool usage, enabled MCP tool count, work context status, **catalog configuration surface** (`plugin` vs `admin_portal`), admin portal URL, and upgrade link.
+Show current Hub plan (`Community`, `Developer`, `Team`, …), trial end date, days remaining, daily and monthly tool usage, enabled MCP tool count, work context status, **catalog configuration surface** (`plugin` vs `admin_portal`), admin portal URL, and upgrade link. On Connection Hub it may also show an informative **Active workspace** line (does not change Hub billing).
 
 **Example**: _"Show my Opsphere usage"_ or _"How many tool calls do I have left today?"_
 
