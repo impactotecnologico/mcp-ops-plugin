@@ -27,7 +27,7 @@ Paid plans are provisioned by Opsphere — not self-serve Sign up.
 
 - **Connect** via Cursor OAuth (Sign up free / login) → Hub + **Personal Workspace** automatic (`subscription_id: community`).
 - Operational tools available immediately — no manual Personal Workspace link and no manual session open for normal use.
-- **Work Context** is optional stack notes; **External workspaces** require upgrade.
+- **Work Context** is optional stack notes; **External workspaces** require upgrade. **Organization invites:** accepting with the same email on Developer+ can auto-link that workspace to your Hub — see Team/Enterprise below.
 - Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately — no credentials.
 - Check status anytime: **`ops_my_usage`** or _"Show my usage"_ in chat.
 - **Basic CI in chat** — `bb_pipeline_diagnose`, `ghe_actions_latest` (not the **`/ci-investigator`** subagent; see below).

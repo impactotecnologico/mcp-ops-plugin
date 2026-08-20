@@ -61,7 +61,7 @@ These tools are available once authenticated and integrations are configured:
 - **Organization invite:** same email + Developer+ Hub → org workspace may already be in `ops_accounts_list` after accept; offer **`open-work-context`** to switch. If missing → upgrade / create Hub / quota / **`link-account`** for different emails.
 - **Community** cannot link additional (external) workspaces — if the user asks, explain upgrade (Developer+ when enabled / paid plans). Never present "0/0" without that explanation.
 - **Do not** teach `context_id` / `broker_context` to normal users. Session resolution is automatic for Personal Workspace when auto-context is on.
-- Switching to an **external** workspace (paid plans with linked clients) is the only case for skill **`open-work-context`** — and only when the user explicitly wants another linked workspace.
+- Switching to an **external** workspace (paid plans with linked organization workspaces) is the only case for skill **`open-work-context`** — and only when the user explicitly wants another linked workspace.
 
 ### MCP resources (gateway — read via @ or Fetch MCP Resource)
 
@@ -290,7 +290,7 @@ If the gateway returns error code `SINGLE_ENVIRONMENT_ONLY`:
 When the user asks about their plan, usage, trial status, remaining calls, or upgrade options:
 
 - Use `ops_my_usage` — no parameters required.
-- It returns: plan, trial/status, daily/monthly usage, **Personal Workspace** status, **Work Context** (separate), integrations, additional workspace quota, upgrade link.
+- It returns: plan, trial/status, daily/monthly usage, **Personal Workspace** status, **Work Context** (separate), integrations, additional workspace quota, linked organization workspaces (`ops_accounts_list`), upgrade link.
 - **Do not** invent a public tool count like "20 MCP tools enabled" or "31 MCP tools enabled". Summarize catalog as the plan's operational tools / modules from the tool text.
 - **Presentation:** Use skill **`plan-and-usage`**. Summarize in conversational prose — **never** dump the raw MCP JSON envelope or a `json` code block unless the user explicitly asks for raw/debug output.
 
@@ -332,7 +332,7 @@ Users might say things like:
 - "What's wrong with my Bedrock agent?" / paste `agentId` — `aws_bedrock_agent_diagnose` → `aws_lambda_agent_diagnose` per Lambda; prompt `investigate-bedrock-agent` when in playbooks (paid `aws` module; not Agent Core)
 - "Tell Opsphere what I usually work with" — triggers the `set-work-context` skill
 - "I accepted my company invite — is my workspace linked?" — `ops_accounts_list` first (auto-link on same email + Developer+); else **`link-account`**
-- "Link another client workspace" / "add a customer account" — skill **`link-account`** (paid Hub / when external quota allows; Community → upgrade CTA)
+- "Link another organization workspace" / "add an external workspace" — skill **`link-account`** (paid Hub / when external quota allows; Community → upgrade CTA)
 - "Switch to my other linked workspace" — skill **`open-work-context`** (paid external switch only; not needed for Community Personal Workspace)
 - "How do I configure deployment sources?" — triggers **`configure-deployment-catalog`** skill
 - "Show PR #42 status in Bitbucket"

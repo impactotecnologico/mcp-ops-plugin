@@ -86,7 +86,7 @@ After Connect, the gateway exposes **11 read-only MCP resources** (policies, cat
 | `opsphere://playbooks/index` | Guided workflows — outage, pipeline, SonarQube, Cloudflare audit, Bedrock agents (`investigate-bedrock-agent`), … |
 | `opsphere://tenant/account-context` | Full cloud-catalog context per account (infra names, regions, capabilities) |
 | `opsphere://hub/active-context` | **Hub only** — active `context_id` and linked connection for this MCP session |
-| `opsphere://hub/connections` | **Hub only** — linked client workspaces (same as `ops_accounts_list`) |
+| `opsphere://hub/connections` | **Hub only** — linked organization workspaces (same as `ops_accounts_list`) |
 | `opsphere://policies/*` | Change approval, secrets handling, incident response |
 | `opsphere://taxonomy/severity` | SEV1–4 severity taxonomy |
 | `opsphere://inventory/critical-assets` | Brands, accounts, regions, apps inventory |

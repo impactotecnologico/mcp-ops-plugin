@@ -51,8 +51,10 @@ After accepting, run `ops_accounts_list` in chat to see Personal Workspace + any
 
 ## When to run
 
-1. User says _"link another workspace"_, _"add a client account"_, _"connect another Opsphere workspace"_ on a plan that allows external links.
+1. User says _"link another workspace"_, _"add an organization workspace"_, _"connect another Opsphere workspace"_ on a plan that allows external links — **or** accepted an org invite with a **different email** than their Hub.
 2. User wants to **remove an external** workspace → `ops_account_unlink` (never the Personal Workspace).
+
+**Skip OAuth** if the user **just accepted an org invite** with the **same email** as their Hub on Developer+ — call `ops_accounts_list` first; the workspace may already be linked.
 
 ## Community / zero external quota (mandatory)
 

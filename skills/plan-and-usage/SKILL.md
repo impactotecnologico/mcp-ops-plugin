@@ -25,7 +25,7 @@ Call **`ops_my_usage`** (no parameters).
 | Plan | e.g. Community (trial days if present) |
 | Personal Workspace | **Active** (automatic — not blocked by Work Context) |
 | Work Context | Configured / not configured — optional provider notes |
-| External workspaces | Community: included Personal Workspace; additional links need upgrade |
+| External workspaces | Community: included Personal Workspace; additional links need upgrade. **Org invite:** same email + Developer+ may already show in `ops_accounts_list` — mention when user asks about a company invitation. |
 | Integrations | Count / list next actions (Connect AWS, Datadog, …) if zero |
 | Daily / monthly usage | From tool text |
 
@@ -51,6 +51,7 @@ Call **`ops_my_usage`** (no parameters).
 
 ## After presenting usage
 
+- If the user asks about a **company invitation**, call `ops_accounts_list` — org workspace may already be linked (same email + Developer+). Otherwise point to upgrade or **`link-account`**.
 - If Work Context is not configured, optionally offer `set-work-context` (does not block tools).
 - If integrations are 0, offer `configure-integration` for providers allowed on the plan.
 - On Community, do not promise Developer features unless plan status shows Developer is active.
