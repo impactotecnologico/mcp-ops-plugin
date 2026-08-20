@@ -142,6 +142,8 @@ Available when `ops_accounts_list` appears in `tools/list` (Community and paid H
 **Product rules:**
 
 - After signup/login, **Personal Workspace is Active** — use operational tools without a manual open step.
+- **Organization invite (same email):** accepting an admin invitation can **auto-link** that workspace to your Connection Hub when you are on **Developer** or higher with available link quota. No `/link-account` step in that case.
+- If auto-link is not possible yet (no Hub, Community plan, or quota full), your org membership is still active — the link completes when you create/upgrade your Hub or free a slot. Use **`/link-account`** for different emails or manual linking.
 - **Work Context** (`ops_set_work_context`) is optional provider/stack notes — distinct from Personal Workspace.
 - **Community** external link quota is 0 — upgrade CTA; do not present Personal Workspace as blocked.
 - Do not teach end users to pass internal session IDs for normal Community calls.
@@ -150,6 +152,7 @@ Available when `ops_accounts_list` appears in `tools/list` (Community and paid H
 **Examples:**
 
 - _"Show my usage"_ → Personal Workspace Active + Work Context status
+- _"I accepted my company invite — is it linked?"_ → `ops_accounts_list` (auto-link on same email + Developer+)
 - _"Link another workspace"_ on Community → upgrade explanation
 - _"Switch to my staging client"_ (paid multi-link) → `open-work-context`
 

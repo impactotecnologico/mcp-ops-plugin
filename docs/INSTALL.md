@@ -96,8 +96,9 @@ After **Sign up free / login**, Community accounts get a **Connection Hub** with
 1. Confirm with _"Show my usage"_ (`ops_my_usage`) — expect **Personal Workspace: Active**.
 2. Optional: set **Work Context** (stack notes) — separate from Personal Workspace.
 3. Optional: configure integrations (_"Configure my Datadog"_).
-4. **Additional (external) workspaces** require a paid plan with link quota. On Community, asking to link another workspace should explain upgrade — Personal Workspace stays included.
-5. Switching between **external** linked workspaces (paid) uses **`open-work-context`**. Community Personal Workspace does **not** require a manual open step.
+4. **Organization workspaces:** if your company invited you and you accept with the **same email** as your Hub on **Developer** or higher, that workspace is usually linked automatically — check `ops_accounts_list`. Otherwise use **`/link-account`**.
+5. **Additional (external) workspaces** require a paid plan with link quota. On Community, asking to link another workspace should explain upgrade — Personal Workspace stays included.
+6. Switching between **external** linked workspaces (paid) uses **`open-work-context`**. Community Personal Workspace does **not** require a manual open step.
 
 See [TOOLS.md — Connection Hub](TOOLS.md#connection-hub-multi-account-broker).
 

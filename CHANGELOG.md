@@ -4,6 +4,12 @@ All notable changes to Opsphere will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Changed
+- **Organization invites:** when you accept an admin invitation with the **same email** as your Connection Hub on **Developer** or higher, the organization workspace can link **automatically** — documented in README, [INSTALL.md](docs/INSTALL.md), [TOOLS.md](docs/TOOLS.md), [PLANS.md](docs/PLANS.md), [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md), [`link-account`](skills/link-account/SKILL.md) / [`open-work-context`](skills/open-work-context/SKILL.md) skills, setup/welcome commands, and [`onboarding-guide.mdc`](rules/onboarding-guide.mdc).
+- **`/link-account`** remains the manual path (different emails, quota retry, or linking before creating a Hub).
+
 ## [1.0.10] - 2026-08-06 (OAuth reconnect recovery)
 
 ### Changed

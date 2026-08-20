@@ -58,6 +58,7 @@ These tools are available once authenticated and integrations are configured:
 - After **Sign up free / login**, Hub + **Personal Workspace** already exist. The account is **operational immediately**.
 - Do **not** ask the user to create/link Personal Workspace, copy IDs, or run `ops_context_open` for normal Community use.
 - Call `ops_accounts_list` / `ops_my_usage` to confirm status — expect Personal Workspace active.
+- **Organization invite:** same email + Developer+ Hub → org workspace may already be in `ops_accounts_list` after accept; offer **`open-work-context`** to switch. If missing → upgrade / create Hub / quota / **`link-account`** for different emails.
 - **Community** cannot link additional (external) workspaces — if the user asks, explain upgrade (Developer+ when enabled / paid plans). Never present "0/0" without that explanation.
 - **Do not** teach `context_id` / `broker_context` to normal users. Session resolution is automatic for Personal Workspace when auto-context is on.
 - Switching to an **external** workspace (paid plans with linked clients) is the only case for skill **`open-work-context`** — and only when the user explicitly wants another linked workspace.
@@ -139,13 +140,14 @@ If a tool returns an error about missing credentials or an unconfigured provider
 
 1. **Detect Hub:** `ops_accounts_list` present (Community and paid Hub accounts).
 2. **After signup/login:** assume **Personal Workspace is Active**. Confirm with `ops_my_usage` / `ops_accounts_list`. Start operational tools immediately — no link step, no `ops_context_open`, no `context_id` coaching.
-3. **Personal Workspace** is product-managed. Never offer unlink/delete of the personal link. `PERSONAL_WORKSPACE_UNLINK_FORBIDDEN` → explain it is part of the account.
-4. **External link (Community):** if user asks to add another workspace → upgrade CTA: _"Your Personal Workspace is included. Linking additional workspaces requires Developer or higher."_ Keep error code `BROKER_LINK_LIMIT_EXCEEDED` for diagnostics. Do **not** run `ops_account_link_start` on Community when quota is 0.
-5. **External link (paid / Developer when enabled):** skill **`link-account`** → browser OAuth only; never paste tokens in chat. Personal Workspace does **not** count toward external quota.
-6. **Switch to an external workspace (paid only, user-initiated):** skill **`open-work-context`**. Do not use this for normal Community Personal Workspace work.
-7. **Integrations / Work Context prose:** configure on the active Personal Workspace (or the external workspace the user switched to). Prefer `configure-integration` / `set-work-context` without mentioning internal IDs.
-8. **Developer plan:** only mention Developer features when `ops_my_usage` / plan status shows Developer is active. If Developer rollout is off, do not promise Developer capabilities.
-9. Never invent tenant names, `linked_connection_id`, or `context_id`.
+3. **Organization invite:** if the user accepted an admin invitation, call `ops_accounts_list` — same email + Developer+ Hub often means the org workspace is **already linked**. Offer **`open-work-context`** to switch. If missing, explain upgrade / create Hub / quota / **`link-account`** for different emails — do not treat absent list entry as failed invite.
+4. **Personal Workspace** is product-managed. Never offer unlink/delete of the personal link. `PERSONAL_WORKSPACE_UNLINK_FORBIDDEN` → explain it is part of the account.
+5. **External link (Community):** if user asks to add another workspace → upgrade CTA: _"Your Personal Workspace is included. Linking additional workspaces requires Developer or higher."_ Keep error code `BROKER_LINK_LIMIT_EXCEEDED` for diagnostics. Do **not** run `ops_account_link_start` on Community when quota is 0.
+6. **External link (paid / Developer when enabled):** skill **`link-account`** → browser OAuth only; never paste tokens in chat. Personal Workspace does **not** count toward external quota.
+7. **Switch to an external workspace (paid only, user-initiated):** skill **`open-work-context`**. Do not use this for normal Community Personal Workspace work.
+8. **Integrations / Work Context prose:** configure on the active Personal Workspace (or the external workspace the user switched to). Prefer `configure-integration` / `set-work-context` without mentioning internal IDs.
+9. **Developer plan:** only mention Developer features when `ops_my_usage` / plan status shows Developer is active. If Developer rollout is off, do not promise Developer capabilities.
+10. Never invent tenant names, `linked_connection_id`, or `context_id`.
 
 ---
 
@@ -329,6 +331,7 @@ Users might say things like:
 - "List my S3 buckets" — `aws_cli_query` directly after AWS is configured (no SSO step)
 - "What's wrong with my Bedrock agent?" / paste `agentId` — `aws_bedrock_agent_diagnose` → `aws_lambda_agent_diagnose` per Lambda; prompt `investigate-bedrock-agent` when in playbooks (paid `aws` module; not Agent Core)
 - "Tell Opsphere what I usually work with" — triggers the `set-work-context` skill
+- "I accepted my company invite — is my workspace linked?" — `ops_accounts_list` first (auto-link on same email + Developer+); else **`link-account`**
 - "Link another client workspace" / "add a customer account" — skill **`link-account`** (paid Hub / when external quota allows; Community → upgrade CTA)
 - "Switch to my other linked workspace" — skill **`open-work-context`** (paid external switch only; not needed for Community Personal Workspace)
 - "How do I configure deployment sources?" — triggers **`configure-deployment-catalog`** skill

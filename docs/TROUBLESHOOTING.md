@@ -100,6 +100,22 @@ Applies when `tools/list` includes `ops_accounts_list`.
 
 After signup or returning login, **Personal Workspace should already be Active**. Prefer **`/opsphere-reconnect`** if tools fail after reconnect. Do **not** treat a missing manual `context_id` as the first fix for Community.
 
+### Organization invite — workspace not listed
+
+**Symptom**: You accepted an invitation to join your company's Opsphere workspace, but `ops_accounts_list` does not show that organization workspace.
+
+**Check** (in order):
+
+1. **Same email?** Auto-link uses the email on your Connection Hub. If you accepted the invite with a different address, membership may still work in the admin portal — use **`/link-account`** to connect manually.
+2. **Plan:** Linking organization workspaces requires **Developer** or higher on your Hub. On **Community**, upgrade first; your org access is still active.
+3. **No Hub yet?** Create one with **Sign up free** on the plugin card using the **same email** as the invite — the link completes when your Hub is ready.
+4. **Quota full?** Remove an old external link or upgrade for more slots, then run **`/link-account`** if it still does not appear.
+5. Wait a few seconds and call `ops_accounts_list` again.
+
+**Related**: **`/open-work-context`** — switch to an external workspace once it appears in the list.
+
+---
+
 ### BROKER_CONTEXT_REQUIRED / session issues
 
 **Symptom**: A tenant-scoped tool returns `BROKER_CONTEXT_REQUIRED` or similar session errors.

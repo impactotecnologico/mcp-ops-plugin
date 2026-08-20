@@ -45,12 +45,13 @@ Contact sales via [opsphere.io/pricing](https://opsphere.io/pricing).
 
 ## Team / Enterprise (invite)
 
-Your org admin provisions access (e.g. `user@company.com` → tenant `acme-corp`, plan `team`).
+Your org admin provisions access (e.g. `user@company.com` → your organization workspace).
 
 - Full tool surface (200+ tools in Cursor).
 - **`/ci-investigator`** subagent for multi-step CI failures (GitHub + Bitbucket).
 - No daily rate limit.
 - No read-only gate.
+- **Connection Hub:** when you accept an admin invitation with the **same email** as your Hub on **Developer** or higher, that organization workspace is typically **linked automatically** — confirm with `ops_accounts_list`. Use **`/link-account`** if emails differ or you need to link manually.
 
 Use **`ops_my_usage`** to confirm plan name and enabled tool count.
 

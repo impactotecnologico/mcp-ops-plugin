@@ -47,7 +47,7 @@ Architecture diagram and domain list: **[docs/REMOTE-MCP-ARCHITECTURE.md](docs/R
 | **`/opsphere-setup`** | First-run OAuth + first integration (step by step) |
 | **`/opsphere-reconnect`** | Plugin red, 401 or `invalid_grant` — recover Cursor/Codex OAuth safely |
 | **`/integration-status`** | See which providers are connected |
-| **`/link-account`** | Link/unlink an **external** workspace (Community → upgrade CTA; Personal Workspace is automatic) |
+| **`/link-account`** | Link/unlink an **external** workspace (Community → upgrade CTA; Personal Workspace is automatic). Org invites with the **same email** may link automatically on Developer+. |
 | **`/open-work-context`** | Switch to an **external** linked workspace (paid). Not needed for Community Personal Workspace |
 
 Type **`/opsphere-welcome`** after install for example prompts including subagents (`/outage-triage`, `/endpoint-health`, `/ci-investigator`, `/postmortem-writer`).
@@ -133,7 +133,7 @@ The plugin bundle is **markdown and JSON only** — agent guidance, skills, and 
 | **Always-on rule** | [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc) | Tool catalog, integration triggers, **subagent delegation**, macro workflows, Community error codes (`TRIAL_EXPIRED`, `RATE_LIMIT_EXCEEDED`, `READ_ONLY_PLAN`, `SINGLE_ENVIRONMENT_ONLY`), memory hygiene, AWS (IAM keys, not SSO), credential rules |
 | **Skills** | [`skills/configure-integration/`](skills/configure-integration/) | Step-by-step provider setup → `ops_configure_integration` |
 | | [`skills/set-work-context/`](skills/set-work-context/) | Tenant work context (`ops_set_work_context`) |
-| | [`skills/link-account/`](skills/link-account/) | Connection Hub — link/unlink client workspaces (OAuth) |
+| | [`skills/link-account/`](skills/link-account/) | Connection Hub — link/unlink external workspaces; org invites may auto-link on same email (Developer+) |
 | | [`skills/open-work-context/`](skills/open-work-context/) | Switch to an external linked workspace (paid); not needed for Community Personal Workspace |
 | | [`skills/run-macro-workflows/`](skills/run-macro-workflows/) | Team+ composite `macro_*` tools (outage, endpoint, env health) |
 | **Commands** | [`commands/`](commands/) | `/opsphere-welcome`, `/opsphere-setup`, `/opsphere-reconnect`, `/integration-status` |
@@ -199,6 +199,7 @@ On **paid plans** with the `aws` module enabled, Opsphere can **diagnose Amazon 
 | `"Configure my Algolia"` | Guided setup: App ID + restricted Search API key (not Admin) |
 | `"Show my usage"` | Displays plan, trial status, and daily tool calls |
 | `"Which integrations do I have set up?"` | Lists configured vs. pending providers |
+| `"I accepted my company invite — is my workspace linked?"` | `ops_accounts_list` — same email + Developer+ Hub often links automatically at accept; otherwise `/link-account` |
 | `"Configure my AWS"` | Guided IAM key setup (Access Key + Secret Key — not SSO) |
 | `"List my S3 buckets"` | Read-only `aws_cli_query` using configured keys (no SSO step) |
 | `"What's wrong with Bedrock agent AGENT12345?"` | `aws_bedrock_agent_diagnose` → `aws_lambda_agent_diagnose` per action-group Lambda; prompt `investigate-bedrock-agent` (paid `aws` module) |
@@ -236,6 +237,7 @@ On **paid plans** with the `aws` module enabled, Opsphere can **diagnose Amazon 
 Opsphere includes a **30-day Community trial** with no credit card required:
 
 - **Personal Workspace automatic** after Sign up free / login — operational immediately
+- **Organization workspaces:** if your company invited you and you accept with the **same email** as your Connection Hub on a **Developer** (or higher) plan, that workspace is usually **linked automatically** — check with `ops_accounts_list`. Use **`/link-account`** when emails differ or you need to link manually.
 - **Community operational catalog** (gateway is source of truth; client UIs may display a different count)
 - **100 tool calls per day** (resets at midnight UTC)
 - **Core integrations** (Datadog, Vercel, GitHub, Bitbucket, Cloudflare, Sentry, Jira, AWS, … when allowed by plan)
