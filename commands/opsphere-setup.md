@@ -20,13 +20,17 @@ Call `ops_my_usage` (no parameters). This determines the current state:
 
 ## Step 2 — Connect the account (OAuth2)
 
-Authentication is handled automatically by Cursor — there is no need to paste a token.
+Authentication is handled automatically by the client — there is no need to paste a token.
 
-Tell the user:
+**Cursor / Codex:** tell the user:
 
 > "To connect Opsphere, open **Settings → Extensions** (or the Marketplace tab), find the **Opsphere** plugin, and click **Sign in** / **Connect**. A browser window opens for sign-up or log-in. Cursor stores the token automatically.
 >
 > **Note:** With the marketplace plugin, Opsphere often does **not** show as a separate server under **Settings → MCP** — use the plugin card for connection status (green = connected)."
+
+**Claude Code:** tell the user:
+
+> "Run **`/mcp`** to check the Opsphere connection. If it shows **Needs authentication**, select it to open a browser window for sign-up or log-in, or run **`claude mcp login opsphere`** from the shell. Claude Code stores the token automatically."
 
 Wait for the user to confirm they have connected. Then call `ops_my_usage` again to verify.
 
@@ -35,9 +39,9 @@ If the user asks what to do in the browser:
 - **New user**: switch to the **Sign up** tab, enter an email and password, click **Create account**.
 - **Returning user**: stay on the **Log in** tab, enter credentials, click **Log in**.
 
-> Access tokens last **24 hours**. Cursor should refresh them automatically via OAuth. If the plugin turns red or tools return 401, run **`/opsphere-reconnect`** — the gateway does not rotate refresh tokens (by design, to support Cursor's refresh behavior).
+> Access tokens last **24 hours**. The client should refresh them automatically via OAuth. If the plugin turns red or tools return 401, run **`/opsphere-reconnect`** (Cursor/Codex) or `claude mcp login opsphere` (Claude Code) — the gateway does not rotate refresh tokens (by design, to support the client's refresh behavior).
 
-If OAuth keeps failing after reconnect, run the **`opsphere-reconnect`** command flow instead of repeating setup from scratch.
+If OAuth keeps failing after reconnect, run the **`opsphere-reconnect`** command flow (Cursor/Codex) or re-run `claude mcp login opsphere` (Claude Code) instead of repeating setup from scratch.
 
 ---
 

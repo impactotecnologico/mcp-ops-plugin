@@ -46,7 +46,7 @@ tracked_match_exists() {
 echo "=== Opsphere plugin — public repo validation ==="
 
 # 1. Required manifest files
-for f in .cursor-plugin/plugin.json .codex-plugin/plugin.json .mcp.json mcp.json README.md CHANGELOG.md LICENSE; do
+for f in .cursor-plugin/plugin.json .codex-plugin/plugin.json .claude-plugin/plugin.json .mcp.json mcp.json .claude.mcp.json README.md CHANGELOG.md LICENSE; do
   [[ -f "$f" ]] || { red "missing $f"; continue; }
   ok "$f exists"
 done
@@ -57,7 +57,7 @@ done
 [[ -f assets/icon.png ]] && ok "assets/icon.png"
 
 # 3. JSON syntax
-for j in .cursor-plugin/plugin.json .cursor-plugin/marketplace.json .codex-plugin/plugin.json .agents/plugins/marketplace.json .mcp.json mcp.json; do
+for j in .cursor-plugin/plugin.json .cursor-plugin/marketplace.json .codex-plugin/plugin.json .claude-plugin/plugin.json .claude-plugin/marketplace.json .agents/plugins/marketplace.json .mcp.json mcp.json .claude.mcp.json; do
   [[ -f "$j" ]] || continue
   python3 -m json.tool "$j" >/dev/null || red "invalid JSON: $j"
 done
@@ -218,6 +218,9 @@ MANIFESTS = (
     ".cursor-plugin/plugin.json",
     ".cursor-plugin/marketplace.json",
     "mcp.json",
+    ".claude-plugin/plugin.json",
+    ".claude-plugin/marketplace.json",
+    ".claude.mcp.json",
 )
 
 
@@ -366,7 +369,114 @@ else
   FAIL=1
 fi
 
-# 17. Execution policy agent contract documented
+# 17. Claude Code plugin manifest + MCP config (independent version from Cursor/Codex)
+if ROOT="$ROOT" python3 <<'PY'
+import json
+import os
+import re
+import sys
+
+ROOT = os.environ.get("ROOT", ".")
+failures: list[str] = []
+
+
+def fail(msg: str) -> None:
+    failures.append(msg)
+    print(f"FAIL: {msg}")
+
+
+claude_plugin_path = os.path.join(ROOT, ".claude-plugin/plugin.json")
+claude_mcp_path = os.path.join(ROOT, ".claude.mcp.json")
+claude_marketplace_path = os.path.join(ROOT, ".claude-plugin/marketplace.json")
+
+claude_plugin: dict = {}
+if not os.path.isfile(claude_plugin_path):
+    fail("missing .claude-plugin/plugin.json")
+else:
+    with open(claude_plugin_path, encoding="utf-8") as f:
+        claude_plugin = json.load(f)
+    version = claude_plugin.get("version")
+    if not version or not re.match(r"^\d+\.\d+\.\d+", str(version)):
+        fail(f".claude-plugin/plugin.json invalid version: {version!r}")
+    else:
+        print(f"OK: .claude-plugin/plugin.json version ({version})")
+    mcp_ref = claude_plugin.get("mcpServers")
+    if mcp_ref != "./.claude.mcp.json":
+        fail(
+            f".claude-plugin/plugin.json mcpServers must be ./.claude.mcp.json "
+            f"(got {mcp_ref!r}) — must never point at .mcp.json (Codex)"
+        )
+    else:
+        print("OK: .claude-plugin/plugin.json mcpServers points to ./.claude.mcp.json")
+
+if not os.path.isfile(claude_mcp_path):
+    fail("missing .claude.mcp.json")
+else:
+    with open(claude_mcp_path, encoding="utf-8") as f:
+        claude_mcp = json.load(f)
+    opsphere = (claude_mcp.get("mcpServers") or {}).get("opsphere") or {}
+    if opsphere.get("type") != "http":
+        fail(f'.claude.mcp.json mcpServers.opsphere.type must be "http" (got {opsphere.get("type")!r})')
+    else:
+        print('OK: .claude.mcp.json sets mcpServers.opsphere.type "http"')
+    if "mcp-cursor.opsphere.io" not in str(opsphere.get("url")):
+        fail(f".claude.mcp.json unexpected gateway URL: {opsphere.get('url')!r}")
+    else:
+        print("OK: .claude.mcp.json uses public gateway URL")
+    oauth = opsphere.get("oauth") or {}
+    if oauth.get("clientId") != "claude-mcp":
+        fail(f'.claude.mcp.json oauth.clientId must be "claude-mcp" (got {oauth.get("clientId")!r})')
+    else:
+        print("OK: .claude.mcp.json bundles claude-mcp OAuth clientId")
+    if oauth.get("callbackPort") != 8787:
+        fail(f".claude.mcp.json oauth.callbackPort must be 8787 (got {oauth.get('callbackPort')!r})")
+    else:
+        print("OK: .claude.mcp.json pins oauth.callbackPort 8787")
+
+RESERVED_MARKETPLACE_NAMES = {
+    "claude-plugins-official",
+    "claude-community",
+    "anthropic-marketplace",
+}
+
+if not os.path.isfile(claude_marketplace_path):
+    fail("missing .claude-plugin/marketplace.json")
+else:
+    with open(claude_marketplace_path, encoding="utf-8") as f:
+        claude_marketplace = json.load(f)
+    mp_name = claude_marketplace.get("name")
+    if not mp_name or mp_name in RESERVED_MARKETPLACE_NAMES:
+        fail(f".claude-plugin/marketplace.json name invalid or reserved: {mp_name!r}")
+    else:
+        print(f"OK: .claude-plugin/marketplace.json name ({mp_name})")
+    entries = claude_marketplace.get("plugins") or []
+    if not entries:
+        fail(".claude-plugin/marketplace.json has no plugins entries")
+    plugin_version = claude_plugin.get("version")
+    for i, entry in enumerate(entries):
+        entry_source = entry.get("source")
+        if entry_source != "./":
+            fail(f".claude-plugin/marketplace.json plugins[{i}].source must be './' (got {entry_source!r})")
+        else:
+            print(f"OK: .claude-plugin/marketplace.json plugins[{i}].source ({entry_source})")
+        entry_version = entry.get("version")
+        if plugin_version and entry_version != plugin_version:
+            fail(
+                f"version mismatch: .claude-plugin/plugin.json={plugin_version!r} vs "
+                f".claude-plugin/marketplace.json plugins[{i}]={entry_version!r}"
+            )
+        else:
+            print(f"OK: .claude-plugin/plugin.json and marketplace plugins[{i}] version ({entry_version})")
+
+sys.exit(1 if failures else 0)
+PY
+then
+  :
+else
+  FAIL=1
+fi
+
+# 18. Execution policy agent contract documented
 if search_quiet 'execution_policy_missing|execution_module_not_enabled|execution_budget_exhausted|-32003' rules/onboarding-guide.mdc; then
   ok "onboarding-guide documents execution policy denials"
 else

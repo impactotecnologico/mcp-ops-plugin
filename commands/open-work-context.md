@@ -19,3 +19,5 @@ Follow skill **[`skills/open-work-context/SKILL.md`](../skills/open-work-context
 
 - **`/link-account`** — add external workspaces when the plan allows
 - **`/opsphere-setup`** — signup/login status (Personal Workspace Active)
+
+**Claude Code:** invoke this command as `/opsphere:open-work-context`.

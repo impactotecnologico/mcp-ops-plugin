@@ -21,7 +21,7 @@ Copy or paraphrase the following:
 > - Run **`/opsphere-setup`** — connect your account (OAuth) and configure your first integration.
 > - Or say: _"Set up my Opsphere account"_
 >
-> **Plugin red or OAuth error?** Run **`/opsphere-reconnect`** (marketplace: use the plugin card in **Settings → Extensions**, not always **Settings → MCP**).
+> **Plugin red or OAuth error?** Run **`/opsphere-reconnect`** (marketplace: use the plugin card in **Settings → Extensions**, not always **Settings → MCP**). **Claude Code:** run `/mcp` to check connection, or `claude mcp login opsphere` to re-auth from the shell.
 >
 > **Already connected? Try:**
 > - _"Is example.com up?"_ or **`/endpoint-health`** — DNS + HTTP + TLS for one host (all plans)
@@ -45,12 +45,14 @@ Copy or paraphrase the following:
 > **Docs:** [INSTALL.md](../docs/INSTALL.md) · [TOOLS.md](../docs/TOOLS.md) · [TROUBLESHOOTING.md](../docs/TROUBLESHOOTING.md) · [PLANS.md](../docs/PLANS.md)
 >
 > **Admin Tools (Team+):** enabling extra MCP modules (K8s, ArgoCD, macros, …) is done in the [admin portal](https://admin.opsphere.io) on paid plans. Community integrations are configured in chat (`ops_configure_integration`).
+>
+> **Claude Code:** every skill and subagent is namespaced under `opsphere` — invoke skills as `/opsphere:skill-name` (e.g. `/opsphere:opsphere-welcome`) and subagents as `@opsphere:agent-name` (e.g. `@opsphere:outage-triage`). Run `/opsphere:opsphere-onboarding` once per session for the full tool catalog and error-code reference (Claude Code has no always-on rule like Cursor's `onboarding-guide.mdc`). After editing or pulling plugin changes, run `/reload-plugins`.
 
 ---
 
 ## Agent follow-up
 
-1. If the user has not connected MCP yet, point them to the **Opsphere plugin card** in **Settings → Extensions** (Sign in / Connect). Local dev installs may use **Settings → MCP → Connect**.
-2. If OAuth fails or the plugin is red, offer **`/opsphere-reconnect`**.
-3. If they want full onboarding, offer to run the **`opsphere-setup`** command flow.
+1. If the user has not connected MCP yet, point them to the **Opsphere plugin card** in **Settings → Extensions** (Sign in / Connect). Local dev installs may use **Settings → MCP → Connect**. **Claude Code:** use `/mcp` to check/connect, or `claude mcp login opsphere` from the shell.
+2. If OAuth fails or the plugin is red, offer **`/opsphere-reconnect`** (Cursor/Codex) or `/mcp` + `claude mcp login opsphere` (Claude Code).
+3. If they want full onboarding, offer to run the **`opsphere-setup`** command flow (`/opsphere:opsphere-setup` on Claude Code).
 4. Do not execute `scripts/check-auth.sh` or any bash script — it has been removed from the plugin.

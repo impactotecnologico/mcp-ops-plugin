@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+- **Claude Code plugin track (`1.0.0`)** — new third host alongside Cursor and Codex: `.claude-plugin/plugin.json` manifest (independent version, `mcpServers: "./.claude.mcp.json"`), dedicated `.claude.mcp.json` (`"type": "http"`, `oauth.clientId: claude-mcp`, `oauth.callbackPort: 8787`, `oauth.scopes: "mcp:tools"`), and [`skills/opsphere-onboarding/SKILL.md`](skills/opsphere-onboarding/SKILL.md) as the Claude-native substitute for the always-on `rules/onboarding-guide.mdc` rule (which Claude Code does not load).
+- `scripts/ci-validate.sh` now validates the Claude manifest and MCP config (existence, JSON validity, `mcpServers` pointer never aliasing Codex's `.mcp.json`, gateway URL, `claude-mcp` OAuth client id, `callbackPort: 8787`).
+- README: Claude Code badge, quick-start (`claude --plugin-dir .`, `/mcp`, `claude mcp login opsphere`, `/reload-plugins`), and skill/agent invocation table (`/opsphere:<skill>`, `@opsphere:<agent>`).
+- `agents/outage-triage.md`, `agents/endpoint-health.md`, `agents/ci-investigator.md`: added `disallowedTools: Write, Edit, Bash` frontmatter for Claude Code's plugin-agent tool-denylist support, alongside the existing Cursor `readonly: true` (both fields coexist without conflict — each host only parses the fields in its own schema).
+- Claude-specific invocation copy (`/opsphere:<name>`, `/mcp`, `claude mcp login opsphere`, `/reload-plugins`) added to `commands/*.md` alongside existing Cursor/Codex copy.
+- `.claude-plugin/marketplace.json` for distribution via `claude plugin marketplace add opsphere-io/opsphere-plugin` + `claude plugin install opsphere@opsphere`, beyond local `--plugin-dir` testing. `scripts/ci-validate.sh` checks marketplace name (not colliding with reserved Anthropic names), `source: "./"`, and version sync with `.claude-plugin/plugin.json`.
+
+### Note
+- Gateway OAuth client `claude-mcp` and redirect URI `http://localhost:8787/callback` are registered and deployed in `mcp-ops-b` — this release is the plugin bundle side of that work.
+
 ### Changed
 - Added the Codex-native `@reconnect` skill so the same recovery policy is available outside Cursor slash commands.
 - Reconnection guidance now distinguishes terminal session expiry from Gateway/network unavailability.

@@ -3,6 +3,7 @@ name: endpoint-health
 description: Single-host endpoint health checker — DNS, HTTP reachability, and TLS certificate validation. Use when the user asks if a URL or hostname is up, SSL expiry, DNS resolution, or edge health for one target (not full multi-service outages).
 model: inherit
 readonly: true
+disallowedTools: Write, Edit, Bash
 ---
 
 # Endpoint Health
