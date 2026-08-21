@@ -10,7 +10,8 @@ Guide linking/unlinking **external** workspaces. Follow skill **[`skills/link-ac
 ## Steps
 
 1. Call `ops_my_usage` + `ops_accounts_list`.
-2. If Personal Workspace is active and the plan does not allow additional links (Community) → upgrade CTA; stop.
+2. If the user **just accepted an org invitation** with the same email as their Hub (Developer+), the workspace may already be listed — confirm before starting OAuth.
+3. If Personal Workspace is active and the plan does not allow additional links (Community) → upgrade CTA; stop.
 3. Never treat Personal Workspace as something the user must link.
 4. For allowed external links: `ops_account_link_start` → browser URL only → verify with `ops_accounts_list`.
 5. Unlink **external** only — refuse Personal Workspace unlink (`PERSONAL_WORKSPACE_UNLINK_FORBIDDEN`).

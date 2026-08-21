@@ -81,9 +81,10 @@ Personal Workspace stays Active either way.
 If `tools/list` includes `ops_accounts_list`:
 
 1. Call `ops_accounts_list` / check `ops_my_usage` Connection Hub section.
-2. Personal Workspace present → **success**. Do **not** offer `link-account` just because there are no external clients.
-3. If the user asks to link another workspace on Community → upgrade CTA (Developer or higher). Do not start OAuth link.
-4. Do **not** require `ops_context_open` or teach `context_id` for normal Community work.
+2. Personal Workspace present → **success**. Do **not** offer `link-account` just because there are no external workspaces linked yet.
+3. If the user **just accepted an organization invite**, the org workspace may already be linked (same email + Developer+ Hub) — confirm in the list before suggesting OAuth.
+4. If the user asks to link another workspace on Community → upgrade CTA (Developer or higher). Do not start OAuth link.
+5. Do **not** require `ops_context_open` or teach `context_id` for normal Community work.
 
 ---
 

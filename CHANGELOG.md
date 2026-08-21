@@ -13,6 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - Successful authentication is verified silently with one lightweight `ops_my_usage` call.
 - Transient 5xx/network failures use bounded 30 s / 60 s / 120 s backoff; 429 honors `Retry-After` and retries at most once.
 - Added reviewer scenarios and CI invariants for terminal grants, silent verification, and service failures.
+- **Organization invites:** when you accept an admin invitation with the **same email** as your Connection Hub on **Developer** or higher, the organization workspace can link **automatically** — documented in README, [INSTALL.md](docs/INSTALL.md), [TOOLS.md](docs/TOOLS.md), [PLANS.md](docs/PLANS.md), [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md), [`link-account`](skills/link-account/SKILL.md) / [`open-work-context`](skills/open-work-context/SKILL.md) skills, [`plan-and-usage`](skills/plan-and-usage/SKILL.md), setup/welcome commands, Codex default prompts, and [`onboarding-guide.mdc`](rules/onboarding-guide.mdc).
+- **`/link-account`** remains the manual path (different emails, quota retry, or linking before creating a Hub).
 
 ## [1.0.10] - 2026-08-06 (OAuth reconnect recovery)
 

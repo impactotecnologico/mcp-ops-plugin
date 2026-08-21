@@ -9,6 +9,14 @@ This skill is for **switching to an external linked workspace** on plans that al
 
 It is **not** part of Community onboarding. After signup/login, **Personal Workspace is already Active** — start using tools without this skill.
 
+## After an organization invite
+
+If the user **just accepted an invitation** to an organization workspace:
+
+1. Call `ops_accounts_list` — the org workspace may **already be linked** (same email + Developer+ Hub).
+2. If it appears, offer to **switch** with this skill when they want to work there.
+3. If it does **not** appear, check `ops_my_usage` (plan, Hub, quota) and point to **`link-account`** for manual linking or upgrade — do not treat a failed list as "invite broken"; membership may still be active in the admin portal.
+
 ## Concepts
 
 | Term | Meaning |

@@ -69,8 +69,8 @@
       "@plan-and-usage check my account and summarize my plan, usage, and available capabilities in plain language",
       "@configure-integration guide me through connecting Datadog, AWS, GitHub, or another supported integration",
       "@set-work-context help me define my stack, environments, repositories, deployment platforms, and operational tools",
-      "@link-account help me link another client Opsphere workspace to my Connection Hub",
-      "@open-work-context open a work context on a linked client so I can run Datadog or deployment tools"
+      "@link-account help me link an organization workspace to my Connection Hub (or check if my company invite already linked it)",
+      "@open-work-context switch to a linked organization workspace so I can run Datadog or deployment tools there"
     ],
     "brandColor": "#0D9488",
     "composerIcon": "./assets/logo-icon.svg",

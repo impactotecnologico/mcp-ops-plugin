@@ -7,6 +7,22 @@ description: Link or unlink an external workspace on Connection Hub (paid plans)
 
 Guide linking or unlinking **external workspaces** on a Connection Hub. Personal Workspace is automatic and separate.
 
+## Organization invite — automatic link (same email)
+
+When someone **accepts an invitation** to join an organization workspace as administrator:
+
+| Situation | What happens |
+|-----------|----------------|
+| **Same email** as your Connection Hub + **Developer** (or higher) plan with link quota | The organization workspace is **linked automatically** when you accept the invitation — no `/link-account` step. |
+| **Same email**, but you do not have a Connection Hub yet | Your account is ready; the workspace links when you **create a Hub** with that email (Sign up free in the plugin). |
+| **Same email**, Hub on **Community** only | Your account is ready; the workspace links after you **upgrade** to Developer or higher. |
+| **Same email**, Hub link quota is full | Your account is ready; the workspace links when a slot is free (remove an old external link or upgrade). |
+| **Different email** than your Hub | Accepting still activates your org access; use **`/link-account`** in the plugin to link manually. |
+
+After accepting, run `ops_accounts_list` in chat to see Personal Workspace + any organization workspaces. Use **`open-work-context`** to switch to an external workspace when you have more than one.
+
+> **`/link-account`** remains the manual path: different emails, retry after quota, or linking workspaces you joined before creating a Hub.
+
 ## Concepts (mandatory)
 
 | Concept | Meaning |
@@ -35,8 +51,10 @@ Guide linking or unlinking **external workspaces** on a Connection Hub. Personal
 
 ## When to run
 
-1. User says _"link another workspace"_, _"add a client account"_, _"connect another Opsphere workspace"_ on a plan that allows external links.
+1. User says _"link another workspace"_, _"add an organization workspace"_, _"connect another Opsphere workspace"_ on a plan that allows external links — **or** accepted an org invite with a **different email** than their Hub.
 2. User wants to **remove an external** workspace → `ops_account_unlink` (never the Personal Workspace).
+
+**Skip OAuth** if the user **just accepted an org invite** with the **same email** as their Hub on Developer+ — call `ops_accounts_list` first; the workspace may already be linked.
 
 ## Community / zero external quota (mandatory)
 

@@ -13,7 +13,7 @@ Eleven **read-only** resources are registered on the gateway when Connection Bro
 | URI | MIME | Purpose |
 |-----|------|---------|
 | `opsphere://rules/operational` | markdown | Full tool catalog + tenant scope (same substance as server instructions) |
-| `opsphere://tools/catalog` | json | Enabled modules and prompt index for your plan/tenant |
+| `opsphere://tools/catalog` | json | Enabled modules and prompt index for the **active work context** (Personal Workspace by default; linked tenant after `/open-work-context`) |
 | `opsphere://playbooks/index` | markdown | All MCP prompts by category (e.g. `diagnose-sonarqube-quality-gate`, `investigate-website-outage`, `investigate-bedrock-agent`) |
 | `opsphere://tenant/account-context` | markdown | Per-account cloud catalog (`system_prompt_context`) |
 | `opsphere://hub/active-context` | json | **Hub only** — active `context_id`, connection label, expiry for this MCP session |
@@ -51,6 +51,13 @@ Verify the TLS certificate for a hostname: expiry date, issuer, and validity.
 
 ---
 
+### `traceroute` [built-in]
+Run traceroute from the MCP gateway host to diagnose network path issues (requires `traceroute` in the container image).
+
+**Example**: _"Traceroute to api.mycompany.com"_
+
+---
+
 ### `alg_status` [built-in]
 Algolia **global platform** status by cluster (`operational`, `degraded_performance`, `partial_outage`, `major_outage`). Public monitoring API — **no tenant credentials**. Use during search/outage triage before blaming your app.
 
@@ -75,14 +82,14 @@ Store credentials for a provider securely. Accepts a map of credential keys.
 ---
 
 ### `ops_list_integrations`
-Show which providers are configured (with masked previews) and which are pending.
+Show which providers are configured (with masked previews) and which are pending for the **active work context** (Personal Workspace by default; linked tenant after `/open-work-context`).
 
 **Example**: _"Which integrations do I have set up?"_
 
 ---
 
 ### `ops_test_integration`
-Verify that stored credentials for a provider actually work by making a lightweight API call.
+Verify that stored credentials for a provider actually work by making a lightweight API call against the **active work context**.
 
 **Example**: _"Test my Vercel integration"_
 
@@ -98,7 +105,7 @@ Remove all stored credentials for a provider.
 ## Plan & Usage [built-in]
 
 ### `ops_my_usage`
-Show current plan (`Community`, `Team`, …), trial end date, days remaining, daily and monthly tool usage, enabled MCP tool count, work context status, **catalog configuration surface** (`plugin` vs `admin_portal`), admin portal URL, and upgrade link.
+Show current Hub plan (`Community`, `Developer`, `Team`, …), trial end date, days remaining, daily and monthly tool usage, enabled MCP tool count, work context status, **catalog configuration surface** (`plugin` vs `admin_portal`), admin portal URL, and upgrade link. On Connection Hub it may also show an informative **Active workspace** line (does not change Hub billing).
 
 **Example**: _"Show my Opsphere usage"_ or _"How many tool calls do I have left today?"_
 
@@ -135,6 +142,8 @@ Available when `ops_accounts_list` appears in `tools/list` (Community and paid H
 **Product rules:**
 
 - After signup/login, **Personal Workspace is Active** — use operational tools without a manual open step.
+- **Organization invite (same email):** accepting an admin invitation can **auto-link** that workspace to your Connection Hub when you are on **Developer** or higher with available link quota. No `/link-account` step in that case.
+- If auto-link is not possible yet (no Hub, Community plan, or quota full), your org membership is still active — the link completes when you create/upgrade your Hub or free a slot. Use **`/link-account`** for different emails or manual linking.
 - **Work Context** (`ops_set_work_context`) is optional provider/stack notes — distinct from Personal Workspace.
 - **Community** external link quota is 0 — upgrade CTA; do not present Personal Workspace as blocked.
 - Do not teach end users to pass internal session IDs for normal Community calls.
@@ -143,6 +152,7 @@ Available when `ops_accounts_list` appears in `tools/list` (Community and paid H
 **Examples:**
 
 - _"Show my usage"_ → Personal Workspace Active + Work Context status
+- _"I accepted my company invite — is it linked?"_ → `ops_accounts_list` (auto-link on same email + Developer+)
 - _"Link another workspace"_ on Community → upgrade explanation
 - _"Switch to my staging client"_ (paid multi-link) → `open-work-context`
 
@@ -222,6 +232,13 @@ Get the status of all Datadog Synthetic tests.
 
 ---
 
+### `dd_metrics_query`
+Query Datadog metrics timeseries via `/api/v1/query` (CPU, latency, error rates).
+
+**Example**: _"Query avg trace errors for the edge service in the last hour"_
+
+---
+
 ## Deployment Status [built-in]
 
 Aggregates **latest deployment** across platforms configured for your tenant (Vercel, CI, GitOps, S3+CloudFront, ECS). **Preferred** for any "last deploy / release / publish" question in any language.
@@ -246,6 +263,13 @@ Returns `deployments[]` (newest first) and `gaps[]` when a platform is missing o
 
 **Community:** included in the Community operational catalog.
 
+### `ops_incident_rollup` [built-in]
+Read-only compact incident timeline: active Datadog alerts, `deployment_status`, and error spikes for an environment. For interactive triage with live SSE progress, use `macro_outage_triage` instead.
+
+**Parameters:** `env?`, `hours?` (default 6, max 48)
+
+**Example**: _"Give me an incident rollup for production in the last 6 hours"_
+
 ---
 
 ## Vercel
@@ -256,6 +280,13 @@ Requires: `VERCEL_TOKEN` (and optionally `VERCEL_TEAM_ID` for team projects).
 List the most recent deployments for a project.
 
 **Example**: _"Show my latest Vercel deploys for storefront-prod"_
+
+---
+
+### `vercel_deployment_logs`
+Build and runtime log events for a deployment (latest or explicit `deploymentId`).
+
+**Example**: _"Show build logs for the latest storefront-prod deploy"_
 
 ---
 
@@ -602,6 +633,13 @@ List DNS records for a Cloudflare zone.
 
 ---
 
+### `cf_cache_purge`
+Purge cached assets for a zone (URLs, cache-tags, hosts, or path prefixes). **Destructive** — requires API token with Cache Purge permission.
+
+**Example**: _"Purge Cloudflare cache for https://mycompany.com/assets/logo.png"_
+
+---
+
 ### `cf_workers_scripts_list`
 List Worker scripts in the Cloudflare account (distinct from zone Workers routes).
 
@@ -635,6 +673,44 @@ List account Rules Lists (IP allowlists used in WAF as `ip.src in $name`).
 **Parameters:** `accountId?`, `zoneOrId?`, `kind?` (`ip`, `hostname`, `asn`, `redirect`).
 
 **Example**: _"List Cloudflare IP rules lists"_
+
+---
+
+### `cf_load_balancers_list`
+List account Load Balancers (name, hostname, enabled, pool ids). Optional zone filter.
+
+**Parameters:** `accountId?`, `zoneOrId?`, `zone?`, `search?`, `page?`, `per_page?`.
+
+**Permission:** Account Load Balancers Read (configured on Breitling token).
+
+**Example**: _"List Cloudflare load balancers for breitling.com"_
+
+---
+
+### `cf_load_balancer_get`
+Load Balancer detail: pools, origins (healthy/unhealthy), steering, session affinity.
+
+**Parameters:** `loadBalancerId` (from `cf_load_balancers_list`), `zoneOrId` or `zone` (required — zone name or ID), `accountId?`.
+
+**Example**: _"Show Cloudflare LB detail for id …"_
+
+---
+
+### `cf_lb_pools_list`
+List account LB pools with origin health counts.
+
+**Parameters:** `accountId?`, `zoneOrId?`, `page?`, `per_page?`.
+
+**Example**: _"List Cloudflare LB pools and origin health"_
+
+---
+
+### `cf_lb_monitors_list`
+List account LB health monitors (path, interval, retries, expected codes).
+
+**Parameters:** `accountId?`, `zoneOrId?`, `page?`, `per_page?`.
+
+**Example**: _"List Cloudflare LB health monitors"_
 
 ---
 

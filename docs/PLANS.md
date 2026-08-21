@@ -27,7 +27,7 @@ Paid plans are provisioned by Opsphere — not self-serve Sign up.
 
 - **Connect** via Cursor OAuth (Sign up free / login) → Hub + **Personal Workspace** automatic (`subscription_id: community`).
 - Operational tools available immediately — no manual Personal Workspace link and no manual session open for normal use.
-- **Work Context** is optional stack notes; **External workspaces** require upgrade.
+- **Work Context** is optional stack notes; **External workspaces** require upgrade. **Organization invites:** accepting with the same email on Developer+ can auto-link that workspace to your Hub — see Team/Enterprise below.
 - Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately — no credentials.
 - Check status anytime: **`ops_my_usage`** or _"Show my usage"_ in chat.
 - **Basic CI in chat** — `bb_pipeline_diagnose`, `ghe_actions_latest` (not the **`/ci-investigator`** subagent; see below).
@@ -45,12 +45,13 @@ Contact sales via [opsphere.io/pricing](https://opsphere.io/pricing).
 
 ## Team / Enterprise (invite)
 
-Your org admin provisions access (e.g. `user@company.com` → tenant `acme-corp`, plan `team`).
+Your org admin provisions access (e.g. `user@company.com` → your organization workspace).
 
 - Full tool surface (200+ tools in Cursor).
 - **`/ci-investigator`** subagent for multi-step CI failures (GitHub + Bitbucket).
 - No daily rate limit.
 - No read-only gate.
+- **Connection Hub:** when you accept an admin invitation with the **same email** as your Hub on **Developer** or higher, that organization workspace is typically **linked automatically** — confirm with `ops_accounts_list`. Use **`/link-account`** if emails differ or you need to link manually.
 
 Use **`ops_my_usage`** to confirm plan name and enabled tool count.
 
