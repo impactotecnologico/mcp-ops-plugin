@@ -47,7 +47,7 @@ Reuse facts already in the thread. Batch at most **2–4 questions** per turn. I
 
 1. **Clarify target** — hostname, environment (INT/TST/PRE/PRD), and time window; use **Ask the user** when any are missing.
 2. **Active alerts** — `alerts_active` when available (Datadog and/or PagerDuty). If `pd_incidents_search` exists: open incidents (`statuses=triggered,acknowledged`). If `prom_alerts` exists: firing/pending Prometheus alerts.
-3. **External uptime** — `pingdom_summary` with `hostnameContains` when relevant; `synthetics_summary_by_location` if available.
+3. **External uptime** — `pingdom_summary` with `hostnameContains` when relevant; `synthetics_summary_by_location(hours)` for regional execution pass/fail. If a named Synthetic fails or needs drill-down → `dd_synthetics_results(publicId|nameContains)` — do **not** ask for a local Datadog API. `dd_synthetics_summary` is inventory (`live`/`paused`) only.
 4. **Network edge** — `http_check` → `dns_lookup` (multiple resolvers) → `cert_status` → `dnssec_check` → `cf_quick_status` for the zone when Cloudflare is configured.
 5. **Algolia / search** — for storefront or search symptoms: `alg_status` + `alg_incidents` first (global, no credentials). When `alg_*` Search API tools exist, pass `env` matching the incident tier → `alg_search` / `alg_object_get` to verify indexing.
 6. **Deploy correlation** — **`deployment_status(scope=auto)`** during the outage window when available; else `vercel_deploys_latest` / `vercel_project_status` for a named Vercel project, or `railway_deployments_latest` / `railway_project_status` when Railway is in scope. **Do not** use deployment status alone to close an outage — correlate timing with errors and edge checks.

@@ -17,7 +17,7 @@ These tools are available once authenticated and integrations are configured:
 
 | Category | Provider | Tools |
 |----------|----------|-------|
-| Monitoring | Datadog | `dd_logs_search`, `dd_errors_by_service`, `dd_errors_recent`, `dd_synthetics_summary` |
+| Monitoring | Datadog | `dd_logs_search`, `dd_errors_by_service`, `dd_errors_recent`, `dd_synthetics_summary`, `dd_synthetics_results`, `synthetics_summary_by_location` |
 | Deployments | Multi-stack (catalog) | **`deployment_status`** (preferred) — Vercel, CI, GitOps, S3+CloudFront, ECS from your configured sources |
 | Deployments | Vercel (direct) | `vercel_deploys_latest`, `vercel_project_status` — only when user asks Vercel-only or `deployment_status` gaps suggest it |
 | Deployments | Railway (direct) | `railway_projects_list`, `railway_project_status`, `railway_deployments_latest`, `railway_logs`, `railway_health_summary`, `railway_incident_diagnosis` — 17 read-only tools when Railway module is enabled |
@@ -307,6 +307,14 @@ Opsphere tools return human-readable markdown inside MCP `content[].text`. The c
 | Hide transport details unless debugging | Show JSON-RPC, `type`, or `isError` unless asked |
 
 **Exception:** Only show raw JSON when the user explicitly asks (e.g. "raw MCP response for debugging").
+
+---
+
+## Datadog Synthetics (outage triage)
+
+- `dd_synthetics_summary` = inventory + config status (`live`/`paused`), **not** pass/fail of the last run.
+- `synthetics_summary_by_location(hours)` = regional execution up/down; if `dataQuality=no_execution_results_in_window`, do **not** claim 100% healthy.
+- Failing or ambiguous test → `dd_synthetics_results(publicId|nameContains, from/to)` — never request a local Datadog API when Hub Datadog is connected.
 
 ---
 

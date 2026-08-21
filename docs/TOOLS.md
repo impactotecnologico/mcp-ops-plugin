@@ -226,9 +226,18 @@ Fetch recent errors with stack trace deduplication.
 ---
 
 ### `dd_synthetics_summary`
-Get the status of all Datadog Synthetic tests.
+List Datadog Synthetic tests and their **config** status (`live` / `paused`). This is inventory — **not** pass/fail of the last run.
 
-**Example**: _"What's the Synthetics status?"_
+For execution results use `synthetics_summary_by_location` or `dd_synthetics_results`.
+
+**Example**: _"List all Synthetic tests and which are paused"_
+
+---
+
+### `dd_synthetics_results`
+Execution results (pass/fail) for one Datadog Synthetic test in a time window. Prefer `publicId`; or `nameContains` to resolve. Optional `resultId` for full detail of one run.
+
+**Example**: _"Show Synthetic results for Homepage US in the last hour"_ / _"dd_synthetics_results for yg3-kef-xsw"_
 
 ---
 
