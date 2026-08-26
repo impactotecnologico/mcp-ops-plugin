@@ -1,0 +1,4016 @@
+{
+  "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
+  "schema_version": 1,
+  "app_info": {
+    "display_name": "Opsphere",
+    "subtitle": "DevOps and SRE operations",
+    "description": "Opsphere helps DevOps and SRE teams inspect connected cloud, observability, CI/CD, source-control, and incident systems; diagnose deployments and outages; and carry out explicitly requested operational changes.",
+    "category": "DEVELOPER_TOOLS"
+  },
+  "tools": {
+    "akamai_cache_purge": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Requests an Akamai cache purge, which changes CDN cache state.",
+        "open_world_justification": "Changes externally served Akamai CDN cache state.",
+        "destructive_justification": "Purges selected Akamai cache content and the cache state cannot be restored directly."
+      }
+    },
+    "akamai_diag": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes akamai diag information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "akamai_papi_redirects": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes akamai papi redirects information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "akamai_papi_rules": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes akamai papi rules information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "akamai_properties_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes akamai properties list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "akamai_properties_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes akamai properties search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "akamai_waf_policies": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes akamai waf policies information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "akamai_waf_rules": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes akamai waf rules information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "alerts_active": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes alerts active information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "alg_incidents": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes alg incidents information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "alg_index_settings": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes alg index settings information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "alg_indices_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes alg indices list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "alg_logs": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes alg logs information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "alg_object_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes alg object get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "alg_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes alg search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "alg_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes alg status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "argocd_app_resources": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes argocd app resources information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "argocd_app_unhealthy": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes argocd app unhealthy information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "argocd_debug": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes argocd debug information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "argocd_get_app": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes argocd get app information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "argocd_list_apps": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes argocd list apps information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "argocd_list_clusters": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes argocd list clusters information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_athena_query": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Starts an Athena query and writes its result files to the configured private S3 location.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_bedrock_agent_diagnose": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws bedrock agent diagnose information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_cli_query": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws cli query information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_cloudwatch_logs_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws cloudwatch logs search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_codeartifact_packages": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws codeartifact packages information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_codeartifact_versions": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws codeartifact versions information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_dynamodb_describe_table": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws dynamodb describe table information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_dynamodb_query": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws dynamodb query information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_ecr_images": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws ecr images information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_ecr_repos": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws ecr repos information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_lambda_agent_diagnose": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws lambda agent diagnose information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_rds_data_query": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws rds data query information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_s3_find": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws s3 find information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_secretsmanager_describe": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws secretsmanager describe information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_secretsmanager_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws secretsmanager list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_session_revoke": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Revokes stored AWS authentication state rather than performing a read-only status check.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Revokes authentication or account access and therefore requires explicit confirmation."
+      }
+    },
+    "aws_session_status": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Can refresh and persist the private AWS session when the refresh action is requested.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_sso_login": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Starts, polls, or completes AWS SSO authentication and updates private login or token state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_sso_login_device_poll": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Starts, polls, or completes AWS SSO authentication and updates private login or token state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_sso_login_device_start": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Starts, polls, or completes AWS SSO authentication and updates private login or token state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_sso_login_global_poll": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Starts, polls, or completes AWS SSO authentication and updates private login or token state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_sso_login_global_start": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Starts, polls, or completes AWS SSO authentication and updates private login or token state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_sso_login_remote": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Starts, polls, or completes AWS SSO authentication and updates private login or token state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_sso_logout": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Revokes stored AWS authentication state rather than performing a read-only status check.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Revokes authentication or account access and therefore requires explicit confirmation."
+      }
+    },
+    "aws_sts_whoami": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws sts whoami information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_blob_find": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure blob find information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_cli_query": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure cli query information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_dns_lookup": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure dns lookup information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_keyvault_secret_metadata": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure keyvault secret metadata information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_keyvault_secrets_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure keyvault secrets list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_log_analytics_query": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure log analytics query information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_resource_groups": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure resource groups information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_servicebus_dlq_content": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure servicebus dlq content information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_servicebus_health_overview": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure servicebus health overview information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_servicebus_message_explorer": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure servicebus message explorer information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_servicebus_monitoring_report": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure servicebus monitoring report information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_servicebus_namespace_health": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure servicebus namespace health information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_servicebus_namespaces": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure servicebus namespaces information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_servicebus_queue_deadletter": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure servicebus queue deadletter information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_servicebus_queue_metrics": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure servicebus queue metrics information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_servicebus_queues": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure servicebus queues information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_servicebus_resourcegroup_detect": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure servicebus resourcegroup detect information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_servicebus_topic_sub_metrics": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure servicebus topic sub metrics information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_servicebus_topic_subscriptions": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure servicebus topic subscriptions information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_servicebus_topics": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure servicebus topics information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_subscription_set": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Changes the active Azure subscription stored for later private operations.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_subscriptions_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure subscriptions list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_user_login_poll": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Starts or polls Azure authentication and updates private login or token state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_user_login_start": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Starts or polls Azure authentication and updates private login or token state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_user_session_revoke": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Revokes the stored private Azure user session.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Revokes authentication or account access and therefore requires explicit confirmation."
+      }
+    },
+    "azure_user_session_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure user session status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "bb_branches_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes bb branches list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "bb_commits_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes bb commits list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "bb_pipeline_diagnose": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes bb pipeline diagnose information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "bb_pipeline_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes bb pipeline get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "bb_pipelines_latest": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes bb pipelines latest information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "bb_pr_commits": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes bb pr commits information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "bb_pr_diff": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes bb pr diff information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "bb_pr_diffstat": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes bb pr diffstat information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "bb_pr_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes bb pr get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "bb_pr_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes bb pr search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "bb_repos_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes bb repos list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "bb_tags_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes bb tags list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cert_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cert status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_account_ruleset_entrypoint_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf account ruleset entrypoint get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_analytics_overview": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf analytics overview information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_cache_purge": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_cache_rules_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf cache rules list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_cache_rules_replace": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_cname_flattening_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf cname flattening get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_cname_flattening_set": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_config_rules_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf config rules list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_config_rules_replace": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_dns_records": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf dns records information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_firewall_events": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf firewall events information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_kv_keys_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf kv keys list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_kv_namespaces_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf kv namespaces list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_kv_value_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf kv value get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_lb_monitors_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf lb monitors list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_lb_pools_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf lb pools list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_load_balancer_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf load balancer get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_load_balancers_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf load balancers list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_logpush_job_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf logpush job get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_logpush_jobs_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf logpush jobs list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_origin_rules_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf origin rules list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_origin_rules_replace": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_page_rule_create": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_page_rule_delete": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_page_rule_update": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_page_rules_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf page rules list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_quick_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf quick status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_redirect_rules_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf redirect rules list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_redirect_rules_replace": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_rules_list_items": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf rules list items information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_rules_lists_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf rules lists list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_ruleset_entrypoint_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf ruleset entrypoint get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_ruleset_entrypoint_update": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_rulesets_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf rulesets list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_snippet_rules_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf snippet rules list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_snippets_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf snippets list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_ssl_certificate_packs": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf ssl certificate packs information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_ssl_mode_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf ssl mode get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_ssl_mode_set": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_ssl_verification": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf ssl verification information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_transform_rules_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf transform rules list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_transform_rules_replace": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_waf_custom_rules_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf waf custom rules list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_waf_custom_rules_replace": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_waf_ip_audit": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf waf ip audit information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_workers_domains_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf workers domains list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_workers_route_create": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_workers_route_delete": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_workers_route_update": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
+        "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
+        "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_workers_routes_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf workers routes list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_workers_script_deployments": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf workers script deployments information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_workers_scripts_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf workers scripts list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_zone_settings_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf zone settings get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_zone_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf zone status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_zones_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf zones list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "check_aws_session_for_env": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "May start AWS SSO device authorization and persist login state when no valid session exists.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "check_azure_session_for_account": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "May start Azure device authorization and persist login state when no valid session exists.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "check_azure_session_for_tenant": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "May start Azure device authorization and persist login state when no valid session exists.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "confluence_page_read": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes confluence page read information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "confluence_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes confluence search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ctf_content_type_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ctf content type get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ctf_content_types_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ctf content types list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ctf_entries_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ctf entries search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ctf_entry_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ctf entry get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ctf_environments_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ctf environments list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ctf_graphql_query": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ctf graphql query information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ctf_graphql_schema_introspect": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ctf graphql schema introspect information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ctf_spaces_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ctf spaces list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "dd_errors_by_service": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes dd errors by service information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "dd_errors_recent": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes dd errors recent information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "dd_log_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes dd log get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "dd_logs_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes dd logs search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "dd_metrics_query": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes dd metrics query information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "dd_synthetics_results": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes dd synthetics results information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "dd_synthetics_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes dd synthetics summary information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "dd_waf_bots": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes dd waf bots information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "deployment_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes deployment status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "dns_lookup": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes dns lookup information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "dnssec_check": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes dnssec check information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ecs_sync_cluster_metadata": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Synchronizes discovered cluster metadata into the private Opsphere catalog.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "eks_sync_cluster_metadata": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Synchronizes discovered cluster metadata into the private Opsphere catalog.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "eks_update_kubeconfig": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Updates private kubeconfig or active Kubernetes context state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "env_capacity_overview": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes env capacity overview information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "env_errors_overview": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes env errors overview information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "env_health_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes env health summary information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_actions_diagnose": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe actions diagnose information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_actions_latest": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe actions latest information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_actions_latest_jobs": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe actions latest jobs information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_actions_latest_logs": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe actions latest logs information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_branches_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe branches list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_commits_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe commits list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_org_repos": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe org repos information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_pr_detail": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe pr detail information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_pr_diff": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe pr diff information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_pr_files": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe pr files information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_repo_prs": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe repo prs information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_repo_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe repo summary information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_search_code": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe search code information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_tags_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe tags list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_workflow_dispatch": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Dispatches a GitHub workflow, starting an external execution with repository-defined effects.",
+        "open_world_justification": "Starts a workflow in the external GitHub system.",
+        "destructive_justification": "Starts a repository-defined workflow whose external effects cannot be recalled after dispatch."
+      }
+    },
+    "ghe_workflow_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe workflow list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ghe_workflow_runs_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ghe workflow runs list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "gl_branches_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes gl branches list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "gl_commits_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes gl commits list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "gl_mr_changes": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes gl mr changes information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "gl_mr_commits": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes gl mr commits information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "gl_mr_diff": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes gl mr diff information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "gl_mr_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes gl mr get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "gl_mr_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes gl mr search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "gl_pipeline_diagnose": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes gl pipeline diagnose information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "gl_pipeline_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes gl pipeline get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "gl_pipelines_latest": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes gl pipelines latest information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "gl_projects_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes gl projects list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "gl_tags_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes gl tags list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "http_check": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes http check information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "infra_tfvars_catalog": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes infra tfvars catalog information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "infra_tfvars_find": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes infra tfvars find information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "jira_issue_comments": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes jira issue comments information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "jira_issue_fulldetails": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes jira issue fulldetails information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "jira_issue_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes jira issue get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "jira_issues_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes jira issues list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "jira_issues_recent": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes jira issues recent information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "jira_issues_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes jira issues search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_autodiag_notification": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "May establish an AWS SSO session while preparing the private Kubernetes diagnosis.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_cluster_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s cluster summary information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_containers_count": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s containers count information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_context_use": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Updates private kubeconfig or active Kubernetes context state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_contexts": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s contexts information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_cronjob_pods": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s cronjob pods information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_describe": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s describe information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_find_pod": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s find pod information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_logs": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s logs information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_node_describe": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s node describe information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_nodes_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s nodes list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_pod_previous_logs": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s pod previous logs information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_pods_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s pods list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_replicasets_images": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s replicasets images information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_replicasets_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s replicasets list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_resource_yaml": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s resource yaml information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "k8s_rollout_history": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes k8s rollout history information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "macro_endpoint_health": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes macro endpoint health information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "macro_env_health": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes macro env health information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "macro_outage_triage": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes macro outage triage information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "memory_invalidate": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Invalidates selected private memory records so they are no longer active.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Invalidates or permanently removes selected memory data after confirmation."
+      }
+    },
+    "memory_purge_user": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Permanently removes the selected user memory records.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Invalidates or permanently removes selected memory data after confirmation."
+      }
+    },
+    "memory_search": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves memory and also updates private last-used metadata and usage events.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "memory_session_touch": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Upserts private session metadata and may append a session summary.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "memory_store": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Stores private memory and can overwrite an existing repository profile.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Can overwrite an existing repository memory profile with the submitted value."
+      }
+    },
+    "observability_daily_digest": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes observability daily digest information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "observability_query": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes observability query information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "observability_trigger_digest": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Sends a digest through configured Slack, email, or webhook delivery channels.",
+        "open_world_justification": "Sends the digest to external Slack, email, or webhook destinations.",
+        "destructive_justification": "Sends messages to configured recipients and delivery cannot be recalled after success."
+      }
+    },
+    "ops_account_link_start": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ops account link start information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ops_account_unlink": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Revokes the selected linked-account grant and removes its private connection.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Revokes authentication or account access and therefore requires explicit confirmation."
+      }
+    },
+    "ops_accounts_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ops accounts list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ops_configure_integration": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Stores encrypted integration credentials and can overwrite a provider configuration.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Can overwrite the selected provider credential record with new encrypted credentials."
+      }
+    },
+    "ops_context_close": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Opens or closes private work-context session state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ops_context_open": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Opens or closes private work-context session state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ops_get_work_context": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ops get work context information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ops_incident_rollup": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ops incident rollup information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ops_list_integrations": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ops list integrations information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ops_my_usage": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ops my usage information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ops_remove_integration": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Deletes the selected provider credentials from the private workspace.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Deletes all stored credentials for the selected integration."
+      }
+    },
+    "ops_set_work_context": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Stores and can overwrite the private working context used by later tool calls.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Can overwrite the previously stored workspace context."
+      }
+    },
+    "ops_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ops status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "ops_test_integration": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes ops test integration information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "pd_incident_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes pd incident get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "pd_incident_log_entries": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes pd incident log entries information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "pd_incidents_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes pd incidents search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "pd_service_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes pd service get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "pd_services_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes pd services list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "pingdom_actions_recent": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes pingdom actions recent information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "pingdom_check_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes pingdom check get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "pingdom_check_outages": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes pingdom check outages information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "pingdom_check_probes_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes pingdom check probes status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "pingdom_check_results": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes pingdom check results information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "pingdom_check_uptime": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes pingdom check uptime information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "pingdom_checks_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes pingdom checks list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "pingdom_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes pingdom summary information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "prom_alerts": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes prom alerts information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "prom_label_values": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes prom label values information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "prom_query": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes prom query information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "prom_query_range": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes prom query range information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "prom_rules": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes prom rules information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "prom_series": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes prom series information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "prom_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes prom status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "prom_targets": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes prom targets information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_dashboard": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway dashboard information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_deployment_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway deployment get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_deployments_latest": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway deployments latest information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_domains": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway domains information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_env_diff": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway env diff information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_env_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway env list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_environments_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway environments list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_errors_recent": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway errors recent information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_health_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway health summary information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_incident_diagnosis": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway incident diagnosis information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_logs": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway logs information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_metrics_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway metrics summary information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_project_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway project status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_projects_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway projects list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_service_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway service status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_services_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway services list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "railway_volumes": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes railway volumes information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "repo_env_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes repo env list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "repo_pipeline_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes repo pipeline summary information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "repos_catalog": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes repos catalog information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "repos_config_find": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes repos config find information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "repos_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes repos list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "repos_search_text": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes repos search text information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "repos_var_where": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes repos var where information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sentry_event_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sentry event get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sentry_events_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sentry events search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sentry_issues_export": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sentry issues export information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sentry_issues_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sentry issues get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sentry_issues_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sentry issues list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sentry_issues_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sentry issues search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sentry_logs_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sentry logs search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sentry_organizations_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sentry organizations list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sentry_projects_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sentry projects list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sentry_projects_stats": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sentry projects stats information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sq_analyses_latest": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sq analyses latest information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sq_branches_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sq branches list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sq_duplications_show": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sq duplications show information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sq_hotspots_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sq hotspots search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sq_issues_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sq issues search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sq_last_scan_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sq last scan summary information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sq_measures_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sq measures summary information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sq_projects_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sq projects search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sq_pull_requests_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sq pull requests list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "sq_quality_gate_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes sq quality gate status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "synthetics_summary_by_location": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes synthetics summary by location information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "system_update": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Updates local server code and restarts private MCP or web processes.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Performs an administrative overwrite or update that may not be directly reversible."
+      }
+    },
+    "tcp_connect": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes tcp connect information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "traceroute": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes traceroute information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "vercel_deployment_logs": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes vercel deployment logs information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "vercel_deploys_latest": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes vercel deploys latest information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "vercel_env_diff": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes vercel env diff information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "vercel_env_diff_repo": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes vercel env diff repo information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "vercel_env_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes vercel env list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "vercel_env_sources": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes vercel env sources information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "vercel_project_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes vercel project status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "vercel_projects_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes vercel projects list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    }
+  },
+  "test_cases": [
+    {
+      "description": "Review recent Datadog errors.",
+      "user_prompt": "Show me the recent Datadog errors for the payments service.",
+      "file_attachment_urls": null,
+      "tools_triggered": "dd_errors_recent",
+      "expected_output": "Returns recent matching errors with useful service and timing context.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Inspect unhealthy Argo CD resources.",
+      "user_prompt": "Which resources are unhealthy in the production Argo CD app?",
+      "file_attachment_urls": null,
+      "tools_triggered": "argocd_app_unhealthy",
+      "expected_output": "Returns the unhealthy application resources and their reported status.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Search operational Jira issues.",
+      "user_prompt": "Find open Jira incidents assigned to the platform team.",
+      "file_attachment_urls": null,
+      "tools_triggered": "jira_issues_search",
+      "expected_output": "Returns matching Jira issues without modifying them.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Summarize environment health.",
+      "user_prompt": "Give me a health summary for the production environment.",
+      "file_attachment_urls": null,
+      "tools_triggered": "macro_env_health",
+      "expected_output": "Returns a concise health summary based on the connected operational systems.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Check the current Opsphere plan.",
+      "user_prompt": "Show my Opsphere plan and current tool usage.",
+      "file_attachment_urls": null,
+      "tools_triggered": "ops_my_usage",
+      "expected_output": "Returns plan, trial, usage, and configured-integration status.",
+      "expected_output_url": null
+    }
+  ],
+  "negative_test_cases": [
+    {
+      "description": "Calendar request",
+      "user_prompt": "What meetings do I have tomorrow?",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "Opsphere should not be invoked because the request is outside DevOps and SRE operations.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Personal writing request",
+      "user_prompt": "Write a birthday poem for my sister.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "Opsphere should not be invoked because the request is outside DevOps and SRE operations.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Financial advice request",
+      "user_prompt": "Which stock should I buy this week?",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "Opsphere should not be invoked because the request is outside DevOps and SRE operations.",
+      "expected_output_url": null
+    }
+  ]
+}
