@@ -1,5 +1,6 @@
 {
   "name": "opsphere",
+  "description": "DevOps & SRE intelligence for Claude Code: search Datadog logs, triage site-down incidents, diagnose GitHub Actions and Bitbucket pipelines, check Vercel and multi-platform deployment status, run DNS/HTTP/TLS health checks, and manage AWS, Kubernetes, Cloudflare, Jira, and Sentry from chat.",
   "owner": {
     "name": "Opsphere",
     "email": "contact@opsphere.io"

@@ -13,16 +13,16 @@ Opsphere connects your DevOps stack to Claude Code through a **remote MCP gatewa
 
 | Category | Provider | Tools |
 |----------|----------|-------|
-| Monitoring | Datadog | `dd_logs_search`, `dd_errors_by_service`, `dd_errors_recent`, `dd_synthetics_summary` |
+| Monitoring | Datadog | `dd_logs_search`, `dd_errors_by_service`, `dd_errors_recent`, `dd_synthetics_summary`, `dd_synthetics_results`, `synthetics_summary_by_location` |
 | Deployments | Multi-stack (catalog) | **`deployment_status`** (preferred) — Vercel, CI, GitOps, S3+CloudFront, ECS from configured sources |
 | Deployments | Vercel / Railway (direct) | `vercel_deploys_latest`, `vercel_project_status`; `railway_*` (17 read-only tools) — only when the user asks provider-specific or `deployment_status` gaps point there |
 | Source control | GitHub / Bitbucket / GitLab | `ghe_repo_summary`, `ghe_actions_latest`; `bb_pipelines_latest`, `bb_pipeline_diagnose`; `gl_pipelines_latest`, `gl_pipeline_diagnose` |
 | CDN / DNS | Cloudflare | `cf_quick_status`, `cf_dns_records` |
 | Issue tracking | Jira | `jira_issue_get`, `jira_issues_search` |
 | Error tracking | Sentry | `sentry_issues_list`, `sentry_issues_search` |
-| Code quality | SonarQube (paid) | `sq_projects_search` → `sq_last_scan_summary` / `sq_quality_gate_status` + `sq_issues_search` |
-| Search | Algolia (paid) | `alg_indices_list`, `alg_search`, `alg_object_get`, `alg_logs`; `alg_status` / `alg_incidents` are built-in (no credentials) |
-| Cloud | AWS | `aws_sts_whoami`, `aws_cli_query`, `aws_bedrock_agent_diagnose`, `aws_lambda_agent_diagnose` (Bedrock Agents — paid `aws` module) |
+| Code quality | SonarQube (paid) | `sq_projects_search` → `sq_last_scan_summary` / `sq_quality_gate_status` + `sq_issues_search`; `sq_duplications_show` for duplication drill-down |
+| Search | Algolia (paid) | `alg_indices_list`, `alg_index_settings`, `alg_search`, `alg_object_get`, `alg_logs`; `alg_status` / `alg_incidents` are built-in (no credentials) |
+| Cloud | AWS | `aws_sts_whoami`, `aws_cli_query`, `aws_bedrock_agent_diagnose`, `aws_lambda_agent_diagnose`, `aws_cloudwatch_logs_search` (Bedrock Agents — paid `aws` module) |
 | Network (built-in) | — | `dns_lookup`, `http_check`, `cert_status` — work immediately after login, no setup needed |
 | Integration mgmt | — | `ops_configure_integration`, `ops_list_integrations`, `ops_test_integration`, `ops_remove_integration` |
 | Plan & usage | — | `ops_my_usage` |
@@ -76,6 +76,21 @@ The gateway enforces execution policy on every `tools/call`. **Never** send poli
 | `-32003` | `execution_module_not_enabled` | Tool/module not on plan — suggest `ops_my_usage` or upgrade |
 | `-32003` | `execution_sensitive_action_denied` | Pick a read-only alternative |
 | `-32004` | `max_tool_calls` / `max_cost_units` / `max_macro_calls` | Budget exhausted — wait for `resetsAt`, don't spam retries |
+
+## Datadog Synthetics (outage triage)
+
+- `dd_synthetics_summary` = inventory + config status (`live`/`paused`), **not** pass/fail of the last run.
+- `synthetics_summary_by_location(hours)` = regional execution up/down; if `dataQuality=no_execution_results_in_window`, do **not** claim 100% healthy.
+- Failing or ambiguous test → `dd_synthetics_results(publicId|nameContains, from/to)`.
+
+## Amazon Bedrock Agents (paid `aws` module)
+
+For **Bedrock Agent**, **action group**, **knowledge base**, or **agent alias** issues (not **Agent Core** — clarify scope if mentioned):
+
+1. Call `aws_bedrock_agent_diagnose` first (`agentId`, `region`).
+2. For each Lambda in `lambdas[]`, call `aws_lambda_agent_diagnose` (`functionName`, same `region`).
+3. If findings cite CloudWatch errors, use `aws_cloudwatch_logs_search` on the cited log group.
+4. When listed in playbooks, use MCP prompt `investigate-bedrock-agent`.
 
 ## Integration credentials
 
