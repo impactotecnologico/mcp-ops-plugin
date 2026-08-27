@@ -3,6 +3,7 @@ name: outage-triage
 description: Site-down and incident triage specialist. Use proactively when the user reports outages, downtime, 5xx errors, "is X down", degraded SLOs, or widespread failures across services.
 model: inherit
 readonly: true
+disallowedTools: Write, Edit, Bash
 ---
 
 # Outage Triage

@@ -3,6 +3,7 @@ name: ci-investigator
 description: CI and pipeline failure investigator for GitHub Actions, Bitbucket, and GitLab. Use when the user reports failed workflows, red pipelines, or asks to diagnose CI — not for simple single-tool status checks.
 model: inherit
 readonly: true
+disallowedTools: Write, Edit, Bash
 ---
 
 # CI Investigator

@@ -19,4 +19,6 @@ Guide linking/unlinking **external** workspaces. Follow skill **[`skills/link-ac
 
 ## If MCP is disconnected
 
-Point to **`/opsphere-reconnect`**.
+Point to **`/opsphere-reconnect`** (Cursor/Codex) or `/mcp` + `claude mcp login opsphere` (Claude Code).
+
+**Claude Code:** invoke this command as `/opsphere:link-account`.

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "opsphere": {
+      "type": "http",
+      "url": "https://mcp-cursor.opsphere.io/mcp",
+      "oauth": {
+        "clientId": "claude-mcp",
+        "callbackPort": 8787,
+        "scopes": "mcp:tools"
+      }
+    }
+  }
+}

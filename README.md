@@ -4,6 +4,7 @@
 
 [![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.10-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
 [![Codex plugin](https://img.shields.io/badge/Codex-1.0.6-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-1.0.0-orange)](https://github.com/opsphere-io/opsphere-plugin/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
@@ -141,6 +142,8 @@ The plugin bundle is **markdown and JSON only** — agent guidance, skills, and 
 | **Subagents** | [`agents/`](agents/) | Focused investigation and post-mortem flows (table above) |
 
 The onboarding rule tells the main agent **when to delegate** vs handle inline, to call `ops_my_usage` before premium subagents when plan is unknown, and **not** to paste secrets outside the configure flow.
+
+> **Claude Code** does not load `rules/*.mdc` as always-on context — see [Claude Code](#claude-code) above for the `opsphere-onboarding` skill substitute and `/opsphere:` / `@opsphere:` namespacing.
 
 ---
 
@@ -358,6 +361,51 @@ Verify: ask Codex to call **`ops_my_usage`** or use **`@configure-integration`**
 Cursor **agents** (`/outage-triage`, etc.) map to the first four skills above; keep `agents/` and ported skills in sync when editing.
 
 Full install paths (desktop marketplace, troubleshooting): **[docs/INSTALL.md](docs/INSTALL.md#codex--chatgpt)** · **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md#codex--chatgpt-cli)**
+
+---
+
+## Claude Code
+
+Opsphere is also packaged as a **Claude Code plugin** (same remote gateway as Cursor and Codex). Version **1.0.0** lives in `.claude-plugin/plugin.json` — independent from the Cursor and Codex manifest versions. MCP configuration is a dedicated `.claude.mcp.json` (Claude requires `"type": "http"` and a camelCase `oauth.clientId`; it is **not** compatible with Codex's `.mcp.json`).
+
+### Quick start (Claude Code CLI)
+
+**From the marketplace** (`.claude-plugin/marketplace.json`):
+
+```bash
+claude plugin marketplace add opsphere-io/opsphere-plugin
+claude plugin install opsphere@opsphere
+```
+
+**From source** (local testing without installing):
+
+```bash
+git clone https://github.com/opsphere-io/opsphere-plugin.git
+cd opsphere-plugin
+claude --plugin-dir .
+```
+
+Inside Claude Code:
+
+```
+/reload-plugins                     # after pulling changes
+/mcp                                # opsphere → Connected (or Needs authentication → login)
+claude mcp login opsphere           # re-auth from the shell if needed
+/opsphere:opsphere-welcome
+```
+
+### Skills and subagents (`/opsphere:` and `@opsphere:` in Claude Code)
+
+The manifest `name: opsphere` namespaces every skill and subagent:
+
+| Concept | Cursor | Codex | Claude Code |
+|---------|--------|-------|--------------|
+| Skill invoke | `/opsphere-welcome` | `@opsphere-welcome` | `/opsphere:opsphere-welcome` |
+| Agent invoke | `/outage-triage` | `@incident-investigation` | `@opsphere:outage-triage` |
+| Connect MCP | Settings → Extensions | `codex mcp login` | `/mcp` or `claude mcp login opsphere` |
+| Reload after edits | Reload Window | new Codex task | `/reload-plugins` |
+
+All 11 `skills/` and 4 `agents/` are reused as-is — no content fork per host. Claude Code has no always-on rule mechanism (unlike Cursor's [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc)); the closest substitute is [`skills/opsphere-onboarding/SKILL.md`](skills/opsphere-onboarding/SKILL.md), invoked with `/opsphere:opsphere-onboarding`.
 
 ---
 

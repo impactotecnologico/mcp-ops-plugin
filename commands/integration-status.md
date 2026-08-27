@@ -51,3 +51,5 @@ Unavailable / beta
 ### 4. Offer to configure
 
 After presenting status, ask only about providers that are actually available to connect — e.g. "Would you like to configure one of the providers listed under available to connect?"
+
+**Claude Code:** invoke this command as `/opsphere:integration-status`.

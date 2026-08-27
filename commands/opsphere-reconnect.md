@@ -35,7 +35,7 @@ Otherwise suggest they run it once in a terminal. **Health OK only means the gat
 
 ## Step 2 — Identify the client
 
-Ask or infer whether the user is in **Cursor**, the **Codex desktop plugin**, or **Codex CLI**, then follow only the matching path.
+Ask or infer whether the user is in **Cursor**, the **Codex desktop plugin**, **Codex CLI**, or **Claude Code**, then follow only the matching path.
 
 ### Cursor Marketplace
 
@@ -45,6 +45,12 @@ Tell the user:
 >
 > - **Green** = MCP connected (client may show a tool count; trust gateway/catalog over any single UI number).
 > - **Red** or missing tools = OAuth needs recovery (this command).
+
+### Claude Code
+
+Tell the user:
+
+> Run **`/mcp`** in chat. The **opsphere** entry shows **Connected**, **Needs authentication**, or an error state directly — there is no separate plugin card to check.
 
 ---
 
@@ -84,6 +90,17 @@ npx @openai/codex mcp login opsphere
 ```
 
 Then start a new Codex session. An already-running session does not reload MCP authorization. If `logout` reports no stored login, continue with `login`.
+
+### Claude Code
+
+1. In chat, run **`/mcp`** and select **opsphere** → **Authenticate** (or **Reconnect** if already showing an error) to open the browser login.
+2. Alternatively, guide the user to run this in their own terminal, outside the active session:
+
+```bash
+claude mcp login opsphere
+```
+
+3. Run **`/reload-plugins`** if the connection still doesn't refresh after login. Perform the silent verification in Step 4.
 
 ---
 
