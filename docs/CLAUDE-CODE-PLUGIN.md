@@ -22,8 +22,8 @@ Documento operativo para añadir un **tercer host** al bundle `mcp-ops-plugin`, 
 
 | Aspecto | Estado hoy | Acción |
 |---------|------------|--------|
-| Track Cursor | ✅ Producción — manifest `1.0.10`, `mcp.json` + `cursor-mcp` | Sin cambios |
-| Track Codex | ✅ Producción — manifest `1.0.6`, `.mcp.json` + `codex-mcp` | Sin cambios |
+| Track Cursor | ✅ Producción — manifest `1.0.11`, `mcp.json` + `cursor-mcp` | Sin cambios |
+| Track Codex | ✅ Producción — manifest `1.0.7`, `.mcp.json` + `codex-mcp` | Sin cambios |
 | Track Claude Code | ❌ **Cero implementación** (no existe `.claude-plugin/`) | Nuevo track completo |
 | Gateway OAuth Claude | ⚠️ Parcial — redirect `localhost:8787/callback` ya permitido; falta `claude-mcp` en clientes estáticos | Cambio en `mcp-ops-b` |
 
@@ -43,8 +43,8 @@ Documento operativo para añadir un **tercer host** al bundle `mcp-ops-plugin`, 
 
 | Host | Manifest | Versión | MCP config |
 |------|----------|---------|------------|
-| Cursor | `.cursor-plugin/plugin.json` | `1.0.10` | `mcp.json` → `auth.CLIENT_ID: cursor-mcp` |
-| Codex | `.codex-plugin/plugin.json` | `1.0.6` | `mcpServers: ./.mcp.json` → `oauth.client_id: codex-mcp` |
+| Cursor | `.cursor-plugin/plugin.json` | `1.0.11` | `mcp.json` → `auth.CLIENT_ID: cursor-mcp` |
+| Codex | `.codex-plugin/plugin.json` | `1.0.7` | `mcpServers: ./.mcp.json` → `oauth.client_id: codex-mcp` |
 | Claude | — | — | — |
 
 ### Contenido reutilizable (sin reestructurar carpetas)
@@ -223,7 +223,7 @@ El redirect probablemente **no** requiere cambios en gateway si se usa puerto 87
 
 Notas:
 
-- Versión **independiente** de Cursor (`1.0.10`) y Codex (`1.0.6`).
+- Versión **independiente** de Cursor (`1.0.11`) y Codex (`1.0.7`).
 - `name: opsphere` → namespace `/opsphere:…` y `@opsphere:…`.
 - Considerar `"defaultEnabled": false` en la entrada del marketplace (opt-in explícito para SaaS externo).
 

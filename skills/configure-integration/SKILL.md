@@ -1,6 +1,6 @@
 ---
 name: configure-integration
-description: Connect an eligible provider (Datadog, Vercel, GitHub, Cloudflare, Jira, Sentry, Bitbucket, GitLab, Railway, AWS, …) when ops_list_integrations marks it available_to_connect — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider that is configure_cta-eligible, or when a tool reports missing credentials for an eligible module.
+description: Connect an eligible provider (Datadog, Vercel, GitHub, Cloudflare, Jira, Confluence, Sentry, Bitbucket, GitLab, Railway, AWS, …) when ops_list_integrations marks it available_to_connect — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider that is configure_cta-eligible, or when a tool reports missing credentials for an eligible module.
 ---
 
 # Configure Integration
@@ -108,16 +108,18 @@ It uses four MCP tools from the backend:
 |-----|----------|-------------|-----------------|
 | `GHE_TOKEN` | Yes | Personal Access Token (classic or fine-grained) | Settings → Developer Settings → Personal Access Tokens |
 | `GHE_BASE_URL` | No | API base URL for GitHub Enterprise Server | e.g., `https://github.mycompany.com/api/v3` |
+| `GHE_ORG` | No | Default org for bare repository names | GitHub organization slug, e.g. `bokeroon` |
 
-> **Note**: For github.com, only `GHE_TOKEN` is needed. `GHE_BASE_URL` is only required for self-hosted GitHub Enterprise Server instances.
+> **Note**: For github.com, only `GHE_TOKEN` is required. `GHE_ORG` is recommended when users normally pass bare repo names; `GHE_BASE_URL` is only required for self-hosted GitHub Enterprise Server instances.
 
 **Setup steps**:
 
 1. Ask: "Are you using github.com or a self-hosted GitHub Enterprise Server?"
 2. For github.com: direct to https://github.com/settings/tokens → Generate new token (classic).
    Required scopes: `repo`, `read:org`, `workflow`.
-3. For GHE Server: same path but on their own GitHub instance. Also ask for the base URL.
-4. Call `ops_configure_integration`:
+3. Ask for the usual organization slug if the user wants bare repo names to resolve automatically.
+4. For GHE Server: same token path on their own GitHub instance. Also ask for the base URL.
+5. Call `ops_configure_integration`:
    ```
    ops_configure_integration(provider: "github", credentials: {
      "GHE_TOKEN": "<token>"
@@ -127,12 +129,14 @@ It uses four MCP tools from the backend:
    ```
    "GHE_BASE_URL": "https://github.mycompany.com/api/v3"
    ```
-5. Call `ops_test_integration(provider: "github")` to verify.
-6. On success: "GitHub is connected! You can now use `ghe_repo_summary` and `ghe_actions_latest`."
+   If supplied, also include `"GHE_ORG": "<org>"`.
+6. Call `ops_test_integration(provider: "github")` to verify.
+7. On success, use `ghe_org_repos` first when the repository is unknown. For repo-specific calls, prefer `repo: "owner/name"`; a bare repo name intentionally falls back to the active workspace default org.
 
 **Common issues**:
 - 401 → token is expired or revoked. Generate a new one.
 - 404 on repos → missing `repo` scope or the token is a fine-grained token without the right repository access.
+- A successful `ops_test_integration` or any successful `ghe_*` call proves the token is usable. Do not replace credentials merely because a later call used the wrong org/repository; resolve with `ghe_org_repos` or an explicit `owner/name` first.
 
 ---
 
@@ -253,7 +257,37 @@ It uses four MCP tools from the backend:
 
 **Common issues**:
 - 401 → wrong email or token. The email must be the one associated with the Atlassian account that generated the token.
-- 404 on project → the user account may not have access to that Jira project.
+- 404 on an issue or project → it may not exist, or the account lacks Browse Projects / issue-security access. Do not conclude that credentials are invalid from a 404 alone.
+- 410 from issue search → server-side Jira search API incompatibility; reconnecting or replacing credentials will not fix it.
+
+---
+
+## Provider: Confluence
+
+Confluence Cloud normally **inherits Jira's Atlassian site, email, and API token**. Do not ask the user for a second token when Jira authentication is already configured. In `ops_list_integrations`, inspect `auth_dependency`: `provider: "jira"` with `satisfied: true` means Confluence authentication is configured even when its own optional keys are empty.
+
+Existing workspaces may report `authentication_source: "legacy_provider_credentials"`. Those stored credentials remain supported for compatibility; do not ask the user to replace them unless authentication actually fails. New setup must use shared Jira authentication.
+
+**Optional settings**:
+
+| Key | Required | Description |
+|-----|----------|-------------|
+| `CONFLUENCE_BASE_URL` | No | Confluence wiki URL, only when it differs from the Jira site; root site URLs and `/wiki` URLs are both accepted |
+| `CONFLUENCE_SPACE_KEY` | No | Default space key when callers omit `spaceKey` |
+
+**Setup and verification**:
+
+1. Call `ops_list_integrations` and inspect both the Confluence entry and its Jira `auth_dependency`.
+2. If Jira authentication is incomplete, configure Jira first using the Jira flow above.
+3. If Confluence uses the same Atlassian site, do not persist duplicate credentials. Configure only an optional default space when the user requests one.
+4. If Confluence is hosted at a different Atlassian site, call `ops_configure_integration(provider: "confluence", credentials: { "CONFLUENCE_BASE_URL": "<site-or-wiki-url>" })` (plus `CONFLUENCE_SPACE_KEY` when desired).
+5. Call `ops_test_integration(provider: "confluence")` to verify product access using the inherited Jira authentication.
+
+**Common issues**:
+
+- 401 → the shared Atlassian email/token is invalid; repair the Jira authentication.
+- 403 → authentication reached Atlassian, but the account lacks Confluence product access or space/page permission. For guests, verify the guest is assigned to that space. Do not label this as “not configured.”
+- 404 → page/space may not exist or may be hidden by permissions; also verify the Atlassian site URL. `/wiki` is added and normalized automatically.
 
 ---
 
@@ -331,6 +365,8 @@ It uses four MCP tools from the backend:
 
 > **Note**: Plugin users typically use static IAM access keys (not enterprise SSO). The minimum required IAM policy is `sts:GetCallerIdentity` for identity verification; add read-only permissions only for the AWS operations you need.
 
+> **Paid workspace SSO is a different setup path**: it requires an SSO profile in that workspace's Cloud Catalog plus the relevant modules. Do not collect static keys when the user is explicitly trying to use an admin-configured SSO profile.
+
 **Setup steps**:
 
 1. Ask: "I need your AWS Access Key ID and Secret Access Key for static IAM authentication."
@@ -352,9 +388,9 @@ It uses four MCP tools from the backend:
 
 **After setup — how to query AWS**:
 
-- Use **static IAM keys only** — the plugin does not support AWS SSO on the free tier.
+- On the free tier, use **static IAM keys only**; AWS SSO is a paid workspace/catalog capability.
 - **Never** pass `profile` to `aws_sts_whoami` or `aws_cli_query` unless the user's plan includes SSO and they have an active SSO session.
-- **Never** call `aws_sso_login*` or `aws_session_status` for plugin users — those tools are disabled on the free tier.
+- On the free tier, do not call `aws_sso_login*` or `aws_session_status`; those tools are not available there.
 - **Region**: only Access Key + Secret Key are stored. Default region is **not** configured. Omit `region` unless the user asks; when needed, include it in the CLI command (e.g. `ec2 describe-instances --region us-east-1`) or pass the tool's `region` parameter.
 - Example — user says _"List my S3 buckets"_ → call `aws_cli_query` with `command: "s3api list-buckets"` (no `profile`, add `--region` only if the user specifies a region).
 
@@ -363,6 +399,8 @@ It uses four MCP tools from the backend:
 - `SignatureDoesNotMatch` → the Secret Key is incorrect. Common cause: trailing space on copy-paste.
 - `AccessDenied` → IAM user lacks permissions. Minimum required: `sts:GetCallerIdentity`.
 - `Error loading SSO Token` → the agent used SSO or passed `profile` by mistake. Retry without `profile`.
+- `EXECUTION_MODULE_NOT_ENABLED` → configuration/entitlement, not bad credentials. `aws_sso_login_device_start` belongs to `aws`; `check_aws_session_for_env`, status, revoke, and logout belong to the separate `aws-sessions` module.
+- `aws_profile_not_configured` → the profile is missing from the active workspace Cloud Catalog/runtime. Reconnect does not create it.
 
 ---
 
@@ -454,6 +492,7 @@ If a user tries a tool and gets an error about missing credentials or an unconfi
 
 1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `railway_` → Railway, `ghe_` → GitHub, `bb_` → Bitbucket, `gl_` → GitLab, `sq_` → SonarQube, `cf_` → Cloudflare, `jira_` → Jira, `sentry_` → Sentry, `alg_` → Algolia Search API, `aws_` → AWS). **`alg_status` and `alg_incidents` never require credentials** — if those fail, it is not a missing-integration error.
 2. Call `ops_list_integrations` to confirm the provider is not configured.
+   Inspect `runtime_status` too: credential state is not the same as module enablement, Cloud Catalog setup, AWS session state, or GitHub default-org routing.
 3. Offer to set it up: "It looks like [Provider] is not configured yet. Would you like me to help you connect it?"
 4. Follow the provider-specific steps above.
 

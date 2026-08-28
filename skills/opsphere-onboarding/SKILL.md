@@ -16,13 +16,15 @@ Opsphere connects your DevOps stack to Claude Code through a **remote MCP gatewa
 | Monitoring | Datadog | `dd_logs_search`, `dd_errors_by_service`, `dd_errors_recent`, `dd_synthetics_summary`, `dd_synthetics_results`, `synthetics_summary_by_location` |
 | Deployments | Multi-stack (catalog) | **`deployment_status`** (preferred) — Vercel, CI, GitOps, S3+CloudFront, ECS from configured sources |
 | Deployments | Vercel / Railway (direct) | `vercel_deploys_latest`, `vercel_project_status`; `railway_*` (17 read-only tools) — only when the user asks provider-specific or `deployment_status` gaps point there |
-| Source control | GitHub / Bitbucket / GitLab | `ghe_repo_summary`, `ghe_actions_latest`; `bb_pipelines_latest`, `bb_pipeline_diagnose`; `gl_pipelines_latest`, `gl_pipeline_diagnose` |
+| Source control | GitHub / Bitbucket / GitLab | `ghe_org_repos` (discover) → `ghe_repo_summary`, `ghe_actions_latest`; `bb_pipelines_latest`, `bb_pipeline_diagnose`; `gl_pipelines_latest`, `gl_pipeline_diagnose` |
 | CDN / DNS | Cloudflare | `cf_quick_status`, `cf_dns_records` |
 | Issue tracking | Jira | `jira_issue_get`, `jira_issues_search` |
+| Knowledge base | Confluence | `confluence_search`, `confluence_page_read` |
 | Error tracking | Sentry | `sentry_issues_list`, `sentry_issues_search` |
 | Code quality | SonarQube (paid) | `sq_projects_search` → `sq_last_scan_summary` / `sq_quality_gate_status` + `sq_issues_search`; `sq_duplications_show` for duplication drill-down |
 | Search | Algolia (paid) | `alg_indices_list`, `alg_index_settings`, `alg_search`, `alg_object_get`, `alg_logs`; `alg_status` / `alg_incidents` are built-in (no credentials) |
 | Cloud | AWS | `aws_sts_whoami`, `aws_cli_query`, `aws_bedrock_agent_diagnose`, `aws_lambda_agent_diagnose`, `aws_cloudwatch_logs_search` (Bedrock Agents — paid `aws` module) |
+| AWS user sessions | AWS SSO | `check_aws_session_for_env`, `aws_session_status`, `aws_session_revoke`, `aws_sso_logout` (separate `aws-sessions` module) |
 | Network (built-in) | — | `dns_lookup`, `http_check`, `cert_status` — work immediately after login, no setup needed |
 | Integration mgmt | — | `ops_configure_integration`, `ops_list_integrations`, `ops_test_integration`, `ops_remove_integration` |
 | Plan & usage | — | `ops_my_usage` |
@@ -32,6 +34,13 @@ Opsphere connects your DevOps stack to Claude Code through a **remote MCP gatewa
 | Macro workflows (Team+) | — | `macro_outage_triage`, `macro_endpoint_health`, `macro_env_health` |
 
 Never invent tool names — only call tools present in the current session's `tools/list`.
+
+## Provider routing rules
+
+- **GitHub**: prefer `repo: "owner/name"` when known. If the repository is unknown, call `ghe_org_repos`; a bare repo name uses only the active workspace's configured default org. A successful GitHub test/tool call means the token works—do not diagnose credentials as invalid until explicit repository routing and access have been checked.
+- **AWS modules are separate**: `aws_sso_login_device_start`, its poll tool, STS, and AWS queries belong to `aws`. Session preflight/status/revoke/logout belong to `aws-sessions`. Enabling one does not expose the other.
+- **AWS SSO prerequisites**: an enabled module is not enough; the SSO profile must exist in the active workspace Cloud Catalog/runtime. Local laptop SSO does not populate the remote gateway. A reconnect refreshes session/catalog state but does not create modules or profiles.
+- **Atlassian shared authentication**: Confluence inherits Jira's site/email/API token unless an optional Confluence base URL is set. A Confluence 403 is an access/space-permission result, not “credentials missing”; a Jira/Confluence 404 can also hide resources the account cannot browse.
 
 ## Three concepts — never mix them
 

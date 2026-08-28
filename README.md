@@ -2,9 +2,9 @@
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.10-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
-[![Codex plugin](https://img.shields.io/badge/Codex-1.0.6-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
-[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-1.0.0-orange)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.11-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Codex plugin](https://img.shields.io/badge/Codex-1.0.7-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-1.0.1-orange)](https://github.com/opsphere-io/opsphere-plugin/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
@@ -154,7 +154,7 @@ The onboarding rule tells the main agent **when to delegate** vs handle inline, 
 | **Datadog** | Search logs · count errors by service · check synthetics | API Key + App Key |
 | **Vercel** | Latest deploys · project status · env vars | API Token |
 | **Railway** | Projects · services · deployments · logs · metrics · env names · incident diagnosis | API token (account, workspace, or project) |
-| **GitHub** | Repo summary · Actions runs · PRs | Personal Access Token |
+| **GitHub** | Repo discovery · summary · Actions runs · PRs | Personal Access Token; optional default org |
 | **Bitbucket** | Pipeline list · pipeline diagnosis · PR search | App Password |
 | **Cloudflare** | Zone status · DNS records · firewall events | API Token |
 | **Jira** | Issue search · issue detail · comments | API Token |
@@ -166,7 +166,7 @@ The onboarding rule tells the main agent **when to delegate** vs handle inline, 
 
 ### AWS with the plugin
 
-Opsphere plugin AWS integration uses **IAM Access Key + Secret Access Key** — not AWS SSO. Say _"Configure my AWS"_ to store your keys on the gateway (encrypted). After setup, ask things like _"List my S3 buckets"_ or _"Who am I in AWS?"_ — the agent calls `aws_cli_query` / `aws_sts_whoami` **without** SSO or `profile`. Local `aws sso login` on your laptop does not apply; tools run on the remote gateway. Specify AWS region in your request when needed (default region is not stored during setup).
+The Community setup uses **IAM Access Key + Secret Access Key**. Paid workspaces can instead use admin-configured AWS SSO when the workspace Cloud Catalog contains the profile and the required module is enabled. Local `aws sso login` on your laptop never supplies the remote gateway. The `aws` module owns device login, STS, and AWS query tools; the separate `aws-sessions` module owns session preflight/status/revoke/logout. Enabling one does not enable the other.
 
 On **paid plans** with the `aws` module enabled, Opsphere can **diagnose Amazon Bedrock Agents** (not Agent Core): `aws_bedrock_agent_diagnose` for agent status, aliases, action groups, IAM, knowledge bases, and findings → `aws_lambda_agent_diagnose` for each backing Lambda → optional CloudWatch logs. Guided MCP prompt: **`investigate-bedrock-agent`** (listed in `opsphere://playbooks/index`). Details: [docs/TOOLS.md](docs/TOOLS.md#aws_bedrock_agent_diagnose).
 
@@ -198,6 +198,7 @@ On **paid plans** with the `aws` module enabled, Opsphere can **diagnose Amazon 
 | `"Why did SonarQube fail on main?"` | `sq_last_scan_summary` or `sq_quality_gate_status` → `sq_issues_search` (when SonarQube module enabled) |
 | `"Find this SonarCloud project"` (paste URL) | `sq_projects_search(q=<URL>)` → `sq_last_scan_summary` |
 | `"Summarize acme/backend on GitHub"` | `ghe_repo_summary(repo=acme/backend)` — github.com needs only `GHE_TOKEN` |
+| `"What repositories can I access?"` | `ghe_org_repos` using the active workspace default org; repo-specific calls prefer `owner/name` |
 | `"Is Algolia having an outage?"` | `alg_status` + `alg_incidents` (built-in — no setup) |
 | `"Why is this SKU missing from search?"` | `alg_object_get` → `alg_search` (when Algolia module enabled) |
 | `"Configure my Algolia"` | Guided setup: App ID + restricted Search API key (not Admin) |
@@ -331,7 +332,7 @@ See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for the full guide.
 
 ## Codex / ChatGPT
 
-Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.6** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
+Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.7** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
 
 ### Quick start (Codex CLI)
 
@@ -366,7 +367,7 @@ Full install paths (desktop marketplace, troubleshooting): **[docs/INSTALL.md](d
 
 ## Claude Code
 
-Opsphere is also packaged as a **Claude Code plugin** (same remote gateway as Cursor and Codex). Version **1.0.0** lives in `.claude-plugin/plugin.json` — independent from the Cursor and Codex manifest versions. MCP configuration is a dedicated `.claude.mcp.json` (Claude requires `"type": "http"` and a camelCase `oauth.clientId`; it is **not** compatible with Codex's `.mcp.json`).
+Opsphere is also packaged as a **Claude Code plugin** (same remote gateway as Cursor and Codex). Version **1.0.1** lives in `.claude-plugin/plugin.json` — independent from the Cursor and Codex manifest versions. MCP configuration is a dedicated `.claude.mcp.json` (Claude requires `"type": "http"` and a camelCase `oauth.clientId`; it is **not** compatible with Codex's `.mcp.json`).
 
 ### Quick start (Claude Code CLI)
 

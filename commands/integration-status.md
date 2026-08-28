@@ -13,6 +13,13 @@ Check the current state of Opsphere integrations using the **live** gateway resp
 
 Call `ops_list_integrations` to retrieve the live state of providers for this account/plan.
 
+Also read `runtime_status` when present. It is workspace-scoped and distinguishes credentials from runtime facts that the summary alone cannot prove:
+
+- AWS `aws` versus `aws-sessions` module enablement, Cloud Catalog setup, and caller session state.
+- GitHub module/token state and whether a default org comes from credentials or Cloud Catalog.
+
+For providers with `auth_dependency`, use that field too. Confluence inherits Jira authentication: when its Jira dependency is satisfied, report Confluence authentication as configured even if Confluence has no separate token keys.
+
 ### 2. Present results from the response groups
 
 Use `summary` (and each entry’s `status` / `configure_cta`) — do **not** invent entitlement:
@@ -24,6 +31,10 @@ Use `summary` (and each entry’s `status` / `configure_cta`) — do **not** inv
 | Requires upgrade | `summary.requires_upgrade` | GA provider known but not in the current plan |
 | Unavailable / beta | `summary.unavailable_beta` | Not offered as a normal configure-now capability |
 | Configured but unavailable | `summary.configured_unavailable` | Credentials exist but plan/lifecycle currently blocks use |
+
+Do not translate `runtime_status.aws.modules.aws_sessions = disabled/not_assigned` into "AWS credentials are broken". Likewise, a missing GitHub default org is a routing gap, not proof that the token is invalid.
+
+For Confluence, a 403 from a tool means Atlassian denied product/space/page access; it is not evidence that the integration is unconfigured. A 404 can mean a missing or permission-hidden page/space.
 
 Example presentation:
 

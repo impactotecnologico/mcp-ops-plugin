@@ -10,7 +10,7 @@
       "name": "opsphere",
       "source": "./",
       "description": "DevOps & SRE intelligence for Claude Code: search Datadog logs, triage site-down incidents, diagnose GitHub Actions and Bitbucket pipelines, check Vercel and multi-platform deployment status, run DNS/HTTP/TLS health checks, and manage AWS, Kubernetes, Cloudflare, Jira, and Sentry from chat. Secure remote MCP gateway with OAuth2; bundled skills and subagents for outage triage, CI investigation, endpoint health, and post-mortems. Free Community trial.",
-      "version": "1.0.0"
+      "version": "1.0.1"
     }
   ]
 }

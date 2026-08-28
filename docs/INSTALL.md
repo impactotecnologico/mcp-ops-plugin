@@ -131,7 +131,7 @@ See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for common issues.
 
 ## Codex / ChatGPT
 
-Opsphere ships a **Codex plugin** manifest at `.codex-plugin/plugin.json` (version **1.0.6**, separate from Cursor). Both clients use the same gateway: `https://mcp-cursor.opsphere.io/mcp`. Skills under `skills/` are shared (including **`link-account`** and **`open-work-context`** for Connection Hub users).
+Opsphere ships a **Codex plugin** manifest at `.codex-plugin/plugin.json` (version **1.0.7**, separate from Cursor). Both clients use the same gateway: `https://mcp-cursor.opsphere.io/mcp`. Skills under `skills/` are shared (including **`link-account`** and **`open-work-context`** for Connection Hub users).
 
 ### Codex CLI (recommended path)
 
