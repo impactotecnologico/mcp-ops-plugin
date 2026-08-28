@@ -47,8 +47,8 @@ If the user **just accepted an invitation** to an organization workspace:
 | Tool | Purpose |
 |------|---------|
 | `ops_accounts_list` | List personal + external connections |
-| `ops_context_open` | Bind session to a chosen **external** link (gateway-managed) |
-| `ops_context_close` | Leave an external switch before opening another |
+| `ops_context_open` | Atomically replace this conversation's active workspace with the chosen **external** link |
+| `ops_context_close` | Explicitly leave the active workspace when the user asks to close it |
 
 Prefer describing outcomes to the user as **"switched to workspace X"** — not as "here is your context_id".
 
@@ -58,10 +58,12 @@ Internal IDs may appear in tool payloads for the model; **do not** teach end use
 
 1. Call `ops_accounts_list`. Identify Personal vs external from the tool result.
 2. Ask which **external** workspace if more than one (labels/slugs only).
-3. Call `ops_context_open` with that `linked_connection_id` (optional stable chat key if the tool requires it).
+3. Call `ops_context_open` with that `linked_connection_id`. It closes/replaces the previous conversation context atomically; do not close first. Only pass a stable `chat_session_key` supplied by the host—never invent one.
 4. If the result includes `tools_discovery.stale: true`, call MCP `tools/list` before scoped tools.
 5. Confirm to the user which workspace is active by **label/slug**.
 6. Continue operational tools. Do not narrate broker internals (`expires_at`, pinning, etc.) unless the user asks for diagnostics.
+
+If a provider tool is absent from the active catalog, explain that it is unavailable in the current workspace and offer a workspace switch. Never switch automatically: retain the selected workspace until the user confirms another one.
 
 ## Community / auto-context
 
@@ -85,5 +87,7 @@ If they want additional workspaces → skill **`link-account`** (upgrade CTA on 
 
 - Presenting this skill as required after Sign up free / login
 - "Pass context_id to every tenant-scoped tool" as Community guidance
+- Automatically switching workspaces because a provider tool is absent
+- Closing the current context before a normal confirmed switch
 - Confusing this with **Work Context** (`ops_set_work_context`)
 - Unlinking or "opening" Personal Workspace as if it were missing

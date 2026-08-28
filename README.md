@@ -332,7 +332,7 @@ See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for the full guide.
 
 ## Codex / ChatGPT
 
-Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.7** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
+Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.9** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
 
 ### Quick start (Codex CLI)
 
@@ -367,7 +367,7 @@ Full install paths (desktop marketplace, troubleshooting): **[docs/INSTALL.md](d
 
 ## Claude Code
 
-Opsphere is also packaged as a **Claude Code plugin** (same remote gateway as Cursor and Codex). Version **1.0.1** lives in `.claude-plugin/plugin.json` — independent from the Cursor and Codex manifest versions. MCP configuration is a dedicated `.claude.mcp.json` (Claude requires `"type": "http"` and a camelCase `oauth.clientId`; it is **not** compatible with Codex's `.mcp.json`).
+Opsphere is also packaged as a **Claude Code plugin** (same remote gateway as Cursor and Codex). Version **1.0.3** lives in `.claude-plugin/plugin.json` — independent from the Cursor and Codex manifest versions. MCP configuration is a dedicated `.claude.mcp.json` (Claude requires `"type": "http"` and a camelCase `oauth.clientId`; it is **not** compatible with Codex's `.mcp.json`).
 
 ### Quick start (Claude Code CLI)
 

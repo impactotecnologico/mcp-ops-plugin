@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Fixed
+- Workspace changes now replace the prior conversation context atomically; agents no longer close first or treat a missing provider tool as permission to switch workspaces automatically.
 - Claude now derives **Available now** capabilities from the active workspace's
   live MCP tool list and clearly separates inactive or unavailable integrations.
 - Plan and usage guidance now handles direct corporate-workspace sessions where
@@ -20,7 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - GitHub guidance uses workspace defaults for bare repository names and falls back to repository discovery or explicit `owner/name`.
 
 ### Released versions
-- Cursor plugin **1.0.12**, Codex plugin **1.0.8**, and Claude Code plugin **1.0.2**.
+- Cursor plugin **1.0.13**, Codex plugin **1.0.9**, and Claude Code plugin **1.0.3**.
 
 ### Added
 - **Claude Code plugin track (`1.0.0`)** — new third host alongside Cursor and Codex: `.claude-plugin/plugin.json` manifest (independent version, `mcpServers: "./.claude.mcp.json"`), dedicated `.claude.mcp.json` (`"type": "http"`, `oauth.clientId: claude-mcp`, `oauth.callbackPort: 8787`, `oauth.scopes: "mcp:tools"`), and [`skills/opsphere-onboarding/SKILL.md`](skills/opsphere-onboarding/SKILL.md) as the Claude-native substitute for the always-on `rules/onboarding-guide.mdc` rule (which Claude Code does not load).
