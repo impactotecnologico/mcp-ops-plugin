@@ -35,6 +35,11 @@ If the user **just accepted an invitation** to an organization workspace:
 2. User says _"switch to [client]"_ and `ops_accounts_list` shows multiple non-personal connections.
 3. Do **not** run after Community signup, returning login, or when only Personal Workspace exists.
 
+A resource lookup is not an implicit switch request. For example, asking for a
+Moeve Jira ticket while Breitling is active means: explain the likely workspace
+mismatch and ask whether to switch to Moeve. Do not call `ops_context_open` until
+the user explicitly confirms the named target.
+
 ## When NOT to run
 
 - Community first-time or returning login
@@ -58,12 +63,12 @@ Internal IDs may appear in tool payloads for the model; **do not** teach end use
 
 1. Call `ops_accounts_list`. Identify Personal vs external from the tool result.
 2. Ask which **external** workspace if more than one (labels/slugs only).
-3. Call `ops_context_open` with that `linked_connection_id`. It closes/replaces the previous conversation context atomically; do not close first. Only pass a stable `chat_session_key` supplied by the host—never invent one.
+3. Call `ops_context_open` with that `linked_connection_id` only after explicit user confirmation. It persistently changes the active workspace and client preference, and closes/replaces the previous context atomically; do not close first. Only pass a stable `chat_session_key` supplied by the host—never invent one.
 4. If the result includes `tools_discovery.stale: true`, call MCP `tools/list` before scoped tools.
 5. Confirm to the user which workspace is active by **label/slug**.
 6. Continue operational tools. Do not narrate broker internals (`expires_at`, pinning, etc.) unless the user asks for diagnostics.
 
-If a provider tool is absent from the active catalog, explain that it is unavailable in the current workspace and offer a workspace switch. Never switch automatically: retain the selected workspace until the user confirms another one.
+If a resource belongs elsewhere or a provider tool is absent from the active catalog, explain the mismatch and offer a workspace switch. Never switch automatically: retain the selected workspace until the user confirms another one. There is no temporary lookup mode: after a confirmed switch, remain in the new workspace until the user asks to change it again.
 
 ## Community / auto-context
 
@@ -88,6 +93,8 @@ If they want additional workspaces → skill **`link-account`** (upgrade CTA on 
 - Presenting this skill as required after Sign up free / login
 - "Pass context_id to every tenant-scoped tool" as Community guidance
 - Automatically switching workspaces because a provider tool is absent
+- Treating a cross-workspace ticket, zone, repo, project, or provider request as confirmation
+- Switching temporarily to answer and switching back without a second explicit request
 - Closing the current context before a normal confirmed switch
 - Confusing this with **Work Context** (`ops_set_work_context`)
 - Unlinking or "opening" Personal Workspace as if it were missing

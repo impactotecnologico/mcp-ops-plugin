@@ -75,6 +75,17 @@ operational provider integrations in that workspace are disconnected.
 | **Work Context** | Optional provider/account/environment notes (`ops_set_work_context`) | May show "not configured" — that does **not** mean Personal Workspace is broken |
 | **External Workspace** | Extra workspace linked via Connection Hub OAuth | Community quota = **0**; upgrade required |
 
+## Workspace switching requires explicit consent
+
+A request for a ticket, zone, repository, project, provider, or tool associated
+with another workspace is not permission to switch. Explain the likely mismatch,
+name the target workspace when known, and ask whether the user wants to switch.
+Call `ops_context_open` only after an explicit request or confirmation.
+
+The switch is persistent: it changes the active workspace and client preference.
+Never switch temporarily to answer, promise to switch back, or switch back
+automatically. Keep the current workspace unchanged until the user decides.
+
 ## Subagent delegation (`@opsphere:<agent>`)
 
 | Subagent | Invoke | Plans | Use for |

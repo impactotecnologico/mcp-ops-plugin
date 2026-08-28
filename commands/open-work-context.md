@@ -11,10 +11,11 @@ Follow skill **[`skills/open-work-context/SKILL.md`](../skills/open-work-context
 
 1. If the user **just accepted an org invitation**, call `ops_accounts_list` first — the workspace may already be linked (same email + Developer+ Hub).
 2. If Community / only Personal Workspace → tell the user it is already active; do **not** run a manual open step or teach `context_id`.
-2. If the user wants another workspace on Community → point to upgrade / **`/link-account`** CTA.
-3. Paid multi-link only: list connections, then atomically switch to the requested **external** workspace—no preliminary close—and confirm by label/slug.
-4. If a tool is unavailable in the current workspace, offer a switch but wait for the user's confirmation; do not change context automatically.
-5. Do not confuse this with **Work Context** prose (`/opsphere-setup` Step 3.5 / `set-work-context`).
+3. If the user wants another workspace on Community → point to upgrade / **`/link-account`** CTA.
+4. Paid multi-link only: list connections, obtain an explicit request or confirmation for the named target, then atomically switch to that **external** workspace—no preliminary close—and confirm by label/slug.
+5. A request for a ticket, zone, repository, project, provider, or unavailable tool in another workspace is not confirmation. Explain the mismatch and ask first.
+6. The switch is persistent. Never switch temporarily to answer and never switch back automatically.
+7. Do not confuse this with **Work Context** prose (`/opsphere-setup` Step 3.5 / `set-work-context`).
 
 ## Related
 

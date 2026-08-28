@@ -1,7 +1,7 @@
 {
   "name": "opsphere",
   "displayName": "Opsphere — DevOps & SRE Intelligence",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "DevOps and SRE intelligence for Claude Code via a remote MCP gateway.",
   "author": {
     "name": "Opsphere",

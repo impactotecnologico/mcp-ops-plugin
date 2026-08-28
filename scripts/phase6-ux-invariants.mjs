@@ -25,6 +25,8 @@ const checks = [
       /BROKER_LINK_LIMIT_EXCEEDED/,
       /PERSONAL_WORKSPACE_UNLINK_FORBIDDEN/,
       /WORKSPACE_SUSPENDED/,
+      /A request for a ticket, zone, repository, project, provider, or tool associated with another workspace is \*\*not\*\* permission to switch/i,
+      /Never switch temporarily to answer a question/i,
     ],
   },
   {
@@ -49,6 +51,8 @@ const checks = [
     require: [
       /Personal Workspace is already active/i,
       /Not required for Community/i,
+      /resource lookup is not an implicit switch request/i,
+      /There is no temporary lookup mode/i,
     ],
   },
   {
@@ -73,6 +77,8 @@ const checks = [
       /self-service `ops_\*` tools are not\s+guaranteed in a direct corporate-workspace login/i,
       /Jira retry discipline/i,
       /Do not brute-force query variants/i,
+      /Workspace switching requires explicit consent/i,
+      /Never switch temporarily to answer/i,
     ],
   },
   {

@@ -69,6 +69,14 @@ Tools can include the following once authenticated, entitled, and configured:
 - **Do not** teach `context_id` / `broker_context` to normal users. Session resolution is automatic for Personal Workspace when auto-context is on.
 - Switching to an **external** workspace (paid plans with linked organization workspaces) is the only case for skill **`open-work-context`** — and only when the user explicitly wants another linked workspace.
 
+**Workspace ownership is user-controlled:**
+
+- A request for a ticket, zone, repository, project, provider, or tool associated with another workspace is **not** permission to switch.
+- Explain that the resource appears to belong to another workspace, name that workspace when known, and ask whether the user wants to switch.
+- Call `ops_context_open` only after the user explicitly asks for that switch or explicitly confirms the proposal.
+- A switch is persistent. Never switch temporarily to answer a question, never promise to switch back, and never switch back automatically after the answer.
+- Keep the current workspace unchanged when the user declines, does not answer, or only asks what would be available elsewhere.
+
 ### MCP resources (gateway — read via @ or Fetch MCP Resource)
 
 Eleven read-only resources ship with the remote MCP server (nine universal + two Hub-only). They are **not** duplicated in this plugin repo — Cursor/Codex fetch them from the gateway after Connect.
