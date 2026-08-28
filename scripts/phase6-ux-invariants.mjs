@@ -54,7 +54,26 @@ const checks = [
   {
     file: 'skills/plan-and-usage/SKILL.md',
     forbid: [/\*\*Tools:\*\*\s*\d+\s*MCP tools enabled/i],
-    require: [/Personal Workspace/i, /Work context/i],
+    require: [
+      /Personal Workspace/i,
+      /Work context/i,
+      /If \*\*`ops_my_usage`\*\* is present/i,
+      /direct\s+corporate-workspace session/i,
+      /do not infer that Opsphere or the active\s+workspace is disconnected/i,
+    ],
+  },
+  {
+    file: 'skills/opsphere-onboarding/SKILL.md',
+    forbid: [],
+    require: [
+      /Live capability discovery \(mandatory\)/i,
+      /current MCP `tools\/list` is the authority/i,
+      /under \*\*Available now\*\*/i,
+      /Re-evaluate the live list after a workspace switch/i,
+      /self-service `ops_\*` tools are not\s+guaranteed in a direct corporate-workspace login/i,
+      /Jira retry discipline/i,
+      /Do not brute-force query variants/i,
+    ],
   },
   {
     file: 'commands/opsphere-setup.md',

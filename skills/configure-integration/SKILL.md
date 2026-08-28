@@ -259,6 +259,9 @@ It uses four MCP tools from the backend:
 - 401 → wrong email or token. The email must be the one associated with the Atlassian account that generated the token.
 - 404 on an issue or project → it may not exist, or the account lacks Browse Projects / issue-security access. Do not conclude that credentials are invalid from a 404 alone.
 - 410 from issue search → server-side Jira search API incompatibility; reconnecting or replacing credentials will not fix it.
+- For the same inaccessible issue/project, make at most one exact-key lookup and
+  one materially different diagnostic search. Then stop and request an Atlassian
+  admin check; do not retry many JQL variants.
 
 ---
 

@@ -35,7 +35,10 @@ Macros **replace long atomic chains** in telemetry — one macro call, not six s
 
 ## Flow
 
-1. **Plan gate** — Call `ops_my_usage` if plan is unknown. Community → stop with upgrade hint.
+1. **Plan gate** — Call `ops_my_usage` if the plan is unknown **and the tool is
+   advertised**. In a direct corporate workspace where it is absent, only offer
+   macros present in the live `tools/list`; gateway execution policy remains the
+   authority. Community → stop with upgrade hint when confirmed.
 2. **Catalog** — Confirm the macro exists in `tools/list`.
 3. **Clarify** — Ask for missing hostname, environment, or time window (batch 2–3 questions max).
 4. **Invoke** — Call the macro with structured arguments. Wait for the final JSON result; progress events are handled by the client.

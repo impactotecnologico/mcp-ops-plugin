@@ -7,7 +7,25 @@ description: Show Opsphere plan, trial, usage, Personal Workspace, Work Context,
 
 ## Tool
 
-Call **`ops_my_usage`** (no parameters).
+First check the current MCP `tools/list`.
+
+- If **`ops_my_usage`** is present, call it with no parameters.
+- If it is absent, do not call it and do not infer that Opsphere or the active
+  workspace is disconnected. Explain that plan/usage is a Connection Hub or
+  self-service control-plane capability and is not exposed by this direct
+  corporate-workspace session. Operational provider tools advertised in the
+  current list can still work normally.
+- Do not invent plan, quota, Personal Workspace, Work Context, or integration
+  status from the tool's absence. If `ops_list_integrations` is present, it may be
+  used separately for live integration status; otherwise tell the user that an
+  administrator or a Connection Hub login is needed for account-level details.
+
+Good fallback:
+
+> This direct workspace session does not expose the self-service plan/usage tool.
+> That does not disable the workspace's operational integrations; I can still use
+> the provider tools currently advertised. For account-level plan and quota
+> details, use your Opsphere Connection Hub session or ask the workspace admin.
 
 ## Response presentation (mandatory)
 

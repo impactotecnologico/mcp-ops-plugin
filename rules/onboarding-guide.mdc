@@ -13,7 +13,13 @@ The backend is a remote MCP server. All tool calls go to the Opsphere gateway. N
 
 ## Available Tool Categories
 
-These tools are available once authenticated and integrations are configured:
+This is a routing reference for the full product. The current MCP `tools/list` is
+the authority for what is available in the active workspace. When asked what can
+be done, group advertised providers under **Available now**. Never present an
+absent or inactive integration as usable; label it **Not active** or **Needs
+action** only when live integration status supports that conclusion.
+
+Tools can include the following once authenticated, entitled, and configured:
 
 | Category | Provider | Tools |
 |----------|----------|-------|
@@ -31,7 +37,7 @@ These tools are available once authenticated and integrations are configured:
 | Cloud | AWS | `aws_sts_whoami`, `aws_cli_query`, `aws_bedrock_agent_diagnose`, `aws_lambda_agent_diagnose` (Bedrock Agents — paid `aws` module) |
 | Network (built-in) | — | `dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents` |
 | Integration Mgmt | — | `ops_configure_integration`, `ops_list_integrations`, `ops_test_integration`, `ops_remove_integration` |
-| Plan & Usage | — | `ops_my_usage` |
+| Plan & Usage | — | `ops_my_usage` (when advertised by a Hub/self-service session) |
 | Work context | — | `ops_set_work_context`, `ops_get_work_context` |
 | **Connection Hub** (broker) | — | `ops_accounts_list`, `ops_account_link_start`, `ops_account_unlink`, `ops_context_open`, `ops_context_close` — only when `tools/list` includes them |
 | Operational memory | — | `memory_search`, `memory_store`, `memory_session_touch`, `memory_invalidate` |

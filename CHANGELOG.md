@@ -7,13 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Fixed
+- Claude now derives **Available now** capabilities from the active workspace's
+  live MCP tool list and clearly separates inactive or unavailable integrations.
+- Plan and usage guidance now handles direct corporate-workspace sessions where
+  Hub/self-service `ops_*` tools are intentionally not advertised, without
+  reporting the operational workspace as disconnected.
+- Jira guidance now bounds retries for repeated 403/404 results so agents stop
+  after a useful diagnostic instead of exhausting the workspace execution budget.
 - Integration status now distinguishes module enablement, credentials, verified authentication, resource authorization, and provider defaults instead of treating every 403/404 as a broken setup.
 - Confluence correctly inherits shared Jira authentication and explains real product/space permission failures without requesting a duplicate token.
 - AWS guidance separates the `aws` and `aws-sessions` modules and the remote Cloud Catalog from local SSO.
 - GitHub guidance uses workspace defaults for bare repository names and falls back to repository discovery or explicit `owner/name`.
 
 ### Released versions
-- Cursor plugin **1.0.11**, Codex plugin **1.0.7**, and Claude Code plugin **1.0.1**.
+- Cursor plugin **1.0.12**, Codex plugin **1.0.8**, and Claude Code plugin **1.0.2**.
 
 ### Added
 - **Claude Code plugin track (`1.0.0`)** — new third host alongside Cursor and Codex: `.claude-plugin/plugin.json` manifest (independent version, `mcpServers: "./.claude.mcp.json"`), dedicated `.claude.mcp.json` (`"type": "http"`, `oauth.clientId: claude-mcp`, `oauth.callbackPort: 8787`, `oauth.scopes: "mcp:tools"`), and [`skills/opsphere-onboarding/SKILL.md`](skills/opsphere-onboarding/SKILL.md) as the Claude-native substitute for the always-on `rules/onboarding-guide.mdc` rule (which Claude Code does not load).

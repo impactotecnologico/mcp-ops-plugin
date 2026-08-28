@@ -9,7 +9,23 @@ Claude Code plugins do not load a `CLAUDE.md` or any file as always-on project c
 
 Opsphere connects your DevOps stack to Claude Code through a **remote MCP gateway**. All tool calls go to `https://mcp-cursor.opsphere.io/mcp` — no tool logic runs locally, and no hidden scripts execute from this plugin.
 
-## Tool categories
+## Live capability discovery (mandatory)
+
+The table below is a routing reference for the full Opsphere product. It is **not**
+proof that a provider or tool is active in the current workspace.
+
+- The current MCP `tools/list` is the authority for what can be used now.
+- When the user asks what Opsphere can do, present tools/providers that are in the
+  current `tools/list` under **Available now**.
+- Do not describe absent provider tools as active integrations. If setup/status
+  tools are available, use `ops_list_integrations` and put disabled, unassigned,
+  upgrade-only, or misconfigured providers under **Not active** or **Needs action**.
+- Mention an inactive provider only as a clearly labelled setup/admin possibility;
+  never mix it into the list of capabilities available now.
+- Re-evaluate the live list after a workspace switch. A static skill catalog from
+  an earlier workspace must not override the newly advertised MCP tools.
+
+## Tool categories (routing reference only)
 
 | Category | Provider | Tools |
 |----------|----------|-------|
@@ -27,13 +43,16 @@ Opsphere connects your DevOps stack to Claude Code through a **remote MCP gatewa
 | AWS user sessions | AWS SSO | `check_aws_session_for_env`, `aws_session_status`, `aws_session_revoke`, `aws_sso_logout` (separate `aws-sessions` module) |
 | Network (built-in) | — | `dns_lookup`, `http_check`, `cert_status` — work immediately after login, no setup needed |
 | Integration mgmt | — | `ops_configure_integration`, `ops_list_integrations`, `ops_test_integration`, `ops_remove_integration` |
-| Plan & usage | — | `ops_my_usage` |
+| Plan & usage | — | `ops_my_usage` (Connection Hub/self-service sessions when advertised) |
 | Work context | — | `ops_set_work_context`, `ops_get_work_context` |
 | Connection Hub | — | `ops_accounts_list`, `ops_account_link_start`, `ops_account_unlink`, `ops_context_open`, `ops_context_close` (only when in `tools/list`) |
 | Operational memory | — | `memory_search`, `memory_store`, `memory_session_touch`, `memory_invalidate` |
 | Macro workflows (Team+) | — | `macro_outage_triage`, `macro_endpoint_health`, `macro_env_health` |
 
 Never invent tool names — only call tools present in the current session's `tools/list`.
+In particular, `ops_my_usage` and the other self-service `ops_*` tools are not
+guaranteed in a direct corporate-workspace login. Their absence does not mean the
+operational provider integrations in that workspace are disconnected.
 
 ## Provider routing rules
 
@@ -41,6 +60,12 @@ Never invent tool names — only call tools present in the current session's `to
 - **AWS modules are separate**: `aws_sso_login_device_start`, its poll tool, STS, and AWS queries belong to `aws`. Session preflight/status/revoke/logout belong to `aws-sessions`. Enabling one does not expose the other.
 - **AWS SSO prerequisites**: an enabled module is not enough; the SSO profile must exist in the active workspace Cloud Catalog/runtime. Local laptop SSO does not populate the remote gateway. A reconnect refreshes session/catalog state but does not create modules or profiles.
 - **Atlassian shared authentication**: Confluence inherits Jira's site/email/API token unless an optional Confluence base URL is set. A Confluence 403 is an access/space-permission result, not “credentials missing”; a Jira/Confluence 404 can also hide resources the account cannot browse.
+- **Jira retry discipline**: a 401 means the configured Atlassian identity/token
+  must be repaired. On repeated 403/404 results for the same project or issue,
+  make at most one exact-key lookup and one materially different diagnostic
+  search, then stop and report the required Jira product, Browse Projects, and
+  issue-security checks. Do not brute-force query variants or consume the
+  workspace execution budget retrying the same denied resource.
 
 ## Three concepts — never mix them
 
@@ -59,7 +84,12 @@ Never invent tool names — only call tools present in the current session's `to
 | `ci-investigator` | `@opsphere:ci-investigator` | Professional+ | Failed CI/CD pipelines (Community gets an upgrade message) |
 | `postmortem-writer` | `@opsphere:postmortem-writer` | All | Post-mortem / RCA drafting, optional `memory_store` |
 
-Call `ops_my_usage` before delegating a premium subagent when the plan is unknown. Don't delegate single-tool requests (one `http_check`, one log search) — handle those inline.
+When `ops_my_usage` is advertised, call it before delegating a premium subagent if
+the plan is unknown. In a direct corporate workspace where it is absent, use the
+live availability of the requested operational tools and let gateway execution
+policy remain authoritative; do not report the whole workspace as disabled.
+Don't delegate single-tool requests (one `http_check`, one log search) — handle
+those inline.
 
 ## Error codes — agent action
 
