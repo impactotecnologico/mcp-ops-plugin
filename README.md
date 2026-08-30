@@ -28,6 +28,12 @@ Everything runs through a **secure remote MCP server** — by design. Credential
 
 Architecture diagram and domain list: **[docs/REMOTE-MCP-ARCHITECTURE.md](docs/REMOTE-MCP-ARCHITECTURE.md)**.
 
+## Connect another client
+
+Use `/opsphere-connect-another-client` to reuse the same Opsphere account in Cursor, Codex, Claude Code or another compatible MCP host. Each client completes OAuth independently and receives its own revocable session; never copy token files between applications.
+
+Warp local is distributed as a canary package under [`opsphere-warp/`](opsphere-warp/README.md). It includes the remote MCP configuration, portable skills and `AGENTS.md`. Opsphere OAuth is not supported in Warp/Oz cloud environments.
+
 ---
 
 ## Quick Start

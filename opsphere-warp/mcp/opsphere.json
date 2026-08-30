@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "opsphere": {
+      "url": "https://mcp-cursor.opsphere.io/mcp"
+    }
+  }
+}

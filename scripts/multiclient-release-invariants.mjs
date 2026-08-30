@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import path from 'node:path';
 
 const files = {
   skill: fs.readFileSync('skills/connect-another-client/SKILL.md', 'utf8'),
@@ -28,6 +29,34 @@ const forbidden = [
 ];
 
 let failures = 0;
+
+const warpConfig = JSON.parse(fs.readFileSync('opsphere-warp/mcp/opsphere.json', 'utf8'));
+if (warpConfig?.mcpServers?.opsphere?.url !== 'https://mcp-cursor.opsphere.io/mcp') {
+  console.error('FAIL Warp package MCP URL/shape');
+  failures += 1;
+}
+
+for (const skillName of [
+  'endpoint-health', 'incident-investigation', 'ci-investigation', 'postmortem-writer',
+]) {
+  const canonical = fs.readFileSync(path.join('skills', skillName, 'SKILL.md'), 'utf8');
+  const packaged = fs.readFileSync(path.join('opsphere-warp', 'skills', skillName, 'SKILL.md'), 'utf8');
+  if (canonical !== packaged) {
+    console.error(`FAIL Warp skill drift: ${skillName}`);
+    failures += 1;
+  }
+}
+
+const warpRules = fs.readFileSync('opsphere-warp/rules/AGENTS.md', 'utf8');
+if (!/live MCP discovery/i.test(warpRules) || !/without explicit user consent/i.test(warpRules)) {
+  console.error('FAIL Warp AGENTS.md safety rules');
+  failures += 1;
+}
+if (fs.existsSync('opsphere-warp/rules/WARP.md')) {
+  console.error('FAIL package must not install both AGENTS.md and WARP.md');
+  failures += 1;
+}
+
 for (const [name, text, pattern] of required) {
   if (!pattern.test(text)) { console.error(`FAIL missing ${name}`); failures += 1; }
 }
