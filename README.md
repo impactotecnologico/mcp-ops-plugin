@@ -138,7 +138,7 @@ The plugin bundle is **markdown and JSON only** — agent guidance, skills, and 
 | | [`skills/link-account/`](skills/link-account/) | Connection Hub — link/unlink external workspaces; org invites may auto-link on same email (Developer+) |
 | | [`skills/open-work-context/`](skills/open-work-context/) | Switch to an external linked workspace (paid); not needed for Community Personal Workspace |
 | | [`skills/run-macro-workflows/`](skills/run-macro-workflows/) | Team+ composite `macro_*` tools (outage, endpoint, env health) |
-| **Commands** | [`commands/`](commands/) | `/opsphere-welcome`, `/opsphere-setup`, `/opsphere-reconnect`, `/integration-status` |
+| **Commands** | [`commands/`](commands/) | `/opsphere-welcome`, `/opsphere-setup`, `/opsphere-reconnect`, `/opsphere-connect-another-client`, `/integration-status` |
 | **Subagents** | [`agents/`](agents/) | Focused investigation and post-mortem flows (table above) |
 
 The onboarding rule tells the main agent **when to delegate** vs handle inline, to call `ops_my_usage` before premium subagents when plan is unknown, and **not** to paste secrets outside the configure flow.

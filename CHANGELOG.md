@@ -22,9 +22,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - GitHub guidance uses workspace defaults for bare repository names and falls back to repository discovery or explicit `owner/name`.
 
 ### Released versions
-- Cursor plugin **1.0.14**, Codex plugin **1.0.10**, and Claude Code plugin **1.0.4**.
+- Cursor plugin **1.0.15**, Codex plugin **1.0.11**, and Claude Code plugin **1.0.5**.
 
 ### Added
+- Multiclient connection guidance through `/opsphere-connect-another-client` and the shared `connect-another-client` skill for Cursor, Codex, Claude Code, Warp local, and standards-compatible MCP clients.
 - **Claude Code plugin track (`1.0.0`)** — new third host alongside Cursor and Codex: `.claude-plugin/plugin.json` manifest (independent version, `mcpServers: "./.claude.mcp.json"`), dedicated `.claude.mcp.json` (`"type": "http"`, `oauth.clientId: claude-mcp`, `oauth.callbackPort: 8787`, `oauth.scopes: "mcp:tools"`), and [`skills/opsphere-onboarding/SKILL.md`](skills/opsphere-onboarding/SKILL.md) as the Claude-native substitute for the always-on `rules/onboarding-guide.mdc` rule (which Claude Code does not load).
 - `scripts/ci-validate.sh` now validates the Claude manifest and MCP config (existence, JSON validity, `mcpServers` pointer never aliasing Codex's `.mcp.json`, gateway URL, `claude-mcp` OAuth client id, `callbackPort: 8787`).
 - README: Claude Code badge, quick-start (`claude --plugin-dir .`, `/mcp`, `claude mcp login opsphere`, `/reload-plugins`), and skill/agent invocation table (`/opsphere:<skill>`, `@opsphere:<agent>`).
