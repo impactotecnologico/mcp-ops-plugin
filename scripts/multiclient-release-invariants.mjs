@@ -6,6 +6,7 @@ const files = {
   skill: fs.readFileSync('skills/connect-another-client/SKILL.md', 'utf8'),
   command: fs.readFileSync('commands/opsphere-connect-another-client.md', 'utf8'),
   codex: fs.readFileSync('.codex-plugin/plugin.json', 'utf8'),
+  warpReadme: fs.readFileSync('opsphere-warp/README.md', 'utf8'),
 };
 
 const required = [
@@ -21,6 +22,11 @@ const required = [
   ['post-login verification', files.skill, /ops_my_usage.*ops_accounts_list/s],
   ['command delegates to skill', files.command, /skills\/connect-another-client\/SKILL\.md/],
   ['Codex discovery prompt', files.codex, /@connect-another-client/],
+  ['unconfirmed canary path', files.skill, /canary access unconfirmed/i],
+  ['no eligibility inference from usage', files.skill, /ops_my_usage.*not canary eligibility/],
+  ['project approval instructions', files.skill, /project configs require explicit approval/i],
+  ['Personal picker instructions', files.skill, /select \*\*Personal Workspace\*\* in the OAuth picker/],
+  ['public package availability check', files.skill, /actually published before promising/],
 ];
 
 const forbidden = [
@@ -34,6 +40,46 @@ const warpConfig = JSON.parse(fs.readFileSync('opsphere-warp/mcp/opsphere.json',
 if (warpConfig?.mcpServers?.opsphere?.url !== 'https://mcp-cursor.opsphere.io/mcp') {
   console.error('FAIL Warp package MCP URL/shape');
   failures += 1;
+}
+
+// Parse user-copyable examples, not just URL substrings: a Markdown URL inside
+// a JSON string is valid JSON but invalid MCP configuration.
+const examples = [...files.warpReadme.matchAll(/```json\s*\n([\s\S]*?)```/g)];
+if (!examples.length) {
+  console.error('FAIL Warp README has no copyable JSON configuration');
+  failures += 1;
+}
+for (const [, source] of examples) {
+  try {
+    const parsed = JSON.parse(source);
+    if (JSON.stringify(parsed) !== JSON.stringify(warpConfig)) throw new Error('example differs from packaged MCP config');
+  } catch (error) {
+    console.error(`FAIL Warp README configuration: ${error.message}`);
+    failures += 1;
+  }
+}
+
+for (const [name, document] of [['skill', files.skill], ['README', files.warpReadme]]) {
+  for (const requiredPath of ['~/.warp/.mcp.json', '<repo>/.warp/.mcp.json']) {
+    if (!document.includes(requiredPath)) {
+      console.error(`FAIL ${name}: missing exact config path ${requiredPath}`);
+      failures += 1;
+    }
+  }
+  if (/~\/\.warp\/mcp\.json/.test(document)) {
+    console.error(`FAIL ${name}: incorrect non-hidden mcp.json filename`);
+    failures += 1;
+  }
+  for (const target of [
+    'https://github.com/opsphere-io/opsphere-plugin/archive/refs/heads/main.zip',
+    'mailto:contact@opsphere.io',
+  ]) {
+    const links = [...document.matchAll(/\]\(([^)]+)\)/g)].map(match => match[1]);
+    if (!links.includes(target)) {
+      console.error(`FAIL ${name}: missing package acquisition route ${target}`);
+      failures += 1;
+    }
+  }
 }
 
 for (const skillName of [

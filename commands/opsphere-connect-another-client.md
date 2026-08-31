@@ -13,4 +13,6 @@ When available, begin with `ops_my_usage` to confirm the current account and pla
 
 For Warp, explain the canary gate before configuration. Configure the remote Streamable HTTP endpoint `https://mcp-cursor.opsphere.io/mcp` in Warp local and offer the `opsphere-warp/` package for skills/rules. Explain that Opsphere OAuth MCP is not available inside Warp/Oz cloud environments.
 
+Apply the skill's Warp-specific checks: confirm canary access or explicitly mark it unconfirmed; `ops_my_usage` does not prove eligibility. Give literal, copyable JSON, the Settings > Agents > MCP servers enablement step, and explicit project approval. If the user wants Personal, tell them to select Personal Workspace in the OAuth picker. Offer the optional package only with a verified public download or the support fallback; never assume access to the private repo. Cloud restrictions here are Opsphere's current support boundary.
+
 **Claude Code:** invoke as `/opsphere:opsphere-connect-another-client`.

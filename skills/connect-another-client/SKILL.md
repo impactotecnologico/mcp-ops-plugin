@@ -32,6 +32,16 @@ Help the user reuse their existing Opsphere account in another supported client.
 - **Warp local:** first state that access is canary-gated. If available, add a remote Streamable HTTP MCP server named `opsphere` with the URL above. Global config is `~/.warp/.mcp.json`; project config is `<repo>/.warp/.mcp.json`. Use `{ "mcpServers": { "opsphere": { "url": "https://mcp-cursor.opsphere.io/mcp" } } }`, preserving other entries. Complete browser OAuth; Warp returns to `http://127.0.0.1:<port>/mcp/oauth2callback`.
 - **Generic MCP client:** configure a remote Streamable HTTP server with the URL above. Prefer OAuth discovery, PKCE S256 and dynamic registration; do not configure a static bearer token.
 
+## Warp-specific checks
+
+- Before claiming that the account can connect, obtain an explicit Opsphere operator confirmation of canary access. `ops_my_usage` confirms the account/plan, not canary eligibility. If there is no authoritative confirmation, say **canary access unconfirmed** and present setup as preparation only. Do not infer eligibility from the plan or from the server appearing in Warp.
+- If the server is missing from Warp's list, check the config path, JSON and local enablement; the canary gate applies during OAuth authorization, not local server discovery.
+- Open **Settings > Agents > MCP servers**. Global Warp configs auto-spawn by default; project configs require explicit approval/toggling and may need enabling again after restarting Warp.
+- When the user wants Personal, instruct them to select **Personal Workspace** in the OAuth picker. Otherwise let them choose their intended workspace. Do not imply Warp inherits Cursor's active workspace or silently switch it afterward.
+- Render configuration in a fenced `json` block with a literal URL, never a Markdown link inside the JSON string. Do not ask users to configure a callback port or client secret manually.
+- Cloud wording must describe the current **Opsphere support boundary**, not a general inability of Warp to use cloud MCP servers.
+- Optional skills/rules: provide the [public repository](https://github.com/opsphere-io/opsphere-plugin) and [source ZIP](https://github.com/opsphere-io/opsphere-plugin/archive/refs/heads/main.zip). Check that `opsphere-warp/` is actually published before promising it is downloadable. If it is missing or cannot be verified, say the package is not confirmed available and direct the user to [Opsphere support](mailto:contact@opsphere.io) for the canary package. Do not require access to the private development repository. MCP-only setup does not need this package.
+
 After login, ask the client to call `ops_my_usage` and `ops_accounts_list`. Confirm the same Hub and Personal Workspace are visible; do not compare or expose internal IDs unless diagnosing a real mismatch.
 
 If the user changes workspace with explicit consent, expect `notifications/tools/list_changed`. If the client does not refresh, reconnect the Opsphere MCP and call `tools/list` again. Never switch workspace merely to test the connection.
