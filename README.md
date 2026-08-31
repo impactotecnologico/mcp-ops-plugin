@@ -272,7 +272,7 @@ Opsphere is a **remote MCP SaaS**: this repo is the open-source Cursor plugin bu
 | **Credentials** | Sent **only** via `ops_configure_integration`; encrypted at rest on gateway; **never** in plugin repo or Cursor plugin files |
 | **Transport** | HTTPS only; credential values not logged; `ops_list_integrations` shows masked previews only |
 | **Your code** | Not sent to Opsphere unless you paste it in chat |
-| **Revocation** | Disconnect MCP, `ops_remove_integration`, or email [contact@opsphere.io](mailto:contact@opsphere.io) for account deletion |
+| **Revocation** | Revoke the intended OAuth session through support. Disconnecting MCP or removing an integration does not revoke that client session. See [multiclient recovery](docs/MULTICLIENT-SUPPORT.md). |
 | **Bundle hygiene** | Markdown + JSON only — **no secrets, no install hooks, no exfiltration code** in the plugin package |
 
 **Automated verification (public repo):** every push/PR runs [`scripts/ci-validate.sh`](scripts/ci-validate.sh) (manifest + hygiene checks) and **Gitleaks** (full-history secret scan) via [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Run locally: `npm test`.
