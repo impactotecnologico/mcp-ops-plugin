@@ -1,39 +1,39 @@
 # Opsphere for Warp local
 
-This package adds Opsphere's remote MCP plus portable operational skills and project rules to Warp local.
+Use the [official generated Warp connection guide](guides/warp.md) for the endpoint, literal MCP configuration, OAuth, plan compatibility and troubleshooting. The guide and MCP resources are generated from one canonical connection contract, not maintained separately here.
 
-Warp local MCP access is available across all Opsphere plans, without a per-user invitation or allowlist. Existing permissions, quotas and account status still apply. Use the same email as your existing Opsphere account; each client receives an independent OAuth session. Never copy OAuth tokens from Cursor, Codex or Claude Code.
+## Obtain the package
 
-## Install
+Follow the public package availability check in the guide before downloading. MCP-only setup needs no package. This folder adds eight skills, AGENTS.md rules, an agent catalog, a recommended profile checklist and local examples. No credentials are included.
 
-### Obtain the optional package
+## Install in a project
 
-No canary approval is needed. A server missing from Warp's list is a local configuration/discovery issue. An `invalid_redirect_uri` during dynamic registration is a callback compatibility error before account login, not a subscription restriction. The global service switch can temporarily disable Warp for everyone.
+Requires Node.js 20 or newer. From this obtained package folder:
 
-MCP-only setup needs no repository download. For the optional skills and rules, check the [public repository](https://github.com/opsphere-io/opsphere-plugin) for `opsphere-warp/`, then [download the source ZIP](https://github.com/opsphere-io/opsphere-plugin/archive/refs/heads/main.zip) and extract it. Use the `opsphere-warp/` directory inside the extracted folder. If the directory is not published yet, request the optional package from [Opsphere support](mailto:contact@opsphere.io); do not use the private development repo or assume a release asset exists.
-
-### Configure MCP
-
-Save or merge this literal JSON in `~/.warp/.mcp.json` (global) or `<repo>/.warp/.mcp.json` (project), preserving other servers:
-
-```json
-{
-  "mcpServers": {
-    "opsphere": {
-      "url": "https://mcp-cursor.opsphere.io/mcp"
-    }
-  }
-}
+```sh
+node install.mjs install /absolute/path/to/your-project
 ```
 
-Open **Settings > Agents > MCP servers**. Global Warp servers auto-spawn by default. Project servers require explicit approval/toggling; after restarting Warp, enable the project server again if requested. Complete OAuth in the browser using the same account email. If you want your personal workspace, select **Personal Workspace** in the OAuth picker; Warp does not inherit Cursor's active workspace. Let Warp manage its callback and credentials.
+The installer merges the project MCP config, adds a marked AGENTS.md section, and installs skills and their references in .agents/skills/. It preserves other MCP entries and existing files; conflicting skills, competing WARP.md or a different opsphere server stop installation before changes. It records ownership in .agents/opsphere-warp-install.json.
 
-### Optional package installation and verification
+Then follow the guide to enable the project MCP and complete browser OAuth. No authentication is performed by the installer. Global MCP-only configuration is an alternative documented in the guide; avoid adding both global and project entries unintentionally.
 
-1. From the obtained `opsphere-warp/` folder, copy the selected directories under `skills/` into `<repo>/.agents/skills/`.
-2. Merge `rules/AGENTS.md` into the repository's `AGENTS.md`, preserving existing instructions. Do not install a competing `WARP.md`.
-3. After MCP authorization, ask Warp to call `ops_my_usage` and `ops_accounts_list`. Verify the account and intended active workspace; do not change workspace just to test connectivity.
+For manual installation, copy the selected skill directories (including references) into .agents/skills/, merge rules/AGENTS.md and configure MCP from the guide. Record the files you added; the uninstaller only manages its own manifest.
 
-The MCP URL is `https://mcp-cursor.opsphere.io/mcp` using remote HTTP transport. Opsphere OAuth MCP in Warp/Oz cloud and Slack-triggered cloud agents is outside this package's current support boundary, not a general limitation of Warp's cloud MCP capabilities. Do not copy local OAuth credentials to cloud environments.
+## Profile and first run
 
-If tools do not refresh after an explicitly confirmed workspace change, reconnect the MCP and request `tools/list` again.
+Use [the recommended profile checklist](profiles/recommended.md), then ask Warp to run opsphere-onboarding. See [local examples](examples/local.md). Skills are not an import of another host's plugin engine.
+
+## Uninstall or upgrade
+
+```sh
+node install.mjs uninstall /absolute/path/to/your-project
+```
+
+Uninstall removes only the unchanged MCP entry it introduced and its exact rules block. Unchanged owned skill files are moved to .agents/opsphere-warp-removed-<timestamp>/ for recovery. Edited files and pre-existing matching files are preserved and reported; remove or merge them manually after review. Empty directories and config files may remain. No recursive project deletion is used.
+
+For upgrades, uninstall the old package, review preserved edits, then install the new package. Keep the old package available until uninstall finishes.
+
+Local removal does not revoke the server session or delete your account, integrations, workspace or subscription. Revoke only the relevant session separately when desired, using Opsphere's authorized session-management flow; contact support if that surface is unavailable to your account. Removing a Warp Agent Profile is a separate optional action in Warp.
+
+Warp/Oz cloud and Slack-triggered cloud agents remain outside this package's Opsphere support boundary.

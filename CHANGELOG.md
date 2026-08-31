@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Multiclient delivery — 2026-08-31
+- Canonical connection guides, generated configurations, and the existing connect-another-client command share one maintained source; live resources are available after gateway deployment.
+- Warp local package includes eight portable skills, AGENTS.md, a recommended profile checklist, local examples, and explicit install/uninstall with collision protection and recoverable removal. No cloud support or token copying.
+- Distribution versions: Cursor 1.0.16, Codex 1.0.12, Claude Code 1.0.6.
+
 ### Fixed
 - Workspace selection is now explicitly user-controlled: cross-workspace resource requests only propose a switch, `ops_context_open` requires prior confirmation, and agents must never switch temporarily or return automatically.
 - Workspace changes now replace the prior conversation context atomically; agents no longer close first or treat a missing provider tool as permission to switch workspaces automatically.

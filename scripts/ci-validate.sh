@@ -92,7 +92,7 @@ sys.exit(1 if bad else 0)
 fi
 
 # 6. scripts/ — maintainer CI only (no runtime shell in bundle)
-ALLOWED_SCRIPTS=(ci-validate.sh codex-install.sh codex-mcp-config.sh phase6-ux-invariants.mjs multiclient-release-invariants.mjs)
+ALLOWED_SCRIPTS=(ci-validate.sh codex-install.sh codex-mcp-config.sh phase6-ux-invariants.mjs multiclient-release-invariants.mjs warp-package.test.mjs)
 EXTRA_SCRIPTS=()
 while IFS= read -r script; do
   [[ -z "$script" ]] && continue
