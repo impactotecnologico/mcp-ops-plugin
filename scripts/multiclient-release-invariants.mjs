@@ -22,14 +22,15 @@ const required = [
   ['post-login verification', files.skill, /ops_my_usage.*ops_accounts_list/s],
   ['command delegates to skill', files.command, /skills\/connect-another-client\/SKILL\.md/],
   ['Codex discovery prompt', files.codex, /@connect-another-client/],
-  ['unconfirmed canary path', files.skill, /canary access unconfirmed/i],
-  ['no eligibility inference from usage', files.skill, /ops_my_usage.*not canary eligibility/],
+  ['all-plan access', files.skill, /available across all Opsphere plans/],
+  ['no account invitation required', files.skill, /No invitation or account allowlist is required/],
   ['project approval instructions', files.skill, /project configs require explicit approval/i],
   ['Personal picker instructions', files.skill, /select \*\*Personal Workspace\*\* in the OAuth picker/],
   ['public package availability check', files.skill, /actually published before promising/],
 ];
 
 const forbidden = [
+  ['obsolete canary restriction', `${files.skill}\n${files.command}\n${files.warpReadme}`, /is canary-gated|confirm canary access|canary access unconfirmed|invited canary accounts/i],
   ['cloud support promise', files.skill, /Warp(?:\/Oz)? cloud (?:is )?supported/i],
   ['client secret request', `${files.skill}\n${files.command}`, /paste.*client secret|send.*client secret/i],
 ];

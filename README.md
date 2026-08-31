@@ -32,7 +32,7 @@ Architecture diagram and domain list: **[docs/REMOTE-MCP-ARCHITECTURE.md](docs/R
 
 Use `/opsphere-connect-another-client` to reuse the same Opsphere account in Cursor, Codex, Claude Code or another compatible MCP host. Each client completes OAuth independently and receives its own revocable session; never copy token files between applications.
 
-Warp local is distributed as a canary package under [`opsphere-warp/`](opsphere-warp/README.md). It includes the remote MCP configuration, portable skills and `AGENTS.md`. Opsphere OAuth is not supported in Warp/Oz cloud environments.
+Warp local MCP is available across all Opsphere plans without per-user invitations. The optional [`opsphere-warp/`](opsphere-warp/README.md) package includes the remote MCP configuration, portable skills and `AGENTS.md`. Opsphere OAuth is not supported in Warp/Oz cloud environments.
 
 ---
 
