@@ -71,9 +71,9 @@ const checks = [
     forbid: [],
     require: [
       /Live capability discovery \(mandatory\)/i,
-      /current MCP `tools\/list` is the authority/i,
-      /under \*\*Available now\*\*/i,
-      /Re-evaluate the live list after a workspace switch/i,
+      /MCP `tools\/list` describes callable definitions, not workspace authorization/i,
+      /Use `ops_my_usage`, workspace availability and `ops_list_integrations`/i,
+      /With `catalog.mode: stable`, no catalog refresh\s+or reconnection is needed/i,
       /self-service `ops_\*` tools are not\s+guaranteed in a direct corporate-workspace login/i,
       /Jira retry discipline/i,
       /Do not brute-force query variants/i,

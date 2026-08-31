@@ -13,11 +13,12 @@ The backend is a remote MCP server. All tool calls go to the Opsphere gateway. N
 
 ## Available Tool Categories
 
-This is a routing reference for the full product. The current MCP `tools/list` is
-the authority for what is available in the active workspace. When asked what can
-be done, group advertised providers under **Available now**. Never present an
-absent or inactive integration as usable; label it **Not active** or **Needs
-action** only when live integration status supports that conclusion.
+This is a routing reference for the full product. MCP `tools/list` describes
+callable definitions, not authorization or configured integrations. Use
+`ops_my_usage`, workspace availability and `ops_list_integrations` to describe
+what is usable in the active workspace. Unknown status is not missing setup.
+When `catalog.mode` is `stable`, workspace changes do not require a catalog
+refresh or reconnection. Never change workspace to bypass a denied operation.
 
 Tools can include the following once authenticated, entitled, and configured:
 
@@ -45,9 +46,9 @@ Tools can include the following once authenticated, entitled, and configured:
 
 **Network tools (`dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents`) work immediately after login — no integration setup needed.** `alg_status` / `alg_incidents` report **global** Algolia platform health (not your tenant App ID).
 
-**Macro tools** (`macro_*`) appear only on **Team / Enterprise** when the `macros` module is enabled. They run multi-step investigations server-side with progress streaming. Use skill **`run-macro-workflows`** when `tools/list` includes them; otherwise use subagents (`/outage-triage`, `/endpoint-health`) or atomic network tools.
+**Macro tools** (`macro_*`) require an eligible plan and the enabled `macros` module even when visible in the stable catalog. They run multi-step investigations server-side with progress streaming. Check workspace eligibility before using skill **`run-macro-workflows`**; respect execution denials.
 
-**Memory tools** appear only when the `memory` module is enabled for your tenant (`tenant_tools`, profile `cursor`). They store **distilled** notes from past sessions — not live ops truth. Always verify current state with Datadog, K8s, Vercel, or other live tools after reading memory.
+**Memory tools** require the `memory` module enabled for the active workspace, even when visible. They store **distilled** notes from past sessions — not live ops truth. Always verify current state with live tools after reading memory.
 
 **Three distinct concepts (never mix them):**
 
@@ -397,7 +398,7 @@ Default scopes for partners: **session** + **user**. Use `scope=repository` only
 
 Do **not** store text that duplicates account catalog context (`cloud_accounts.system_prompt_context`). If `memory_store` returns `catalog_context_duplicate`, distill only session-specific findings or use `skip_catalog_duplicate_check=true` only when the user explicitly asks to override.
 
-If `memory_*` tools are missing from `tools/list`, the tenant does not have memory enabled — do not invent the tools; tell the user to contact Opsphere support or check signup plan.
+If `memory_*` tools are missing from `tools/list`, do not invent them or infer the workspace's configuration from their absence. Check live availability. Conversely, visible memory tools still require workspace enablement and permission.
 
 ---
 

@@ -64,7 +64,7 @@ Internal IDs may appear in tool payloads for the model; **do not** teach end use
 1. Call `ops_accounts_list`. Identify Personal vs external from the tool result.
 2. Ask which **external** workspace if more than one (labels/slugs only).
 3. Call `ops_context_open` with that `linked_connection_id` only after explicit user confirmation. It persistently changes the active workspace and client preference, and closes/replaces the previous context atomically; do not close first. Only pass a stable `chat_session_key` supplied by the host—never invent one.
-4. If the result includes `tools_discovery.stale: true`, call MCP `tools/list` before scoped tools.
+4. If `tools_discovery.mode` is `stable`, do not refresh or reconnect. Use `workspace_availability` and, when needed, `ops_list_integrations`: the public tools list is not permission to execute. If availability is unknown, do not infer missing credentials. Only legacy `tools_discovery.stale: true` calls for a host catalog refresh; if the host does not expose `tools/list`, do not invent an invocable tool.
 5. Confirm to the user which workspace is active by **label/slug**.
 6. Continue operational tools. Do not narrate broker internals (`expires_at`, pinning, etc.) unless the user asks for diagnostics.
 

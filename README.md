@@ -107,7 +107,7 @@ The plugin rule [`onboarding-guide.mdc`](rules/onboarding-guide.mdc) tells the a
 
 Opsphere ships **specialized subagents** in [`agents/`](agents/). Invoke them in chat with **`/agent-name`** (e.g. `/endpoint-health`) or ask the main agent to use them. They run on the same remote MCP gateway; output is a structured report back to your thread.
 
-Subagents **adapt to your plan** by using only tools that appear in your session's `tools/list` — no hardcoded tenant or org. When details are missing (hostname, repo, incident timeline), they **ask you clarifying questions** before burning tool calls.
+Subagents use advertised tools and respect the active workspace's plan, configuration and execution permissions — no hardcoded tenant or org. Visibility is not authorization. With stable discovery enabled, switching workspace does not require reconnecting; use `ops_my_usage` and `ops_list_integrations` to check actual availability. When details are missing (hostname, repo, incident timeline), agents ask before running tool calls.
 
 | Subagent | Invoke | Plans | Read-only | What it does |
 |----------|--------|-------|-----------|--------------|

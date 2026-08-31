@@ -419,3 +419,14 @@ Contact us at **contact@opsphere.io** with:
 - A description of what you're trying to do.
 - The error message (exact text).
 - Your Cursor version (`Help → About`).
+# Stable catalog and workspace changes
+
+If `ops_my_usage` reports `catalog.mode: stable`, the public tool count stays the
+same across workspaces. That is expected: configured modules, integration
+credentials and execution permissions still depend on the active workspace.
+Switching workspace does not require reconnecting. Check workspace availability
+and `ops_list_integrations`; never switch automatically to work around a denial.
+
+Clients already connected before stable discovery was activated need one catalog
+reload. New product tools or schema changes may also require one reload in clients
+that ignore catalog notifications. This is separate from normal workspace changes.

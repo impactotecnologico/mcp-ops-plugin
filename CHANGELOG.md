@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Stable discovery — prepared for gateway activation
+- Cursor 1.0.17, Codex 1.0.13, Claude Code 1.0.7: distinguish public tool definitions
+  from active-workspace configuration, integration credentials and authorization.
+- In stable mode, no catalog reconnection is needed after workspace changes;
+  one reload is needed for clients connected before activation.
+- Connection guides, onboarding, workspace skills and Warp AGENTS.md share the
+  same guidance. Legacy discovery remains supported while the flag is off.
+- The earlier live-list eligibility wording below describes the previous release;
+  a listed tool is no longer evidence of workspace permission in stable mode.
+
 ### Multiclient delivery — 2026-08-31
 - Canonical connection guides, generated configurations, and the existing connect-another-client command share one maintained source; live resources are available after gateway deployment.
 - Warp local package includes eight portable skills, AGENTS.md, a recommended profile checklist, local examples, and explicit install/uninstall with collision protection and recoverable removal. No cloud support or token copying.

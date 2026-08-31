@@ -14,16 +14,17 @@ Opsphere connects your DevOps stack to Claude Code through a **remote MCP gatewa
 The table below is a routing reference for the full Opsphere product. It is **not**
 proof that a provider or tool is active in the current workspace.
 
-- The current MCP `tools/list` is the authority for what can be used now.
-- When the user asks what Opsphere can do, present tools/providers that are in the
-  current `tools/list` under **Available now**.
+- MCP `tools/list` describes callable definitions, not workspace authorization.
+- Use `ops_my_usage`, workspace availability and `ops_list_integrations` to
+  distinguish usable capabilities from setup, plan or permission requirements.
 - Do not describe absent provider tools as active integrations. If setup/status
   tools are available, use `ops_list_integrations` and put disabled, unassigned,
   upgrade-only, or misconfigured providers under **Not active** or **Needs action**.
 - Mention an inactive provider only as a clearly labelled setup/admin possibility;
   never mix it into the list of capabilities available now.
-- Re-evaluate the live list after a workspace switch. A static skill catalog from
-  an earlier workspace must not override the newly advertised MCP tools.
+- After switching workspace, re-evaluate workspace availability, not permission
+  inferred from visible tools. With `catalog.mode: stable`, no catalog refresh
+  or reconnection is needed. Unknown status is not evidence of missing setup.
 
 ## Tool categories (routing reference only)
 

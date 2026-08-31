@@ -26,6 +26,11 @@ Respect gateway errors: `TRIAL_EXPIRED`, `RATE_LIMIT_EXCEEDED`, `READ_ONLY_PLAN`
 
 Use tools that exist in the current session's `tools/list`. Never invent tool names.
 
+Visibility alone is not authorization: stable discovery includes definitions
+unavailable in the active workspace. Check workspace availability and integration
+status for optional providers; respect plan/configuration denials. Do not switch
+workspace automatically. Stable-mode workspace changes need no reconnection.
+
 **Typical after login (no integration setup):**
 
 | Tool | Purpose |

@@ -1,6 +1,6 @@
 {
   "name": "opsphere-cursor-plugin",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "private": true,
   "description": "Opsphere DevOps & SRE intelligence plugin for Cursor (manifest, rules, skills — no npm runtime deps)",
   "scripts": {

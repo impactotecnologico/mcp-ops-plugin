@@ -27,6 +27,15 @@ Good fallback:
 > the provider tools currently advertised. For account-level plan and quota
 > details, use your Opsphere Connection Hub session or ask the workspace admin.
 
+## Catalog and workspace measurements
+
+Report `catalog.announcedToolCount` separately from workspace configured tools,
+enabled modules, configured providers and plan eligibility. The stable public
+catalog is not an authorization list. Usage and subscription remain Hub-level;
+operational configuration belongs to the active workspace, not the Hub. Unknown
+availability must stay unknown, not become zero or "not configured". When
+`catalog.mode` is `stable`, switching workspace needs no catalog reconnection.
+
 ## Response presentation (mandatory)
 
 **Never** paste the raw MCP tool envelope (`content`, `type`, JSON-RPC, or a `json` code block of the full tool result).
@@ -41,7 +50,7 @@ Good fallback:
 |---------|----------------|
 | Connection | Opsphere **connected** |
 | Plan | e.g. Community (trial days if present) |
-| Personal Workspace | **Active** (automatic — not blocked by Work Context) |
+| Personal Workspace | Included automatically; say **Active** only when selected |
 | Work Context | Configured / not configured — optional provider notes |
 | External workspaces | Community: included Personal Workspace; additional links need upgrade. **Org invite:** same email + Developer+ may already show in `ops_accounts_list` — mention when user asks about a company invitation. |
 | Integrations | Count / list next actions (Connect AWS, Datadog, …) if zero |

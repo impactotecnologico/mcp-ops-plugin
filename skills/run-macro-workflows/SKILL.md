@@ -15,6 +15,11 @@ Macros are **read-only composite tools** on the remote gateway. Each macro runs 
 
 Check `tools/list` before calling — never invent tool names.
 
+In stable discovery, a visible macro does not prove plan eligibility or module
+enablement. Check the active workspace availability, not just the Hub's plan;
+respect explicit execution denials. Do not switch workspace to bypass a gate.
+Stable-mode workspace changes do not require reconnecting.
+
 | Tool | When to use | Typical args |
 |------|-------------|--------------|
 | `macro_endpoint_health` | Single hostname/URL: DNS + HTTP + TLS in one run | `hostname` or `url`; optional `port`, `path` |
