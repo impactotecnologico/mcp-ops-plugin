@@ -2915,13 +2915,13 @@
     "ops_context_open": {
       "annotations": {
         "readOnlyHint": false,
-        "destructiveHint": false,
+        "destructiveHint": true,
         "openWorldHint": false
       },
       "justifications": {
         "read_only_justification": "Opens or closes private work-context session state.",
         "open_world_justification": "Does not change public internet state or write to an external third-party system.",
-        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+        "destructive_justification": "Performs an administrative overwrite or update that may not be directly reversible."
       }
     },
     "ops_get_work_context": {

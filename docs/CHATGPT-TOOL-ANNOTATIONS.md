@@ -9,7 +9,7 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 - Tools auditadas: 328
 - Solo lectura: 275
 - Con efectos o cambios de estado: 53
-- Destructivas o irreversibles: 30
+- Destructivas o irreversibles: 31
 - Cambian sistemas públicos o externos: 19
 - Bloqueadas por la regla existente del plan de solo lectura: 32
 
@@ -257,7 +257,7 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `ops_accounts_list` | true | false | false | Solo consulta | Permitida |
 | `ops_configure_integration` | false | true | false | Sobrescribe, elimina o revoca estado privado | Permitida |
 | `ops_context_close` | false | false | false | Cambia estado privado de forma acotada | Permitida |
-| `ops_context_open` | false | true | false | Sustituye el contexto activo y la preferencia persistente; requiere confirmación | Permitida |
+| `ops_context_open` | false | true | false | Sobrescribe, elimina o revoca estado privado | Permitida |
 | `ops_get_work_context` | true | false | false | Solo consulta | Permitida |
 | `ops_incident_rollup` | true | false | false | Solo consulta | Permitida |
 | `ops_list_integrations` | true | false | false | Solo consulta | Permitida |
@@ -343,3 +343,4 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `vercel_env_sources` | true | false | false | Solo consulta | Permitida |
 | `vercel_project_status` | true | false | false | Solo consulta | Permitida |
 | `vercel_projects_list` | true | false | false | Solo consulta | Permitida |
+
