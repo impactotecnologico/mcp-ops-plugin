@@ -44,7 +44,7 @@ Tools can include the following once authenticated, entitled, and configured:
 | Operational memory | — | `memory_search`, `memory_store`, `memory_session_touch`, `memory_invalidate` |
 | **Macro workflows** (Team+) | — | `macro_outage_triage`, `macro_endpoint_health`, `macro_env_health` — composite read-only runs with SSE progress |
 
-**Network tools (`dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents`) work immediately after login — no integration setup needed.** `http_check` supports optional `connectHost`, `headers` (e.g. `Host`), and `servername` for direct origin probes bypassing CDN DNS. `alg_status` / `alg_incidents` report **global** Algolia platform health (not your tenant App ID).
+**Network tools (`dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents`) work immediately after login — no integration setup needed.** `dns_lookup` accepts `recordTypes` (`A`, `AAAA`, `CNAME`, `NS`); for DNS cutovers use `["NS", "CNAME"]` rather than falling back to shell `dig`. `http_check` supports optional `connectHost`, `headers` (e.g. `Host`), and `servername` for direct origin probes bypassing CDN DNS. `alg_status` / `alg_incidents` report **global** Algolia platform health (not your tenant App ID).
 
 **Macro tools** (`macro_*`) require an eligible plan and the enabled `macros` module even when visible in the stable catalog. They run multi-step investigations server-side with progress streaming. Check workspace eligibility before using skill **`run-macro-workflows`**; respect execution denials.
 

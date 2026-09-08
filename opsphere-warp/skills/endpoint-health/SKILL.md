@@ -28,8 +28,8 @@ Use tools that exist in the current session's `tools/list`. Never invent tool na
 
 | Tool | Purpose |
 |------|---------|
-| `dns_lookup` | Resolution across resolvers (Google, Cloudflare, system) |
-| `http_check` | HTTP(S) reachability and status |
+| `dns_lookup` | Resolution across resolvers (Google, Cloudflare, system); optional `recordTypes` (`A`, `AAAA`, `CNAME`, `NS`) |
+| `http_check` | HTTP(S) reachability and status; optional `connectHost`, `headers` (`Host`), `servername` for origin bypass |
 | `cert_status` | TLS certificate validity and expiry |
 
 **Often available on paid plans or fuller catalogs** (skip if absent):
@@ -65,23 +65,26 @@ If the user gave a bare domain, that is enough to start the core path. Batch at 
 Follow in order. **Always run the core path** when those three tools exist. Skip optional steps when the tool is missing.
 
 1. **Clarify target** — hostname or URL; port (default 443); path for `http_check`. **Stop and ask** if no target was given.
-2. **DNS** — `dns_lookup` for the hostname. Compare resolvers; flag NXDOMAIN, SERVFAIL, or inconsistent answers.
+2. **DNS** — `dns_lookup` for the hostname. Compare resolvers; flag NXDOMAIN, SERVFAIL, or inconsistent answers. For delegation/cutover questions, request `recordTypes: ["NS", "CNAME"]`; do not infer that the option is absent merely because a default response contains only `recordTypes: ["A"]`.
 3. **HTTP** — `http_check` on `https://hostname` (or the user's URL). Record status code, latency, and errors.
 4. **TLS** — `cert_status` on the hostname (and port if not 443). Record expiry, issuer, and validity errors.
 5. **TCP** (if `tcp_connect` in `tools/list`) — connect to hostname:443 (or user port) when HTTP failed but DNS succeeded.
 6. **DNSSEC** (if `dnssec_check` in `tools/list`) — validate the registrable domain when DNS looks suspicious.
 7. **Cloudflare** (if `cf_quick_status` / `cf_dns_records` in `tools/list`) — derive zone from hostname (e.g. `www.example.com` → `example.com` when appropriate); quick status then DNS records if useful.
-8. **External uptime** (if `pingdom_*` in `tools/list`) — `pingdom_summary` with `hostnameContains` matching the hostname.
-9. **Prior context** (if `memory_search` in `tools/list`) — short query with hostname; treat as hints only.
-10. **Report** — structured output below.
+8. **Origin bypass** (optional) — when CDN/public URLs look healthy but origin is suspect: `dns_lookup` with `recordTypes: ["A","CNAME"]` on the origin hostname (e.g. `www-api-pre-origin.example.com`), then `http_check` with `url: "https://<origin-ip>/"`, `connectHost: "<origin-ip>"`, `headers: { Host: "<origin-hostname>" }`, `servername: "<origin-hostname>"`. Compare status vs public URLs.
+9. **External uptime** (if `pingdom_*` in `tools/list`) — `pingdom_summary` with `hostnameContains` matching the hostname.
+10. **Prior context** (if `memory_search` in `tools/list`) — short query with hostname; treat as hints only.
+11. **Report** — structured output below.
 
 ## Heuristics
 
 - DNS fails on all resolvers → likely DNS or domain issue before blaming the app or CDN.
 - DNS OK but HTTP fails → TLS, firewall, origin down, or wrong path; use `cert_status` and optional `tcp_connect`.
+- CDN OK but origin may be failing → resolve origin with `dns_lookup(recordTypes: ["A","CNAME"])`, then direct `http_check` with `connectHost` + `Host` + `servername`.
 - HTTP 2xx/3xx but user reports "down" → ask about path, region, or auth; check correct URL in `http_check`.
 - Certificate expiring within 30 days → call out in **Verdict** even if HTTP succeeds.
 - Resolver disagreement → mention in **Evidence**; do not claim global outage from one host alone.
+- Parent delegation or DNS cutover → compare `NS` on at least two public resolvers and request `CNAME` separately in the same `dns_lookup` call; shell `dig` is unnecessary when both types are available.
 - Community tenants may lack `tcp_connect`, `dnssec_check`, and Pingdom — core trio (`dns_lookup`, `http_check`, `cert_status`) is still a complete minimal report.
 
 ## Output format

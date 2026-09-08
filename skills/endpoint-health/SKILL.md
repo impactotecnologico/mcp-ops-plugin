@@ -28,7 +28,7 @@ Use tools that exist in the current session's `tools/list`. Never invent tool na
 
 | Tool | Purpose |
 |------|---------|
-| `dns_lookup` | Resolution across resolvers (Google, Cloudflare, system); optional `recordTypes` (`A`, `AAAA`, `CNAME`) |
+| `dns_lookup` | Resolution across resolvers (Google, Cloudflare, system); optional `recordTypes` (`A`, `AAAA`, `CNAME`, `NS`) |
 | `http_check` | HTTP(S) reachability and status; optional `connectHost`, `headers` (`Host`), `servername` for origin bypass |
 | `cert_status` | TLS certificate validity and expiry |
 
@@ -65,7 +65,7 @@ If the user gave a bare domain, that is enough to start the core path. Batch at 
 Follow in order. **Always run the core path** when those three tools exist. Skip optional steps when the tool is missing.
 
 1. **Clarify target** — hostname or URL; port (default 443); path for `http_check`. **Stop and ask** if no target was given.
-2. **DNS** — `dns_lookup` for the hostname. Compare resolvers; flag NXDOMAIN, SERVFAIL, or inconsistent answers.
+2. **DNS** — `dns_lookup` for the hostname. Compare resolvers; flag NXDOMAIN, SERVFAIL, or inconsistent answers. For delegation/cutover questions, request `recordTypes: ["NS", "CNAME"]`; do not infer that the option is absent merely because a default response contains only `recordTypes: ["A"]`.
 3. **HTTP** — `http_check` on `https://hostname` (or the user's URL). Record status code, latency, and errors.
 4. **TLS** — `cert_status` on the hostname (and port if not 443). Record expiry, issuer, and validity errors.
 5. **TCP** (if `tcp_connect` in `tools/list`) — connect to hostname:443 (or user port) when HTTP failed but DNS succeeded.
@@ -84,6 +84,7 @@ Follow in order. **Always run the core path** when those three tools exist. Skip
 - HTTP 2xx/3xx but user reports "down" → ask about path, region, or auth; check correct URL in `http_check`.
 - Certificate expiring within 30 days → call out in **Verdict** even if HTTP succeeds.
 - Resolver disagreement → mention in **Evidence**; do not claim global outage from one host alone.
+- Parent delegation or DNS cutover → compare `NS` on at least two public resolvers and request `CNAME` separately in the same `dns_lookup` call; shell `dig` is unnecessary when both types are available.
 - Community tenants may lack `tcp_connect`, `dnssec_check`, and Pingdom — core trio (`dns_lookup`, `http_check`, `cert_status`) is still a complete minimal report.
 
 ## Output format

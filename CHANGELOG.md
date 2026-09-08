@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### DNS delegation diagnostics
+- `dns_lookup` now supports `NS` alongside `A`, `AAAA`, and `CNAME`; endpoint-health flows use `recordTypes: ["NS", "CNAME"]` to validate public DNS cutovers without falling back to shell `dig`.
+
 ### Stable discovery — prepared for gateway activation
 - Cursor 1.0.17, Codex 1.0.13, Claude Code 1.0.7: distinguish public tool definitions
   from active-workspace configuration, integration credentials and authorization.
