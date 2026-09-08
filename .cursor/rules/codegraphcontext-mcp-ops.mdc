@@ -55,45 +55,56 @@ CGC mantiene un grafo por repositorio. `find_callers` no cruza paquetes o clones
 busca la definición y sus callers en el repo propietario, y usa `find_code` para
 encontrar imports/usos en las capas consumidoras.
 
-## Freshness sin bloquear Git
+## Freshness automática por contenido
 
-La identidad reutilizable del índice es:
+El servicio local persistente es el único propietario de LadybugDB. Observa los
+checkouts, agrupa ráfagas, mantiene una cola durable y actualiza en segundo plano
+los archivos y relaciones afectados. Los clientes MCP y scripts se conectan al
+servicio; no abras la base con un segundo proceso CGC.
 
-`ruta del repo + HEAD SHA + versión CGC`
+La actualidad depende del contenido indexable, configuración, versión CGC y generación
+publicada. Un commit del contenido ya procesado o un `git fetch` no reindexa. Pull,
+checkout, merge, rebase, cambios WIP y cambios hechos con el servicio apagado se
+reconcilian por contenido. El inicio de sesión señala el repo activo y consulta estado
+sin bloquear por una indexación síncrona.
 
-El working tree dirty añade un fingerprint suplementario; `git status` por sí solo
-no demuestra freshness.
+Estados del servicio:
 
-Al iniciar una sesión, tras `git pull`/checkout/rebase, o antes de explorar un repo
-activo:
+- `READY`: la generación publicada coincide con el contenido observado.
+- `UPDATING`: hay un lote en proceso; una localización puede incluir fallback directo
+  de archivos pendientes.
+- `DEGRADED`: el grafo es parcialmente utilizable, con cobertura declarada.
+- `UNINDEXED`: el bootstrap se ejecuta en segundo plano.
+- `UNAVAILABLE`: checkout o volumen ausente; no interpretes la ausencia como borrado.
+- `ERROR`: conserva el error y requiere reintento o recuperación.
+
+Cada consulta estructural debe incluir `repo_path` explícito y conservar los metadatos
+`_opsphere` de freshness, generación, completitud y truncamiento. Una consulta de
+callers, dependencias o impacto no es completa salvo que el alcance esté `READY`.
+Para localizar símbolos durante una actualización se admite el fallback acotado del
+servicio; no lo presentes como análisis exhaustivo.
+
+Diagnóstico y recuperación explícita:
 
 ```bash
-../mcp-ops-b/scripts/cgc-status.sh mcp-ops-db mcp-ops-b
+../mcp-ops-b/scripts/cgc-status.sh
+../mcp-ops-b/scripts/cgc-refresh-dirty.sh --wait mcp-ops-db mcp-ops-b
 ```
 
-Si aparece `STALE_*`, `UNINDEXED` o hay WIP no reflejado, refresca solo los repos
-activos:
-
-```bash
-../mcp-ops-b/scripts/cgc-refresh-dirty.sh mcp-ops-db mcp-ops-b
-```
-
-Con un backend embebido, no abras un segundo proceso contra la base: si el MCP de
-Cursor está activo, desactívalo, ejecuta el refresh y reactívalo al terminar. El script
-detecta ese caso y falla rápido en vez de competir por el lock.
-
-No instales hooks `post-merge`, `post-commit`, `post-checkout` o `post-rewrite`
-que ejecuten `cgc index`. Nunca reindexes los diez repos en el camino crítico de
-Git. `--all` queda reservado a recuperación manual explícita.
+El segundo comando solicita reconciliación al servicio; no ejecuta `index --force`
+en el proceso del terminal. No instales hooks Git de indexación. `--all` queda
+reservado a diagnóstico o recuperación explícitos.
 
 ## Protocolo de exploración
 
-1. Selecciona candidatos con el YAML y comprueba su freshness.
+1. Selecciona candidatos con el YAML; el servicio verifica su generación al consultar.
 2. Ejecuta `find_code` con query en inglés y `repo_path` explícito.
 3. Usa `find_callers` solo donde exista la definición.
 4. Expande a una capa adyacente cuando los imports, contratos o resultados lo indiquen.
-5. Detén el grafo en cuanto haya rutas suficientes y lee el mínimo código necesario.
-6. Cuando el MCP admita salida compacta/GCF, prefiérela y evita pedir source completo.
+5. Si `_opsphere.complete=false`, limita la conclusión a su cobertura; espera `READY`
+   para callers o impacto exhaustivos.
+6. Detén el grafo en cuanto haya rutas suficientes y lee el mínimo código necesario.
+7. Prefiere salida compacta/GCF y evita pedir source completo.
 
 No repitas la misma consulta con los mismos argumentos en un turno. Si CGC no responde,
 reintenta autenticación/conexión una vez; después usa búsqueda textual acotada y deja
