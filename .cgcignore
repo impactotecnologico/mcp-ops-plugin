@@ -73,3 +73,7 @@ _internal/
 docs/
 openspec/
 messages/
+
+# Plugin — bundles y artefactos derivados
+assets/
+chatgpt-app-submission.json
