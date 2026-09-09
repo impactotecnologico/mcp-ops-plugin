@@ -1,0 +1,29 @@
+---
+alwaysApply: false
+---
+
+# Operación y recuperación de CodeGraphContext
+
+Carga esta regla manualmente solo para diagnosticar, instalar, medir o recuperar CGC.
+
+El servicio local persistente es el único propietario de LadybugDB. Observa los repos, agrupa ráfagas, reconcilia por contenido y publica una generación únicamente después de un checkpoint durable. No ejecutes `cgc index --force`, no abras LadybugDB con un segundo proceso y no instales hooks Git de indexación.
+
+Comandos versionados:
+
+```bash
+../mcp-ops-b/scripts/cgc-status.sh
+../mcp-ops-b/scripts/cgc-refresh-dirty.sh --wait mcp-ops-db mcp-ops-b
+```
+
+Cambiar o guardar archivos, `pull`, checkout, merge y rebase producen eventos y además quedan cubiertos por la reconciliación periódica. `fetch` y un commit sin cambios nuevos de contenido no reindexan. Si el servicio estaba apagado, compara el contenido al arrancar.
+
+Estados:
+
+- `READY`: generación observada, persistida y publicada.
+- `UPDATING`: lote en proceso; una localización puede usar fallback de pendientes.
+- `DEGRADED`: cobertura parcial declarada.
+- `UNINDEXED`: bootstrap seguro en segundo plano.
+- `UNAVAILABLE`: checkout o volumen ausente.
+- `ERROR`: conserva diagnóstico; usa reconcile con retry.
+
+El servicio desactiva el auto-checkpoint nativo de LadybugDB, ejecuta checkpoints controlados y pone en cuarentena un `.wal.checkpoint` interrumpido antes de abrir la base. Si grafo y manifiesto discrepan, adopta las rutas estables por SHA y reconcilia el delta; solo hace bootstrap sin evidencia fiable.

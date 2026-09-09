@@ -1,0 +1,29 @@
+---
+description: Cargar al localizar código desconocido, símbolos, callers/callees, dependencias, impacto o flujos cross-repo de Opsphere; no para archivos o literales ya conocidos, documentación, Git ni operaciones en vivo
+alwaysApply: false
+---
+
+# Estrategia CodeGraphContext de Opsphere
+
+La fuente de verdad de repos, capas, orden y dominios es `../mcp-ops-b/config/codegraphcontext-repos.yaml`. No dupliques ese inventario.
+
+## Consultas y selección
+
+La conversación puede estar en español, pero formula consultas CGC con identificadores del código en inglés: función, clase, tipo, endpoint, tabla o constante. Empieza con una query corta y `fuzzy_search=false` si conoces el casing; amplía solo si no hay resultados.
+
+Para flujos de producto sigue, desde la capa relevante, la espina:
+
+`data → gateway → control-plane-api → control-plane-ui → experience`
+
+Billing, infraestructura, plugin, web pública y status son laterales: inclúyelos únicamente si el dominio o la evidencia los señala. Normalmente bastan 2–4 repos; no barras todos por defecto. El grafo se consulta por repo: encuentra la definición y relaciones en su propietario, y busca imports/usos en las capas consumidoras.
+
+## Protocolo de bajo contexto
+
+1. Usa `find_code` con `repo_path` explícito para localizar símbolos.
+2. Usa `analyze_code_relationships` solo para callers, callees o impacto.
+3. Conserva `_opsphere.freshness`, `complete`, generación y truncamiento.
+4. Si `complete=false`, limita la conclusión a la cobertura disponible; no declares exhaustividad.
+5. Detente cuando tengas las rutas necesarias y lee únicamente el código relevante.
+6. Evita source completo y no repitas los mismos argumentos en un turno.
+
+Para un archivo conocido, un error literal, variables de entorno, documentación o configuración Git, usa lectura/búsqueda textual acotada. Para infraestructura en vivo usa Opsphere, no CGC. Generadores, reflexión y llamadas dinámicas pueden requerir verificación textual.
