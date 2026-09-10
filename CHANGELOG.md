@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.0.22] - 2026-09-10 (Bounded QA catalog discovery)
+
+### Fixed
+- QA subagents now run `qa_catalog_get` as the sole initial Opsphere request and wait for it to finish before collecting release or investigation evidence.
+- Busy, discovery-in-progress, timeout, and discovery-failure responses use a single isolated retry with server-provided backoff instead of triggering concurrent fan-out.
+- Subsequent evidence collection is limited to two short concurrent calls, preventing one expensive discovery from saturating a workspace subprocess.
+
+### Safety and compatibility
+- Discovery remains tenant-agnostic: it uses only the active workspace SCM organization, universal QA signals, and tenant-scoped preferences; no customer, repository, or environment names are embedded.
+- Distribution versions: Cursor **1.0.22**, Codex **1.0.17**, Claude Code **1.0.11**.
+
 ## [1.0.21] - 2026-09-10 (Zero-configuration QA catalog)
 
 ### Added
