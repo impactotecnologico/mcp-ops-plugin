@@ -95,6 +95,8 @@ automatically. Keep the current workspace unchanged until the user decides.
 | `endpoint-health` | `@opsphere:endpoint-health` | All | One hostname/URL: DNS + HTTP + TLS |
 | `ci-investigator` | `@opsphere:ci-investigator` | Professional+ | Failed CI/CD pipelines (Community gets an upgrade message) |
 | `postmortem-writer` | `@opsphere:postmortem-writer` | All | Post-mortem / RCA drafting, optional `memory_store` |
+| `qa-test-investigator` | `@opsphere:qa-test-investigator` | All | Feature tests, bug reproduction and ticket-ready QA evidence |
+| `qa-release-readiness` | `@opsphere:qa-release-readiness` | All | Release gate based on matching tests, deployments and runtime evidence |
 
 When `ops_my_usage` is advertised, call it before delegating a premium subagent if
 the plan is unknown. In a direct corporate workspace where it is absent, use the
@@ -102,6 +104,11 @@ live availability of the requested operational tools and let gateway execution
 policy remain authoritative; do not report the whole workspace as disabled.
 Don't delegate single-tool requests (one `http_check`, one log search) — handle
 those inline.
+
+Use `qa-test-investigator` for one suspected product defect and
+`qa-release-readiness` for a release-wide promotion decision. Proposed test
+steps are not executed evidence. The QA agents are read-only and must not create
+tickets, trigger CI, deploy, switch workspaces, or bypass specialist plan gates.
 
 ## Error codes — agent action
 

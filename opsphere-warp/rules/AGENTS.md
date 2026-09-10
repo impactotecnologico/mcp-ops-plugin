@@ -7,3 +7,5 @@
 - Never request, display or copy OAuth tokens, refresh tokens, client secrets or provider credentials.
 - In stable catalog mode, approved workspace changes require no tool refresh or reconnect. The list is independent of the workspace; credentials, enabled tools, plan and permissions still apply on every call. Only legacy stale discovery or a new product/schema release may require a catalog reload. Never force Personal to obtain a larger list.
 - Opsphere MCP OAuth is supported only in Warp local. Do not claim that Oz cloud or Slack-triggered cloud agents inherit local credentials.
+- For feature validation or suspected defects, use `qa-test-investigation`; distinguish proposed, blocked, passed and failed tests, and never execute stateful business journeys.
+- For promotion or go-live decisions, use `qa-release-readiness`; tie every required result to the same immutable release, workspace and environment before recommending Go.

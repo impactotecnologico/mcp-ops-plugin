@@ -23,7 +23,7 @@ assert.ok(read('commands/opsphere-connect-another-client.md').includes('../skill
 assert.ok(read('skills/connect-another-client/SKILL.md').includes('references/connect.md'));
 assert.ok(read('skills/connect-another-client/SKILL.md').includes('opsphere://clients/connect'));
 assert.equal(read('skills/connect-another-client/SKILL.md'), read('opsphere-warp/skills/connect-another-client/SKILL.md'));
-for (const name of ['endpoint-health', 'incident-investigation', 'ci-investigation', 'postmortem-writer']) {
+for (const name of ['endpoint-health', 'incident-investigation', 'ci-investigation', 'postmortem-writer', 'qa-test-investigation', 'qa-release-readiness']) {
   assert.equal(read(`skills/${name}/SKILL.md`), read(`opsphere-warp/skills/${name}/SKILL.md`));
 }
 for (const name of ['opsphere-onboarding', 'connect-another-client', 'configure-integration', 'set-work-context']) {

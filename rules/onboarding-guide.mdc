@@ -456,6 +456,27 @@ For **failed workflows**, **red pipelines**, or **multi-step CI diagnosis** (Git
 
 The `ci-investigator` subagent calls `ops_my_usage` as step 0 and stops with an upgrade message on Community without running CI tools.
 
+### QA test investigator — all plans
+
+For **feature validation**, **bug reproduction**, regression checks, or _"is this a bug?"_, delegate to **`qa-test-investigator`** (`/qa-test-investigator`). It builds explicit cases and correlates read-only evidence from the active workspace.
+
+| Situation | Behavior |
+|-----------|----------|
+| One suspected product defect or feature flow | Delegate to `qa-test-investigator` |
+| One quick endpoint probe | Handle inline or use `endpoint-health` for a structured check |
+| Active widespread outage | Use `outage-triage` |
+| Pipeline failure | Use `ci-investigator` when allowed |
+
+The agent must distinguish `not run`, `blocked`, `passed`, and `failed`; it must never present proposed steps as executed tests. Stateful UI or business flows remain manual unless a separately authorized runner exists. Provider access and premium diagnosis remain governed by the Gateway and existing specialist gates.
+
+### QA release readiness — all plans
+
+For **release readiness**, environment promotion, or go-live assessment, delegate to **`qa-release-readiness`** (`/qa-release-readiness`). It ties evidence to one release and returns `Go`, `Go with observation`, `No-Go`, or `Inconclusive`.
+
+Do not issue `Go` from a green CI run, healthy infrastructure, or one endpoint alone. Mandatory criteria need current evidence for the same commit/artifact, environment, and workspace. A missing mandatory result makes the assessment `Inconclusive`; a verified mandatory failure makes it `No-Go`.
+
+Both QA agents are read-only. They must not create tickets, dispatch workflows, deploy, purge, change integrations, write memory, or use QA routing to bypass plan or execution-policy restrictions. The main agent coordinates specialists; QA agents do not recursively delegate.
+
 ---
 
 ## Important Constraints

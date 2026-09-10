@@ -340,6 +340,8 @@ codex_skills = {
     "link-account",
     "open-work-context",
     "reconnect",
+    "qa-test-investigation",
+    "qa-release-readiness",
 }
 for name in sorted(codex_skills):
   path = os.path.join(ROOT, "skills", name, "SKILL.md")

@@ -21,6 +21,8 @@ Paid plans are provisioned by Opsphere — not self-serve Sign up.
 | **Endpoint health subagent** (`/endpoint-health`) | Yes | Yes | Yes | Yes |
 | **Post-mortem writer subagent** (`/postmortem-writer`) | Yes | Yes | Yes | Yes |
 | **CI Investigator subagent** (`/ci-investigator`) | No | Yes | Yes | Yes |
+| **QA Test Investigator** (`/qa-test-investigator`) | Yes | Yes | Yes | Yes |
+| **QA Release Readiness** (`/qa-release-readiness`) | Yes | Yes | Yes | Yes |
 | **Users** | 1 | Up to 5 | Up to 20 | Custom |
 
 ## Community (free trial)

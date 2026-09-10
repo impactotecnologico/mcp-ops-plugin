@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.0.19] - 2026-09-10 (QA subagents)
+
+### Added
+- `qa-test-investigator`: read-only feature-test and bug-triage subagent with explicit expected/observed evidence and ticket-ready output.
+- `qa-release-readiness`: read-only release gate that links CI, tests, deployment identity, endpoints and runtime evidence before recommending Go, Go with observation, No-Go or Inconclusive.
+- Portable `qa-test-investigation` and `qa-release-readiness` skills for Codex, Claude Code and Warp, with routing and plan documentation.
+
+### Safety and quality
+- QA flows cannot deploy, dispatch CI, create tickets, switch workspaces, write memory or execute stateful business journeys.
+- Evidence must match workspace, environment, version and time window; proposed tests and missing evidence cannot be reported as passes.
+- Distribution versions: Cursor **1.0.19**, Codex **1.0.15**, Claude Code **1.0.9**.
+
 ## [1.0.18] - 2026-09-08 (DNS delegation diagnostics)
 
 ### DNS delegation diagnostics

@@ -6,15 +6,15 @@
   },
   "metadata": {
     "description": "Opsphere — DevOps and SRE intelligence for Cursor. Remote MCP gateway for observability, incident response, CI/CD diagnostics, and cloud operations.",
-    "version": "1.0.18"
+    "version": "1.0.19"
   },
   "plugins": [
     {
       "name": "Opsphere MCP Plugin",
       "type": "Opsphere",
       "source": ".",
-      "description": "DevOps & SRE intelligence for Cursor: search Datadog logs and errors, triage site-down incidents, diagnose GitHub Actions and Bitbucket pipelines, check Vercel and multi-platform deployment status, run DNS/HTTP/TLS health checks, and manage AWS, Kubernetes, ArgoCD, Cloudflare, Jira, and Sentry from the IDE. Secure remote MCP gateway with OAuth2; bundled skills and subagents for outage triage, CI investigation, endpoint health, and post-mortems. Free Community trial.",
-      "version": "1.0.18",
+      "description": "DevOps, SRE, and QA intelligence for Cursor: investigate bugs, assess release readiness, search logs, triage incidents, diagnose pipelines, check deployments, and query AWS, Kubernetes, Cloudflare, Jira, and Sentry. Secure remote MCP with OAuth2 and read-only QA subagents. Free Community trial.",
+      "version": "1.0.19",
       "author": {
         "name": "Opsphere",
         "email": "contact@opsphere.io"

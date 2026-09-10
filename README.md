@@ -2,9 +2,9 @@
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.18-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
-[![Codex plugin](https://img.shields.io/badge/Codex-1.0.14-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
-[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-1.0.8-orange)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.19-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Codex plugin](https://img.shields.io/badge/Codex-1.0.15-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-1.0.9-orange)](https://github.com/opsphere-io/opsphere-plugin/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
@@ -58,7 +58,7 @@ Warp local MCP is available across all Opsphere plans without per-user invitatio
 | **`/link-account`** | Link/unlink an **external** workspace (Community → upgrade CTA; Personal Workspace is automatic). Org invites with the **same email** may link automatically on Developer+. |
 | **`/open-work-context`** | Switch to an **external** linked workspace (paid). Not needed for Community Personal Workspace |
 
-Type **`/opsphere-welcome`** after install for example prompts including subagents (`/outage-triage`, `/endpoint-health`, `/ci-investigator`, `/postmortem-writer`).
+Type **`/opsphere-welcome`** after install for example prompts including subagents (`/outage-triage`, `/endpoint-health`, `/ci-investigator`, `/postmortem-writer`, `/qa-test-investigator`, `/qa-release-readiness`).
 
 No shell scripts run automatically when you open a workspace — you invoke commands and subagents yourself.
 
@@ -115,6 +115,8 @@ Subagents use advertised tools and respect the active workspace's plan, configur
 | [**endpoint-health**](agents/endpoint-health.md) | `/endpoint-health` | All | Yes | **Single host/URL** check: DNS → HTTP → TLS (+ optional TCP, DNSSEC, Cloudflare, Pingdom on paid catalogs). |
 | [**ci-investigator**](agents/ci-investigator.md) | `/ci-investigator` | Professional+ | Yes | **Failed CI**: GitHub Actions + Bitbucket diagnose, PR/deploy correlation. Community gets upgrade guidance at step 0. |
 | [**postmortem-writer**](agents/postmortem-writer.md) | `/postmortem-writer` | All | No* | **Post-mortem / RCA** draft; optional `memory_store` (`scope=incident`) after you approve. Asks for timeline, impact, action items. |
+| [**qa-test-investigator**](agents/qa-test-investigator.md) | `/qa-test-investigator` | All | Yes | Designs focused tests, investigates suspected defects, and returns traceable evidence plus a ticket-ready bug report. |
+| [**qa-release-readiness**](agents/qa-release-readiness.md) | `/qa-release-readiness` | All | Yes | Assesses one release against matching CI, test, deployment, endpoint, and observability evidence. |
 
 \* *Writes only to **operational memory** when you confirm — no infra mutations (no deploys, cache purge, workflow dispatch).*
 
@@ -126,6 +128,8 @@ Subagents use advertised tools and respect the active workspace's plan, configur
 | One URL: up? DNS? cert expiry? | `/endpoint-health` or `macro_endpoint_health` (Team+) |
 | Pipeline or GitHub Actions failed (paid) | `/ci-investigator` |
 | Post-mortem or save lessons learned after resolution | `/postmortem-writer` |
+| Test a feature or determine whether a behavior is a bug | `/qa-test-investigator` |
+| Decide whether a specific release is ready to promote | `/qa-release-readiness` |
 | One quick `http_check` or log search | Main chat — no subagent |
 
 Plan details and subagent rows: **[docs/PLANS.md](docs/PLANS.md)**. CI blocked on Community: **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)**.
@@ -253,7 +257,7 @@ Opsphere includes a **30-day Community trial** with no credit card required:
 - **100 tool calls per day** (resets at midnight UTC)
 - **Core integrations** (Datadog, Vercel, GitHub, Bitbucket, Cloudflare, Sentry, Jira, AWS, … when allowed by plan)
 - **Network diagnostics** (`dns_lookup`, `http_check`, `cert_status`) — no setup required
-- **Subagents (all plans):** `/outage-triage`, `/endpoint-health`, `/postmortem-writer`; `/ci-investigator` is **paid only**
+- **Subagents (all plans):** `/outage-triage`, `/endpoint-health`, `/postmortem-writer`, `/qa-test-investigator`, `/qa-release-readiness`; `/ci-investigator` is **paid only**
 - **`ops_my_usage`** — plan, trial, Personal Workspace, Work Context (separate), usage, integrations, upgrade link
 
 After your trial, upgrade at [opsphere.io/pricing](https://opsphere.io/pricing) for expanded catalog, unlimited daily calls, write access, external workspaces, and premium providers (Kubernetes, ArgoCD, Azure, Akamai, Pingdom, …).
@@ -338,7 +342,7 @@ See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for the full guide.
 
 ## Codex / ChatGPT
 
-Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.14** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
+Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.15** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
 
 ### Quick start (Codex CLI)
 
@@ -373,7 +377,7 @@ Full install paths (desktop marketplace, troubleshooting): **[docs/INSTALL.md](d
 
 ## Claude Code
 
-Opsphere is also packaged as a **Claude Code plugin** (same remote gateway as Cursor and Codex). Version **1.0.8** lives in `.claude-plugin/plugin.json` — independent from the Cursor and Codex manifest versions. MCP configuration is a dedicated `.claude.mcp.json` (Claude requires `"type": "http"` and a camelCase `oauth.clientId`; it is **not** compatible with Codex's `.mcp.json`).
+Opsphere is also packaged as a **Claude Code plugin** (same remote gateway as Cursor and Codex). Version **1.0.9** lives in `.claude-plugin/plugin.json` — independent from the Cursor and Codex manifest versions. MCP configuration is a dedicated `.claude.mcp.json` (Claude requires `"type": "http"` and a camelCase `oauth.clientId`; it is **not** compatible with Codex's `.mcp.json`).
 
 ### Quick start (Claude Code CLI)
 
@@ -412,7 +416,7 @@ The manifest `name: opsphere` namespaces every skill and subagent:
 | Connect MCP | Settings → Extensions | `codex mcp login` | `/mcp` or `claude mcp login opsphere` |
 | Reload after edits | Reload Window | new Codex task | `/reload-plugins` |
 
-All 11 `skills/` and 4 `agents/` are reused as-is — no content fork per host. Claude Code has no always-on rule mechanism (unlike Cursor's [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc)); the closest substitute is [`skills/opsphere-onboarding/SKILL.md`](skills/opsphere-onboarding/SKILL.md), invoked with `/opsphere:opsphere-onboarding`.
+The plugin includes 16 `skills/` and 6 `agents/`; the portable Warp package includes the 10 operational skills that apply there. Claude Code has no always-on rule mechanism (unlike Cursor's [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc)); the closest substitute is [`skills/opsphere-onboarding/SKILL.md`](skills/opsphere-onboarding/SKILL.md), invoked with `/opsphere:opsphere-onboarding`.
 
 ---
 

@@ -8,6 +8,8 @@ Use these portable skills as focused local agents:
 | Triage an outage or widespread degradation | `incident-investigation` |
 | Diagnose a failed CI/CD workflow | `ci-investigation` |
 | Produce a structured incident postmortem | `postmortem-writer` |
+| Design QA cases and investigate a suspected bug | `qa-test-investigation` |
+| Assess whether a release is ready to promote | `qa-release-readiness` |
 | Start and verify account/workspace | `opsphere-onboarding` |
 | Connect the same account in another app | `connect-another-client` |
 | Configure an eligible provider securely | `configure-integration` |
