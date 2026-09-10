@@ -48,6 +48,8 @@ Tools can include the following once authenticated, entitled, and configured:
 
 **Cloudflare cache evidence:** use `cf_cache_purge_history` for exact purge actions, `cf_cache_analytics` for historical cache outcomes, and `cf_cache_probe` for a current URL. A probe is evidence for its responding request path/POP, never proof of global cache state. These are read-only; do not substitute `cf_cache_purge` unless the user explicitly requests invalidation.
 
+**Cloudflare multi-account:** pass `account_slug` when the account is known. A registered zone can resolve its account automatically. Account and environment are distinct; on `CLOUDFLARE_ACCOUNT_REQUIRED`, ask the user to select a registered account and never probe tokens opportunistically.
+
 **Macro tools** (`macro_*`) require an eligible plan and the enabled `macros` module even when visible in the stable catalog. They run multi-step investigations server-side with progress streaming. Check workspace eligibility before using skill **`run-macro-workflows`**; respect execution denials.
 
 **Memory tools** require the `memory` module enabled for the active workspace, even when visible. They store **distilled** notes from past sessions — not live ops truth. Always verify current state with live tools after reading memory.
