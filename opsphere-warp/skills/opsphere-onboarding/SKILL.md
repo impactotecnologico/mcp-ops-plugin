@@ -17,6 +17,13 @@ report unknown status as unknown. Never switch workspace to bypass a denial.
 
 Ask what the user wants to do. For integration setup use `configure-integration`; for provider/account notes use `set-work-context`. For an operational investigation choose the installed incident, endpoint, CI or postmortem skill. A listed tool may still require credentials; respect its live eligibility and errors.
 
+For QA work, use `qa-test-investigation` for a suspected defect and
+`qa-release-readiness` for a promotion decision. When `qa_catalog_get` is
+available, discover suites through the active workspace SCM integration without
+guessing repository names or requiring a manifest. Ask before persisting an
+ambiguous source with `qa_source_confirm`; never execute discovered commands.
+`READY_WITH_UNCONFIRMED_POLICY` is not an unconditional release approval.
+
 Keep the active workspace unless the user explicitly requests a change. Start with read-only diagnostics; ask before state-changing operations. Do not manually pass or invent a `context_id` for normal operations.
 
 The package supports Warp local. Local credentials are not cloud workload identity; do not promise Opsphere support in cloud agents.

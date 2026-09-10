@@ -109,6 +109,11 @@ Use `qa-test-investigator` for one suspected product defect and
 `qa-release-readiness` for a release-wide promotion decision. Proposed test
 steps are not executed evidence. The QA agents are read-only and must not create
 tickets, trigger CI, deploy, switch workspaces, or bypass specialist plan gates.
+When `qa_catalog_get` is advertised, they discover tenant QA suites from existing
+SCM access without a manifest or repository-name convention. Ambiguous discovery
+requires an explicit user choice before `qa_source_confirm`; catalog commands are
+evidence only and are never executed. `READY_WITH_UNCONFIRMED_POLICY` is not an
+unconditional release approval.
 
 ## Error codes — agent action
 

@@ -16,3 +16,5 @@ Use these portable skills as focused local agents:
 | Review or update provider/account notes | `set-work-context` |
 
 Each skill begins with live MCP discovery. They are not MCP tools and do not carry credentials. Oz cloud execution is unsupported until Opsphere provides workload or delegated identity.
+
+The QA skills use `qa_catalog_get` and `qa_release_evidence` when advertised. Repository discovery uses the active workspace's existing SCM access, requires no tenant-specific manifest, and never executes repository content.

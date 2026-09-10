@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.0.21] - 2026-09-10 (Zero-configuration QA catalog)
+
+### Added
+- Both QA subagents now start from the tenant-scoped `qa_catalog_get` catalog when available and can use `qa_release_evidence` for commit-matched release checks.
+- QA repository discovery is based on technical evidence from the active workspace SCM integration; it requires no tenant manifest, repository naming convention, or website/admin configuration.
+- Ambiguous candidates require an explicit user choice before `qa_source_confirm` persists a preference.
+
+### Safety and compatibility
+- Discovered commands remain untrusted evidence and are never executed; catalog claims retain repository, commit SHA, and path provenance.
+- `READY_WITH_UNCONFIRMED_POLICY` cannot be presented as unconditional approval.
+- The previous evidence-based QA flow remains available when the new Gateway tools are absent.
+- Distribution versions: Cursor **1.0.21**, Codex **1.0.16**, Claude Code **1.0.10**.
+
 ## [1.0.20] - 2026-09-10 (Cursor Git marketplace import)
 
 ### Fixed

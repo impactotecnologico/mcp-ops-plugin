@@ -1,12 +1,12 @@
 # Plan de implementación de subagentes QA
 
-Fecha: 10 de septiembre de 2026. Estado: implementado en el repositorio; publicación pendiente del flujo de release.
+Fecha: 10 de septiembre de 2026. Estado: ampliado con descubrimiento QA agnóstico; publicación y Golden Path pendientes.
 
 ## Objetivo y alcance
 
 Incorporar `qa-test-investigator` y `qa-release-readiness` al plugin aprovechando el Gateway, el contexto de workspace, las integraciones y los diagnósticos existentes. El primero ayuda a diseñar pruebas e investigar defectos; el segundo evalúa la preparación de una versión para su promoción. Ambos producen recomendaciones con evidencia, sin modificar aplicaciones ni desplegar releases.
 
-La primera implementación se limita a `mcp-ops-plugin`: instrucciones, documentación y validación. No requiere nuevos servicios AWS, migraciones de base de datos, endpoints, permisos IAM ni cambios en `mcp-web-chat`. Este último tiene su propio orquestador: añadir agentes al plugin no los incorpora automáticamente a web-chat.
+La implementación final añade un catálogo QA descubierto sin configuración externa: persistencia tenant-scoped en `mcp-ops-db`, detección y tools en `mcp-ops`, consumo guiado en el plugin y adaptación del orquestador de `mcp-web-chat`. No se requiere modificar los repositorios QA de los tenants ni hardcodear marcas, organizaciones o nombres de repositorio.
 
 ## Base revisada en el repositorio
 
