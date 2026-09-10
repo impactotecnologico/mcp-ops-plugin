@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.0.20] - 2026-09-10 (Cursor Git marketplace import)
+
+### Fixed
+- Cursor's GitHub marketplace importer now resolves Opsphere from a real `plugins/opsphere` directory through `metadata.pluginRoot`, instead of the no-longer-supported root `source: "."` layout.
+- The Cursor marketplace entry now contains only fields accepted by the current strict schema.
+- Added a deterministic package sync and CI parity check so the Git-importable plugin cannot drift from the canonical plugin files.
+
 ## [1.0.19] - 2026-09-10 (QA subagents)
 
 ### Added

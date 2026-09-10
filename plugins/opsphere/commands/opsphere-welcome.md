@@ -1,0 +1,60 @@
+---
+name: opsphere-welcome
+description: Quick start — what Opsphere can do, example prompts, and links to setup. Run after installing the plugin (type /opsphere-welcome in chat).
+---
+
+# Opsphere Welcome
+
+Show the user this welcome guide. Do **not** run any shell commands — this replaces the old workspace-open hook.
+
+---
+
+## Present to the user
+
+Copy or paraphrase the following:
+
+> **Opsphere — DevOps Intelligence**
+>
+> You're connected to a remote MCP gateway. All tools run on `mcp-cursor.opsphere.io` — nothing executes from hidden scripts in this plugin.
+>
+> **First time here?**
+> - Run **`/opsphere-setup`** — connect your account (OAuth) and configure your first integration.
+> - Or say: _"Set up my Opsphere account"_
+>
+> **Plugin red or OAuth error?** Run **`/opsphere-reconnect`** (marketplace: use the plugin card in **Settings → Extensions**, not always **Settings → MCP**). **Claude Code:** run `/mcp` to check connection, or `claude mcp login opsphere` to re-auth from the shell.
+>
+> **Already connected? Try:**
+> - _"Is example.com up?"_ or **`/endpoint-health`** — DNS + HTTP + TLS for one host (all plans)
+> - _"¿Cuál fue el último despliegue?"_ / _"What was the last deployment?"_ — **`deployment_status`** (multi-platform: Vercel, CI, S3, ECS…)
+> - _"Check my latest Vercel deploys"_ — Vercel-only detail (or use deployment_status first)
+> - _"Search Datadog logs for errors in the last hour"_
+> - _"Configure my Datadog"_
+> - _"Configure my AWS"_ — IAM Access Key + Secret Key (not SSO)
+> - _"What were the last Sonar scan results?"_ — `sq_projects_search` + `sq_last_scan_summary` (only when SonarQube is enabled for your plan; check `/integration-status` first)
+> - _"What's wrong with my Bedrock agent?"_ — `aws_bedrock_agent_diagnose` → Lambdas (paid `aws` module; prompt `investigate-bedrock-agent`)
+> - **`/link-account`** — add an **external** workspace (paid plans; Community → upgrade info). Personal Workspace is already included. Org invites with the **same email** may link automatically on Developer+.
+> - **`/open-work-context`** — switch to another **linked external** workspace (paid). Not needed for Community Personal Workspace.
+> - _"I accepted my company invite — is my workspace linked?"_ — check with `ops_accounts_list`
+> - _"Is the site down?"_ or **`/outage-triage`** — multi-step incident triage (all plans)
+> - _"Why did CI fail on main?"_ or **`/ci-investigator`** — pipeline diagnosis (Professional+; Community: upgrade info)
+> - _"Write a post-mortem"_ or **`/postmortem-writer`** — RCA + optional incident memory (all plans)
+> - _"Help me test this flow and decide whether this is a bug"_ or **`/qa-test-investigator`** — QA cases + evidence (all plans)
+> - _"Is release abc123 ready for production?"_ or **`/qa-release-readiness`** — traceable release gate (all plans)
+> - **`/integration-status`** — see which providers are connected
+>
+> **MCP resources** (gateway): `opsphere://playbooks/index` lists guided prompts; `opsphere://tenant/account-context` has full cloud-catalog context per account. See [TOOLS.md#mcp-resources](../docs/TOOLS.md#mcp-resources).
+>
+> **Docs:** [INSTALL.md](../docs/INSTALL.md) · [TOOLS.md](../docs/TOOLS.md) · [TROUBLESHOOTING.md](../docs/TROUBLESHOOTING.md) · [PLANS.md](../docs/PLANS.md)
+>
+> **Admin Tools (Team+):** enabling extra MCP modules (K8s, ArgoCD, macros, …) is done in the [admin portal](https://admin.opsphere.io) on paid plans. Community integrations are configured in chat (`ops_configure_integration`).
+>
+> **Claude Code:** every skill and subagent is namespaced under `opsphere` — invoke skills as `/opsphere:skill-name` (e.g. `/opsphere:opsphere-welcome`) and subagents as `@opsphere:agent-name` (e.g. `@opsphere:outage-triage`). Run `/opsphere:opsphere-onboarding` once per session for the full tool catalog and error-code reference (Claude Code has no always-on rule like Cursor's `onboarding-guide.mdc`). After editing or pulling plugin changes, run `/reload-plugins`.
+
+---
+
+## Agent follow-up
+
+1. If the user has not connected MCP yet, point them to the **Opsphere plugin card** in **Settings → Extensions** (Sign in / Connect). Local dev installs may use **Settings → MCP → Connect**. **Claude Code:** use `/mcp` to check/connect, or `claude mcp login opsphere` from the shell.
+2. If OAuth fails or the plugin is red, offer **`/opsphere-reconnect`** (Cursor/Codex) or `/mcp` + `claude mcp login opsphere` (Claude Code).
+3. If they want full onboarding, offer to run the **`opsphere-setup`** command flow (`/opsphere:opsphere-setup` on Claude Code).
+4. Do not execute `scripts/check-auth.sh` or any bash script — it has been removed from the plugin.

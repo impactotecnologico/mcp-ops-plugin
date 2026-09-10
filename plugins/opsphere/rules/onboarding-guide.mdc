@@ -1,0 +1,487 @@
+---
+description: Load when the user asks to use, configure, troubleshoot or understand Opsphere, its DevOps integrations, plans, usage, OAuth, operational memory or incident workflows
+alwaysApply: false
+---
+
+# Opsphere — DevOps Operational Intelligence
+
+Opsphere connects your DevOps tools to **Cursor** and **Codex**. Query logs, check deploys, search issues, diagnose incidents, and manage integrations — all from the chat, without leaving the IDE.
+
+The backend is a remote MCP server. All tool calls go to the Opsphere gateway. No tool logic runs locally.
+
+---
+
+## Available Tool Categories
+
+This is a routing reference for the full product. MCP `tools/list` describes
+callable definitions, not authorization or configured integrations. Use
+`ops_my_usage`, workspace availability and `ops_list_integrations` to describe
+what is usable in the active workspace. Unknown status is not missing setup.
+When `catalog.mode` is `stable`, workspace changes do not require a catalog
+refresh or reconnection. Never change workspace to bypass a denied operation.
+
+Tools can include the following once authenticated, entitled, and configured:
+
+| Category | Provider | Tools |
+|----------|----------|-------|
+| Monitoring | Datadog | `dd_logs_search`, `dd_errors_by_service`, `dd_errors_recent`, `dd_synthetics_summary`, `dd_synthetics_results`, `synthetics_summary_by_location` |
+| Deployments | Multi-stack (catalog) | **`deployment_status`** (preferred) — Vercel, CI, GitOps, S3+CloudFront, ECS from your configured sources |
+| Deployments | Vercel (direct) | `vercel_deploys_latest`, `vercel_project_status` — only when user asks Vercel-only or `deployment_status` gaps suggest it |
+| Deployments | Railway (direct) | `railway_projects_list`, `railway_project_status`, `railway_deployments_latest`, `railway_logs`, `railway_health_summary`, `railway_incident_diagnosis` — 17 read-only tools when Railway module is enabled |
+| Source Control | GitHub Enterprise | `ghe_repo_summary`, `ghe_actions_latest` |
+| Source Control | Bitbucket | `bb_pipelines_latest`, `bb_pipeline_diagnose` |
+| CDN / DNS | Cloudflare | `cf_quick_status`, `cf_dns_records` |
+| Issue Tracking | Jira | `jira_issue_get`, `jira_issues_search` |
+| Error Tracking | Sentry | `sentry_issues_list`, `sentry_issues_search` |
+| Code Quality | SonarQube (paid) | `sq_projects_search` (URL or key) → `sq_last_scan_summary` for last scan; `sq_quality_gate_status` + `sq_issues_search` for QG drill-down — prompt `diagnose-sonarqube-quality-gate` when in playbooks |
+| Search | Algolia (paid) | `alg_indices_list`, `alg_index_settings`, `alg_search`, `alg_object_get`, `alg_logs` — configure with App ID + restricted API key |
+| Cloud | AWS | `aws_sts_whoami`, `aws_cli_query`, `aws_bedrock_agent_diagnose`, `aws_lambda_agent_diagnose` (Bedrock Agents — paid `aws` module) |
+| Network (built-in) | — | `dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents` |
+| Integration Mgmt | — | `ops_configure_integration`, `ops_list_integrations`, `ops_test_integration`, `ops_remove_integration` |
+| Plan & Usage | — | `ops_my_usage` (when advertised by a Hub/self-service session) |
+| Work context | — | `ops_set_work_context`, `ops_get_work_context` |
+| **Connection Hub** (broker) | — | `ops_accounts_list`, `ops_account_link_start`, `ops_account_unlink`, `ops_context_open`, `ops_context_close` — only when `tools/list` includes them |
+| Operational memory | — | `memory_search`, `memory_store`, `memory_session_touch`, `memory_invalidate` |
+| **Macro workflows** (Team+) | — | `macro_outage_triage`, `macro_endpoint_health`, `macro_env_health` — composite read-only runs with SSE progress |
+
+**Network tools (`dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents`) work immediately after login — no integration setup needed.** `dns_lookup` accepts `recordTypes` (`A`, `AAAA`, `CNAME`, `NS`); for DNS cutovers use `["NS", "CNAME"]` rather than falling back to shell `dig`. `http_check` supports optional `connectHost`, `headers` (e.g. `Host`), and `servername` for direct origin probes bypassing CDN DNS. `alg_status` / `alg_incidents` report **global** Algolia platform health (not your tenant App ID).
+
+**Macro tools** (`macro_*`) require an eligible plan and the enabled `macros` module even when visible in the stable catalog. They run multi-step investigations server-side with progress streaming. Check workspace eligibility before using skill **`run-macro-workflows`**; respect execution denials.
+
+**Memory tools** require the `memory` module enabled for the active workspace, even when visible. They store **distilled** notes from past sessions — not live ops truth. Always verify current state with live tools after reading memory.
+
+**Three distinct concepts (never mix them):**
+
+| Concept | What it is | User-facing |
+|---------|------------|-------------|
+| **Personal Workspace** | Automatic operational workspace created at signup | Always **Active** after Community signup — no manual link |
+| **Work Context** | Optional provider/account/environment notes (`ops_set_work_context`) | May be "not configured" — that does **not** mean Personal Workspace is broken |
+| **External Workspace** | Extra workspace linked via Connection Hub OAuth | Community quota = **0**; upgrade required |
+
+**Work context** (provider notes) is injected automatically when MCP connects when configured. After signup, if `ops_my_usage` shows Work context as not configured, optionally run `set-work-context`. That is optional personalization — tools already work on the Personal Workspace.
+
+**Connection Hub** (when `ops_accounts_list` is in `tools/list`):
+
+- After **Sign up free / login**, Hub + **Personal Workspace** already exist. The account is **operational immediately**.
+- Do **not** ask the user to create/link Personal Workspace, copy IDs, or run `ops_context_open` for normal Community use.
+- Call `ops_accounts_list` / `ops_my_usage` to confirm status — expect Personal Workspace active.
+- **Organization invite:** same email + Developer+ Hub → org workspace may already be in `ops_accounts_list` after accept; offer **`open-work-context`** to switch. If missing → upgrade / create Hub / quota / **`link-account`** for different emails.
+- **Community** cannot link additional (external) workspaces — if the user asks, explain upgrade (Developer+ when enabled / paid plans). Never present "0/0" without that explanation.
+- **Do not** teach `context_id` / `broker_context` to normal users. Session resolution is automatic for Personal Workspace when auto-context is on.
+- Switching to an **external** workspace (paid plans with linked organization workspaces) is the only case for skill **`open-work-context`** — and only when the user explicitly wants another linked workspace.
+
+**Workspace ownership is user-controlled:**
+
+- A request for a ticket, zone, repository, project, provider, or tool associated with another workspace is **not** permission to switch.
+- Explain that the resource appears to belong to another workspace, name that workspace when known, and ask whether the user wants to switch.
+- Call `ops_context_open` only after the user explicitly asks for that switch or explicitly confirms the proposal.
+- A switch is persistent. Never switch temporarily to answer a question, never promise to switch back, and never switch back automatically after the answer.
+- Keep the current workspace unchanged when the user declines, does not answer, or only asks what would be available elsewhere.
+
+### MCP resources (gateway — read via @ or Fetch MCP Resource)
+
+Eleven read-only resources ship with the remote MCP server (nine universal + two Hub-only). They are **not** duplicated in this plugin repo — Cursor/Codex fetch them from the gateway after Connect.
+
+| URI | When to read |
+|-----|----------------|
+| `opsphere://rules/operational` | Full tool catalog + tenant scope (same as server instructions; refreshes with catalog) |
+| `opsphere://tools/catalog` | JSON: enabled modules + prompt index for your tenant |
+| `opsphere://playbooks/index` | All MCP prompts grouped by category (outage, pipeline, SonarQube, Bedrock `investigate-bedrock-agent`, …) |
+| `opsphere://tenant/account-context` | Full per-account `system_prompt_context` (infra names, regions, capabilities) |
+| `opsphere://hub/active-context` | **Hub only** — active `context_id`, connection label, expiry |
+| `opsphere://hub/connections` | **Hub only** — linked connections list (same data as `ops_accounts_list`) |
+| `opsphere://policies/change-approval` | Before mutating Cloudflare / Akamai / `system_update` |
+| `opsphere://policies/secrets-handling` | Credential handling and redaction |
+| `opsphere://policies/incident-response` | Incident lifecycle and roles |
+| `opsphere://taxonomy/severity` | SEV1–4 definitions and confidence |
+| `opsphere://inventory/critical-assets` | Canonical brands, accounts, regions, apps |
+
+**When to use resources vs tools:** use **`deployment_status`**, **`macro_*`**, or atomic tools for live checks. Use **`opsphere://tenant/account-context`** when you need full catalog prose for a non-default account. Use **`opsphere://playbooks/index`** to discover guided prompts (e.g. `diagnose-sonarqube-quality-gate`, `investigate-bedrock-agent`). Do not expect one resource per tool — the catalog lives in `opsphere://rules/operational`.
+
+---
+
+## Amazon Bedrock Agents (paid `aws` module)
+
+For **Bedrock Agent**, **action group**, **knowledge base**, or **agent alias** issues (not **Agent Core** — clarify scope if the user mentions Agent Core):
+
+1. Call **`aws_bedrock_agent_diagnose`** first (`agentId`, `region` e.g. `eu-central-1`).
+2. For each Lambda in `lambdas[]`, call **`aws_lambda_agent_diagnose`** (`functionName`, same `region`).
+3. If findings cite CloudWatch errors, use **`aws_cloudwatch_logs_search`** on the cited log group.
+4. When listed in playbooks, use MCP prompt **`investigate-bedrock-agent`**.
+
+Requires AWS IAM keys via `ops_configure_integration` (plugin tier — no SSO `profile`). Env var **values** from Lambda diagnose are never returned.
+
+---
+
+## Latest deployment (any language)
+
+For **"latest deployment"**, **"último despliegue"**, **"last release"**, **"what went live"**, or similar in **any language**:
+
+1. Call **`deployment_status(env=<active env if known>, scope="auto")` FIRST** — aggregates Vercel, CI, GitOps, S3+CloudFront, and ECS from the tenant catalog.
+2. **Do not** default to `vercel_deploys_latest` unless the user asks Vercel-only or `deployment_status` returns `gaps[]` pointing there.
+3. If **`capabilities.vercel`** is false (e.g. static site on S3, ECS-only), **never** call `vercel_*` tools.
+4. Interpret **`gaps[]`** in the tool response — they are **tenant-aware**:
+   - **Community**: suggest `ops_set_work_context` (prose stack description) + `configure-integration` for Vercel/AWS; use skill **`configure-deployment-catalog`**.
+   - **Team / Enterprise**: suggest admin configures **Deployment sources** in Cloud Catalog at **https://admin.opsphere.io** (from `ops_my_usage` → Catalog configuration).
+5. **Outage vs release**: site-down / 5xx → delegate **`outage-triage`**; "what was deployed" → `deployment_status`, not outage triage.
+
+---
+
+## When to Suggest Integration Setup
+
+If a tool returns an error about missing credentials or an unconfigured provider:
+
+1. Identify the provider from the tool name prefix:
+   - `dd_` → Datadog
+   - `vercel_` → Vercel
+   - `railway_` → Railway
+   - `ghe_` → GitHub
+   - `bb_` → Bitbucket
+   - `gl_` → GitLab
+   - `sq_` → SonarQube
+   - `alg_` → Algolia (Search API — except `alg_status` / `alg_incidents`, which are built-in diagnostics)
+   - `cf_` → Cloudflare
+   - `jira_` → Jira
+   - `sentry_` → Sentry
+   - `aws_` → AWS
+
+2. Suggest: "It looks like [Provider] is not configured yet. Say **'Configure my [Provider]'** and I will walk you through it."
+
+3. Use the `configure-integration` skill for the full setup flow.
+
+---
+
+## Connection Hub — agent rules (when broker tools are in `tools/list`)
+
+1. **Detect Hub:** `ops_accounts_list` present (Community and paid Hub accounts).
+2. **After signup/login:** assume **Personal Workspace is Active**. Confirm with `ops_my_usage` / `ops_accounts_list`. Start operational tools immediately — no link step, no `ops_context_open`, no `context_id` coaching.
+3. **Organization invite:** if the user accepted an admin invitation, call `ops_accounts_list` — same email + Developer+ Hub often means the org workspace is **already linked**. Offer **`open-work-context`** to switch. If missing, explain upgrade / create Hub / quota / **`link-account`** for different emails — do not treat absent list entry as failed invite.
+4. **Personal Workspace** is product-managed. Never offer unlink/delete of the personal link. `PERSONAL_WORKSPACE_UNLINK_FORBIDDEN` → explain it is part of the account.
+5. **External link (Community):** if user asks to add another workspace → upgrade CTA: _"Your Personal Workspace is included. Linking additional workspaces requires Developer or higher."_ Keep error code `BROKER_LINK_LIMIT_EXCEEDED` for diagnostics. Do **not** run `ops_account_link_start` on Community when quota is 0.
+6. **External link (paid / Developer when enabled):** skill **`link-account`** → browser OAuth only; never paste tokens in chat. Personal Workspace does **not** count toward external quota.
+7. **Switch to an external workspace (paid only, user-initiated):** skill **`open-work-context`**. Do not use this for normal Community Personal Workspace work.
+8. **Integrations / Work Context prose:** configure on the active Personal Workspace (or the external workspace the user switched to). Prefer `configure-integration` / `set-work-context` without mentioning internal IDs.
+9. **Developer plan:** only mention Developer features when `ops_my_usage` / plan status shows Developer is active. If Developer rollout is off, do not promise Developer capabilities.
+10. Never invent tenant names, `linked_connection_id`, or `context_id`.
+
+---
+
+## Integration credentials — agent rules (mandatory)
+
+When a user needs to connect Datadog, Vercel, AWS, GitHub, or any other provider:
+
+1. **Always** use the `configure-integration` skill — collect one credential at a time, then call **`ops_configure_integration(provider, credentials)`** with the full map in a single tool call.
+2. **Never** ask the user to paste API keys, tokens, or passwords into free-form chat for general questions, troubleshooting, or work context.
+3. **Never** store secrets in `ops_set_work_context`, `memory_store`, or any tool other than `ops_configure_integration`.
+4. **Never** echo back full credential values in your reply — confirm success with provider name only (e.g. "Datadog connected").
+5. If the user pastes a secret outside the setup flow, acknowledge it and **immediately** move them into `configure-integration` → `ops_configure_integration`; remind them not to leave secrets in casual chat messages.
+
+Credentials persist **only** on the Opsphere gateway (encrypted, tenant-scoped). They are **not** written to this plugin repo, Cursor plugin files, or local disk.
+
+---
+
+## AWS — agent rules (mandatory)
+
+Plugin AWS integration uses **static IAM access keys** configured via `ops_configure_integration`. It is **not** AWS SSO.
+
+1. **Do not** pass `profile` to `aws_sts_whoami` or `aws_cli_query` unless the user's plan explicitly includes SSO and they have completed an SSO login flow.
+2. **Do not** call `aws_sso_login*`, `aws_session_status`, or other SSO session tools for plugin users — they are **not available** on the free plugin tier.
+3. **Do not** ask the user to run `aws sso login` locally — Opsphere runs AWS CLI on the remote gateway, not on the user's machine.
+4. **Region**: default region is **not** stored during AWS setup (only Access Key + Secret Key). Omit `region` unless the user specifies one; when needed, pass it in the CLI command (e.g. `s3api list-buckets --region eu-west-1`) or as the tool's `region` parameter if supported.
+5. After `ops_test_integration(provider: "aws")` succeeds, run this **verification checklist** before telling the user AWS is ready:
+   - `aws_sts_whoami` — **no** `profile`
+   - `aws_cli_query` with `command: "sts get-caller-identity"` — **no** `profile`
+6. For natural-language requests (e.g. _"List my S3 buckets"_), go directly to `aws_cli_query` with the appropriate read-only CLI command — **no** SSO setup step.
+
+If `aws_cli_query` fails with **"Error loading SSO Token"**, the agent attempted SSO or passed a `profile` by mistake. Retry **without** `profile` using the configured IAM keys.
+
+---
+
+## When to Suggest Signup / Re-login
+
+If the MCP connection fails with **401 Unauthorized**, the plugin card is **red**, or logs mention **MCP OAuth refresh error**:
+
+- The user likely has not set up an account yet, their access token expired (24 hours), or OAuth refresh failed (e.g. after a Cursor crash).
+- Suggest: run **`/opsphere-reconnect`**, or **Sign in** on the **Opsphere plugin card** in **Settings → Extensions** (marketplace installs often do not show Opsphere under **Settings → MCP**).
+- For first-time setup: **`/opsphere-setup`**, **`/opsphere-welcome`**, or _"Set up my Opsphere account"_.
+
+For brand-new installs (no Connect yet), you may suggest **`/opsphere-welcome`** before full setup — it lists example prompts without running any shell scripts.
+
+---
+
+## Trial Expiration (TRIAL_EXPIRED)
+
+If the gateway returns error code `TRIAL_EXPIRED`:
+
+- Tell the user: "Your 30-day free trial has expired. Visit **https://opsphere.io/pricing** to continue using Opsphere."
+- Do not retry the request.
+- Do not suggest re-login — re-authentication will not fix an expired trial.
+- Keep the code `TRIAL_EXPIRED` available if the user asks for support diagnostics.
+
+## Workspace suspended (WORKSPACE_SUSPENDED)
+
+If the gateway returns `WORKSPACE_SUSPENDED` (or tenant status suspended):
+
+- Tell the user the account/workspace is **suspended** and to contact Opsphere support or their org admin.
+- Do **not** present this as an expired trial.
+
+## Business error UX (keep codes for diagnostics)
+
+| Code | User-facing guidance |
+|------|----------------------|
+| `BROKER_LINK_LIMIT_EXCEEDED` | Personal Workspace is included; linking **additional** workspaces requires Developer or higher. Point to pricing. |
+| `PERSONAL_WORKSPACE_UNLINK_FORBIDDEN` | Personal Workspace is part of the account and cannot be unlinked. |
+| `PLAN_WORKSPACE_NOT_INCLUDED` | That external workspace / plan feature is not included — upgrade. |
+| `MACROS_PAID_ONLY` | Macros require a paid plan (Team+). |
+
+---
+
+## Rate Limit (RATE_LIMIT_EXCEEDED)
+
+If the gateway returns error code `RATE_LIMIT_EXCEEDED`:
+
+- Tell the user how many calls they have used and when the limit resets (from `details.resetsAt` in the error body).
+- Suggest: "You can check your full plan status with `ops_my_usage`."
+- Do not retry the request automatically.
+
+---
+
+## Execution policy (informative only — gateway enforces)
+
+The gateway applies **execution policies** on every `tools/call` for your tenant and runtime (`cursor` for this plugin). Limits come from PostgreSQL — **never** send policy fields in tool arguments.
+
+**Never include in `tools/call` arguments:** `tenant_id`, `plan`, `profile_id`, `max_tool_calls`, `max_cost_units`, `max_duration_ms`, `max_retries`, `max_macro_calls`, `allow_sensitive_actions`, `enabled_tools`, `policy_version`, `subscription_id`, `runtime_profile`.
+
+Use `ops_my_usage` for plan/usage visibility. The gateway is the only authority for allow/deny.
+
+### JSON-RPC execution denials
+
+| Code | `data.reason` (examples) | Agent action |
+|------|--------------------------|--------------|
+| `-32003` | `execution_policy_missing` | Tell user policy is not configured; contact admin — do not retry blindly |
+| `-32003` | `execution_module_not_enabled` | Tool/module not on plan — suggest `ops_my_usage` or upgrade |
+| `-32003` | `execution_sensitive_action_denied` | Pick a read-only alternative or ask admin to allow sensitive actions |
+| `-32003` | `BROKER_CONTEXT_*` | Reconnect MCP (`/opsphere-reconnect`). For **external** workspace switch on paid plans only, use `open-work-context`. Do **not** coach Community users to pass `context_id` manually. |
+| `-32004` | `max_tool_calls`, `max_cost_units`, `max_macro_calls` | Budget exhausted — wait for `resetsAt` or reduce scope; do not spam retries |
+
+---
+
+## Admin portal vs plugin
+
+| Concern | Community | Team / Enterprise (and Professional) |
+|---------|-----------|--------------------------------------|
+| **Integrations** (Datadog, AWS keys, GitHub token, …) | Configure in chat with `ops_configure_integration` | Prefer admin portal Cloud Catalog / credentials; plugin still works when `catalog_config_surface` allows |
+| **MCP tool modules** (enable K8s, ArgoCD, macros, …) | Fixed by plan matrix — admin **Tools** toggles for out-of-plan modules are disabled | Org admins manage modules in **https://admin.opsphere.io** → Tools |
+| **`ops_my_usage`** | Plan, trial/daily usage, Personal Workspace, Work Context (separate), integrations; Community operational catalog — **never** invent "N MCP tools enabled" | May show `catalog_config_surface: admin_portal` — point users to the admin portal for catalog/module changes |
+
+If a **Community** user asks to enable Kubernetes, ArgoCD, macros, or other premium modules in the admin Tools page: explain those modules are **not included** in Community. Suggest [opsphere.io/pricing](https://opsphere.io/pricing). Do not invent workarounds that toggle premium modules.
+
+If the gateway returns `PLAN_TOOL_NOT_INCLUDED`: the tool is outside the subscription allow-list — same upgrade guidance.
+
+---
+
+## Read-Only Plan (READ_ONLY_PLAN)
+
+If the gateway returns error code `READ_ONLY_PLAN`:
+
+- The user's **Community** plan blocks mutating tools (CDN writes, cache purge, workflow dispatch, etc.).
+- Suggest upgrade at **https://opsphere.io/pricing** for write access.
+- Do not retry with the same tool.
+- Integration setup tools (`ops_configure_integration`, `ops_remove_integration`, memory session helpers) remain allowed.
+
+---
+
+## Single Environment (SINGLE_ENVIRONMENT_ONLY)
+
+If the gateway returns error code `SINGLE_ENVIRONMENT_ONLY`:
+
+- **Community** allows one environment per request (e.g. `envs: ["INT"]` only).
+- Ask the user to narrow the scope or upgrade for multi-env comparison.
+
+---
+
+## Plan & Usage Visibility
+
+When the user asks about their plan, usage, trial status, remaining calls, or upgrade options:
+
+- Use `ops_my_usage` — no parameters required.
+- It returns: plan, trial/status, daily/monthly usage, **Personal Workspace** status, **Work Context** (separate), integrations, additional workspace quota, linked organization workspaces (`ops_accounts_list`), upgrade link.
+- **Do not** invent a public tool count like "20 MCP tools enabled" or "31 MCP tools enabled". Summarize catalog as the plan's operational tools / modules from the tool text.
+- **Presentation:** Use skill **`plan-and-usage`**. Summarize in conversational prose — **never** dump the raw MCP JSON envelope or a `json` code block unless the user explicitly asks for raw/debug output.
+
+---
+
+## Response presentation (all MCP tools — mandatory)
+
+Opsphere tools return human-readable markdown inside MCP `content[].text`. The chat UI should feel like talking to an SRE, not reading an API trace.
+
+| Do | Don't |
+|----|-------|
+| Parse tool `text` and answer in natural language | Paste `{ "content": [...] }` or full tool JSON |
+| Use headings, bullets, short tables | Wrap the entire tool result in a `json` code block |
+| Hide transport details unless debugging | Show JSON-RPC, `type`, or `isError` unless asked |
+
+**Exception:** Only show raw JSON when the user explicitly asks (e.g. "raw MCP response for debugging").
+
+---
+
+## Datadog Synthetics (outage triage)
+
+- `dd_synthetics_summary` = inventory + config status (`live`/`paused`), **not** pass/fail of the last run.
+- `synthetics_summary_by_location(hours)` = regional execution up/down; if `dataQuality=no_execution_results_in_window`, do **not** claim 100% healthy.
+- Failing or ambiguous test → `dd_synthetics_results(publicId|nameContains, from/to)` — never request a local Datadog API when Hub Datadog is connected.
+
+---
+
+## Example Prompts
+
+Users might say things like:
+
+- "Check my latest Vercel deploys"
+- "What's the status of my Railway project?" — `railway_project_status` or `railway_health_summary` when Railway is configured
+- "Show failed Railway deployments in production" — `railway_deployments_latest` with status filter
+- "Diagnose my Railway API outage" — `railway_incident_diagnosis` → `railway_logs`
+- "Configure my Railway" — triggers the `configure-integration` skill (account, workspace, or project API token)
+- "¿Cuál fue el último despliegue?" / "What was the last deployment?" — **`deployment_status(scope=auto)`** first
+- "When did we last publish to production?" — **`deployment_status`**
+- "Search Datadog logs for errors in the last hour"
+- "What's failing in Sentry right now?"
+- "Is example.com up?" — triggers `dns_lookup` + `http_check` + `cert_status`
+- "Is Algolia down?" / "search not working on the storefront" — `alg_status` + `alg_incidents` first; then `alg_search` / `alg_object_get` when Algolia is configured
+- "Check the SSL cert for api.mycompany.com"
+- "Configure my Datadog" — triggers the `configure-integration` skill
+- "Configure my AWS" — IAM Access Key + Secret Key (not SSO)
+- "List my S3 buckets" — `aws_cli_query` directly after AWS is configured (no SSO step)
+- "What's wrong with my Bedrock agent?" / paste `agentId` — `aws_bedrock_agent_diagnose` → `aws_lambda_agent_diagnose` per Lambda; prompt `investigate-bedrock-agent` when in playbooks (paid `aws` module; not Agent Core)
+- "Tell Opsphere what I usually work with" — triggers the `set-work-context` skill
+- "I accepted my company invite — is my workspace linked?" — `ops_accounts_list` first (auto-link on same email + Developer+); else **`link-account`**
+- "Link another organization workspace" / "add an external workspace" — skill **`link-account`** (paid Hub / when external quota allows; Community → upgrade CTA)
+- "Switch to my other linked workspace" — skill **`open-work-context`** (paid external switch only; not needed for Community Personal Workspace)
+- "How do I configure deployment sources?" — triggers **`configure-deployment-catalog`** skill
+- "Show PR #42 status in Bitbucket"
+- "Find Jira issues assigned to me"
+- "What GitHub Actions ran today on the main branch?"
+- "Why did the pipeline fail on main?" — on paid plans, delegate to `ci-investigator`; on Community, `bb_pipeline_diagnose` or `gl_pipeline_diagnose` or upgrade
+- "Find this SonarCloud project" / paste `sonarcloud.io` URL — `sq_projects_search(q=<full URL>)` then `sq_last_scan_summary(project=<key>)`
+- "What were the last scan results?" / "último escaneo" / names `org_project` key — `sq_last_scan_summary(project=<key>)` directly (org inferred from key; no `SONAR_ORGANIZATION` required)
+- "Qué code smells / qué issues" — `sq_issues_search(project, types=[CODE_SMELL|BUG|...])` (summary only gives counts)
+- "Código duplicado" / "where is duplication" — `sq_duplications_show(project)`
+- "Why did SonarQube fail the quality gate?" — `sq_last_scan_summary` or `sq_quality_gate_status` + `sq_issues_search` (inNewCodePeriod=true) when SonarQube is configured
+- "Summarize GitHub repo acme/backend" — `ghe_repo_summary(repo=acme/backend)` on github.com (no `GHE_BASE_URL` needed)
+- "Why is SKU X missing from search?" — `alg_object_get` + `alg_search` when Algolia is configured; `alg_status` if suspecting upstream outage
+- "Configure my Algolia" — triggers the `configure-integration` skill (restricted API key, not Admin)
+- "Diagnose the failed GitHub Actions workflow" — paid: `/ci-investigator`; Community: `ghe_actions_latest` inline or upgrade
+- "Show my usage" — triggers `ops_my_usage`
+- "Which integrations do I have configured?" — triggers `ops_list_integrations`
+- "Do we have memory about this outage before?" — `memory_search` with `scopes: ["incident"]` (and `repo` if known)
+- "Save this investigation summary for next time" — `memory_store` (`scope`: `user` or `session` for general notes; `incident` / `decision` for structured post-mortems)
+- "Write a post-mortem for today's outage" — delegate to **`postmortem-writer`** (asks for missing details; optional `memory_store` with `scope=incident`)
+
+### Memory quick selection
+
+| Need | Tool |
+|------|------|
+| Recall prior work / outage precedent | `memory_search` |
+| Save finding after investigation | `memory_store` |
+| Optional session heartbeat | `memory_session_touch` |
+| Remove stale memory | `memory_invalidate` |
+
+### When to use memory (agent behavior)
+
+1. **Before** repeating a long repo analysis or outage triage → `memory_search` (query ≥ 3 chars; optional `scopes`, `repo`).
+2. **If empty results** → reformulate **once** with concrete tokens (service, env, repo, HTTP code) or different `scopes`. The gateway auto-retries with synonym expansion; do not call `memory_search` more than one extra time unless the user asks.
+3. **After** a useful investigation → `memory_store` with a **short** summary (no raw logs, no secrets).
+4. **When outdated** → `memory_invalidate` with `status: stale` (owner or admin).
+5. **Optional** at session start → `memory_session_touch` once (`repo` optional; inferred from `ghe_*` / `bb_*` / `repos_*` tool calls). On **Connection Hub**, pass `external_session_key` equal to `ops_context_open` `chat_session_key` (gateway injects it when omitted).
+
+Default scopes for partners: **session** + **user**. Use `scope=repository` only with explicit `repo` `org/name`. Use `scope=incident` (`kind=episodic` + `incident` object) or `scope=decision` (`decision` object) for post-mortems and ADR-lite.
+
+Do **not** store text that duplicates account catalog context (`cloud_accounts.system_prompt_context`). If `memory_store` returns `catalog_context_duplicate`, distill only session-specific findings or use `skip_catalog_duplicate_check=true` only when the user explicitly asks to override.
+
+If `memory_*` tools are missing from `tools/list`, do not invent them or infer the workspace's configuration from their absence. Check live availability. Conversely, visible memory tools still require workspace enablement and permission.
+
+---
+
+## Subagent delegation
+
+Opsphere ships read-only subagents in `agents/`. They are visible to all plans in Cursor; **plan gating** is enforced inside each subagent and by these rules.
+
+### Before delegating (mandatory when plan is unknown)
+
+1. Call **`ops_my_usage`** when you are about to delegate and do not already know the user's plan from this session.
+2. If `**Plan**: Community`, follow the per-subagent rules below — do **not** delegate premium subagents.
+3. If the user explicitly invokes `/ci-investigator` on Community, delegation is allowed; the subagent performs its own plan gate and returns the upgrade message.
+
+### Outage triage — all plans
+
+For **site-down**, widespread failures, or multi-step incident triage, delegate to **`outage-triage`** (`/outage-triage` or "use outage-triage") instead of running the full flow in the main thread. It runs read-only, isolates verbose tool output, and returns a structured verdict with evidence.
+
+On **Team / Enterprise**, when `macro_outage_triage` is in `tools/list`, you may call it directly for the same class of incident (one composite tool with progress) — see skill **`run-macro-workflows`**. Prefer the subagent when the user wants interactive clarification; prefer the macro when they want a single structured report quickly.
+
+Do not delegate simple single-tool requests (one `http_check`, one `dd_logs_search`) — handle those inline.
+
+### Endpoint health — all plans
+
+For **one hostname or URL** — reachability, DNS resolution, SSL/TLS expiry, or _"is X up?"_ — delegate to **`endpoint-health`** (`/endpoint-health` or "use endpoint-health") when the user wants a structured multi-step check (DNS + HTTP + cert).
+
+| Situation | Behavior |
+|-----------|----------|
+| Full structured check (DNS + HTTP + TLS) | Delegate to `endpoint-health` |
+| Single quick check | Inline: one `http_check`, `dns_lookup`, or `cert_status` |
+| Widespread outage or many services | Use **`outage-triage`**, not `endpoint-health` |
+
+`endpoint-health` adapts to `tools/list` (no plan gate). Community gets the core trio; paid plans may add `tcp_connect`, `dnssec_check`, Cloudflare, Pingdom, etc.
+
+### Post-mortem writer — all plans
+
+For **post-mortems**, **RCA summaries**, or **saving lessons learned** after an incident is understood, delegate to **`postmortem-writer`** (`/postmortem-writer` or "write a post-mortem").
+
+| Situation | Behavior |
+|-----------|----------|
+| User wants structured post-mortem or incident write-up | Delegate to `postmortem-writer` |
+| User wants to save investigation to memory | Delegate — subagent uses `memory_store` when approved |
+| Active outage still in progress | Use **`outage-triage`** first; post-mortem after resolution |
+| One-line "save this note" | Inline `memory_store` (`scope`: `user` or `session`) |
+
+`postmortem-writer` may **ask the user** clarifying questions (timeline, impact, root cause, action items). It adapts to `tools/list` for `memory_*` and optional read-only evidence; no plan gate.
+
+### CI investigator — Professional / Team / Enterprise only
+
+For **failed workflows**, **red pipelines**, or **multi-step CI diagnosis** (GitHub Actions + Bitbucket, PR correlation, structured root-cause report), delegate to **`ci-investigator`** (`/ci-investigator` or "use ci-investigator") on **paid** plans.
+
+| Plan | Behavior |
+|------|----------|
+| **Community** | **Do not delegate** to `ci-investigator` from the main agent. For a **single** Bitbucket repo, use `bb_pipeline_diagnose` inline. For GitHub, use `ghe_actions_latest` inline (no `ghe_actions_diagnose` on Community). For complex CI triage, suggest upgrade at **https://opsphere.io/pricing**. |
+| **Professional / Team / Enterprise** | Delegate to `ci-investigator` for multi-step CI failures. Do not delegate trivial status checks (one `ghe_actions_latest` or one `bb_pipelines_latest`) — handle inline. |
+
+The `ci-investigator` subagent calls `ops_my_usage` as step 0 and stops with an upgrade message on Community without running CI tools.
+
+### QA test investigator — all plans
+
+For **feature validation**, **bug reproduction**, regression checks, or _"is this a bug?"_, delegate to **`qa-test-investigator`** (`/qa-test-investigator`). It builds explicit cases and correlates read-only evidence from the active workspace.
+
+| Situation | Behavior |
+|-----------|----------|
+| One suspected product defect or feature flow | Delegate to `qa-test-investigator` |
+| One quick endpoint probe | Handle inline or use `endpoint-health` for a structured check |
+| Active widespread outage | Use `outage-triage` |
+| Pipeline failure | Use `ci-investigator` when allowed |
+
+The agent must distinguish `not run`, `blocked`, `passed`, and `failed`; it must never present proposed steps as executed tests. Stateful UI or business flows remain manual unless a separately authorized runner exists. Provider access and premium diagnosis remain governed by the Gateway and existing specialist gates.
+
+### QA release readiness — all plans
+
+For **release readiness**, environment promotion, or go-live assessment, delegate to **`qa-release-readiness`** (`/qa-release-readiness`). It ties evidence to one release and returns `Go`, `Go with observation`, `No-Go`, or `Inconclusive`.
+
+Do not issue `Go` from a green CI run, healthy infrastructure, or one endpoint alone. Mandatory criteria need current evidence for the same commit/artifact, environment, and workspace. A missing mandatory result makes the assessment `Inconclusive`; a verified mandatory failure makes it `No-Go`.
+
+Both QA agents are read-only. They must not create tickets, dispatch workflows, deploy, purge, change integrations, write memory, or use QA routing to bypass plan or execution-policy restrictions. The main agent coordinates specialists; QA agents do not recursively delegate.
+
+---
+
+## Important Constraints
+
+- Never invent tool names. Only call tools that exist in the list above.
+- Never ask the user to edit `mcp.json` or configure the MCP transport manually — the plugin handles this.
+- **Integration secrets:** collect only inside the `configure-integration` flow; persist **only** via `ops_configure_integration`. Never in free-form chat, work context, or memory. Never stored locally or in this repo.
+- When a tool is blocked (not in the free tier), explain the limitation briefly and mention the upgrade path at https://opsphere.io/pricing.

@@ -1,67 +1,20 @@
 {
+  "$schema": "https://cursor.com/schema/marketplace.schema.json",
   "name": "opsphere",
   "owner": {
     "name": "Opsphere",
     "email": "contact@opsphere.io"
   },
   "metadata": {
-    "description": "Opsphere — DevOps and SRE intelligence for Cursor. Remote MCP gateway for observability, incident response, CI/CD diagnostics, and cloud operations.",
-    "version": "1.0.19"
+    "description": "Opsphere DevOps, SRE, and QA intelligence plugins for Cursor.",
+    "version": "1.0.20",
+    "pluginRoot": "plugins"
   },
   "plugins": [
     {
-      "name": "Opsphere MCP Plugin",
-      "type": "Opsphere",
-      "source": ".",
-      "description": "DevOps, SRE, and QA intelligence for Cursor: investigate bugs, assess release readiness, search logs, triage incidents, diagnose pipelines, check deployments, and query AWS, Kubernetes, Cloudflare, Jira, and Sentry. Secure remote MCP with OAuth2 and read-only QA subagents. Free Community trial.",
-      "version": "1.0.19",
-      "author": {
-        "name": "Opsphere",
-        "email": "contact@opsphere.io"
-      },
-      "homepage": "https://opsphere.io",
-      "repository": "https://github.com/opsphere-io/opsphere-plugin",
-      "license": "MIT",
-      "logo": "assets/logo-icon.svg",
-      "keywords": [
-        "devops",
-        "sre",
-        "site-reliability",
-        "observability",
-        "monitoring",
-        "incident-response",
-        "incident-triage",
-        "outage",
-        "postmortem",
-        "datadog",
-        "vercel",
-        "railway",
-        "github",
-        "github-actions",
-        "bitbucket",
-        "gitlab",
-        "aws",
-        "kubernetes",
-        "argocd",
-        "cloudflare",
-        "akamai",
-        "sentry",
-        "jira",
-        "ci-cd",
-        "pipelines",
-        "deployment",
-        "infrastructure",
-        "platform-engineering",
-        "endpoint-health",
-        "dns",
-        "tls",
-        "mcp",
-        "model-context-protocol",
-        "cursor",
-        "operational-intelligence",
-        "opsphere"
-      ],
-      "category": "DevOps"
+      "name": "opsphere",
+      "source": "opsphere",
+      "description": "Investigate bugs, assess release readiness, search logs, triage incidents, diagnose pipelines, and query connected operational platforms through Opsphere."
     }
   ]
 }

@@ -92,7 +92,7 @@ sys.exit(1 if bad else 0)
 fi
 
 # 6. scripts/ — maintainer CI only (no runtime shell in bundle)
-ALLOWED_SCRIPTS=(ci-validate.sh codex-install.sh codex-mcp-config.sh phase6-ux-invariants.mjs multiclient-release-invariants.mjs warp-package.test.mjs)
+ALLOWED_SCRIPTS=(ci-validate.sh codex-install.sh codex-mcp-config.sh phase6-ux-invariants.mjs multiclient-release-invariants.mjs sync-cursor-marketplace.mjs warp-package.test.mjs)
 EXTRA_SCRIPTS=()
 while IFS= read -r script; do
   [[ -z "$script" ]] && continue
@@ -204,14 +204,21 @@ else:
 
 with open(os.path.join(ROOT, ".cursor-plugin/marketplace.json"), encoding="utf-8") as f:
     marketplace = json.load(f)
+plugin_root = (marketplace.get("metadata") or {}).get("pluginRoot", "")
+allowed_marketplace_entry_fields = {"name", "source", "description", "minClientVersions"}
 for i, entry in enumerate(marketplace.get("plugins") or []):
-    entry_logo = entry.get("logo")
-    if not entry_logo:
-        fail(f"marketplace.json plugins[{i}] missing logo")
-    elif not os.path.isfile(os.path.join(ROOT, entry_logo)):
-        fail(f"marketplace.json plugins[{i}].logo not found: {entry_logo}")
+    extra = set(entry) - allowed_marketplace_entry_fields
+    if extra:
+        fail(f"marketplace.json plugins[{i}] unsupported fields: {sorted(extra)}")
+    source = entry.get("source")
+    if not isinstance(source, str) or source in {".", "./"} or source.startswith("./"):
+        fail(f"marketplace.json plugins[{i}] source must be a bare plugin directory name")
+        continue
+    nested_manifest = os.path.join(ROOT, plugin_root, source, ".cursor-plugin", "plugin.json")
+    if not os.path.isfile(nested_manifest):
+        fail(f"marketplace.json plugins[{i}] does not resolve to {nested_manifest}")
     else:
-        print(f"OK: marketplace.json plugins[{i}] logo exists ({entry_logo})")
+        print(f"OK: marketplace.json plugins[{i}] resolves to {os.path.relpath(nested_manifest, ROOT)}")
 
 # 13. No parent-segment or absolute paths in JSON manifests
 MANIFESTS = (
@@ -260,14 +267,18 @@ else:
     print(f"OK: plugin.json and marketplace metadata version ({plugin_version})")
 
 for i, entry in enumerate(marketplace.get("plugins") or []):
-    entry_version = entry.get("version")
-    if entry_version != plugin_version:
-        fail(
-            f"version mismatch: plugin.json={plugin_version!r} vs "
-            f"marketplace plugins[{i}]={entry_version!r}"
-        )
+    source = entry.get("source")
+    if not isinstance(source, str):
+        continue
+    nested_manifest = os.path.join(ROOT, plugin_root, source, ".cursor-plugin", "plugin.json")
+    if not os.path.isfile(nested_manifest):
+        continue
+    with open(nested_manifest, encoding="utf-8") as f:
+        nested_version = json.load(f).get("version")
+    if nested_version != plugin_version:
+        fail(f"version mismatch: plugin.json={plugin_version!r} vs nested plugin={nested_version!r}")
     else:
-        print(f"OK: plugin.json and marketplace plugins[{i}] version ({plugin_version})")
+        print(f"OK: canonical and Git marketplace plugin versions ({plugin_version})")
 
 sys.exit(1 if failures else 0)
 PY

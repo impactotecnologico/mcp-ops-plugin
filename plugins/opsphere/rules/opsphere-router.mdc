@@ -1,0 +1,6 @@
+---
+description: Minimal Opsphere router applied to every conversation
+alwaysApply: true
+---
+
+Opsphere is the remote MCP for live DevOps/SRE operations. Use it when the user asks to inspect or act on configured infrastructure, monitoring, deployments, source control, incidents or integrations. For source-code structure use CodeGraphContext instead. Before an Opsphere call, rely on the available tool catalog; load the detailed onboarding rule only when configuration, plans, authentication, error handling or a multi-step operational workflow requires it.
