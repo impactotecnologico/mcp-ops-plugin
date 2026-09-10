@@ -30,7 +30,7 @@ Tools can include the following once authenticated, entitled, and configured:
 | Deployments | Railway (direct) | `railway_projects_list`, `railway_project_status`, `railway_deployments_latest`, `railway_logs`, `railway_health_summary`, `railway_incident_diagnosis` — 17 read-only tools when Railway module is enabled |
 | Source Control | GitHub Enterprise | `ghe_repo_summary`, `ghe_actions_latest` |
 | Source Control | Bitbucket | `bb_pipelines_latest`, `bb_pipeline_diagnose` |
-| CDN / DNS | Cloudflare | `cf_quick_status`, `cf_dns_records` |
+| CDN / DNS | Cloudflare | `cf_quick_status`, `cf_dns_records`, `cf_cache_purge_history`, `cf_cache_analytics`, `cf_cache_probe` |
 | Issue Tracking | Jira | `jira_issue_get`, `jira_issues_search` |
 | Error Tracking | Sentry | `sentry_issues_list`, `sentry_issues_search` |
 | Code Quality | SonarQube (paid) | `sq_projects_search` (URL or key) → `sq_last_scan_summary` for last scan; `sq_quality_gate_status` + `sq_issues_search` for QG drill-down — prompt `diagnose-sonarqube-quality-gate` when in playbooks |
@@ -45,6 +45,8 @@ Tools can include the following once authenticated, entitled, and configured:
 | **Macro workflows** (Team+) | — | `macro_outage_triage`, `macro_endpoint_health`, `macro_env_health` — composite read-only runs with SSE progress |
 
 **Network tools (`dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents`) work immediately after login — no integration setup needed.** `dns_lookup` accepts `recordTypes` (`A`, `AAAA`, `CNAME`, `NS`); for DNS cutovers use `["NS", "CNAME"]` rather than falling back to shell `dig`. `http_check` supports optional `connectHost`, `headers` (e.g. `Host`), and `servername` for direct origin probes bypassing CDN DNS. `alg_status` / `alg_incidents` report **global** Algolia platform health (not your tenant App ID).
+
+**Cloudflare cache evidence:** use `cf_cache_purge_history` for exact purge actions, `cf_cache_analytics` for historical cache outcomes, and `cf_cache_probe` for a current URL. A probe is evidence for its responding request path/POP, never proof of global cache state. These are read-only; do not substitute `cf_cache_purge` unless the user explicitly requests invalidation.
 
 **Macro tools** (`macro_*`) require an eligible plan and the enabled `macros` module even when visible in the stable catalog. They run multi-step investigations server-side with progress streaming. Check workspace eligibility before using skill **`run-macro-workflows`**; respect execution denials.
 

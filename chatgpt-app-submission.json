@@ -1064,6 +1064,30 @@
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
     },
+    "cf_cache_analytics": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf cache analytics information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "cf_cache_probe": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf cache probe information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
     "cf_cache_purge": {
       "annotations": {
         "readOnlyHint": false,
@@ -1074,6 +1098,18 @@
         "read_only_justification": "Creates, updates, deletes, purges, or replaces internet-facing Cloudflare state.",
         "open_world_justification": "Changes internet-facing Cloudflare configuration or cache state.",
         "destructive_justification": "May delete, overwrite, or purge Cloudflare configuration or cache state after confirmation."
+      }
+    },
+    "cf_cache_purge_history": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes cf cache purge history information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
     },
     "cf_cache_rules_list": {

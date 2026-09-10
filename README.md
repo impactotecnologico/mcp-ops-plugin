@@ -166,7 +166,7 @@ The onboarding rule tells the main agent **when to delegate** vs handle inline, 
 | **Railway** | Projects · services · deployments · logs · metrics · env names · incident diagnosis | API token (account, workspace, or project) |
 | **GitHub** | Repo discovery · summary · Actions runs · PRs | Personal Access Token; optional default org |
 | **Bitbucket** | Pipeline list · pipeline diagnosis · PR search | App Password |
-| **Cloudflare** | Zone status · DNS records · firewall events | API Token |
+| **Cloudflare** | Zone/DNS status · firewall events · cache purge history · cache analytics · URL cache probe | API Token |
 | **Jira** | Issue search · issue detail · comments | API Token |
 | **Sentry** | Issues list · issue search · project stats | Auth Token |
 | **SonarQube** | Quality gate · measures · issues · hotspots (paid) | Token + host URL |

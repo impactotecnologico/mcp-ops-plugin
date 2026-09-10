@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.0.23] - 2026-09-10 (Cloudflare cache observability)
+
+### Added
+- Documented the new read-only `cf_cache_purge_history`, `cf_cache_analytics`, and `cf_cache_probe` Gateway tools.
+- Added routing guidance that distinguishes exact purge audit, historical cache behavior, and point-in-time URL/POP evidence.
+
+### Safety and compatibility
+- Cache probes must never be presented as proof of global cache state, and inspection requests must not invoke destructive `cf_cache_purge`.
+- Distribution versions: Cursor **1.0.23**, Codex **1.0.18**, Claude Code **1.0.12**.
+
 ## [1.0.22] - 2026-09-10 (Bounded QA catalog discovery)
 
 ### Fixed

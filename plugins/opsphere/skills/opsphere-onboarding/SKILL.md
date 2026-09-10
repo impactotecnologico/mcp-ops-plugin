@@ -34,7 +34,7 @@ proof that a provider or tool is active in the current workspace.
 | Deployments | Multi-stack (catalog) | **`deployment_status`** (preferred) — Vercel, CI, GitOps, S3+CloudFront, ECS from configured sources |
 | Deployments | Vercel / Railway (direct) | `vercel_deploys_latest`, `vercel_project_status`; `railway_*` (17 read-only tools) — only when the user asks provider-specific or `deployment_status` gaps point there |
 | Source control | GitHub / Bitbucket / GitLab | `ghe_org_repos` (discover) → `ghe_repo_summary`, `ghe_actions_latest`; `bb_pipelines_latest`, `bb_pipeline_diagnose`; `gl_pipelines_latest`, `gl_pipeline_diagnose` |
-| CDN / DNS | Cloudflare | `cf_quick_status`, `cf_dns_records` |
+| CDN / DNS | Cloudflare | `cf_quick_status`, `cf_dns_records`, `cf_cache_purge_history`, `cf_cache_analytics`, `cf_cache_probe` |
 | Issue tracking | Jira | `jira_issue_get`, `jira_issues_search` |
 | Knowledge base | Confluence | `confluence_search`, `confluence_page_read` |
 | Error tracking | Sentry | `sentry_issues_list`, `sentry_issues_search` |

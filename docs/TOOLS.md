@@ -649,6 +649,27 @@ Purge cached assets for a zone (URLs, cache-tags, hosts, or path prefixes). **De
 
 ---
 
+### `cf_cache_purge_history`
+Read exact cache purge events for a zone from Cloudflare Audit Logs v2: timestamp, actor/token, success/failure, and files, prefixes, hosts, tags, or purge-all payload. **Read-only**.
+
+**Example**: _"Show cache purges for mycompany.com in the last 24 hours"_
+
+---
+
+### `cf_cache_analytics`
+Analyze historical cache outcomes for a zone and optional hostname: requests and edge bytes grouped by HIT, MISS, BYPASS, DYNAMIC, EXPIRED, REVALIDATED, and observed status.
+
+**Example**: _"Show cache HIT and MISS behavior for assets.mycompany.com since yesterday"_
+
+---
+
+### `cf_cache_probe`
+Probe one URL 1–3 times and report `CF-Cache-Status`, `Age`, `CF-Ray`, cache headers, latency, and transition. The result is scoped to the responding request path/POP, not Cloudflare's global cache.
+
+**Example**: _"Check the current Cloudflare cache behavior of https://www.mycompany.com/logo.svg"_
+
+---
+
 ### `cf_workers_scripts_list`
 List Worker scripts in the Cloudflare account (distinct from zone Workers routes).
 
