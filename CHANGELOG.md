@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+- Release-readiness now treats workspace resolution, QA catalog discovery, immutable release identity, and QA evidence as sequential barriers before bounded operational fan-out.
+- Missing credentials, timeouts, missing mappings, and unmatched evidence are classified as blocked or not evidenced; `No-Go` requires a demonstrated failure of an agreed mandatory criterion for the exact release and scope.
+- Named requests such as an environment plus site, product, service, or workspace are resolved from active-tenant metadata without customer aliases or automatic workspace switching.
+- Release comparisons no longer treat expected PRE/production version differences, protected-endpoint 401/403 responses, chronic tenant alerts, or uncorrelated error rates as release failures by themselves.
+
+### Reliability
+- Release-readiness uses at most twelve calls by default, no more than two short concurrent reads, target-specific Synthetics, and one backoff-aware retry for `BROKER_SUBPROCESS_BUSY`.
+
 ## [1.0.23] - 2026-09-10 (Cloudflare cache observability)
 
 ### Added
