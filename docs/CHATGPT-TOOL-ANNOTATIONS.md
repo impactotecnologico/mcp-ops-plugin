@@ -6,8 +6,8 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 - `destructiveHint`: puede borrar, sobrescribir, revocar o ejecutar una acción irreversible.
 - `openWorldHint`: puede cambiar un sistema público o un tercero externo.
 
-- Tools auditadas: 335
-- Solo lectura: 281
+- Tools auditadas: 336
+- Solo lectura: 282
 - Con efectos o cambios de estado: 54
 - Destructivas o irreversibles: 31
 - Cambian sistemas públicos o externos: 19
@@ -292,6 +292,7 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `prom_targets` | true | false | false | Solo consulta | Permitida |
 | `qa_catalog_get` | true | false | false | Solo consulta | Permitida |
 | `qa_release_evidence` | true | false | false | Solo consulta | Permitida |
+| `qa_release_snapshot` | true | false | false | Solo consulta | Permitida |
 | `qa_source_confirm` | false | false | false | Cambia estado privado de forma acotada | Permitida |
 | `qa_sources_discover` | true | false | false | Solo consulta | Permitida |
 | `railway_dashboard` | true | false | false | Solo consulta | Permitida |

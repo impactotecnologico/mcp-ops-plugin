@@ -23,13 +23,13 @@ Identify the immutable release/commit or artifact, or discover the immutable ver
 
 ## Discover tenant QA assets
 
-After resolving the active workspace, start the evidence phase with `qa_catalog_get` as the only in-flight MCP call. Pass environment and scope when supported, read the complete result, and use its suites and immutable evidence references instead of guessing repositories or criteria. Do not launch deployment, health, CI, endpoint, or observability reads until it returns. Discovery uses technical content already accessible through the active workspace SCM integration and does not require an Opsphere manifest or repository configuration.
+After resolving the active workspace, call `qa_release_snapshot` once when advertised, passing environment, optional scope, immutable commit when known, and the requested time window. It resolves the tenant catalog first and then collects bounded release, deployment, and observability sections with partial-result semantics. Do not duplicate a provider read already present in the snapshot. If the composite tool is absent, use `qa_catalog_get` as the only in-flight call and then `qa_release_evidence` alone. Discovery uses technical content already accessible through the active workspace SCM integration and does not require an Opsphere manifest or repository configuration.
 
 If sources are ambiguous, call `qa_sources_discover`, explain the signals, then stop and ask the user to choose. Call `qa_source_confirm` only after explicit confirmation because it persists a tenant preference. Never call `qa_release_evidence` with an empty or ambiguous catalog. Then call `qa_release_evidence` alone with target environment, resolved scope, and immutable commit when available.
 
 If `qa_release_evidence` returns `BLOCKED_SCOPE_UNRESOLVED`, ask one short disambiguation question and do not substitute tenant-wide evidence. When present, `scope_policy_configured: false` means no mandatory release policy was proven for that resolved site/product/service.
 
-If catalog discovery returns `QA_DISCOVERY_FAILED`, `BROKER_SUBPROCESS_BUSY`, `DISCOVERY_IN_PROGRESS`, or a transport timeout, do not fan out and do not call `qa_release_evidence`. Honor the server backoff, retry `qa_catalog_get` once in isolation, and then return a traceable partial assessment if it still fails.
+For `PROVIDER_TIMEOUT` or `PROVIDER_RATE_LIMITED`, keep successful snapshot sections, honor the server backoff, and retry only one missing decisive read. If catalog discovery returns `QA_DISCOVERY_FAILED`, `BROKER_SUBPROCESS_BUSY`, `DISCOVERY_IN_PROGRESS`, or a transport timeout, do not fan out and do not call `qa_release_evidence`. Retry the failed barrier once in isolation, then return a traceable partial assessment.
 
 These are hard phase barriers. Never start `qa_sources_discover` beside `qa_catalog_get`; it is a conditional follow-up only. Establish the deployed immutable version after the catalog, then call `qa_release_evidence` alone with that version before broader operational reads.
 
@@ -53,7 +53,7 @@ These are hard phase barriers. Never start `qa_sources_discover` beside `qa_cata
    - `No-Go`: an agreed mandatory criterion demonstrably fails for the exact target release and scope.
    - `Inconclusive`: version identity, criteria, access, or mandatory evidence is insufficient.
 
-Prefer existing matching evidence. The context gate, catalog call, and release-evidence call are sequential barriers; read each result before beginning the next phase. After they complete, default to at most 12 MCP calls and never have more than two short, independent calls in flight; read both before submitting more. Maintain the call count and do not restart the assessment after a partial failure. Avoid `macro_env_health` when target-specific atomic evidence is required or its checks would be duplicated. Never run `qa_catalog_get` or `qa_release_evidence` concurrently with another Opsphere call. For `BROKER_SUBPROCESS_BUSY`, wait `retryAfterMs` and retry only that read once. Retry other transient reads at most twice with server backoff. Never retry authorization, plan, trial, policy, or budget denials.
+Prefer existing matching evidence. With `qa_release_snapshot`, use at most six additional calls and only for decisive gaps. In fallback mode, the context, catalog, and release-evidence calls remain sequential barriers. Never have more than two short independent calls in flight; never duplicate snapshot sections or restart the assessment after a partial failure. Avoid `macro_env_health` when its checks would be duplicated. Retry only one missing decisive transient read with server backoff. Never retry authorization, plan, trial, policy, or budget denials.
 
 ## Report
 

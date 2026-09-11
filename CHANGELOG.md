@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.0.25] - 2026-09-11 (Bounded release snapshot)
+
+### Added
+- Release-readiness now prefers one tenant-scoped `qa_release_snapshot` call that resolves the requested target before collecting bounded deployment, QA, error, and alert evidence.
+
+### Reliability
+- A scope that cannot be resolved stops before provider fan-out, while slow or rate-limited providers become explicit partial sections instead of collapsing the whole assessment.
+- Follow-up reads are capped, duplicate snapshot sections are not requested again, and all tenant/site/product matching comes from active-workspace catalog metadata.
+- Distribution versions: Cursor **1.0.25**, Codex **1.0.19**, Claude Code **1.0.13**.
+
 ### Fixed
 - Release-readiness now treats workspace resolution, QA catalog discovery, immutable release identity, and QA evidence as sequential barriers before bounded operational fan-out.
 - Missing credentials, timeouts, missing mappings, and unmatched evidence are classified as blocked or not evidenced; `No-Go` requires a demonstrated failure of an agreed mandatory criterion for the exact release and scope.
