@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.0.26] - 2026-09-11 (Execution budget visibility)
+
+### Added
+- Team and Enterprise users can ask Cursor for their current investigation budget through the read-only `ops_execution_budget` tool.
+- The `/execution-budget` command presents remaining calls, cost units, macros, retries, and the next reset without accepting tenant or policy overrides.
+
+### Safety and compatibility
+- Budget inspection is informational and scoped by the gateway to the authenticated user, active workspace, Cursor runtime, and MCP session.
+- Agents stop operational retries after a budget denial and use the inspector only once to explain the reset time.
+- Distribution versions: Cursor **1.0.26**, Codex **1.0.20**, Claude Code **1.0.14**.
+
 ## [1.0.25] - 2026-09-11 (Bounded release snapshot)
 
 ### Added

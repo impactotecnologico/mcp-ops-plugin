@@ -10,7 +10,7 @@
       "name": "opsphere",
       "source": "./",
       "description": "DevOps, SRE, and QA intelligence for Claude Code: investigate bugs, assess release readiness, search logs, triage incidents, diagnose pipelines, check deployments, and query connected operational platforms through a secure remote MCP gateway. Free Community trial.",
-      "version": "1.0.13"
+      "version": "1.0.14"
     }
   ]
 }
