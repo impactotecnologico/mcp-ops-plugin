@@ -1,6 +1,6 @@
 ---
 name: plan-and-usage
-description: Show Opsphere plan, trial, usage, Personal Workspace, Work Context, and integrations. Use for plan/usage/limits/upgrade or ops_my_usage.
+description: Show Opsphere plan, trial, daily usage, execution budget, Personal Workspace, Work Context, and integrations. Use for plan/usage/limits/upgrade, ops_my_usage, or ops_execution_budget.
 ---
 
 # Plan and usage
@@ -10,6 +10,9 @@ description: Show Opsphere plan, trial, usage, Personal Workspace, Work Context,
 First check the current MCP `tools/list`.
 
 - If **`ops_my_usage`** is present, call it with no parameters.
+- If the user specifically asks about investigation capacity or reset time and
+  **`ops_execution_budget`** is present, call it with no parameters after
+  `ops_my_usage`. It is available to eligible Team and Enterprise workspaces.
 - If it is absent, do not call it and do not infer that Opsphere or the active
   workspace is disconnected. Explain that plan/usage is a Connection Hub or
   self-service control-plane capability and is not exposed by this direct
@@ -55,6 +58,7 @@ availability must stay unknown, not become zero or "not configured". When
 | External workspaces | Community: included Personal Workspace; additional links need upgrade. **Org invite:** same email + Developer+ may already show in `ops_accounts_list` — mention when user asks about a company invitation. |
 | Integrations | Count / list next actions (Connect AWS, Datadog, …) if zero |
 | Daily / monthly usage | From tool text |
+| Current investigation budget | From `ops_execution_budget`: calls, cost, macros, retries and reset; keep separate from daily/monthly usage |
 
 ### Good example
 

@@ -256,7 +256,10 @@ The gateway applies **execution policies** on every `tools/call` for your tenant
 
 **Never include in `tools/call` arguments:** `tenant_id`, `plan`, `profile_id`, `max_tool_calls`, `max_cost_units`, `max_duration_ms`, `max_retries`, `max_macro_calls`, `allow_sensitive_actions`, `enabled_tools`, `policy_version`, `subscription_id`, `runtime_profile`.
 
-Use `ops_my_usage` for plan/usage visibility. The gateway is the only authority for allow/deny.
+Use `ops_my_usage` for subscription and daily usage. On Team and Enterprise, use
+`ops_execution_budget` (no parameters) for the authenticated user's active Cursor
+investigation window: calls, cost, macros, retries and reset time. It is informational
+and cannot change policy. The gateway is the only authority for allow/deny.
 
 ### JSON-RPC execution denials
 
@@ -266,7 +269,7 @@ Use `ops_my_usage` for plan/usage visibility. The gateway is the only authority 
 | `-32003` | `execution_module_not_enabled` | Tool/module not on plan — suggest `ops_my_usage` or upgrade |
 | `-32003` | `execution_sensitive_action_denied` | Pick a read-only alternative or ask admin to allow sensitive actions |
 | `-32003` | `BROKER_CONTEXT_*` | Reconnect MCP (`/opsphere-reconnect`). For **external** workspace switch on paid plans only, use `open-work-context`. Do **not** coach Community users to pass `context_id` manually. |
-| `-32004` | `max_tool_calls`, `max_cost_units`, `max_macro_calls` | Budget exhausted — wait for `resetsAt` or reduce scope; do not spam retries |
+| `-32004` | `max_tool_calls`, `max_cost_units`, `max_macro_calls`, `max_retries` | Budget exhausted — call `ops_execution_budget` once when available, report its reset time, then stop; do not spam retries |
 
 ---
 
