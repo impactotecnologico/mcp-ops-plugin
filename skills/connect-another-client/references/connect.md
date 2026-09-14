@@ -6,7 +6,7 @@ Use the same email to recover the same Hub, subscription and Personal Workspace.
 
 Each session is independently revocable. Preferences are per effective OAuth client ID; a new DCR registration can have a fresh preference.
 
-Warp local is available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.
+Warp local, OpenCode and Antigravity are available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.
 
 MCP-only supplies tools, resources and OAuth. The optional plugin/package adds skills, rules and agents, not extra permissions.
 
@@ -33,17 +33,62 @@ Endpoint: https://mcp-cursor.opsphere.io/mcp (Streamable HTTP). OAuth authorizat
 3. Complete browser OAuth with the same account. If you want Personal, select Personal Workspace in the OAuth picker. Do not assume another client's workspace is inherited.
 4. Let Warp manage callbacks and credentials. Desktop uses warp://mcp/oauth2callback; the local CLI may use http://127.0.0.1:<port>/mcp/oauth2callback. Do not set a callback port manually.
 
+## OpenCode
+
+1. Merge the OpenCode MCP object into <repo>/opencode.json, preserving other servers. Global MCP-only setup uses ~/.config/opencode/opencode.json; do not add both unintentionally.
+2. Complete OAuth with opencode mcp auth opsphere or OpenCode /mcps. Use the same account. Do not copy token files.
+3. Let OpenCode manage callbacks and credentials. Do not set a callback port or redirect URI unless the gateway reports invalid_redirect_uri.
+4. Keep Code Mode disabled for Opsphere so gateway tools stay native. Raise the catalog timeout; the default is too low for this server.
+
+## Antigravity
+
+1. Install the Opsphere plugin into the workspace (.agents/plugins/opsphere/) or globally (~/.gemini/config/plugins/opsphere/).
+2. Reload the workspace or CLI so Antigravity discovers plugin.json and mcp_config.json (serverUrl).
+3. Complete browser OAuth with the same account. Do not copy token files or add a duplicate opsphere server in ~/.gemini/config/mcp_config.json.
+4. MCP-only can use mcp_config.json with serverUrl; the package adds skills, rules and agents, not extra permissions.
+
 ## Other MCP client
 
 1. Configure the remote URL with Streamable HTTP, OAuth discovery, PKCE S256 and DCR. Compatibility is not guaranteed; do not use static bearer credentials.
 
 ## Remote MCP configuration
 
+Warp local and generic `mcpServers` shape:
+
 ```json
 {
   "mcpServers": {
     "opsphere": {
       "url": "https://mcp-cursor.opsphere.io/mcp"
+    }
+  }
+}
+```
+
+OpenCode (`opencode.json`):
+
+```json
+{
+  "mcp": {
+    "opsphere": {
+      "type": "remote",
+      "url": "https://mcp-cursor.opsphere.io/mcp",
+      "timeout": 60000,
+      "codemode": false
+    }
+  }
+}
+```
+
+If the installed OpenCode requires V2 `mcp.servers`, nest the same `opsphere` object under `mcp.servers` instead of next to it. Do not set `oauth: false` or a static client secret.
+
+Antigravity (`mcp_config.json`, `serverUrl` only):
+
+```json
+{
+  "mcpServers": {
+    "opsphere": {
+      "serverUrl": "https://mcp-cursor.opsphere.io/mcp"
     }
   }
 }
@@ -62,12 +107,26 @@ Endpoint: https://mcp-cursor.opsphere.io/mcp (Streamable HTTP). OAuth authorizat
 - stale_catalog: Check catalog.mode in ops_my_usage. In stable mode, do not reconnect after workspace changes; inspect workspace availability or ops_list_integrations instead. Legacy mode with tools_discovery.stale=true may require client catalog refresh/reconnect. Future product/schema updates may need one reload. Never change workspace to repair discovery, and do not ask the agent to invoke tools/list if its host does not expose it.
 - revocation: Revoke only the destination session. Removing configuration is not server-side revocation. Do not unlink workspaces or revoke other apps as a reconnect shortcut.
 
-## Optional Warp package
+## Optional packages
 
 Verify opsphere-warp/ is actually published before promising a download. If unavailable, contact support. MCP-only needs neither a download nor access to a private repository.
 
+Verify opsphere-opencode/ is actually published before promising a download. If unavailable, contact support. MCP-only needs neither a download nor access to a private repository.
+
+Verify opsphere-antigravity/ is actually published before promising a download. If unavailable, contact support. MCP-only needs neither a download nor access to a private repository.
+
 [Public repository](https://github.com/opsphere-io/opsphere-plugin) · [Source ZIP](https://github.com/opsphere-io/opsphere-plugin/archive/refs/heads/main.zip) · [Support](mailto:contact@opsphere.io)
 
-Install skills under .agents/skills/. Merge AGENTS.md preserving existing instructions. Do not also install WARP.md or assume precedence between competing files.
+Warp: Install skills under .agents/skills/. Merge AGENTS.md preserving existing instructions. Do not also install WARP.md or assume precedence between competing files.
 
 Warp/Oz cloud and Slack-triggered cloud agents are outside Opsphere support for this package, not generally incapable of MCP. Never upload local OAuth credentials.
+
+OpenCode: Install skills under .opencode/skills/. Merge AGENTS.md preserving existing instructions. Use opsphere-opencode markers; do not reuse Warp markers or install into .agents/skills/.
+
+Keep codemode false so Opsphere gateway tools remain native. Revisit only if a session proves context overflow.
+
+Set at least a 60000 ms catalog timeout. OpenCode defaults are too low for this server.
+
+Antigravity: Install the plugin directory as a whole. Do not add hooks.json or a default disabledTools list.
+
+Do not add a second opsphere server in ~/.gemini/config/mcp_config.json or .agents/mcp_config.json when the plugin already defines serverUrl.

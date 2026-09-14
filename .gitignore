@@ -4,6 +4,7 @@ docs/PRE-PUBLISH-AUDIT.md
 
 # Source design files (Adobe Illustrator, GIMP, etc.)
 logos/
+local_docs
 
 # Environment and secrets
 .env

@@ -6,7 +6,7 @@ Use the same email to recover the same Hub, subscription and Personal Workspace.
 
 Each session is independently revocable. Preferences are per effective OAuth client ID; a new DCR registration can have a fresh preference.
 
-Warp local is available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.
+Warp local, OpenCode and Antigravity are available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.
 
 MCP-only supplies tools, resources and OAuth. The optional plugin/package adds skills, rules and agents, not extra permissions.
 

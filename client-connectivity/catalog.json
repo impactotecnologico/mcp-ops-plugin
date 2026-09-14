@@ -5,7 +5,7 @@
   "authentication": "OAuth authorization code, PKCE S256 and discovery; do not configure a static bearer token or client secret.",
   "account": "Use the same email to recover the same Hub, subscription and Personal Workspace. Complete OAuth independently in each client. Do not copy OAuth token files.",
   "sessions": "Each session is independently revocable. Preferences are per effective OAuth client ID; a new DCR registration can have a fresh preference.",
-  "plans": "Warp local is available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.",
+  "plans": "Warp local, OpenCode and Antigravity are available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.",
   "distribution": "MCP-only supplies tools, resources and OAuth. The optional plugin/package adds skills, rules and agents, not extra permissions.",
   "catalogPolicy": "When ops_my_usage reports catalog.mode=stable, tools/list is the public connector catalog, independent of workspace and plan. Listed does not mean permitted, configured or connected. Workspace switches require no reconnect. Every call validates the selected workspace, plan, enabled tools, permissions, credentials and limits. Never force Personal or switch automatically. One reload may be needed after activation or future tool/schema releases in clients that ignore change notifications.",
   "clients": {
@@ -45,6 +45,42 @@
         "Let Warp manage callbacks and credentials. Desktop uses warp://mcp/oauth2callback; the local CLI may use http://127.0.0.1:<port>/mcp/oauth2callback. Do not set a callback port manually."
       ]
     },
+    "opencode": {
+      "title": "OpenCode",
+      "capabilities": {
+        "mode": "local",
+        "remoteMcp": true,
+        "nativePlugin": false,
+        "portableSkills": true,
+        "rulesFile": "AGENTS.md",
+        "agents": "opencode markdown agents",
+        "cloud": false
+      },
+      "steps": [
+        "Merge the OpenCode MCP object into <repo>/opencode.json, preserving other servers. Global MCP-only setup uses ~/.config/opencode/opencode.json; do not add both unintentionally.",
+        "Complete OAuth with opencode mcp auth opsphere or OpenCode /mcps. Use the same account. Do not copy token files.",
+        "Let OpenCode manage callbacks and credentials. Do not set a callback port or redirect URI unless the gateway reports invalid_redirect_uri.",
+        "Keep Code Mode disabled for Opsphere so gateway tools stay native. Raise the catalog timeout; the default is too low for this server."
+      ]
+    },
+    "antigravity": {
+      "title": "Antigravity",
+      "capabilities": {
+        "mode": "local",
+        "remoteMcp": true,
+        "nativePlugin": true,
+        "portableSkills": true,
+        "rulesFile": "rules/opsphere.md",
+        "agents": "plugin agents",
+        "cloud": false
+      },
+      "steps": [
+        "Install the Opsphere plugin into the workspace (.agents/plugins/opsphere/) or globally (~/.gemini/config/plugins/opsphere/).",
+        "Reload the workspace or CLI so Antigravity discovers plugin.json and mcp_config.json (serverUrl).",
+        "Complete browser OAuth with the same account. Do not copy token files or add a duplicate opsphere server in ~/.gemini/config/mcp_config.json.",
+        "MCP-only can use mcp_config.json with serverUrl; the package adds skills, rules and agents, not extra permissions."
+      ]
+    },
     "generic": {
       "title": "Other MCP client",
       "steps": [
@@ -73,5 +109,28 @@
     "archive": "https://github.com/opsphere-io/opsphere-plugin/archive/refs/heads/main.zip",
     "support": "mailto:contact@opsphere.io",
     "availability": "Verify opsphere-warp/ is actually published before promising a download. If unavailable, contact support. MCP-only needs neither a download nor access to a private repository."
+  },
+  "opencodePackage": {
+    "directory": "opsphere-opencode/",
+    "skillsDirectory": ".opencode/skills/",
+    "rules": "AGENTS.md",
+    "rulesPolicy": "Merge AGENTS.md preserving existing instructions. Use opsphere-opencode markers; do not reuse Warp markers or install into .agents/skills/.",
+    "codeMode": "Keep codemode false so Opsphere gateway tools remain native. Revisit only if a session proves context overflow.",
+    "timeout": "Set at least a 60000 ms catalog timeout. OpenCode defaults are too low for this server.",
+    "repository": "https://github.com/opsphere-io/opsphere-plugin",
+    "archive": "https://github.com/opsphere-io/opsphere-plugin/archive/refs/heads/main.zip",
+    "support": "mailto:contact@opsphere.io",
+    "availability": "Verify opsphere-opencode/ is actually published before promising a download. If unavailable, contact support. MCP-only needs neither a download nor access to a private repository."
+  },
+  "antigravityPackage": {
+    "directory": "opsphere-antigravity/",
+    "skillsDirectory": "skills/",
+    "rules": "rules/opsphere.md",
+    "rulesPolicy": "Install the plugin directory as a whole. Do not add hooks.json or a default disabledTools list.",
+    "duplicateMcp": "Do not add a second opsphere server in ~/.gemini/config/mcp_config.json or .agents/mcp_config.json when the plugin already defines serverUrl.",
+    "repository": "https://github.com/opsphere-io/opsphere-plugin",
+    "archive": "https://github.com/opsphere-io/opsphere-plugin/archive/refs/heads/main.zip",
+    "support": "mailto:contact@opsphere.io",
+    "availability": "Verify opsphere-antigravity/ is actually published before promising a download. If unavailable, contact support. MCP-only needs neither a download nor access to a private repository."
   }
 }

@@ -5,6 +5,8 @@
 [![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.25-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
 [![Codex plugin](https://img.shields.io/badge/Codex-1.0.19-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-1.0.13-orange)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![OpenCode package](https://img.shields.io/badge/OpenCode-1.0.0-lightgrey)](https://github.com/opsphere-io/opsphere-plugin)
+[![Antigravity package](https://img.shields.io/badge/Antigravity-1.0.0-lightgrey)](https://github.com/opsphere-io/opsphere-plugin)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)
@@ -30,9 +32,9 @@ Architecture diagram and domain list: **[docs/REMOTE-MCP-ARCHITECTURE.md](docs/R
 
 ## Connect another client
 
-Use `/opsphere-connect-another-client` to reuse the same Opsphere account in Cursor, Codex, Claude Code or another compatible MCP host. Each client completes OAuth independently and receives its own revocable session; never copy token files between applications.
+Use `/opsphere-connect-another-client` to reuse the same Opsphere account in Cursor, Codex, Claude Code, Warp, OpenCode, Antigravity or another compatible MCP host. Each client completes OAuth independently and receives its own revocable session; never copy token files between applications.
 
-Warp local MCP is available across all Opsphere plans without per-user invitations. The optional [`opsphere-warp/`](opsphere-warp/README.md) package includes the remote MCP configuration, portable skills and `AGENTS.md`. Opsphere OAuth is not supported in Warp/Oz cloud environments.
+Warp local, OpenCode and Antigravity MCP are available across all Opsphere plans without per-user invitations. Optional packages add skills and rules only: [`opsphere-warp/`](opsphere-warp/README.md), [`opsphere-opencode/`](opsphere-opencode/README.md), [`opsphere-antigravity/`](opsphere-antigravity/README.md). Opsphere OAuth is not supported in Warp/Oz cloud environments. Cursor, Codex and Claude Code continue to use their existing plugin manifests.
 
 ---
 
@@ -416,7 +418,7 @@ The manifest `name: opsphere` namespaces every skill and subagent:
 | Connect MCP | Settings → Extensions | `codex mcp login` | `/mcp` or `claude mcp login opsphere` |
 | Reload after edits | Reload Window | new Codex task | `/reload-plugins` |
 
-The plugin includes 16 `skills/` and 6 `agents/`; the portable Warp package includes the 10 operational skills that apply there. Claude Code has no always-on rule mechanism (unlike Cursor's [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc)); the closest substitute is [`skills/opsphere-onboarding/SKILL.md`](skills/opsphere-onboarding/SKILL.md), invoked with `/opsphere:opsphere-onboarding`.
+The plugin includes 16 `skills/` and 6 `agents/`; the portable Warp, OpenCode and Antigravity packages include the 10 operational skills that apply there. Claude Code has no always-on rule mechanism (unlike Cursor's [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc)); the closest substitute is [`skills/opsphere-onboarding/SKILL.md`](skills/opsphere-onboarding/SKILL.md), invoked with `/opsphere:opsphere-onboarding`.
 
 ---
 

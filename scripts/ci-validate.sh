@@ -57,7 +57,7 @@ done
 [[ -f assets/icon.png ]] && ok "assets/icon.png"
 
 # 3. JSON syntax
-for j in .cursor-plugin/plugin.json .cursor-plugin/marketplace.json .codex-plugin/plugin.json .claude-plugin/plugin.json .claude-plugin/marketplace.json .agents/plugins/marketplace.json .mcp.json mcp.json .claude.mcp.json; do
+for j in .cursor-plugin/plugin.json .cursor-plugin/marketplace.json .codex-plugin/plugin.json .claude-plugin/plugin.json .claude-plugin/marketplace.json .agents/plugins/marketplace.json .mcp.json mcp.json .claude.mcp.json client-connectivity/catalog.json opsphere-opencode/mcp/opsphere.json opsphere-opencode/opencode.json opsphere-antigravity/plugin.json opsphere-antigravity/mcp_config.json opsphere-warp/mcp/opsphere.json; do
   [[ -f "$j" ]] || continue
   python3 -m json.tool "$j" >/dev/null || red "invalid JSON: $j"
 done
@@ -92,7 +92,7 @@ sys.exit(1 if bad else 0)
 fi
 
 # 6. scripts/ — maintainer CI only (no runtime shell in bundle)
-ALLOWED_SCRIPTS=(ci-validate.sh codex-install.sh codex-mcp-config.sh phase6-ux-invariants.mjs multiclient-release-invariants.mjs sync-cursor-marketplace.mjs warp-package.test.mjs)
+ALLOWED_SCRIPTS=(ci-validate.sh codex-install.sh codex-mcp-config.sh phase6-ux-invariants.mjs multiclient-release-invariants.mjs sync-cursor-marketplace.mjs warp-package.test.mjs opencode-package.test.mjs antigravity-package.test.mjs)
 EXTRA_SCRIPTS=()
 while IFS= read -r script; do
   [[ -z "$script" ]] && continue
@@ -505,6 +505,28 @@ if search_quiet 'BROKER_SUBPROCESS_BUSY|WORKSPACE_ACCESS_REVOKED' docs/TROUBLESH
   ok "TROUBLESHOOTING documents broker subprocess and workspace errors"
 else
   red "docs/TROUBLESHOOTING.md must document BROKER_SUBPROCESS_BUSY and WORKSPACE_ACCESS_REVOKED"
+fi
+
+# Isolation: OpenCode and Antigravity packages must not land at the repo root
+if [[ -e opencode.json || -e .opencode || -e mcp_config.json ]]; then
+  red "OpenCode/Antigravity manifests must stay inside opsphere-opencode/ or opsphere-antigravity/, not the repo root"
+else
+  ok "no repo-root OpenCode or Antigravity MCP manifests"
+fi
+if [[ -f opsphere-antigravity/hooks.json ]]; then
+  red "opsphere-antigravity/hooks.json must not exist (no auto-exec hooks)"
+else
+  ok "Antigravity package has no hooks.json"
+fi
+if [[ -f opsphere-opencode/mcp/opsphere.json ]] && python3 -c "import json; c=json.load(open('opsphere-opencode/mcp/opsphere.json')); s=c['mcp']['opsphere']; assert s.get('codemode') is False; assert s.get('timeout')>=60000; assert 'oauth' not in s"; then
+  ok "OpenCode MCP snippet uses DCR, catalog timeout and codemode false"
+else
+  red "opsphere-opencode/mcp/opsphere.json must set type remote, timeout>=60000, codemode false, no oauth client secret"
+fi
+if [[ -f opsphere-antigravity/mcp_config.json ]] && python3 -c "import json; c=json.load(open('opsphere-antigravity/mcp_config.json')); s=c['mcpServers']['opsphere']; assert 'serverUrl' in s; assert 'url' not in s and 'httpUrl' not in s; assert 'disabledTools' not in s"; then
+  ok "Antigravity MCP uses serverUrl without default disabledTools"
+else
+  red "opsphere-antigravity/mcp_config.json must use serverUrl only, without url/httpUrl or disabledTools"
 fi
 
 # Phase 6 Community UX content invariants

@@ -5,10 +5,10 @@
   "description": "Opsphere DevOps & SRE intelligence plugin for Cursor (manifest, rules, skills — no npm runtime deps)",
   "scripts": {
     "sync:cursor-marketplace": "node scripts/sync-cursor-marketplace.mjs",
-    "validate": "node scripts/sync-cursor-marketplace.mjs --check && bash scripts/ci-validate.sh && node scripts/phase6-ux-invariants.mjs && node scripts/multiclient-release-invariants.mjs && node --test scripts/warp-package.test.mjs",
+    "validate": "node scripts/sync-cursor-marketplace.mjs --check && bash scripts/ci-validate.sh && node scripts/phase6-ux-invariants.mjs && node scripts/multiclient-release-invariants.mjs && node --test scripts/warp-package.test.mjs scripts/opencode-package.test.mjs scripts/antigravity-package.test.mjs",
     "test": "npm run validate",
     "test:phase6": "node scripts/phase6-ux-invariants.mjs",
-    "test:multiclient-release": "node scripts/multiclient-release-invariants.mjs && node --test scripts/warp-package.test.mjs",
+    "test:multiclient-release": "node scripts/multiclient-release-invariants.mjs && node --test scripts/warp-package.test.mjs scripts/opencode-package.test.mjs scripts/antigravity-package.test.mjs",
     "audit": "node -e \"console.log('No npm dependencies — audit skipped')\""
   }
 }
