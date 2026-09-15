@@ -32,6 +32,18 @@ Confirm:
 
 Current agy ignores Agent Plugins `mcp.json`. If the plugin is listed but MCP is empty, `mcp_config.json` is missing. Do not use `.agents/plugins/opsphere/` or `~/.gemini/antigravity-cli/plugins/opsphere/` as the supported install.
 
+## GitHub URL (live `agy` 1.2.3 — not a supported install)
+
+Executed 2026-09-15. Do not mark a GitHub install as passed.
+
+| Target | Result |
+|---|---|
+| `agy plugin validate https://github.com/opsphere-io/opsphere-plugin/opsphere-antigravity` | Fails: treats the URL as a local path (`missing plugin.json`). |
+| `agy plugin install https://github.com/opsphere-io/opsphere-plugin/opsphere-antigravity` | Clones `opsphere-io/opsphere-plugin.git`, then fails: `subpath "opsphere-antigravity" not found` (directory not on published `main`). |
+| `agy plugin install https://github.com/opsphere-io/opsphere-plugin` | **Must not be used.** Installs the Cursor/Claude repo root as `opsphere` (wrong `mcp.json` / empty `mcp_config.json` `command`). Reinstall from the local `opsphere-antigravity/` path afterward. |
+
+Supported install remains the local package directory. Re-test the tree URL only after `opsphere-antigravity/` is on the default branch; do not document it as supported until that pass succeeds and `mcp_config.json` still uses `serverUrl` only.
+
 ## OAuth (CIMD + PKCE)
 
 Expected (client-managed, not configured in the plugin):
@@ -82,4 +94,4 @@ From `mcp-ops-plugin`:
 npm test
 ```
 
-Cursor, Codex, Claude Code, Warp and OpenCode must keep their existing plugin/MCP files. Completing Antigravity CIMD OAuth must not log out those clients. OpenCode continues to use DCR.
+Cursor, Codex, Claude Code, Warp, OpenCode and Copilot must keep their existing plugin/MCP files. Completing Antigravity CIMD OAuth must not log out those clients. OpenCode continues to use DCR.

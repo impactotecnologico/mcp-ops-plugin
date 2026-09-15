@@ -243,4 +243,21 @@ Use the isolated package, not the Cursor plugin tree.
 
 Official path on current `agy` 1.2.x: `~/.gemini/config/plugins/opsphere/`. Do not use `~/.gemini/antigravity-cli/plugins/` or `.agents/plugins/`. MCP-only uses `serverUrl` in `~/.gemini/config/mcp_config.json` or `.agents/mcp_config.json` **without** the plugin.
 
-Do not install the plugin and a manual `opsphere` MCP entry at the same time.
+Do not run `agy plugin install https://github.com/opsphere-io/opsphere-plugin` (repo root). Live `agy` 1.2.3 accepts that URL and installs the Cursor/Claude bundle instead of [`opsphere-antigravity/`](../opsphere-antigravity/README.md). Do not install the plugin and a manual `opsphere` MCP entry at the same time.
+
+---
+
+## GitHub Copilot CLI
+
+Use the isolated package, not the Cursor plugin tree.
+
+1. Obtain [`opsphere-copilot/`](../opsphere-copilot/README.md).
+2. Install with one of:
+   - `copilot plugin install /absolute/path/to/opsphere-copilot`
+   - `copilot plugin install opsphere-io/opsphere-plugin:opsphere-copilot`
+   - `copilot plugin marketplace add opsphere-io/opsphere-plugin` then `copilot plugin install opsphere@opsphere`
+3. Start a **new** Copilot CLI session and complete DCR OAuth in the client (`/mcp`). Do not configure `client_id`, callback, tokens or secrets.
+
+This repo's Copilot marketplace is [`.github/plugin/marketplace.json`](../.github/plugin/marketplace.json) with `source: ./opsphere-copilot`. Do not use `.claude-plugin/marketplace.json` for Copilot. MCP-only (exclusive of the plugin): `copilot mcp add --transport http opsphere https://mcp-cursor.opsphere.io/mcp`.
+
+Do not install the plugin and a manual `opsphere` MCP entry at the same time. Copilot cloud agent is outside this package's support boundary.

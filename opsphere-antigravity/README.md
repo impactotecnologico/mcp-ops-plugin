@@ -19,7 +19,7 @@ agy plugin validate ~/.gemini/config/plugins/opsphere
 
 Official install path: `~/.gemini/config/plugins/opsphere/`. Validate must report `mcpServers` processed. On current `agy`, the same output also reports skills and agents processed, and `agy plugin list` includes `mcpServers`.
 
-Then start a **new** `agy` session. Do not enable a second MCP entry named `opsphere` while the plugin is installed.
+Then start a **new** `agy` session. Do not enable a second MCP entry named `opsphere` while the plugin is installed. Do not install from `https://github.com/opsphere-io/opsphere-plugin` (repo root): live `agy` 1.2.3 treats that as this whole monorepo, not this folder.
 
 `.agents/plugins/opsphere/` and `~/.gemini/antigravity-cli/plugins/opsphere/` are experimental and unsupported. Google docs may still cite the `antigravity-cli` path; use `~/.gemini/config/plugins/opsphere/` on current `agy`.
 

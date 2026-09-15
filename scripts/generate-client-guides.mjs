@@ -5,7 +5,11 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
-const write = (file, text) => fs.writeFileSync(path.join(root, file), text.endsWith('\n') ? text : text + '\n');
+const write = (file, text) => {
+  const dest = path.join(root, file);
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  fs.writeFileSync(dest, text.endsWith('\n') ? text : text + '\n');
+};
 const json = file => JSON.parse(read(file));
 const fence = obj => '```json\n' + JSON.stringify(obj, null, 2) + '\n```';
 const numbered = steps => steps.map((step, i) => `${i + 1}. ${step}`).join('\n');
@@ -57,6 +61,8 @@ function renderShared(catalog, configs) {
     '',
     clientHeading(catalog, 'antigravity'),
     '',
+    clientHeading(catalog, 'copilot'),
+    '',
     clientHeading(catalog, 'generic'),
     '',
     '## Remote MCP configuration',
@@ -78,6 +84,10 @@ function renderShared(catalog, configs) {
     'Agent Plugins portable (`mcp.json`). Current agy skips this file:',
     '',
     fence(configs.antigravity),
+    '',
+    'GitHub Copilot CLI plugin MCP (`mcp.json`):',
+    '',
+    fence(configs.copilot),
     '',
     'OAuth is client-managed. Antigravity uses stable CIMD:',
     '',
@@ -110,6 +120,8 @@ function renderShared(catalog, configs) {
     '',
     catalog.antigravityPackage.availability,
     '',
+    catalog.copilotPackage.availability,
+    '',
     links(catalog),
     '',
     `Warp: Install skills under ${catalog.warpPackage.skillsDirectory}. ${catalog.warpPackage.rulesPolicy}`,
@@ -133,6 +145,18 @@ function renderShared(catalog, configs) {
     pkg.unconfirmed,
     '',
     pkg.experimentalPaths,
+    '',
+    `GitHub Copilot CLI: ${catalog.copilotPackage.portable} ${catalog.copilotPackage.install} ${catalog.copilotPackage.github} ${catalog.copilotPackage.marketplaceAdd} then ${catalog.copilotPackage.marketplaceInstall} ${catalog.copilotPackage.uninstall}`,
+    '',
+    catalog.copilotPackage.nativeMcp,
+    '',
+    catalog.copilotPackage.oauthMethod,
+    '',
+    catalog.copilotPackage.duplicateMcp,
+    '',
+    catalog.copilotPackage.marketplaceFile,
+    '',
+    catalog.copilotPackage.cloud,
     '',
   ].join('\n');
 }
@@ -178,6 +202,16 @@ function renderClientGuide(catalog, configs, opts) {
       fence(configs.antigravity),
       '',
       'MCP-only is a separate mode using `~/.gemini/config/mcp_config.json` with the same `serverUrl`. Do not also install the plugin.',
+    );
+  }
+  if (opts.id === 'copilot') {
+    lines.push(
+      '',
+      'This is the Agent Plugins `mcp.json` that Copilot CLI loads. OAuth stays in the client. Do not put client_id, callback, tokens or secrets in it.',
+      '',
+      pkg.oauthMethod,
+      '',
+      'MCP-only is a separate mode: `copilot mcp add --transport http opsphere https://mcp-cursor.opsphere.io/mcp`. Do not also install the plugin.',
     );
   }
   lines.push(
@@ -235,6 +269,28 @@ function renderClientGuide(catalog, configs, opts) {
       '',
     );
   }
+  if (opts.id === 'copilot') {
+    lines.push(
+      pkg.portable,
+      '',
+      pkg.nativeMcp,
+      '',
+      `${pkg.install}; ${pkg.github}`,
+      '',
+      `${pkg.marketplaceAdd} then ${pkg.marketplaceInstall}`,
+      '',
+      pkg.uninstall,
+      '',
+      pkg.oauthMethod,
+      '',
+      pkg.duplicateMcp,
+      '',
+      pkg.marketplaceFile,
+      '',
+      pkg.cloud,
+      '',
+    );
+  }
   return lines.join('\n');
 }
 
@@ -245,6 +301,7 @@ export function generateGuides() {
     opencode: json('opsphere-opencode/mcp/opsphere.json'),
     antigravity: json('opsphere-antigravity/mcp.json'),
     antigravityNative: json('opsphere-antigravity/mcp_config.json'),
+    copilot: json('opsphere-copilot/mcp.json'),
   };
   const shared = renderShared(catalog, configs);
   const warp = renderClientGuide(catalog, configs, {
@@ -277,7 +334,14 @@ export function generateGuides() {
       'revocation',
     ],
   });
-  return { shared, warp, opencode, antigravity };
+  const copilot = renderClientGuide(catalog, configs, {
+    id: 'copilot',
+    packageKey: 'copilotPackage',
+    configKey: 'copilot',
+    preamble: { dcr: true, cimd: false },
+    troubleKeys: ['missing_server', 'invalid_redirect_uri', 'authentication', 'stale_catalog', 'revocation'],
+  });
+  return { shared, warp, opencode, antigravity, copilot };
 }
 
 const outputs = [
@@ -288,9 +352,12 @@ const outputs = [
   ['opsphere-opencode/skills/connect-another-client/references/connect.md', 'shared'],
   ['opsphere-antigravity/guides/connect.md', 'shared'],
   ['opsphere-antigravity/skills/connect-another-client/references/connect.md', 'shared'],
+  ['opsphere-copilot/guides/connect.md', 'shared'],
+  ['opsphere-copilot/skills/connect-another-client/references/connect.md', 'shared'],
   ['opsphere-warp/guides/warp.md', 'warp'],
   ['opsphere-opencode/guides/opencode.md', 'opencode'],
   ['opsphere-antigravity/guides/antigravity.md', 'antigravity'],
+  ['opsphere-copilot/guides/copilot.md', 'copilot'],
 ];
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

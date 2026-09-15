@@ -5,8 +5,8 @@
   "authentication": "OAuth authorization code, PKCE S256 and discovery; do not configure a static bearer token or client secret.",
   "account": "Use the same email to recover the same Hub, subscription and Personal Workspace. Complete OAuth independently in each client. Do not copy OAuth token files.",
   "sessions": "Each session is independently revocable. Preferences are per effective OAuth client ID.",
-  "dcrSessions": "For clients that use DCR, including OpenCode, a new DCR registration can have a fresh preference.",
-  "plans": "Warp local, OpenCode and Antigravity are available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.",
+  "dcrSessions": "For clients that use DCR, including OpenCode and GitHub Copilot CLI, a new DCR registration can have a fresh preference.",
+  "plans": "Warp local, OpenCode, Antigravity and GitHub Copilot CLI are available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.",
   "distribution": "MCP-only supplies tools, resources and OAuth. The optional plugin/package adds skills, rules and agents, not extra permissions.",
   "catalogPolicy": "When ops_my_usage reports catalog.mode=stable, tools/list is the public connector catalog, independent of workspace and plan. Listed does not mean permitted, configured or connected. Workspace switches require no reconnect. Every call validates the selected workspace, plan, enabled tools, permissions, credentials and limits. Never force Personal or switch automatically. One reload may be needed after activation or future tool/schema releases in clients that ignore change notifications.",
   "clients": {
@@ -87,6 +87,22 @@
         "MCP-only: add the same gateway as serverUrl in ~/.gemini/config/mcp_config.json (global) or .agents/mcp_config.json (workspace). Do not install the plugin at the same time."
       ]
     },
+    "copilot": {
+      "title": "GitHub Copilot CLI",
+      "capabilities": {
+        "mode": "local",
+        "remoteMcp": true,
+        "nativePlugin": true,
+        "portableSkills": true,
+        "cloud": false
+      },
+      "steps": [
+        "Choose one mode: plugin or MCP-only. Do not enable both for a server named opsphere.",
+        "Plugin: obtain opsphere-copilot/, then run copilot plugin install /absolute/path/to/opsphere-copilot. From GitHub without cloning: copilot plugin install opsphere-io/opsphere-plugin:opsphere-copilot. Marketplace: copilot plugin marketplace add opsphere-io/opsphere-plugin then copilot plugin install opsphere@opsphere.",
+        "Start a new Copilot CLI session. Let Copilot discover OAuth, use DCR and PKCE S256 and open the browser. Sign in with the same account and choose a workspace. Do not configure client_id, callback, tokens or secrets yourself. Do not copy token files.",
+        "MCP-only: copilot mcp add --transport http opsphere https://mcp-cursor.opsphere.io/mcp. Do not install the plugin at the same time."
+      ]
+    },
     "generic": {
       "title": "Other MCP client",
       "steps": [
@@ -148,5 +164,25 @@
     "archive": "https://github.com/opsphere-io/opsphere-plugin/archive/refs/heads/main.zip",
     "support": "mailto:contact@opsphere.io",
     "availability": "Verify opsphere-antigravity/ is actually published before promising a download. If unavailable, contact support. MCP-only needs neither a download nor access to a private repository."
+  },
+  "copilotPackage": {
+    "directory": "opsphere-copilot/",
+    "skillsDirectory": "skills/",
+    "portable": "The package ships plugin.json, mcp.json and skills/. Copilot-specific agents, commands and rules live under com.github.copilot/.",
+    "nativeMcp": "Copilot plugin MCP file is mcp.json using streamable-http url only. Do not put client_id, callback, tokens, secrets or headers in it.",
+    "install": "copilot plugin install /absolute/path/to/opsphere-copilot",
+    "github": "copilot plugin install opsphere-io/opsphere-plugin:opsphere-copilot",
+    "marketplaceAdd": "copilot plugin marketplace add opsphere-io/opsphere-plugin",
+    "marketplaceInstall": "copilot plugin install opsphere@opsphere",
+    "uninstall": "copilot plugin uninstall opsphere",
+    "installPath": "~/.copilot/installed-plugins/",
+    "duplicateMcp": "Do not install the plugin and a manual MCP entry named opsphere at the same time; that duplicates the server.",
+    "oauthMethod": "GitHub Copilot CLI uses DCR. Do not configure client_id, callback, tokens or secrets in the plugin.",
+    "cloud": "Copilot cloud agent remains outside this package's Opsphere support boundary.",
+    "marketplaceFile": "This repo's Copilot marketplace is .github/plugin/marketplace.json with source ./opsphere-copilot. Do not use .claude-plugin/marketplace.json for Copilot.",
+    "repository": "https://github.com/opsphere-io/opsphere-plugin",
+    "archive": "https://github.com/opsphere-io/opsphere-plugin/archive/refs/heads/main.zip",
+    "support": "mailto:contact@opsphere.io",
+    "availability": "Verify opsphere-copilot/ is actually published before promising a download. If unavailable, contact support. MCP-only needs neither a download nor access to a private repository."
   }
 }

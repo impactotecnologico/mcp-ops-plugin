@@ -8,7 +8,7 @@ Each session is independently revocable. Preferences are per effective OAuth cli
 
 Antigravity workspace preference is bound to the stable CIMD client_id. It does not create a new DCR client per install.
 
-Warp local, OpenCode and Antigravity are available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.
+Warp local, OpenCode, Antigravity and GitHub Copilot CLI are available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.
 
 MCP-only supplies tools, resources and OAuth. The optional plugin/package adds skills, rules and agents, not extra permissions.
 

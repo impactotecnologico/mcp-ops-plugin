@@ -7,19 +7,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
-- Isolated [`opsphere-opencode/`](opsphere-opencode/README.md) and [`opsphere-antigravity/`](opsphere-antigravity/README.md) packages (1.0.0) reuse the same remote MCP gateway and connection catalog without changing Cursor, Codex or Claude Code manifests or OAuth client IDs.
+- Isolated [`opsphere-opencode/`](opsphere-opencode/README.md), [`opsphere-antigravity/`](opsphere-antigravity/README.md) and [`opsphere-copilot/`](opsphere-copilot/README.md) packages (1.0.0) reuse the same remote MCP gateway and connection catalog without changing Cursor, Codex or Claude Code manifests or OAuth client IDs.
 - OpenCode ships DCR remote MCP (`codemode` false, 60s catalog timeout), `.opencode/` skills/agents/commands and a conservative project installer.
 - Antigravity ships Agent Plugins v1 `plugin.json` + `mcp.json`, plus native `mcp_config.json` (`serverUrl`) because current `agy` ignores `mcp.json`. Install with `agy plugin install`; uninstall with `agy plugin uninstall opsphere`.
-- Generated connect-another-client guides come from [client-connectivity/catalog.json](client-connectivity/catalog.json). Manual matrices: [docs/OPENCODE-TEST-CASES.md](docs/OPENCODE-TEST-CASES.md), [docs/ANTIGRAVITY-TEST-CASES.md](docs/ANTIGRAVITY-TEST-CASES.md).
+- GitHub Copilot CLI ships Agent Plugins 1.0 `plugin.json` + `mcp.json` (`streamable-http` URL only) with portable skills and Copilot extras under `com.github.copilot/`. Install locally, from `opsphere-io/opsphere-plugin:opsphere-copilot`, or via this repo's Copilot marketplace (`.github/plugin/marketplace.json`).
+- Generated connect-another-client guides come from [client-connectivity/catalog.json](client-connectivity/catalog.json). Manual matrices: [docs/OPENCODE-TEST-CASES.md](docs/OPENCODE-TEST-CASES.md), [docs/ANTIGRAVITY-TEST-CASES.md](docs/ANTIGRAVITY-TEST-CASES.md), [docs/COPILOT-TEST-CASES.md](docs/COPILOT-TEST-CASES.md).
 
 ### Safety and compatibility
-- New packages are off the repo-root plugin tree. Cursor `mcp.json`, Codex `.mcp.json` and Claude `.claude.mcp.json` are unchanged.
-- OpenCode continues to use DCR. Antigravity uses stable CIMD, not `dcr_*`. Do not copy token files. Do not install the Antigravity plugin and a manual `opsphere` MCP entry together.
-- CI validates portable Antigravity schemas. Live `agy` OAuth is a manual matrix and is not claimed passed by CI.
+- New packages are off the repo-root plugin tree. Cursor `mcp.json`, Codex `.mcp.json` and Claude `.claude.mcp.json` are unchanged. There is no repo-root `marketplace.json`, `.github/mcp.json` or `.github/plugin/plugin.json`.
+- OpenCode and GitHub Copilot CLI continue to use DCR. Antigravity uses stable CIMD, not `dcr_*`. Do not copy token files. Do not install a portable plugin and a manual `opsphere` MCP entry together.
+- CI validates portable Antigravity and Copilot schemas and Copilot marketplace isolation. Live `agy` / Copilot OAuth is a manual matrix and is not claimed passed by CI.
 
 ### Documentation
 - OpenCode install docs match live 1.x: project `node install.mjs`, then `opencode mcp auth opsphere`; `opencode mcp add` omits timeout/codemode and can write global config outside a project.
 - Antigravity install docs match live `agy` 1.2.x: `~/.gemini/config/plugins/opsphere/`, validate reports skills, agents and `mcpServers`; Agent Plugins `mcp.json` remains unused by current `agy`.
+- Copilot install docs cover local path, GitHub subdirectory and `copilot plugin marketplace add`; MCP-only is `copilot mcp add --transport http`. Copilot cloud agent is out of support.
+- [docs/MULTICLIENT-SUPPORT.md](docs/MULTICLIENT-SUPPORT.md) records the verified GitHub install matrix for seven clients (`opsphere-io/opsphere-plugin`). Claude and Codex marketplaces stay at repo root; Copilot stays in `.github/plugin/`. Live `agy` 1.2.3 parses a GitHub tree URL but `opsphere-antigravity/` is not on published `main`; repo-root `agy plugin install` of this monorepo is unsupported.
 
 ## [1.0.26] - 2026-09-11 (Execution budget visibility)
 

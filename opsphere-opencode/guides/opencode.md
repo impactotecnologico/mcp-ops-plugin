@@ -6,9 +6,9 @@ Use the same email to recover the same Hub, subscription and Personal Workspace.
 
 Each session is independently revocable. Preferences are per effective OAuth client ID.
 
-For clients that use DCR, including OpenCode, a new DCR registration can have a fresh preference.
+For clients that use DCR, including OpenCode and GitHub Copilot CLI, a new DCR registration can have a fresh preference.
 
-Warp local, OpenCode and Antigravity are available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.
+Warp local, OpenCode, Antigravity and GitHub Copilot CLI are available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.
 
 MCP-only supplies tools, resources and OAuth. The optional plugin/package adds skills, rules and agents, not extra permissions.
 

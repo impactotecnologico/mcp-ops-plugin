@@ -6,11 +6,11 @@ Use the same email to recover the same Hub, subscription and Personal Workspace.
 
 Each session is independently revocable. Preferences are per effective OAuth client ID.
 
-For clients that use DCR, including OpenCode, a new DCR registration can have a fresh preference.
+For clients that use DCR, including OpenCode and GitHub Copilot CLI, a new DCR registration can have a fresh preference.
 
 Antigravity workspace preference is bound to the stable CIMD client_id. It does not create a new DCR client per install.
 
-Warp local, OpenCode and Antigravity are available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.
+Warp local, OpenCode, Antigravity and GitHub Copilot CLI are available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.
 
 MCP-only supplies tools, resources and OAuth. The optional plugin/package adds skills, rules and agents, not extra permissions.
 
@@ -50,6 +50,13 @@ Endpoint: https://mcp-cursor.opsphere.io/mcp (Streamable HTTP). OAuth authorizat
 2. Plugin: obtain opsphere-antigravity/, then run agy plugin install /absolute/path/to/opsphere-antigravity. Current agy 1.2.x installs to ~/.gemini/config/plugins/opsphere/ (plugin.json, mcp_config.json, mcp.json, skills/, agents/). Do not use ~/.gemini/antigravity-cli/plugins/ or .agents/plugins/.
 3. Confirm agy plugin validate reports mcpServers processed (current agy also processes skills and agents). Current agy loads mcp_config.json (serverUrl), not Agent Plugins mcp.json. Then start a new session. Let Antigravity discover OAuth, use the CIMD client_id, start PKCE S256 and open the browser. Sign in with the same account and choose a workspace. If Antigravity asks for a code, paste the one-time authorization code into the terminal. Do not log, share or put that code in documentation. Do not configure client_id, callback, tokens or secrets yourself.
 4. MCP-only: add the same gateway as serverUrl in ~/.gemini/config/mcp_config.json (global) or .agents/mcp_config.json (workspace). Do not install the plugin at the same time.
+
+## GitHub Copilot CLI
+
+1. Choose one mode: plugin or MCP-only. Do not enable both for a server named opsphere.
+2. Plugin: obtain opsphere-copilot/, then run copilot plugin install /absolute/path/to/opsphere-copilot. From GitHub without cloning: copilot plugin install opsphere-io/opsphere-plugin:opsphere-copilot. Marketplace: copilot plugin marketplace add opsphere-io/opsphere-plugin then copilot plugin install opsphere@opsphere.
+3. Start a new Copilot CLI session. Let Copilot discover OAuth, use DCR and PKCE S256 and open the browser. Sign in with the same account and choose a workspace. Do not configure client_id, callback, tokens or secrets yourself. Do not copy token files.
+4. MCP-only: copilot mcp add --transport http opsphere https://mcp-cursor.opsphere.io/mcp. Do not install the plugin at the same time.
 
 ## Other MCP client
 
@@ -112,6 +119,20 @@ Agent Plugins portable (`mcp.json`). Current agy skips this file:
 }
 ```
 
+GitHub Copilot CLI plugin MCP (`mcp.json`):
+
+```json
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "opsphere": {
+      "type": "streamable-http",
+      "url": "https://mcp-cursor.opsphere.io/mcp"
+    }
+  }
+}
+```
+
 OAuth is client-managed. Antigravity uses stable CIMD:
 
 - client_id: https://antigravity.google/oauth/client-metadata.json
@@ -144,6 +165,8 @@ Verify opsphere-opencode/ is actually published before promising a download. If 
 
 Verify opsphere-antigravity/ is actually published before promising a download. If unavailable, contact support. MCP-only needs neither a download nor access to a private repository.
 
+Verify opsphere-copilot/ is actually published before promising a download. If unavailable, contact support. MCP-only needs neither a download nor access to a private repository.
+
 [Public repository](https://github.com/opsphere-io/opsphere-plugin) · [Source ZIP](https://github.com/opsphere-io/opsphere-plugin/archive/refs/heads/main.zip) · [Support](mailto:contact@opsphere.io)
 
 Warp: Install skills under .agents/skills/. Merge AGENTS.md preserving existing instructions. Do not also install WARP.md or assume precedence between competing files.
@@ -167,3 +190,15 @@ Do not install the plugin and a manual MCP entry named opsphere at the same time
 commands/ are omitted because current agy converts plugin commands to skills unreliably; invoke the matching skill. rules/ ship with the plugin layout; validate does not report them.
 
 .agents/plugins/opsphere/ and ~/.gemini/antigravity-cli/plugins/opsphere/ are experimental and unsupported. Google docs may still cite the antigravity-cli path; use ~/.gemini/config/plugins/opsphere/ on current agy.
+
+GitHub Copilot CLI: The package ships plugin.json, mcp.json and skills/. Copilot-specific agents, commands and rules live under com.github.copilot/. copilot plugin install /absolute/path/to/opsphere-copilot copilot plugin install opsphere-io/opsphere-plugin:opsphere-copilot copilot plugin marketplace add opsphere-io/opsphere-plugin then copilot plugin install opsphere@opsphere copilot plugin uninstall opsphere
+
+Copilot plugin MCP file is mcp.json using streamable-http url only. Do not put client_id, callback, tokens, secrets or headers in it.
+
+GitHub Copilot CLI uses DCR. Do not configure client_id, callback, tokens or secrets in the plugin.
+
+Do not install the plugin and a manual MCP entry named opsphere at the same time; that duplicates the server.
+
+This repo's Copilot marketplace is .github/plugin/marketplace.json with source ./opsphere-copilot. Do not use .claude-plugin/marketplace.json for Copilot.
+
+Copilot cloud agent remains outside this package's Opsphere support boundary.

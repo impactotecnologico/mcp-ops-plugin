@@ -1,0 +1,19 @@
+{
+  "name": "opsphere",
+  "owner": {
+    "name": "Opsphere",
+    "email": "contact@opsphere.io"
+  },
+  "metadata": {
+    "description": "Opsphere for GitHub Copilot CLI",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "opsphere",
+      "version": "1.0.0",
+      "source": "./opsphere-copilot",
+      "description": "Opsphere DevOps and SRE tools for Copilot CLI"
+    }
+  ]
+}
