@@ -7,7 +7,7 @@ description: Get started with Opsphere in Antigravity; discover tools, account a
 
 Use live MCP discovery, then `ops_my_usage` and `ops_accounts_list` to identify the active workspace and plan. Personal Workspace availability does not mean it is currently selected. Do not expose internal IDs unless diagnosing a mismatch.
 
-If disconnected, read the installed `connect-another-client` skill and its reference. Never copy tokens from another app. Installing a skill does not install or authorize MCP. Complete browser OAuth in Antigravity IDE MCP settings or the CLI `/mcp` overlay.
+If disconnected, read the installed `connect-another-client` skill and its reference. Never copy tokens from another app. Installing a skill does not install or authorize MCP. Complete OAuth in Antigravity after `agy plugin install`. Let Antigravity use its stable CIMD client_id. Do not configure client_id, callback, tokens or secrets.
 
 MCP discovery lists definitions, not permission to execute them. When
 `ops_my_usage` reports `catalog.mode: stable`, the visible count stays the same

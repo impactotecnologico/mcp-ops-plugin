@@ -2,74 +2,76 @@
 
 **Package:** `opsphere-antigravity/` 1.0.0  
 **MCP gateway:** `https://mcp-cursor.opsphere.io/mcp`  
-**Install:** workspace or global plugin copy (does not modify Cursor, Codex or Claude Code).
+**Install:** `agy plugin install` (does not modify Cursor, Codex or Claude Code).
 
 **Related:** [opsphere-antigravity/README.md](../opsphere-antigravity/README.md) · [guides/antigravity.md](../opsphere-antigravity/guides/antigravity.md) · [MULTICLIENT-SUPPORT.md](MULTICLIENT-SUPPORT.md)
 
-Automated CI covers install/uninstall only. OAuth and live tools are a manual matrix. Do not mark unexecuted rows as passed.
+Automated CI validates Agent Plugins `plugin.json` / `mcp.json` and generated guides. It does **not** run live `agy` OAuth. Do not mark unexecuted rows as passed.
 
 ## Prerequisites
 
-1. Antigravity IDE and/or CLI (`agy`).
-2. A throwaway project for workspace install.
-3. Node.js 20+.
-4. An Opsphere account (same email as other clients). Do not copy token files.
+1. Antigravity CLI (`agy`) and/or IDE.
+2. The `opsphere-antigravity/` package from this repo.
+3. An Opsphere account (same email as other clients). Do not copy token files.
 
-## Workspace install (IDE)
+## Plugin install (required)
 
 ```bash
-cd /path/to/opsphere-plugin/opsphere-antigravity
-node install.mjs install workspace /absolute/path/to/test-project
+agy plugin install /absolute/path/to/opsphere-antigravity
+agy plugin list
 ```
 
-Confirm `.agents/plugins/opsphere/` contains `plugin.json`, `mcp_config.json` with `serverUrl` (not `url` / `httpUrl`), skills, `rules/opsphere.md` and agents. There is no `hooks.json` and no default `disabledTools`.
+Confirm:
 
-Reload the workspace. Customizations / MCP Servers should list `opsphere`. Complete browser OAuth.
+- Install path is `~/.gemini/config/plugins/opsphere/`
+- The plugin contains `plugin.json`, `mcp_config.json` (`serverUrl` only), `mcp.json` (`type: streamable-http`, `url` only) and `skills/`
+- `agy plugin validate` reports `mcpServers : 1 processed`
+- Opsphere appears **once** in a **new** session MCP section
+- There is no extra manual `opsphere` MCP entry alongside the plugin
 
-Confirm there is **no** duplicate `opsphere` entry in `~/.gemini/config/mcp_config.json` or `.agents/mcp_config.json`.
+Current agy ignores Agent Plugins `mcp.json`. If the plugin is listed but MCP is empty, `mcp_config.json` is missing. Do not use `.agents/plugins/opsphere/` or `~/.gemini/antigravity-cli/plugins/opsphere/` as the supported install.
+
+## OAuth (CIMD + PKCE)
+
+Expected (client-managed, not configured in the plugin):
+
+- `client_id`: `https://antigravity.google/oauth/client-metadata.json`
+- callback: `https://antigravity.google/oauth-callback`
+
+Flow:
+
+1. Antigravity discovers OAuth.
+2. It uses the CIMD client_id and PKCE S256.
+3. Browser opens. Sign in and choose a workspace.
+4. If Antigravity asks for a code, paste the one-time authorization code into the terminal.
+5. Antigravity completes token exchange.
+
+The authorization code is single-use. Do not log, share or put it in this file. Do not configure client_id, callback, tokens or secrets. Workspace preference is bound to the stable CIMD client_id, not a new DCR client.
+
+On `Unknown client_id` or `Token issuance failed`, report the redacted error. Do not register DCR or change Cursor/Codex/Claude client IDs.
 
 ## Live checks
 
 1. Call `ops_my_usage` and `ops_accounts_list`. Do not assert a fixed tool count.
 2. Run `opsphere-onboarding` without changing configuration.
 3. Run `endpoint-health` against `https://example.com`.
-4. If IDE ignores plugin agents, the matching skills still cover the same intents.
+4. Confirm skills are discovered. Record whether `rules/` or `agents/` loaded; do not treat them as portable unless they did.
 
-If `invalid_redirect_uri`, report the callback shape. Do not change existing static OAuth client IDs for Cursor, Codex or Claude Code.
+## Refresh and persistence
 
-## Global IDE install (optional)
-
-Use a profile you can reset:
-
-```bash
-node install.mjs install global
-```
-
-Plugin path: `~/.gemini/config/plugins/opsphere/`. Reload Antigravity, authenticate, then:
-
-```bash
-node install.mjs uninstall global
-```
-
-## CLI
-
-```bash
-agy plugin install /absolute/path/to/opsphere-antigravity
-```
-
-1. `/mcp` overlay: server connected after OAuth.
-2. `/skills` lists Opsphere skills. Run onboarding + endpoint-health.
-3. `agy plugin disable opsphere` / `agy plugin enable opsphere` without deleting files.
-
-CLI staging uses `~/.gemini/antigravity-cli/plugins/opsphere/`. Prefer one location (IDE plugin **or** CLI staging), not both plus a raw `mcp_config.json` entry.
+Restart Antigravity. Confirm the session refreshes and the same workspace remains selected without repeating OAuth.
 
 ## Uninstall
 
 ```bash
-node install.mjs uninstall workspace /absolute/path/to/test-project
+agy plugin uninstall opsphere
 ```
 
-Edited plugin files are preserved; unchanged owned files move to a recovery directory. OAuth is **not** revoked.
+OAuth is **not** revoked by uninstall.
+
+## MCP-only (optional, exclusive)
+
+Native Antigravity MCP settings in `~/.gemini/config/mcp_config.json` with `serverUrl`, **without** the plugin. Do not combine with `agy plugin install`. Do not paste Agent Plugins `mcp.json` into that file.
 
 ## Cross-client regression
 
@@ -79,4 +81,4 @@ From `mcp-ops-plugin`:
 npm test
 ```
 
-Cursor, Codex and Claude Code must keep their existing plugin/MCP files. Completing Antigravity OAuth must not log out those clients. Warp and OpenCode installer tests must still pass.
+Cursor, Codex, Claude Code, Warp and OpenCode must keep their existing plugin/MCP files. Completing Antigravity CIMD OAuth must not log out those clients. OpenCode continues to use DCR.

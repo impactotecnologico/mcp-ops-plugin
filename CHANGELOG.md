@@ -7,15 +7,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
-- Isolated [`opsphere-opencode/`](opsphere-opencode/README.md) and [`opsphere-antigravity/`](opsphere-antigravity/README.md) packages (1.0.0) reuse the same remote MCP gateway, portable skills and connection catalog without changing Cursor, Codex or Claude Code manifests or OAuth client IDs.
+- Isolated [`opsphere-opencode/`](opsphere-opencode/README.md) and [`opsphere-antigravity/`](opsphere-antigravity/README.md) packages (1.0.0) reuse the same remote MCP gateway and connection catalog without changing Cursor, Codex or Claude Code manifests or OAuth client IDs.
 - OpenCode ships DCR remote MCP (`codemode` false, 60s catalog timeout), `.opencode/` skills/agents/commands and a conservative project installer.
-- Antigravity ships a native `plugin.json` + `mcp_config.json` (`serverUrl`), skills, markdown rules and a conservative workspace/global installer with no `hooks.json` and no default `disabledTools`.
-- Generated connect-another-client guides and CI invariants cover both hosts. Manual matrices: [docs/OPENCODE-TEST-CASES.md](docs/OPENCODE-TEST-CASES.md), [docs/ANTIGRAVITY-TEST-CASES.md](docs/ANTIGRAVITY-TEST-CASES.md).
+- Antigravity ships Agent Plugins v1 `plugin.json` + `mcp.json`, plus native `mcp_config.json` (`serverUrl`) because current `agy` ignores `mcp.json`. Install with `agy plugin install`; uninstall with `agy plugin uninstall opsphere`.
+- Generated connect-another-client guides come from [client-connectivity/catalog.json](client-connectivity/catalog.json). Manual matrices: [docs/OPENCODE-TEST-CASES.md](docs/OPENCODE-TEST-CASES.md), [docs/ANTIGRAVITY-TEST-CASES.md](docs/ANTIGRAVITY-TEST-CASES.md).
 
 ### Safety and compatibility
 - New packages are off the repo-root plugin tree. Cursor `mcp.json`, Codex `.mcp.json` and Claude `.claude.mcp.json` are unchanged.
-- OAuth remains per-client DCR; do not copy token files. Duplicate Antigravity MCP entries are documented as a catalog-doubling hazard.
-- Installer tests cover collision, symlink and uninstall preservation. Live OAuth is not claimed passed by CI.
+- OpenCode continues to use DCR. Antigravity uses stable CIMD, not `dcr_*`. Do not copy token files. Do not install the Antigravity plugin and a manual `opsphere` MCP entry together.
+- CI validates portable Antigravity schemas. Live `agy` OAuth is a manual matrix and is not claimed passed by CI.
 
 ## [1.0.26] - 2026-09-11 (Execution budget visibility)
 

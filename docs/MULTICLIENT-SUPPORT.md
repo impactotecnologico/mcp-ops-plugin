@@ -17,12 +17,12 @@ Email **contact@opsphere.io** with client name/version, plugin version, local ve
 
 Disconnecting MCP or deleting its configuration does **not** revoke server-side OAuth access. Removing an integration is also **not** client-session revocation. Ask support to identify and revoke only the intended client session; do not unlink a workspace to disconnect one application.
 
-For Warp, OpenCode or Antigravity, run the explicit package uninstaller from the package version you installed; see that package README. User-modified files are preserved and unchanged owned skill files are moved to a recovery directory. Review preserved files before installing an older package. Keep other MCP entries and project rules. Uninstalling does not revoke OAuth or delete account data.
+For Warp or OpenCode, run the explicit package uninstaller from the package version you installed; see that package README. For Antigravity, run `agy plugin uninstall opsphere`. User-modified files are preserved where the client's uninstaller supports it. Keep other MCP entries and project rules. Uninstalling does not revoke OAuth or delete account data.
 
 Plugin rollback means reinstalling a known published version using that client's supported installation flow. Do not copy cache folders or token files between clients. Gateway rollback and package rollback are separate operations; neither recovers usage events deleted by retention.
 
 ## Release verification boundary
 
-Published manifests, downloadable sources and passing CI prove distribution, not an end-to-end pass for every client and plan. Warp cloud/Oz/Slack-triggered cloud agents remain outside this package's support scope. OpenCode and Antigravity OAuth callbacks must succeed against the existing DCR path before those packages are marked production-ready; `invalid_redirect_uri` is a gateway allowlist issue, not a reason to change Cursor, Codex or Claude Code client IDs. The operational release owner tracks the real-client matrix separately and must not mark unexecuted tests as passed.
+Published manifests, downloadable sources and passing CI prove distribution, not an end-to-end pass for every client and plan. Warp cloud/Oz/Slack-triggered cloud agents remain outside this package's support scope. OpenCode continues to use DCR. Antigravity uses stable CIMD (`https://antigravity.google/oauth/client-metadata.json`, callback `https://antigravity.google/oauth-callback`); do not treat Antigravity as `dcr_*`. The operational release owner tracks the real-client matrix separately and must not mark unexecuted tests as passed.
 
 Manual matrices: [OpenCode](OPENCODE-TEST-CASES.md), [Antigravity](ANTIGRAVITY-TEST-CASES.md), [Codex](CODEX-TEST-CASES.md).

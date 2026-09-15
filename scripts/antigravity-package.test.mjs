@@ -1,53 +1,65 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
-import { managePackage } from '../opsphere-antigravity/install.mjs';
+import { fileURLToPath } from 'node:url';
 
-const temp = () => fs.mkdtempSync(path.join(os.tmpdir(), 'opsphere-agy-test-'));
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const pkg = path.join(root, 'opsphere-antigravity');
+const read = relative => fs.readFileSync(path.join(pkg, relative), 'utf8');
+const json = relative => JSON.parse(read(relative));
 
-test('workspace install/uninstall preserves edited plugin files with recoverable backup', () => {
-  const root = temp();
-  managePackage('install', 'workspace', root);
-  assert.throws(() => managePackage('install', 'workspace', root), /already installed/);
-  assert.ok(fs.existsSync(path.join(root, '.agents/plugins/opsphere/plugin.json')));
-  assert.ok(fs.existsSync(path.join(root, '.agents/plugins/opsphere/mcp_config.json')));
-  const skill = path.join(root, '.agents/plugins/opsphere/skills/opsphere-onboarding/SKILL.md');
-  fs.appendFileSync(skill, '\nUser customization\n');
-  const result = managePackage('uninstall', 'workspace', root);
-  assert.match(fs.readFileSync(skill, 'utf8'), /User customization/);
-  assert.equal(result.preserved.length, 1);
-  assert.ok(fs.existsSync(path.join(result.backup, '.agents/plugins/opsphere/skills/endpoint-health/SKILL.md')));
-  assert.equal(fs.existsSync(path.join(root, '.agents/opsphere-antigravity-install.json')), false);
+test('portable Agent Plugins manifests use official schemas and no OAuth secrets', () => {
+  const plugin = json('plugin.json');
+  assert.equal(plugin.$schema, 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json');
+  assert.equal(plugin.name, 'opsphere');
+  assert.equal(plugin.version, '1.0.0');
+  assert.ok(plugin.description);
+  const mcp = json('mcp.json');
+  assert.equal(mcp.$schema, 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json');
+  assert.deepEqual(Object.keys(mcp).sort(), ['$schema', 'mcpServers']);
+  const server = mcp.mcpServers.opsphere;
+  assert.equal(server.type, 'streamable-http');
+  assert.equal(server.url, 'https://mcp-cursor.opsphere.io/mcp');
+  assert.equal(server.serverUrl, undefined);
+  assert.equal(server.oauth, undefined);
+  assert.equal(server.headers, undefined);
+  assert.equal(server.client_id, undefined);
+  assert.equal(server.callback, undefined);
+  const serialized = JSON.stringify(mcp);
+  assert.doesNotMatch(serialized, /Bearer |client_secret|refresh_token|oauth-callback|client-metadata/);
 });
 
-test('workspace collision and symlink checks happen before project changes', () => {
-  const root = temp();
-  fs.mkdirSync(path.join(root, '.agents/plugins/opsphere'), { recursive: true });
-  fs.writeFileSync(path.join(root, '.agents/plugins/opsphere/plugin.json'), '{"name":"other"}');
-  assert.throws(() => managePackage('install', 'workspace', root), /collision/);
-  assert.equal(fs.existsSync(path.join(root, '.agents/opsphere-antigravity-install.json')), false);
-  const other = temp();
-  fs.mkdirSync(path.join(other, '.agents'));
-  fs.symlinkSync(root, path.join(other, '.agents/plugins'));
-  assert.throws(() => managePackage('install', 'workspace', other), /symlink/);
+test('native agy plugin MCP is mcp_config.json with serverUrl only', () => {
+  const native = json('mcp_config.json');
+  assert.deepEqual(Object.keys(native), ['mcpServers']);
+  const server = native.mcpServers.opsphere;
+  assert.equal(server.serverUrl, 'https://mcp-cursor.opsphere.io/mcp');
+  assert.equal(server.type, undefined);
+  assert.equal(server.url, undefined);
+  assert.equal(server.oauth, undefined);
+  assert.equal(server.headers, undefined);
+  assert.equal(server.client_id, undefined);
+  const serialized = JSON.stringify(native);
+  assert.doesNotMatch(serialized, /Bearer |client_secret|refresh_token|oauth-callback|client-metadata/);
 });
 
-test('global install stays under a fake home and does not touch the real user profile', () => {
-  const home = temp();
-  const prev = process.env.HOME;
-  process.env.HOME = home;
-  try {
-    managePackage('install', 'global');
-    const plugin = path.join(home, '.gemini/config/plugins/opsphere/plugin.json');
-    assert.ok(fs.existsSync(plugin));
-    assert.equal(JSON.parse(fs.readFileSync(plugin, 'utf8')).name, 'opsphere');
-    const result = managePackage('uninstall', 'global');
-    assert.equal(fs.existsSync(path.join(home, '.gemini/config/plugins/.opsphere-antigravity-install.json')), false);
-    assert.ok(fs.existsSync(result.backup));
-  } finally {
-    if (prev === undefined) delete process.env.HOME;
-    else process.env.HOME = prev;
+test('package does not ship the old installer or secrets', () => {
+  assert.equal(fs.existsSync(path.join(pkg, 'install.mjs')), false);
+  assert.equal(fs.existsSync(path.join(pkg, 'hooks.json')), false);
+  for (const file of ['plugin.json', 'mcp.json', 'mcp_config.json']) {
+    assert.doesNotMatch(read(file), /Bearer |client_secret|refresh_token/);
   }
+  assert.doesNotMatch(read('mcp.json'), /"serverUrl"/);
+});
+
+test('portable skills exist and README documents the agy mcp_config.json requirement', () => {
+  assert.ok(fs.existsSync(path.join(pkg, 'skills/endpoint-health/SKILL.md')));
+  assert.ok(fs.existsSync(path.join(pkg, 'skills/opsphere-onboarding/SKILL.md')));
+  const readme = read('README.md');
+  assert.match(readme, /agy plugin install/);
+  assert.match(readme, /agy plugin uninstall opsphere/);
+  assert.match(readme, /mcp_config\.json/);
+  assert.match(readme, /CIMD/);
+  assert.doesNotMatch(readme, /plugin agents/);
 });

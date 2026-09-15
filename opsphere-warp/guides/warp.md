@@ -4,7 +4,9 @@
 
 Use the same email to recover the same Hub, subscription and Personal Workspace. Complete OAuth independently in each client. Do not copy OAuth token files.
 
-Each session is independently revocable. Preferences are per effective OAuth client ID; a new DCR registration can have a fresh preference.
+Each session is independently revocable. Preferences are per effective OAuth client ID.
+
+For clients that use DCR, including OpenCode, a new DCR registration can have a fresh preference.
 
 Warp local, OpenCode and Antigravity are available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.
 
@@ -46,7 +48,7 @@ Endpoint: https://mcp-cursor.opsphere.io/mcp (Streamable HTTP). OAuth authorizat
 - stale_catalog: Check catalog.mode in ops_my_usage. In stable mode, do not reconnect after workspace changes; inspect workspace availability or ops_list_integrations instead. Legacy mode with tools_discovery.stale=true may require client catalog refresh/reconnect. Future product/schema updates may need one reload. Never change workspace to repair discovery, and do not ask the agent to invoke tools/list if its host does not expose it.
 - revocation: Revoke only the destination session. Removing configuration is not server-side revocation. Do not unlink workspaces or revoke other apps as a reconnect shortcut.
 
-## Optional Warp package
+## Optional Warp local package
 
 Verify opsphere-warp/ is actually published before promising a download. If unavailable, contact support. MCP-only needs neither a download nor access to a private repository.
 

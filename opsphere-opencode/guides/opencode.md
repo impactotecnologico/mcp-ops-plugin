@@ -4,7 +4,9 @@
 
 Use the same email to recover the same Hub, subscription and Personal Workspace. Complete OAuth independently in each client. Do not copy OAuth token files.
 
-Each session is independently revocable. Preferences are per effective OAuth client ID; a new DCR registration can have a fresh preference.
+Each session is independently revocable. Preferences are per effective OAuth client ID.
+
+For clients that use DCR, including OpenCode, a new DCR registration can have a fresh preference.
 
 Warp local, OpenCode and Antigravity are available across all Opsphere plans. No invitation or account allowlist is required. Account status, workspace permissions and quotas still apply; a global service switch can temporarily disable access.
 

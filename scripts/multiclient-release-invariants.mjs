@@ -10,17 +10,36 @@ assert.ok(catalog.clients.opencode);
 assert.ok(catalog.clients.antigravity);
 assert.equal(catalog.clients.opencode.capabilities.nativePlugin, false);
 assert.equal(catalog.clients.antigravity.capabilities.nativePlugin, true);
+assert.equal(catalog.clients.antigravity.capabilities.rulesFile, undefined);
+assert.equal(catalog.clients.antigravity.capabilities.agents, undefined);
+assert.equal(catalog.clients.antigravity.oauth.method, 'CIMD');
+assert.equal(catalog.clients.antigravity.oauth.clientId, 'https://antigravity.google/oauth/client-metadata.json');
+assert.equal(catalog.clients.antigravity.oauth.callback, 'https://antigravity.google/oauth-callback');
+assert.match(catalog.dcrSessions, /DCR/);
+assert.doesNotMatch(catalog.clients.antigravity.oauth.sessions, /new DCR registration can have a fresh preference/);
 
 const warpConfig = JSON.parse(read('opsphere-warp/mcp/opsphere.json'));
 const opencodeConfig = JSON.parse(read('opsphere-opencode/mcp/opsphere.json'));
-const antigravityConfig = JSON.parse(read('opsphere-antigravity/mcp_config.json'));
+const antigravityConfig = JSON.parse(read('opsphere-antigravity/mcp.json'));
+const plugin = JSON.parse(read('opsphere-antigravity/plugin.json'));
 assert.equal(warpConfig.mcpServers.opsphere.url, catalog.endpoint);
 assert.equal(opencodeConfig.mcp.opsphere.url, catalog.endpoint);
 assert.equal(opencodeConfig.mcp.opsphere.codemode, false);
 assert.equal(opencodeConfig.mcp.opsphere.timeout, 60000);
-assert.equal(antigravityConfig.mcpServers.opsphere.serverUrl, catalog.endpoint);
+assert.equal(antigravityConfig.$schema, 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json');
+assert.equal(antigravityConfig.mcpServers.opsphere.type, 'streamable-http');
+assert.equal(antigravityConfig.mcpServers.opsphere.url, catalog.endpoint);
+assert.equal(antigravityConfig.mcpServers.opsphere.serverUrl, undefined);
+assert.equal(antigravityConfig.mcpServers.opsphere.oauth, undefined);
+assert.equal(antigravityConfig.mcpServers.opsphere.headers, undefined);
+const antigravityNative = JSON.parse(read('opsphere-antigravity/mcp_config.json'));
+assert.equal(antigravityNative.mcpServers.opsphere.serverUrl, catalog.endpoint);
+assert.equal(antigravityNative.mcpServers.opsphere.oauth, undefined);
+assert.equal(antigravityNative.mcpServers.opsphere.headers, undefined);
+assert.equal(plugin.$schema, 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json');
+assert.equal(plugin.name, 'opsphere');
+assert.equal(plugin.version, '1.0.0');
 assert.equal(JSON.parse(read('opsphere-opencode/opencode.json')).mcp.opsphere.url, catalog.endpoint);
-assert.equal(JSON.parse(read('opsphere-antigravity/plugin.json')).name, 'opsphere');
 
 const guide = read('skills/connect-another-client/references/connect.md');
 for (const file of [
@@ -35,21 +54,28 @@ for (const file of [
 }
 
 const sharedBlocks = jsonBlocks(guide);
-assert.equal(sharedBlocks.length, 3);
+assert.equal(sharedBlocks.length, 4);
 assert.deepEqual(sharedBlocks[0], warpConfig);
 assert.deepEqual(sharedBlocks[1], opencodeConfig);
-assert.deepEqual(sharedBlocks[2], antigravityConfig);
+assert.deepEqual(sharedBlocks[2], antigravityNative);
+assert.deepEqual(sharedBlocks[3], antigravityConfig);
 assert.ok(guide.includes(catalog.account));
 assert.ok(guide.includes(catalog.plans));
+assert.ok(guide.includes(catalog.dcrSessions));
+assert.ok(guide.includes(catalog.clients.antigravity.oauth.sessions));
+assert.ok(guide.includes(catalog.clients.antigravity.oauth.clientId));
 assert.ok(guide.includes(catalog.warpPackage.availability));
 assert.ok(guide.includes(catalog.opencodePackage.availability));
 assert.ok(guide.includes(catalog.antigravityPackage.availability));
+assert.ok(guide.includes(catalog.antigravityPackage.nativeMcp));
+assert.ok(guide.includes(catalog.troubleshooting.empty_mcp_panel));
 
-function assertClientGuide(file, config, extra) {
+function assertClientGuide(file, configs, extra) {
+  const expected = Array.isArray(configs) ? configs : [configs];
   const text = read(file);
   const blocks = jsonBlocks(text);
-  assert.ok(blocks.length > 0, file);
-  for (const block of blocks) assert.deepEqual(block, config);
+  assert.equal(blocks.length, expected.length, `${file} json block count`);
+  blocks.forEach((block, i) => assert.deepEqual(block, expected[i]));
   assert.ok(text.includes(catalog.account));
   for (const snippet of extra) assert.ok(text.includes(snippet), `${file} missing ${snippet.slice(0, 40)}`);
 }
@@ -57,18 +83,29 @@ function assertClientGuide(file, config, extra) {
 assertClientGuide('opsphere-warp/guides/warp.md', warpConfig, [
   catalog.warpPackage.cloud,
   catalog.warpPackage.availability,
+  catalog.dcrSessions,
 ]);
 assertClientGuide('opsphere-opencode/guides/opencode.md', opencodeConfig, [
   catalog.opencodePackage.availability,
   catalog.opencodePackage.codeMode,
   catalog.opencodePackage.timeout,
   catalog.opencodePackage.rulesPolicy,
+  catalog.dcrSessions,
 ]);
-assertClientGuide('opsphere-antigravity/guides/antigravity.md', antigravityConfig, [
+const antigravityGuide = read('opsphere-antigravity/guides/antigravity.md');
+assertClientGuide('opsphere-antigravity/guides/antigravity.md', [antigravityNative, antigravityConfig], [
   catalog.antigravityPackage.availability,
   catalog.antigravityPackage.duplicateMcp,
-  catalog.antigravityPackage.rulesPolicy,
+  catalog.antigravityPackage.portable,
+  catalog.antigravityPackage.nativeMcp,
+  catalog.antigravityPackage.oauthMethod,
+  catalog.antigravityPackage.unconfirmed,
+  catalog.troubleshooting.empty_mcp_panel,
+  catalog.clients.antigravity.oauth.clientId,
+  catalog.clients.antigravity.oauth.callback,
+  catalog.clients.antigravity.oauth.sessions,
 ]);
+assert.ok(!antigravityGuide.includes(catalog.dcrSessions));
 
 assert.ok(read('commands/opsphere-connect-another-client.md').includes('../skills/connect-another-client/SKILL.md'));
 assert.ok(read('skills/connect-another-client/SKILL.md').includes('references/connect.md'));
@@ -100,11 +137,13 @@ assert.match(read('opsphere-warp/rules/AGENTS.md'), /without explicit user conse
 assert.match(read('opsphere-opencode/rules/AGENTS.md'), /without explicit user consent/);
 assert.match(read('opsphere-antigravity/rules/opsphere.md'), /without explicit user consent/);
 assert.equal(fs.existsSync('opsphere-antigravity/hooks.json'), false);
+assert.equal(fs.existsSync('opsphere-antigravity/mcp_config.json'), true);
+assert.equal(fs.existsSync('opsphere-antigravity/install.mjs'), false);
 assert.equal(fs.existsSync('opencode.json'), false);
 assert.equal(fs.existsSync('.opencode'), false);
 assert.equal(fs.existsSync('mcp_config.json'), false);
 
 for (const file of ['install.mjs', 'profiles/recommended.md', 'examples/local.md']) assert.ok(fs.existsSync(`opsphere-warp/${file}`));
 for (const file of ['install.mjs', 'opencode.json', 'examples/local.md']) assert.ok(fs.existsSync(`opsphere-opencode/${file}`));
-for (const file of ['install.mjs', 'plugin.json', 'mcp_config.json', 'examples/local.md']) assert.ok(fs.existsSync(`opsphere-antigravity/${file}`));
+for (const file of ['plugin.json', 'mcp.json', 'mcp_config.json', 'examples/local.md']) assert.ok(fs.existsSync(`opsphere-antigravity/${file}`));
 console.log('multiclient-release-invariants: ok');
