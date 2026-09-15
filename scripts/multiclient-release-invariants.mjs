@@ -77,7 +77,7 @@ assert.equal(read('skills/connect-another-client/SKILL.md'), read('opsphere-warp
 assert.equal(read('skills/connect-another-client/SKILL.md'), read('opsphere-opencode/skills/connect-another-client/SKILL.md'));
 assert.equal(read('skills/connect-another-client/SKILL.md'), read('opsphere-antigravity/skills/connect-another-client/SKILL.md'));
 
-const portable = ['endpoint-health', 'incident-investigation', 'ci-investigation', 'postmortem-writer', 'qa-test-investigation', 'qa-release-readiness'];
+const portable = ['endpoint-health', 'incident-investigation', 'ci-investigation', 'postmortem-writer', 'qa-test-investigation', 'qa-release-readiness', 'configure-deployment-catalog'];
 for (const name of portable) {
   const canonical = read(`skills/${name}/SKILL.md`);
   for (const pkg of ['opsphere-warp', 'opsphere-opencode', 'opsphere-antigravity']) {
