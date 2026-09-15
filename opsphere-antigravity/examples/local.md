@@ -1,6 +1,6 @@
 # Local examples
 
-After `agy plugin install` and independent CIMD OAuth, ask Antigravity:
+After `agy plugin install`, a **new** session, and independent CIMD OAuth, ask Antigravity:
 
 - “Use opsphere-onboarding to show my plan and active workspace. Do not change anything.”
 - “Use endpoint-health to check https://example.com. Read-only; do not change infrastructure.”

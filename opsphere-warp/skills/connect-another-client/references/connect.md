@@ -39,17 +39,17 @@ Endpoint: https://mcp-cursor.opsphere.io/mcp (Streamable HTTP). OAuth authorizat
 
 ## OpenCode
 
-1. Merge the OpenCode MCP object into <repo>/opencode.json, preserving other servers. Global MCP-only setup uses ~/.config/opencode/opencode.json; do not add both unintentionally.
-2. Complete OAuth with opencode mcp auth opsphere or OpenCode /mcps. Use the same account. Do not copy token files.
-3. Let OpenCode manage callbacks and credentials. Do not set a callback port or redirect URI unless the gateway reports invalid_redirect_uri.
-4. Keep Code Mode disabled for Opsphere so gateway tools stay native. Raise the catalog timeout; the default is too low for this server.
+1. Choose one mode: package (skills, agents, commands plus MCP) or MCP-only. Do not add Opsphere in both <repo>/opencode.json and ~/.config/opencode/opencode.json(c).
+2. Package: from the obtained opsphere-opencode/ folder, run node install.mjs install /absolute/path/to/your-project (Node.js 20+). Do not install into the Opsphere plugin repository. Then from that project run opencode mcp auth opsphere or OpenCode /mcps. Use the same account. Do not copy token files.
+3. MCP-only: from the project directory, merge the JSON below into <repo>/opencode.json, preserving other servers. Alternatively run opencode mcp add opsphere --url https://mcp-cursor.opsphere.io/mcp from the project, then set timeout 60000 and codemode false. Running mcp add outside a project can write the global OpenCode config instead.
+4. Let OpenCode manage callbacks and credentials. Keep Code Mode disabled and a catalog timeout of at least 60000 ms. Do not set oauth false, a callback port, redirect URI or a static client secret unless the gateway reports invalid_redirect_uri.
 
 ## Antigravity
 
 1. Choose one mode: plugin or MCP-only. Do not enable both for a server named opsphere.
-2. Plugin: run agy plugin install /absolute/path/to/opsphere-antigravity. Official install lands in ~/.gemini/config/plugins/opsphere/ with plugin.json, mcp_config.json, mcp.json and skills/.
-3. Confirm agy plugin validate reports mcpServers processed. Current agy loads mcp_config.json (serverUrl), not Agent Plugins mcp.json. Then start a new session. Let Antigravity discover OAuth, use the CIMD client_id, start PKCE S256 and open the browser. Sign in with the same account and choose a workspace. If Antigravity asks for a code, paste the one-time authorization code into the terminal. Do not log, share or put that code in documentation. Do not configure client_id, callback, tokens or secrets yourself.
-4. MCP-only: add the same gateway as serverUrl in Antigravity native MCP settings (~/.gemini/config/mcp_config.json). Do not install the plugin at the same time.
+2. Plugin: obtain opsphere-antigravity/, then run agy plugin install /absolute/path/to/opsphere-antigravity. Current agy 1.2.x installs to ~/.gemini/config/plugins/opsphere/ (plugin.json, mcp_config.json, mcp.json, skills/, agents/). Do not use ~/.gemini/antigravity-cli/plugins/ or .agents/plugins/.
+3. Confirm agy plugin validate reports mcpServers processed (current agy also processes skills and agents). Current agy loads mcp_config.json (serverUrl), not Agent Plugins mcp.json. Then start a new session. Let Antigravity discover OAuth, use the CIMD client_id, start PKCE S256 and open the browser. Sign in with the same account and choose a workspace. If Antigravity asks for a code, paste the one-time authorization code into the terminal. Do not log, share or put that code in documentation. Do not configure client_id, callback, tokens or secrets yourself.
+4. MCP-only: add the same gateway as serverUrl in ~/.gemini/config/mcp_config.json (global) or .agents/mcp_config.json (workspace). Do not install the plugin at the same time.
 
 ## Other MCP client
 
@@ -150,13 +150,13 @@ Warp: Install skills under .agents/skills/. Merge AGENTS.md preserving existing 
 
 Warp/Oz cloud and Slack-triggered cloud agents are outside Opsphere support for this package, not generally incapable of MCP. Never upload local OAuth credentials.
 
-OpenCode: Install skills under .opencode/skills/. Merge AGENTS.md preserving existing instructions. Use opsphere-opencode markers; do not reuse Warp markers or install into .agents/skills/.
+OpenCode: Install skills under .opencode/skills/. Preferred path: node install.mjs install /absolute/path/to/your-project, then opencode mcp auth opsphere from that project. Merge AGENTS.md preserving existing instructions. Use opsphere-opencode markers; do not reuse Warp markers or install into .agents/skills/.
 
-Keep codemode false so Opsphere gateway tools remain native. Revisit only if a session proves context overflow.
+Keep codemode false so Opsphere gateway tools remain native. Revisit only if a session proves context overflow. opencode mcp add does not set this; edit the server object after add.
 
-Set at least a 60000 ms catalog timeout. OpenCode defaults are too low for this server.
+Set at least a 60000 ms catalog timeout (number on current OpenCode 1.x). OpenCode defaults are too low for this server. opencode mcp add does not set this; edit the server object after add.
 
-Antigravity: The package ships plugin.json, mcp_config.json, mcp.json and skills/. Current agy loads mcp_config.json with serverUrl. Agent Plugins mcp.json is portable and skipped by agy 1.2.x. agy plugin install /absolute/path/to/opsphere-antigravity Official path: ~/.gemini/config/plugins/opsphere/ agy plugin validate must report mcpServers processed. Current agy plugin list may only show skills and agents even when MCP is installed. agy plugin uninstall opsphere
+Antigravity: The package ships plugin.json, mcp_config.json, mcp.json, skills/ and agents/. Current agy 1.2.x loads mcp_config.json with serverUrl plus skills and agents. Agent Plugins mcp.json is portable and skipped by agy 1.2.x. agy plugin install /absolute/path/to/opsphere-antigravity Official path: ~/.gemini/config/plugins/opsphere/ agy plugin validate must report mcpServers processed. Current agy 1.2.x also reports skills and agents, and agy plugin list includes mcpServers. agy plugin uninstall opsphere
 
 agy plugin MCP file is mcp_config.json using serverUrl only. Do not put client_id, callback, tokens, secrets or headers in it.
 
@@ -164,6 +164,6 @@ Antigravity uses stable CIMD, not dcr_*. Do not configure client_id, callback, t
 
 Do not install the plugin and a manual MCP entry named opsphere at the same time; that duplicates the server.
 
-rules/ and agents/ are unconfirmed extras for discovery testing. They are not portable plugin capabilities.
+commands/ are omitted because current agy converts plugin commands to skills unreliably; invoke the matching skill. rules/ ship with the plugin layout; validate does not report them.
 
-.agents/plugins/opsphere/ and ~/.gemini/antigravity-cli/plugins/opsphere/ are experimental and unsupported.
+.agents/plugins/opsphere/ and ~/.gemini/antigravity-cli/plugins/opsphere/ are experimental and unsupported. Google docs may still cite the antigravity-cli path; use ~/.gemini/config/plugins/opsphere/ on current agy.

@@ -24,8 +24,9 @@ agy plugin list
 Confirm:
 
 - Install path is `~/.gemini/config/plugins/opsphere/`
-- The plugin contains `plugin.json`, `mcp_config.json` (`serverUrl` only), `mcp.json` (`type: streamable-http`, `url` only) and `skills/`
-- `agy plugin validate` reports `mcpServers : 1 processed`
+- The plugin contains `plugin.json`, `mcp_config.json` (`serverUrl` only), `mcp.json` (`type: streamable-http`, `url` only), `skills/` and `agents/`
+- `agy plugin validate` reports `mcpServers : 1 processed` (current 1.2.x also reports skills and agents processed)
+- `agy plugin list` includes `mcpServers` among components
 - Opsphere appears **once** in a **new** session MCP section
 - There is no extra manual `opsphere` MCP entry alongside the plugin
 
@@ -55,7 +56,7 @@ On `Unknown client_id` or `Token issuance failed`, report the redacted error. Do
 1. Call `ops_my_usage` and `ops_accounts_list`. Do not assert a fixed tool count.
 2. Run `opsphere-onboarding` without changing configuration.
 3. Run `endpoint-health` against `https://example.com`.
-4. Confirm skills are discovered. Record whether `rules/` or `agents/` loaded; do not treat them as portable unless they did.
+4. Confirm skills are discovered. Current `agy` 1.2.x processes `agents/`. `rules/` are not reported by `agy plugin validate`. Invoke matching skills rather than expecting plugin `commands/`.
 
 ## Refresh and persistence
 
@@ -71,7 +72,7 @@ OAuth is **not** revoked by uninstall.
 
 ## MCP-only (optional, exclusive)
 
-Native Antigravity MCP settings in `~/.gemini/config/mcp_config.json` with `serverUrl`, **without** the plugin. Do not combine with `agy plugin install`. Do not paste Agent Plugins `mcp.json` into that file.
+Native Antigravity MCP settings in `~/.gemini/config/mcp_config.json` (global) or `.agents/mcp_config.json` (workspace) with `serverUrl`, **without** the plugin. Do not combine with `agy plugin install`. Do not paste Agent Plugins `mcp.json` into that file.
 
 ## Cross-client regression
 

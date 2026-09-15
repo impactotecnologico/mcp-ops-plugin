@@ -19,9 +19,9 @@ Endpoint: https://mcp-cursor.opsphere.io/mcp (Streamable HTTP). OAuth authorizat
 ## Antigravity
 
 1. Choose one mode: plugin or MCP-only. Do not enable both for a server named opsphere.
-2. Plugin: run agy plugin install /absolute/path/to/opsphere-antigravity. Official install lands in ~/.gemini/config/plugins/opsphere/ with plugin.json, mcp_config.json, mcp.json and skills/.
-3. Confirm agy plugin validate reports mcpServers processed. Current agy loads mcp_config.json (serverUrl), not Agent Plugins mcp.json. Then start a new session. Let Antigravity discover OAuth, use the CIMD client_id, start PKCE S256 and open the browser. Sign in with the same account and choose a workspace. If Antigravity asks for a code, paste the one-time authorization code into the terminal. Do not log, share or put that code in documentation. Do not configure client_id, callback, tokens or secrets yourself.
-4. MCP-only: add the same gateway as serverUrl in Antigravity native MCP settings (~/.gemini/config/mcp_config.json). Do not install the plugin at the same time.
+2. Plugin: obtain opsphere-antigravity/, then run agy plugin install /absolute/path/to/opsphere-antigravity. Current agy 1.2.x installs to ~/.gemini/config/plugins/opsphere/ (plugin.json, mcp_config.json, mcp.json, skills/, agents/). Do not use ~/.gemini/antigravity-cli/plugins/ or .agents/plugins/.
+3. Confirm agy plugin validate reports mcpServers processed (current agy also processes skills and agents). Current agy loads mcp_config.json (serverUrl), not Agent Plugins mcp.json. Then start a new session. Let Antigravity discover OAuth, use the CIMD client_id, start PKCE S256 and open the browser. Sign in with the same account and choose a workspace. If Antigravity asks for a code, paste the one-time authorization code into the terminal. Do not log, share or put that code in documentation. Do not configure client_id, callback, tokens or secrets yourself.
+4. MCP-only: add the same gateway as serverUrl in ~/.gemini/config/mcp_config.json (global) or .agents/mcp_config.json (workspace). Do not install the plugin at the same time.
 
 ## Remote MCP configuration
 
@@ -85,13 +85,13 @@ Verify opsphere-antigravity/ is actually published before promising a download. 
 
 [Public repository](https://github.com/opsphere-io/opsphere-plugin) · [Source ZIP](https://github.com/opsphere-io/opsphere-plugin/archive/refs/heads/main.zip) · [Support](mailto:contact@opsphere.io)
 
-The package ships plugin.json, mcp_config.json, mcp.json and skills/. Current agy loads mcp_config.json with serverUrl. Agent Plugins mcp.json is portable and skipped by agy 1.2.x.
+The package ships plugin.json, mcp_config.json, mcp.json, skills/ and agents/. Current agy 1.2.x loads mcp_config.json with serverUrl plus skills and agents. Agent Plugins mcp.json is portable and skipped by agy 1.2.x.
 
 agy plugin MCP file is mcp_config.json using serverUrl only. Do not put client_id, callback, tokens, secrets or headers in it.
 
 agy plugin install /absolute/path/to/opsphere-antigravity → ~/.gemini/config/plugins/opsphere/
 
-agy plugin validate must report mcpServers processed. Current agy plugin list may only show skills and agents even when MCP is installed.
+agy plugin validate must report mcpServers processed. Current agy 1.2.x also reports skills and agents, and agy plugin list includes mcpServers.
 
 agy plugin uninstall opsphere
 
@@ -99,6 +99,6 @@ Antigravity uses stable CIMD, not dcr_*. Do not configure client_id, callback, t
 
 Do not install the plugin and a manual MCP entry named opsphere at the same time; that duplicates the server.
 
-rules/ and agents/ are unconfirmed extras for discovery testing. They are not portable plugin capabilities.
+commands/ are omitted because current agy converts plugin commands to skills unreliably; invoke the matching skill. rules/ ship with the plugin layout; validate does not report them.
 
-.agents/plugins/opsphere/ and ~/.gemini/antigravity-cli/plugins/opsphere/ are experimental and unsupported.
+.agents/plugins/opsphere/ and ~/.gemini/antigravity-cli/plugins/opsphere/ are experimental and unsupported. Google docs may still cite the antigravity-cli path; use ~/.gemini/config/plugins/opsphere/ on current agy.

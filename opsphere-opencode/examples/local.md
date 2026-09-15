@@ -8,4 +8,4 @@ After installation and independent MCP authorization, ask OpenCode:
 - “Use set-work-context to review my provider notes before updating them.”
 - “Use connect-another-client to help me use the same account in another app.”
 
-Complete OAuth with `opencode mcp auth opsphere` or `/mcps` before these prompts. Do not copy token files from another client.
+Complete OAuth from the **installed project** with `opencode mcp auth opsphere` or `/mcps` before these prompts. Do not copy token files from another client.

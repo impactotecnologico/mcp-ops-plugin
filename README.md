@@ -34,7 +34,7 @@ Architecture diagram and domain list: **[docs/REMOTE-MCP-ARCHITECTURE.md](docs/R
 
 Use `/opsphere-connect-another-client` to reuse the same Opsphere account in Cursor, Codex, Claude Code, Warp, OpenCode, Antigravity or another compatible MCP host. Each client completes OAuth independently and receives its own revocable session; never copy token files between applications.
 
-Warp local, OpenCode and Antigravity MCP are available across all Opsphere plans without per-user invitations. Optional packages: [`opsphere-warp/`](opsphere-warp/README.md), [`opsphere-opencode/`](opsphere-opencode/README.md), [`opsphere-antigravity/`](opsphere-antigravity/README.md) (`agy plugin install`). Opsphere OAuth is not supported in Warp/Oz cloud environments. Cursor, Codex and Claude Code continue to use their existing plugin manifests. Antigravity uses stable CIMD; OpenCode uses DCR.
+Warp local, OpenCode and Antigravity MCP are available across all Opsphere plans without per-user invitations. Optional packages: [`opsphere-warp/`](opsphere-warp/README.md), [`opsphere-opencode/`](opsphere-opencode/README.md) (`node install.mjs` then `opencode mcp auth opsphere`), [`opsphere-antigravity/`](opsphere-antigravity/README.md) (`agy plugin install`). Opsphere OAuth is not supported in Warp/Oz cloud environments. Cursor, Codex and Claude Code continue to use their existing plugin manifests. Antigravity uses stable CIMD; OpenCode uses DCR. See [docs/INSTALL.md](docs/INSTALL.md) for OpenCode and Antigravity steps.
 
 ---
 

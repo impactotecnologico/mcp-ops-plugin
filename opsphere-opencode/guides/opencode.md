@@ -18,10 +18,10 @@ Endpoint: https://mcp-cursor.opsphere.io/mcp (Streamable HTTP). OAuth authorizat
 
 ## OpenCode
 
-1. Merge the OpenCode MCP object into <repo>/opencode.json, preserving other servers. Global MCP-only setup uses ~/.config/opencode/opencode.json; do not add both unintentionally.
-2. Complete OAuth with opencode mcp auth opsphere or OpenCode /mcps. Use the same account. Do not copy token files.
-3. Let OpenCode manage callbacks and credentials. Do not set a callback port or redirect URI unless the gateway reports invalid_redirect_uri.
-4. Keep Code Mode disabled for Opsphere so gateway tools stay native. Raise the catalog timeout; the default is too low for this server.
+1. Choose one mode: package (skills, agents, commands plus MCP) or MCP-only. Do not add Opsphere in both <repo>/opencode.json and ~/.config/opencode/opencode.json(c).
+2. Package: from the obtained opsphere-opencode/ folder, run node install.mjs install /absolute/path/to/your-project (Node.js 20+). Do not install into the Opsphere plugin repository. Then from that project run opencode mcp auth opsphere or OpenCode /mcps. Use the same account. Do not copy token files.
+3. MCP-only: from the project directory, merge the JSON below into <repo>/opencode.json, preserving other servers. Alternatively run opencode mcp add opsphere --url https://mcp-cursor.opsphere.io/mcp from the project, then set timeout 60000 and codemode false. Running mcp add outside a project can write the global OpenCode config instead.
+4. Let OpenCode manage callbacks and credentials. Keep Code Mode disabled and a catalog timeout of at least 60000 ms. Do not set oauth false, a callback port, redirect URI or a static client secret unless the gateway reports invalid_redirect_uri.
 
 ## Remote MCP configuration
 
@@ -59,8 +59,8 @@ Verify opsphere-opencode/ is actually published before promising a download. If 
 
 [Public repository](https://github.com/opsphere-io/opsphere-plugin) · [Source ZIP](https://github.com/opsphere-io/opsphere-plugin/archive/refs/heads/main.zip) · [Support](mailto:contact@opsphere.io)
 
-Install skills under .opencode/skills/. Merge AGENTS.md preserving existing instructions. Use opsphere-opencode markers; do not reuse Warp markers or install into .agents/skills/.
+Install skills under .opencode/skills/. Preferred path: node install.mjs install /absolute/path/to/your-project, then opencode mcp auth opsphere from that project. Merge AGENTS.md preserving existing instructions. Use opsphere-opencode markers; do not reuse Warp markers or install into .agents/skills/.
 
-Keep codemode false so Opsphere gateway tools remain native. Revisit only if a session proves context overflow.
+Keep codemode false so Opsphere gateway tools remain native. Revisit only if a session proves context overflow. opencode mcp add does not set this; edit the server object after add.
 
-Set at least a 60000 ms catalog timeout. OpenCode defaults are too low for this server.
+Set at least a 60000 ms catalog timeout (number on current OpenCode 1.x). OpenCode defaults are too low for this server. opencode mcp add does not set this; edit the server object after add.

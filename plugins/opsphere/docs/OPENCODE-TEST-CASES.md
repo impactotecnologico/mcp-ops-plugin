@@ -29,6 +29,8 @@ Confirm:
 - Skills, agents and commands exist under `.opencode/`.
 - `AGENTS.md` has `opsphere-opencode` markers, not Warp markers.
 
+Optional MCP-only check (separate project, no installer): from the project directory run `opencode mcp add opsphere --url https://mcp-cursor.opsphere.io/mcp`, then set `timeout` `60000` and `codemode` `false`. Do not run `mcp add` from a random directory; current OpenCode 1.x can write `~/.config/opencode/` instead of project `opencode.json`.
+
 ## Authenticate
 
 ```bash

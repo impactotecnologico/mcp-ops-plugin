@@ -17,6 +17,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - OpenCode continues to use DCR. Antigravity uses stable CIMD, not `dcr_*`. Do not copy token files. Do not install the Antigravity plugin and a manual `opsphere` MCP entry together.
 - CI validates portable Antigravity schemas. Live `agy` OAuth is a manual matrix and is not claimed passed by CI.
 
+### Documentation
+- OpenCode install docs match live 1.x: project `node install.mjs`, then `opencode mcp auth opsphere`; `opencode mcp add` omits timeout/codemode and can write global config outside a project.
+- Antigravity install docs match live `agy` 1.2.x: `~/.gemini/config/plugins/opsphere/`, validate reports skills, agents and `mcpServers`; Agent Plugins `mcp.json` remains unused by current `agy`.
+
 ## [1.0.26] - 2026-09-11 (Execution budget visibility)
 
 ### Added
