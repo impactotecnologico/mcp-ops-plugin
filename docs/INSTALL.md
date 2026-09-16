@@ -215,3 +215,49 @@ npx @openai/codex mcp login opsphere
 Then start a **new Codex session/task** and call `ops_my_usage`. Existing sessions do not reload MCP authorization. In Codex desktop, use **Plugins → Opsphere → Connect/Reconnect**, complete browser login, and open a new task. Do not paste OAuth tokens into chat or configuration files.
 
 See [TROUBLESHOOTING.md#codex--chatgpt-cli](TROUBLESHOOTING.md#codex--chatgpt-cli) for 403, redirect_uri, and plan-gate errors.
+
+---
+
+## OpenCode
+
+Use the isolated package, not the Cursor plugin tree.
+
+1. Obtain [`opsphere-opencode/`](../opsphere-opencode/README.md).
+2. From that folder, in a **project that is not this plugin repository**: `node install.mjs install /absolute/path/to/your-project` (Node.js 20+).
+3. From that project: `opencode mcp auth opsphere` (or OpenCode `/mcps`).
+
+MCP-only: from the project directory merge the JSON in [guides/opencode.md](../opsphere-opencode/guides/opencode.md), or run `opencode mcp add opsphere --url https://mcp-cursor.opsphere.io/mcp` and then set `timeout` `60000` and `codemode` `false`. Running `mcp add` outside a project can write `~/.config/opencode/` instead of `<repo>/opencode.json`. Do not add Opsphere in both project and global OpenCode config.
+
+Current OpenCode 1.x still uses V1 `mcp.opsphere`. Keep `codemode` false. Do not copy token files from another client.
+
+---
+
+## Antigravity
+
+Use the isolated package, not the Cursor plugin tree.
+
+1. Obtain [`opsphere-antigravity/`](../opsphere-antigravity/README.md).
+2. `agy plugin install /absolute/path/to/opsphere-antigravity`
+3. `agy plugin validate ~/.gemini/config/plugins/opsphere` — must report `mcpServers` processed.
+4. Start a **new** `agy` session and complete CIMD OAuth in the client. If it asks for a code, paste the one-time authorization code into the terminal. Do not configure `client_id`, callback, tokens or secrets.
+
+Official path on current `agy` 1.2.x: `~/.gemini/config/plugins/opsphere/`. Do not use `~/.gemini/antigravity-cli/plugins/` or `.agents/plugins/`. MCP-only uses `serverUrl` in `~/.gemini/config/mcp_config.json` or `.agents/mcp_config.json` **without** the plugin.
+
+Do not run `agy plugin install https://github.com/opsphere-io/opsphere-plugin` (repo root). Live `agy` 1.2.3 accepts that URL and installs the Cursor/Claude bundle instead of [`opsphere-antigravity/`](../opsphere-antigravity/README.md). Do not install the plugin and a manual `opsphere` MCP entry at the same time.
+
+---
+
+## GitHub Copilot CLI
+
+Use the isolated package, not the Cursor plugin tree.
+
+1. Obtain [`opsphere-copilot/`](../opsphere-copilot/README.md).
+2. Install with one of:
+   - `copilot plugin install /absolute/path/to/opsphere-copilot`
+   - `copilot plugin install opsphere-io/opsphere-plugin:opsphere-copilot`
+   - `copilot plugin marketplace add opsphere-io/opsphere-plugin` then `copilot plugin install opsphere@opsphere`
+3. Start a **new** Copilot CLI session and complete DCR OAuth in the client (`/mcp`). Do not configure `client_id`, callback, tokens or secrets.
+
+This repo's Copilot marketplace is [`.github/plugin/marketplace.json`](../.github/plugin/marketplace.json) with `source: ./opsphere-copilot`. Do not use `.claude-plugin/marketplace.json` for Copilot. MCP-only (exclusive of the plugin): `copilot mcp add --transport http opsphere https://mcp-cursor.opsphere.io/mcp`.
+
+Do not install the plugin and a manual `opsphere` MCP entry at the same time. Copilot cloud agent is outside this package's support boundary.

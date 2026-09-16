@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "opsphere": {
+      "type": "remote",
+      "url": "https://mcp-cursor.opsphere.io/mcp",
+      "timeout": 60000,
+      "codemode": false
+    }
+  }
+}

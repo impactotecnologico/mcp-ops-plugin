@@ -9,7 +9,7 @@ Guide the user so **`deployment_status`** can resolve their stack. This is **cat
 
 ## Tools
 
-- `deployment_status(env?, scope?)` — discover what's configured; read `gaps[]` for next steps
+- `deployment_status(env?, target?, scope?)` — discover what's configured; read `gaps[]` for next steps
 - `ops_my_usage()` — plan tier, **Catalog configuration** section (`plugin` vs `admin_portal`)
 - `ops_set_work_context(context)` — **Community only** (prose description of stack)
 - `ops_get_work_context()` — read saved context
@@ -49,6 +49,20 @@ If `work_context_editable_via_plugin: no`, **do not** call `ops_set_work_context
 4. After admin updates catalog, retry `deployment_status`.
 
 Do **not** tell Team users that `ops_set_work_context` will work — it will not.
+
+### ArgoCD installations and GitOps destinations
+
+When available, read **`opsphere://argocd/installations`** for the active workspace's resolution mode, installation identifiers and application associations. This is discovery, not evidence that Kubernetes credentials are ready.
+
+- `legacy` / `shadow`: existing deployment sources still execute. Shadow compares the new selection without executing a second provider request. Do not claim a newly added association is active yet.
+- `active`: use the association's exact `target` and `environment` with `deployment_status(target=..., env=..., scope="gitops")`. Multiple matching products require clarification; never choose the first or infer that `pre` means `nonprod`.
+- For a direct ArgoCD tool, use the discovered installation slug in its existing `instance` parameter when that parameter is exposed. Do not invent a new parameter or an installation name.
+- Configuration lives in **Admin → Cloud Catalog → + ArgoCD**, independently of the cloud-account capability checkbox. A workspace installation can serve multiple account environments or a standalone product/environment.
+- The current connection method is Kubernetes through the existing AWS/SSO identity. Keep the management cluster's profile, Kubernetes context and namespace. An associated destination profile is **not** the management identity. Do not request an ArgoCD API token or bypass SSO.
+- Association changes do not grant tool permissions or cross-workspace access. `valid_profiles` applies to explicit connection-profile overrides; adding a destination does not require adding that destination's profile to this list.
+- An admin enables `active` only after reviewing associations and validating shadow results; configuration completeness alone does not prove connectivity. Do not change resolution mode as part of a read-only query.
+
+If this resource is unavailable, use existing discovery and report that independent resolution cannot be verified. Do not assume the backend has been upgraded.
 
 ## When `deployment_status` returns gaps
 
