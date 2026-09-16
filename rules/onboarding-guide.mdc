@@ -121,7 +121,7 @@ Requires AWS IAM keys via `ops_configure_integration` (plugin tier — no SSO `p
 
 For **"latest deployment"**, **"último despliegue"**, **"last release"**, **"what went live"**, or similar in **any language**:
 
-1. Call **`deployment_status(env=<active env if known>, scope="auto")` FIRST** — aggregates Vercel, CI, GitOps, S3+CloudFront, and ECS from the tenant catalog.
+1. Call **`deployment_status(env=<active env if known>, target=<requested product if known>, scope="auto")` FIRST** — aggregates Vercel, CI, GitOps, S3+CloudFront, and ECS from the tenant catalog. For ArgoCD-specific configuration or ambiguous GitOps targets, use the **`configure-deployment-catalog`** skill and, when available, **`opsphere://argocd/installations`**. Preserve the installation's management identity; never substitute a destination account profile or infer a cluster from environment names.
 2. **Do not** default to `vercel_deploys_latest` unless the user asks Vercel-only or `deployment_status` returns `gaps[]` pointing there.
 3. If **`capabilities.vercel`** is false (e.g. static site on S3, ECS-only), **never** call `vercel_*` tools.
 4. Interpret **`gaps[]`** in the tool response — they are **tenant-aware**:

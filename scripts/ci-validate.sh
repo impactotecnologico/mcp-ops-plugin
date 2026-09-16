@@ -57,7 +57,7 @@ done
 [[ -f assets/icon.png ]] && ok "assets/icon.png"
 
 # 3. JSON syntax
-for j in .cursor-plugin/plugin.json .cursor-plugin/marketplace.json .codex-plugin/plugin.json .claude-plugin/plugin.json .claude-plugin/marketplace.json .agents/plugins/marketplace.json .mcp.json mcp.json .claude.mcp.json; do
+for j in .cursor-plugin/plugin.json .cursor-plugin/marketplace.json .codex-plugin/plugin.json .claude-plugin/plugin.json .claude-plugin/marketplace.json .agents/plugins/marketplace.json .mcp.json mcp.json .claude.mcp.json client-connectivity/catalog.json opsphere-opencode/mcp/opsphere.json opsphere-opencode/opencode.json opsphere-antigravity/plugin.json opsphere-antigravity/mcp.json opsphere-antigravity/mcp_config.json opsphere-warp/mcp/opsphere.json opsphere-copilot/plugin.json opsphere-copilot/mcp.json .github/plugin/marketplace.json; do
   [[ -f "$j" ]] || continue
   python3 -m json.tool "$j" >/dev/null || red "invalid JSON: $j"
 done
@@ -92,7 +92,7 @@ sys.exit(1 if bad else 0)
 fi
 
 # 6. scripts/ — maintainer CI only (no runtime shell in bundle)
-ALLOWED_SCRIPTS=(ci-validate.sh codex-install.sh codex-mcp-config.sh phase6-ux-invariants.mjs multiclient-release-invariants.mjs sync-cursor-marketplace.mjs warp-package.test.mjs)
+ALLOWED_SCRIPTS=(ci-validate.sh codex-install.sh codex-mcp-config.sh phase6-ux-invariants.mjs multiclient-release-invariants.mjs sync-cursor-marketplace.mjs sync-portable-skills.mjs warp-package.test.mjs opencode-package.test.mjs antigravity-package.test.mjs copilot-package.test.mjs generate-client-guides.mjs)
 EXTRA_SCRIPTS=()
 while IFS= read -r script; do
   [[ -z "$script" ]] && continue
@@ -505,6 +505,64 @@ if search_quiet 'BROKER_SUBPROCESS_BUSY|WORKSPACE_ACCESS_REVOKED' docs/TROUBLESH
   ok "TROUBLESHOOTING documents broker subprocess and workspace errors"
 else
   red "docs/TROUBLESHOOTING.md must document BROKER_SUBPROCESS_BUSY and WORKSPACE_ACCESS_REVOKED"
+fi
+
+# Isolation: OpenCode, Antigravity and Copilot packages must not land at the repo root
+if [[ -e opencode.json || -e .opencode || -e mcp_config.json || -e marketplace.json || -e .github/mcp.json || -e .github/plugin/plugin.json ]]; then
+  red "OpenCode/Antigravity/Copilot manifests must stay inside their packages, not the repo root"
+else
+  ok "no repo-root OpenCode, Antigravity or Copilot MCP/marketplace manifests"
+fi
+if [[ -f opsphere-antigravity/hooks.json || -f opsphere-copilot/hooks.json ]]; then
+  red "portable packages must not ship hooks.json (no auto-exec hooks)"
+else
+  ok "Antigravity and Copilot packages have no hooks.json"
+fi
+if [[ -f opsphere-opencode/mcp/opsphere.json ]] && python3 -c "import json; c=json.load(open('opsphere-opencode/mcp/opsphere.json')); s=c['mcp']['opsphere']; assert s.get('codemode') is False; assert s.get('timeout')>=60000; assert 'oauth' not in s"; then
+  ok "OpenCode MCP snippet uses DCR, catalog timeout and codemode false"
+else
+  red "opsphere-opencode/mcp/opsphere.json must set type remote, timeout>=60000, codemode false, no oauth client secret"
+fi
+if [[ -f opsphere-antigravity/mcp.json ]] && python3 -c "
+import json
+c=json.load(open('opsphere-antigravity/mcp.json'))
+assert c.get('\$schema')=='https://agent-plugins.org/schemas/1.0.0/mcp.schema.json'
+s=c['mcpServers']['opsphere']
+assert s.get('type')=='streamable-http'
+assert s.get('url')=='https://mcp-cursor.opsphere.io/mcp'
+assert 'serverUrl' not in s and 'oauth' not in s and 'headers' not in s
+p=json.load(open('opsphere-antigravity/plugin.json'))
+assert p.get('\$schema')=='https://agent-plugins.org/schemas/1.0.0/plugin.schema.json'
+assert p.get('name')=='opsphere'
+n=json.load(open('opsphere-antigravity/mcp_config.json'))
+ns=n['mcpServers']['opsphere']
+assert ns.get('serverUrl')=='https://mcp-cursor.opsphere.io/mcp'
+assert 'oauth' not in ns and 'headers' not in ns and 'client_id' not in ns
+"; then
+  ok "Antigravity ships Agent Plugins mcp.json and native mcp_config.json without OAuth secrets"
+else
+  red "opsphere-antigravity must ship plugin.json, mcp.json (streamable-http url) and mcp_config.json (serverUrl) with no OAuth fields"
+fi
+if [[ -f opsphere-copilot/mcp.json ]] && python3 -c "
+import json
+c=json.load(open('opsphere-copilot/mcp.json'))
+assert c.get('\$schema')=='https://agent-plugins.org/schemas/1.0.0/mcp.schema.json'
+s=c['mcpServers']['opsphere']
+assert s.get('type')=='streamable-http'
+assert s.get('url')=='https://mcp-cursor.opsphere.io/mcp'
+assert 'serverUrl' not in s and 'oauth' not in s and 'headers' not in s
+p=json.load(open('opsphere-copilot/plugin.json'))
+assert p.get('\$schema')=='https://agent-plugins.org/schemas/1.0.0/plugin.schema.json'
+assert p.get('name')=='opsphere'
+m=json.load(open('.github/plugin/marketplace.json'))
+assert m['plugins'][0]['source']=='./opsphere-copilot'
+import os
+assert not os.path.exists('opsphere-copilot/agents')
+assert not os.path.exists('opsphere-copilot/install.mjs')
+"; then
+  ok "Copilot ships Agent Plugins mcp.json without OAuth secrets and marketplace source ./opsphere-copilot"
+else
+  red "opsphere-copilot must ship plugin.json and mcp.json (streamable-http url) with Copilot marketplace source ./opsphere-copilot"
 fi
 
 # Phase 6 Community UX content invariants
