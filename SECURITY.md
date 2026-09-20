@@ -1,5 +1,9 @@
 # Security Policy
 
+Contributor guidance: [gateway tool security release gate](docs/TOOL-SECURITY-RELEASE-GATE.md). This documents a CI control and its rollout limits, not a new plugin-side authorization mechanism.
+
+Supply-chain controls and remaining limitations: [R08 release evidence](docs/SUPPLY-CHAIN-SECURITY.md).
+
 ## Supported versions
 
 | Version | Supported |

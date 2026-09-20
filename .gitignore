@@ -1,3 +1,5 @@
+/build-evidence/
+/.github/supply-chain-tools/node_modules/
 # Internal planning documents — never commit
 _internal/
 docs/PRE-PUBLISH-AUDIT.md

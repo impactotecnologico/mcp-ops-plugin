@@ -1,0 +1,9 @@
+{
+  "keyArn": "arn:aws:kms:eu-west-1:421371244108:key/a48c94d0-672b-427f-9a9a-a991c8ea5bb7",
+  "alias": "alias/mcp-opsphere-artifact-signing",
+  "region": "eu-west-1",
+  "algorithm": "RSASSA_PSS_SHA_256",
+  "publicKeyDerBase64": "MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAubgtp9ZGdGXW5n+u1314dXz0F2Xx3PQtNX/7dUp4T3dW6ZgKaDOZM8PWp3f34apq0VknD1d9fsyX9pc8EUv2H/HdCvHwtWGqPdNrVRmTLIdtF76LpycQlup54ijbZN7enifKOdb7svORW5MhzUC4jlFC3c8BsxZ3LjR/QqnWTTSYX8YoZorIr2JLUtmdxhwzKf9Mtuxq2i7XaapcKpTPzR5HwopM+blX/Hc/37SdXixMKcQszIh75ihfD/RS1G0hGML6hSeQVbOjPMPHJC9HhBvPrYyYoXa6flH2kKd68qTov86kwPfQgyIXDMpQwwkFLepc0xOEyxtftIAzWTfA3/HBCgO3qIrmFDHsTdPYkY3UJtJgvl/cGFmlt26UznmDpHjuty+CsGFiVaxzF2mh3jmgvKdjIu4Z8R7p8uKnswV7IlSXuc7qUPEChXpwdGb9HhLTE3JHQpoMwAP1LQexqrqY7acr8hp8/SOzJ40wv/adamLHSghBBvrIM4NAEJglAgMBAAE=",
+  "publicKeySha256": "637204c613c372fffe482ccc7a4eb8c88ba9a27922f3c52bb40b7ce01710143a",
+  "signerRoleArn": "arn:aws:iam::421371244108:role/mcp-opsphere-artifact-signer"
+}

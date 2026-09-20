@@ -16,8 +16,11 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
 
@@ -29,5 +32,40 @@ jobs:
       - name: Gitleaks (full history)
         run: |
           GITLEAKS_VERSION=8.24.2
-          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" | tar -xz gitleaks
+          curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" -o /tmp/gitleaks.tar.gz
+          echo "fa0500f6b7e41d28791ebc680f5dd9899cd42b58629218a5f041efa899151a8e  /tmp/gitleaks.tar.gz" | sha256sum --check --strict
+          tar -xzf /tmp/gitleaks.tar.gz gitleaks
           ./gitleaks detect --source . --verbose
+
+      - name: Inventory the source bundle and bind it to this revision
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org --prefix .github/supply-chain-tools
+          node scripts/supply-chain/check.mjs
+          node --test scripts/supply-chain/supply-chain.test.mjs
+          mkdir -p build-evidence
+          git archive --format=tar --output=build-evidence/plugin-source.tar HEAD
+          node scripts/supply-chain/inventory.mjs build-evidence/plugin-source.tar
+
+      - name: Scan release vulnerabilities and licenses
+        run: node scripts/supply-chain/scan-release.mjs
+
+      - name: Assume dedicated artifact signer
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
+        with:
+          role-to-assume: arn:aws:iam::421371244108:role/mcp-opsphere-artifact-signer
+          aws-region: eu-west-1
+          unset-current-credentials: true
+      - name: Sign and verify release evidence with pinned KMS public key
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          node scripts/supply-chain/sign-release.mjs sign source
+          node scripts/supply-chain/sign-release.mjs verify source
+      - name: Retain plugin source evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: plugin-source-evidence-${{ github.sha }}-${{ github.run_attempt }}
+          path: build-evidence/
+          if-no-files-found: error
+          retention-days: 90
