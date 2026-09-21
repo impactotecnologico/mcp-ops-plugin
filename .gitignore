@@ -20,6 +20,7 @@ Thumbs.db
 # Node
 node_modules/
 package-lock.json
+!/.github/supply-chain-tools/package-lock.json
 yarn.lock
 
 # Editor

@@ -1,10 +1,10 @@
 # R08 — Supply chain controls
 
-## Current status — 2026-09-20
+## Current status — 2026-09-21
 
 This supersedes historical limitations below that have since been implemented. KMS is provisioned via the AWS infra repository; release evidence is signed and verified against `.github/artifact-signing-trust.json`. Shared policy/signature tests: 24 per repo, 144 total PASS. Scanner evidence is mandatory and image scans must match the release digest. HIGH/CRITICAL/UNKNOWN vulnerabilities block releases; licenses are inventoried for separate review, not legally approved.
 
-Six source dependency scans including dev dependencies pass after pinned security updates. Gateway ARM64 build passes but its actual image has unresolved OS/tool/Python vulnerability findings, so R08 is **not closed**. No remote workflow, package publication or application deployment is claimed. Repository protection is the owner's responsibility. The shared signing role does not establish independent builder identity or SLSA certification.
+Six source dependency scans including dev dependencies pass after pinned security updates. The rebuilt gateway ARM64 image passes its runtime smoke checks and the blocking scan with 0 HIGH/CRITICAL/UNKNOWN findings. R08 is therefore closed for the verified local source and image gate; remote workflow execution, published artifact evidence and deployed digest verification remain pending. No package publication or application deployment is claimed. Repository protection is the owner's responsibility. The shared signing role does not establish independent builder identity or SLSA certification.
 
 Canonical verification, safety boundaries and next actions: `mcp-ops/docs/security-verification-2026-09-20.md`. AWS reuse/rotation: `mcp-ops-infra/infra/docs/artifact-signing-and-security.md`.
 
