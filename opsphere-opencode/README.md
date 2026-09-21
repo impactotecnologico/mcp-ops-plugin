@@ -10,7 +10,22 @@ Follow the public package availability check in the guide before downloading. MC
 
 ## Install in a project (recommended)
 
-Requires Node.js 20 or newer. From this obtained package folder, in a **throwaway project** (do not install into the Opsphere plugin repository):
+Requires Node.js 20 or newer. Install into a **throwaway project** (do not install into the Opsphere plugin repository).
+
+### Install from the public repo
+
+This package is not an OpenCode plugin, so do not use `opencode plugin add github:…`. Fetch only this folder of `https://github.com/opsphere-io/opsphere-plugin` with a sparse checkout and run the installer from it:
+
+```sh
+git clone --depth 1 --filter=blob:none --sparse https://github.com/opsphere-io/opsphere-plugin.git
+cd opsphere-plugin
+git sparse-checkout set opsphere-opencode
+node opsphere-opencode/install.mjs install /absolute/path/to/your-project
+```
+
+### Install from an obtained copy
+
+From this obtained package folder:
 
 ```sh
 node install.mjs install /absolute/path/to/your-project
@@ -51,6 +66,42 @@ Global MCP-only configuration (`~/.config/opencode/opencode.json` or `opencode.j
 See [local examples](examples/local.md). Skills are not an import of another host's plugin engine. Do not copy `~/.local/share/opencode/mcp-auth.json` or any OAuth files from Cursor, Codex, Claude Code, Warp or Antigravity.
 
 To sign in again: `opencode mcp logout opsphere`, then `opencode mcp auth opsphere`.
+
+## Screenshots
+
+### Sign in (common to all clients)
+
+Every Opsphere client opens the same browser sign-in page during OAuth.
+
+| | |
+|---|---|
+| ![OAuth login](../assets/screenshots/oauth-login.png) | ![OAuth signup](../assets/screenshots/oauth-signup.png) |
+| *Sign in with your existing account — browser-based OAuth2.* | *New user? Create a free account in seconds — no credit card required.* |
+
+### OpenCode in action
+
+**1. Install into a throwaway project** (see [Install from the public repo](#install-from-the-public-repo) above), then work from **that project**:
+
+```sh
+node opsphere-opencode/install.mjs install /absolute/path/to/your-project
+cd /absolute/path/to/your-project
+```
+
+**2. Check the server.** `opencode mcp list` shows `opsphere` with the gateway URL and `needs authentication`, because the installer never signs you in.
+
+![opencode mcp list showing opsphere needs authentication](../assets/screenshots/opencode-mcp-no-auth.png)
+
+**3. Authenticate.** `opencode mcp auth opsphere` prints an authorize URL and opens your browser. Sign in on the Opsphere page shown in the sign-in screenshots above. OpenCode registers its own dynamic client (`client_id=dcr_…`) and receives the callback on a local `127.0.0.1` port. When the browser step finishes, the terminal prints `Authentication successful!`. The URL contains one-time values, so do not share yours.
+
+![opencode mcp auth opsphere printing the authorize URL and Authentication successful](../assets/screenshots/opencode-auth-trial.png)
+
+**4. Finish in the browser.** The callback page says **Authorization successful. OpenCode is now connected to MCP.** and you can close the window. The address bar carries the authorization response, so it is redacted here; do not share it.
+
+![OpenCode callback page saying Authorization successful, OpenCode is now connected to MCP](../assets/screenshots/opencode-success.png)
+
+**5. Ask a first question:** `Check DNS for opsphere.io`. OpenCode calls the Opsphere `opsphere_dns_lookup` tool (read-only) and summarizes the answer: resolvers, addresses, TTL and status.
+
+![OpenCode running opsphere_dns_lookup for opsphere.io and summarizing the result](../assets/screenshots/opencode-check-dns.png)
 
 ## Uninstall or upgrade
 

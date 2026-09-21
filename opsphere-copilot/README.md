@@ -12,17 +12,23 @@ Follow the public package availability check in the guide before downloading. MC
 
 Choose **one** of:
 
-```sh
-copilot plugin install /absolute/path/to/opsphere-copilot
-```
+**From the public repo** (`https://github.com/opsphere-io/opsphere-plugin`, this folder only, no clone needed):
 
 ```sh
 copilot plugin install opsphere-io/opsphere-plugin:opsphere-copilot
 ```
 
+**From the public repo as a marketplace** (uses `.github/plugin/marketplace.json`):
+
 ```sh
 copilot plugin marketplace add opsphere-io/opsphere-plugin
 copilot plugin install opsphere@opsphere
+```
+
+**From a local copy:**
+
+```sh
+copilot plugin install /absolute/path/to/opsphere-copilot
 ```
 
 Then start a **new** Copilot CLI session. Confirm with `copilot plugin list` and `/skills list`. Do not enable a second MCP entry named `opsphere` while the plugin is installed.
@@ -63,6 +69,43 @@ Local removal does not revoke the server session or delete your account.
 ## First run
 
 See [local examples](examples/local.md). Copilot cloud agent remains outside this package's support boundary.
+
+## Screenshots
+
+### Sign in (common to all clients)
+
+Every Opsphere client opens the same browser sign-in page during OAuth.
+
+| | |
+|---|---|
+| ![OAuth login](../assets/screenshots/oauth-login.png) | ![OAuth signup](../assets/screenshots/oauth-signup.png) |
+| *Sign in with your existing account — browser-based OAuth2.* | *New user? Create a free account in seconds — no credit card required.* |
+
+### GitHub Copilot CLI in action
+
+Captured with GitHub Copilot CLI 1.0.87.
+
+**1. Install the plugin** from the public repo, then start a **new** Copilot CLI session:
+
+```sh
+copilot plugin install opsphere-io/opsphere-plugin:opsphere-copilot
+```
+
+**2. Run `/mcp` and authenticate.** Opsphere is listed under **Installed** as `opsphere`, "From the opsphere plugin" (plugin-contributed), next to the built-in `github-mcp-server`. Select it and choose **Authenticate**.
+
+![Copilot /mcp listing the plugin-contributed opsphere server with the Authenticate action](../assets/screenshots/copilot-mcp.png)
+
+**3. Sign in in the browser.** Copilot opens the Opsphere authorize page. Log in, or choose **Sign up free**.
+
+![Browser showing the Opsphere sign-in page opened by Copilot CLI](../assets/screenshots/copilot-callback.png)
+
+**4. Return to the terminal.** After sign-in the browser lands on a local page (`http://127.0.0.1:<port>`) that says **Authorization Successful**. Unlike Antigravity, there is no code to paste. The address bar carries the authorization response, so it is redacted here; do not share it.
+
+![Local callback page saying Authorization Successful, you can close this window and return to the terminal](../assets/screenshots/copilot-success.png)
+
+**5. Ask a first question:** `Check DNS for opsphere.io`. Copilot reports `MCP Servers reloaded: 2 servers connected`, calls the Opsphere `dns_lookup` tool (a read-only, multi-resolver lookup) and summarizes the A, AAAA, CNAME and NS records.
+
+![Copilot CLI running the Opsphere DNS lookup for opsphere.io and summarizing the records](../assets/screenshots/copilot-check-dns.png)
 
 ## Testing
 

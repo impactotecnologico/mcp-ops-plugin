@@ -8,7 +8,24 @@ Follow the public package availability check in the guide before downloading. MC
 
 ## Install in a project
 
-Requires Node.js 20 or newer. From this obtained package folder:
+Requires Node.js 20 or newer.
+
+### Install from the public repo
+
+Warp has no `github:` plugin install command, so fetch only this folder of `https://github.com/opsphere-io/opsphere-plugin` with a sparse checkout and run the installer from it:
+
+```sh
+git clone --depth 1 --filter=blob:none --sparse https://github.com/opsphere-io/opsphere-plugin.git
+cd opsphere-plugin
+git sparse-checkout set opsphere-warp
+node opsphere-warp/install.mjs install /absolute/path/to/your-project
+```
+
+Do not run `npx skills add opsphere-io/opsphere-plugin`: the repo-root `skills/` catalog is for Cursor, Claude Code and Codex, not Warp.
+
+### Install from an obtained copy
+
+From this obtained package folder:
 
 ```sh
 node install.mjs install /absolute/path/to/your-project
@@ -23,6 +40,30 @@ For manual installation, copy the selected skill directories (including referenc
 ## Profile and first run
 
 Use [the recommended profile checklist](profiles/recommended.md), then ask Warp to run opsphere-onboarding. See [local examples](examples/local.md). Skills are not an import of another host's plugin engine.
+
+## Screenshots
+
+### Sign in (common to all clients)
+
+Every Opsphere client opens the same browser sign-in page during OAuth.
+
+| | |
+|---|---|
+| ![OAuth login](../assets/screenshots/oauth-login.png) | ![OAuth signup](../assets/screenshots/oauth-signup.png) |
+| *Sign in with your existing account — browser-based OAuth2.* | *New user? Create a free account in seconds — no credit card required.* |
+
+### Warp in action
+
+_Screenshots coming soon._
+
+<!-- Template: save the files as assets/screenshots/warp-<name>.png, then uncomment.
+| | |
+|---|---|
+| ![Install](../assets/screenshots/warp-install.png) | ![Sign in](../assets/screenshots/warp-oauth-login.png) |
+| *`node install.mjs install` output.* | *Browser OAuth sign-in after enabling the project MCP.* |
+| ![Connected](../assets/screenshots/warp-connected.png) | ![First tool call](../assets/screenshots/warp-first-call.png) |
+| *Opsphere MCP enabled and running in Warp.* | *First Opsphere skill or tool call.* |
+-->
 
 ## Uninstall or upgrade
 

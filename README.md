@@ -39,6 +39,112 @@ Warp local, OpenCode, Antigravity and GitHub Copilot CLI MCP are available acros
 
 ---
 
+## Client integrations
+
+Opsphere works with several AI clients. All of them use the same remote MCP gateway and the same Opsphere account; each client completes OAuth on its own. Every client has its own README with install steps, OAuth notes, uninstall and a screenshots section.
+
+| Client | What you get | Installs from | Details |
+|--------|--------------|---------------|---------|
+| **Codex / ChatGPT** | Codex plugin: shared skills plus the gateway MCP config, for Codex CLI and ChatGPT desktop | Repo root | [`opsphere-codex/`](opsphere-codex/README.md) |
+| **Claude Code** | Claude Code plugin: skills, subagents, slash commands and MCP config, namespaced `/opsphere:` | Repo root | [`opsphere-claude/`](opsphere-claude/README.md) |
+| **Antigravity** | Agent plugin for `agy`: skills, agents, rules and `mcp_config.json`, with stable CIMD OAuth | `opsphere-antigravity/` | [`opsphere-antigravity/`](opsphere-antigravity/README.md) |
+| **GitHub Copilot CLI** | Agent Plugins package: skills plus Copilot agents, commands and rules, with DCR OAuth | `opsphere-copilot/` | [`opsphere-copilot/`](opsphere-copilot/README.md) |
+| **Warp** (local) | Skills, `AGENTS.md` rules, agent catalog and profile checklist merged into a project by an installer | `opsphere-warp/` | [`opsphere-warp/`](opsphere-warp/README.md) |
+| **OpenCode** | Skills, agents, commands and `AGENTS.md` rules merged into a project, plus `opencode.json` MCP config | `opsphere-opencode/` | [`opsphere-opencode/`](opsphere-opencode/README.md) |
+
+Cursor is covered by the rest of this README. `opsphere-codex/` and `opsphere-claude/` are documentation-only folders, because those two plugins live at the repo root.
+
+### Install from the public repo
+
+Source: [`https://github.com/opsphere-io/opsphere-plugin`](https://github.com/opsphere-io/opsphere-plugin). Claude Code and Codex use the **repo root**; Antigravity, Copilot CLI, Warp and OpenCode use their **nested directory**.
+
+**Claude Code** (repo root)
+
+```sh
+claude plugin marketplace add opsphere-io/opsphere-plugin
+claude plugin install opsphere@opsphere
+```
+
+**Codex / ChatGPT** (repo root)
+
+```sh
+npx @openai/codex plugin marketplace add opsphere-io/opsphere-plugin --ref main
+npx @openai/codex mcp login opsphere
+```
+
+**Antigravity** (nested: `opsphere-antigravity/`)
+
+```sh
+agy plugin install https://github.com/opsphere-io/opsphere-plugin/tree/main/opsphere-antigravity
+agy plugin validate ~/.gemini/config/plugins/opsphere
+```
+
+Keep the `/tree/main/opsphere-antigravity` path. Installing the bare repo URL installs the Cursor/Claude bundle instead.
+
+**GitHub Copilot CLI** (nested: `opsphere-copilot/`)
+
+```sh
+copilot plugin install opsphere-io/opsphere-plugin:opsphere-copilot
+```
+
+**Warp and OpenCode** (nested: `opsphere-warp/`, `opsphere-opencode/`). Neither has a `github:` install command, so fetch only the folder you need and run its installer against your project (Node.js 20+):
+
+```sh
+git clone --depth 1 --filter=blob:none --sparse https://github.com/opsphere-io/opsphere-plugin.git
+cd opsphere-plugin
+git sparse-checkout set opsphere-opencode      # or: opsphere-warp
+node opsphere-opencode/install.mjs install /absolute/path/to/your-project
+opencode mcp auth opsphere                     # OpenCode only, from your project
+```
+
+For Warp, enable the project MCP in Warp and complete browser OAuth. Then start a **new** session in the client and sign in with the same email as your other Opsphere clients. Full flows, uninstall steps and troubleshooting are in each client README above and in [docs/MULTICLIENT-SUPPORT.md](docs/MULTICLIENT-SUPPORT.md).
+
+### Screenshots and prompts for each client
+
+Every client README already shows the **shared sign-in screenshots** ([`oauth-login.png`](assets/screenshots/oauth-login.png) and [`oauth-signup.png`](assets/screenshots/oauth-signup.png), reused from the Cursor set), because the browser sign-in page is the same for all clients. Do not capture those again per client. Each README also has a template for the client-specific shots. To fill it in, capture the shots below and save them as PNG in `assets/screenshots/` with the client slug as a prefix, for example `assets/screenshots/warp-install.png`. Use the slugs `codex`, `claude`, `antigravity`, `copilot`, `warp` and `opencode`. Then uncomment the template in that client's README and remove the "coming soon" line. **Antigravity, Claude Code, Copilot and OpenCode are already done:** their `antigravity-*.png`, `claude-*.png`, `copilot-*.png` and `opencode-*.png` sets are in place and shown in [`opsphere-antigravity/`](opsphere-antigravity/README.md#screenshots), [`opsphere-claude/`](opsphere-claude/README.md#screenshots), [`opsphere-copilot/`](opsphere-copilot/README.md#screenshots) and [`opsphere-opencode/`](opsphere-opencode/README.md#screenshots). Use them as the model for the others: each walks through sign-in and the first call step by step, with a caption per shot. The number of shots depends on the client's setup flow.
+
+**Capture rules**
+
+- Use a fresh session, a **throwaway project** and a Community (free) account. Install the client as an end user would, from the public repo.
+- Crop to the terminal or app window. Use one theme (dark) and a similar width across clients so the pages look consistent.
+- Redact before saving: your email, workspace and tenant names, authorization codes, and any browser URL containing `code=` or `state=`. Never show a token file or `config.toml` contents.
+- Run only the read-only prompts below. Do not capture any configure flow that asks for credentials.
+
+**Shots (file names match the templates)**
+
+| File | What to capture |
+|------|-----------------|
+| `<client>-install.png` | The install command and its successful output |
+| `<client>-connected.png` | The client showing Opsphere connected (see the table below) |
+| `<client>-first-call.png` | The response to the first prompt below |
+| `<client>-endpoint-health.png` | The response to the endpoint-health prompt. This is the equivalent of Cursor's `dns-diagnosis.png` |
+| `<client>-integration-status.png` _(optional)_ | The response to the integration-status prompt. Not in the template; add a row to it if you capture this one |
+
+Antigravity used a longer sequence of self-explanatory names (`antigravity-mcp-noauth`, `-callback`, `-success`, `-mcp-connected`, `-check-dns-one`, `-check-dns-two`). Extra steps like these are fine; keep the `<client>-` prefix and describe each shot in its caption.
+
+**Where to capture and what to run**
+
+| Client | Install (`<client>-install.png`) | Connected (`<client>-connected.png`) | Prompts to run |
+|--------|-------------------------|-----------------------------|----------------|
+| **Codex / ChatGPT** | `npx @openai/codex plugin marketplace add opsphere-io/opsphere-plugin --ref main`, then **Install** in Plugins | **Plugins → Opsphere**, or `/mcp` | `Call ops_my_usage` · `@endpoint-health check https://example.com` · `Which integrations do I have set up?` |
+| **Claude Code** | `claude plugin marketplace add …` then `claude plugin install opsphere@opsphere` | `/mcp` showing `opsphere` Connected | `/opsphere:opsphere-welcome` · `@opsphere:endpoint-health check https://example.com` · `/opsphere:integration-status` |
+| **Antigravity** | `agy plugin install <tree URL>` and `agy plugin validate ~/.gemini/config/plugins/opsphere` (`mcpServers : 1 processed`) | MCP section of a **new** `agy` session, with Opsphere listed once | Prompts below, worded as "Use opsphere-onboarding…" |
+| **GitHub Copilot CLI** | `copilot plugin install opsphere-io/opsphere-plugin:opsphere-copilot`, then `copilot plugin list` | `/mcp` and `/skills list` | Prompts below, worded as "Use opsphere-onboarding…" |
+| **Warp** | `node opsphere-warp/install.mjs install <project>` | Warp MCP settings with Opsphere enabled and running | Prompts below, worded as "Use opsphere-onboarding…" |
+| **OpenCode** | `node opsphere-opencode/install.mjs install <project>` | `/mcps`, or `opencode mcp list` after `opencode mcp auth opsphere` | `/opsphere-welcome` · prompts below |
+
+**Prompts for Antigravity, Copilot, Warp and OpenCode** (the same read-only set from each package's `examples/local.md`, also usable in the clients above):
+
+| Shot | Prompt |
+|------|--------|
+| `first-call.png` | `Use opsphere-onboarding to show my plan and active workspace. Do not change anything.` |
+| `endpoint-health.png` | `Use endpoint-health to check https://example.com. Read-only; do not change infrastructure.` |
+| `integration-status.png` | `Which integrations do I have set up?` |
+
+When done, `git status` should show only new files under `assets/screenshots/<client>/` and the edited client README. Run `npm test` before opening a PR.
+
+---
+
 ## Quick Start
 
 1. **Install** Opsphere from the Cursor Marketplace.
@@ -374,7 +480,7 @@ Verify: ask Codex to call **`ops_my_usage`** or use **`@configure-integration`**
 
 Cursor **agents** (`/outage-triage`, etc.) map to the first four skills above; keep `agents/` and ported skills in sync when editing.
 
-Full install paths (desktop marketplace, troubleshooting): **[docs/INSTALL.md](docs/INSTALL.md#codex--chatgpt)** · **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md#codex--chatgpt-cli)**
+Full install paths (desktop marketplace, troubleshooting): **[docs/INSTALL.md](docs/INSTALL.md#codex--chatgpt)** · **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md#codex--chatgpt-cli)** · Codex client README: **[opsphere-codex/](opsphere-codex/README.md)**
 
 ---
 
@@ -420,6 +526,8 @@ The manifest `name: opsphere` namespaces every skill and subagent:
 | Reload after edits | Reload Window | new Codex task | `/reload-plugins` |
 
 The plugin includes 16 `skills/` and 6 `agents/`; the portable Warp, OpenCode, Antigravity and Copilot packages include the 10 operational skills that apply there. Claude Code has no always-on rule mechanism (unlike Cursor's [`rules/onboarding-guide.mdc`](rules/onboarding-guide.mdc)); the closest substitute is [`skills/opsphere-onboarding/SKILL.md`](skills/opsphere-onboarding/SKILL.md), invoked with `/opsphere:opsphere-onboarding`.
+
+Claude Code client README: **[opsphere-claude/](opsphere-claude/README.md)**.
 
 ---
 
