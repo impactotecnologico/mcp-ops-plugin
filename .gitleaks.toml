@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Reviewed GitHub Actions commit SHAs are public integrity pins, not secrets"
+condition = "AND"
+regexTarget = "secret"
+paths = ['''(?:^|/)\.github/supply-chain-policy\.json$''']
+regexes = ['''(?i)^[0-9a-f]{40}$''']
