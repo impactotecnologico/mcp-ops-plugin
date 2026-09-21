@@ -1,3 +1,5 @@
+/build-evidence/
+/.github/supply-chain-tools/node_modules/
 # Internal planning documents — never commit
 _internal/
 docs/PRE-PUBLISH-AUDIT.md
@@ -18,6 +20,7 @@ Thumbs.db
 # Node
 node_modules/
 package-lock.json
+!/.github/supply-chain-tools/package-lock.json
 yarn.lock
 
 # Editor
