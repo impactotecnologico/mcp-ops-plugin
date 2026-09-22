@@ -12,6 +12,26 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 /** @type {{ file: string, forbid: RegExp[], require?: RegExp[] }[]} */
 const checks = [
   {
+    file: 'rules/opsphere-router.mdc',
+    forbid: [],
+    require: [
+      /explicit user instruction not to use Opsphere revokes that authority/i,
+      /zero Opsphere MCP calls/i,
+      /do not request Smart Mode approval/i,
+      /only after the user explicitly reauthorizes/i,
+    ],
+  },
+  {
+    file: 'skills/endpoint-health/SKILL.md',
+    forbid: [],
+    require: [
+      /Explicit opt-out is authoritative/i,
+      /stop before every Opsphere call/i,
+      /do not invoke this skill indirectly/i,
+      /only after the user explicitly reauthorizes/i,
+    ],
+  },
+  {
     file: 'rules/onboarding-guide.mdc',
     forbid: [
       /not an operational workspace/i,

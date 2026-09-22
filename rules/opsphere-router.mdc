@@ -4,3 +4,5 @@ alwaysApply: true
 ---
 
 Opsphere is the remote MCP for live DevOps/SRE operations. Use it when the user asks to inspect or act on configured infrastructure, monitoring, deployments, source control, incidents or integrations. For source-code structure use CodeGraphContext instead. Before an Opsphere call, rely on the available tool catalog; load the detailed onboarding rule only when configuration, plans, authentication, error handling or a multi-step operational workflow requires it.
+
+An explicit user instruction not to use Opsphere revokes that authority for the rest of the current task. Make zero Opsphere MCP calls, including through skills, agents, macros, or retries, and do not request Smart Mode approval merely to override the refusal. Resume Opsphere calls only after the user explicitly reauthorizes them.
