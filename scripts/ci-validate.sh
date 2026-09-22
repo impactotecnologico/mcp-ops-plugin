@@ -96,6 +96,10 @@ ALLOWED_SCRIPTS=(ci-validate.sh codex-install.sh codex-mcp-config.sh phase6-ux-i
 EXTRA_SCRIPTS=()
 while IFS= read -r script; do
   [[ -z "$script" ]] && continue
+  # Exact maintainer-only R08 paths; do not allow arbitrary new scripts/directories.
+  case "$script" in
+    scripts/supply-chain/check.mjs|scripts/supply-chain/inventory.mjs|scripts/supply-chain/verify-image.mjs|scripts/supply-chain/supply-chain.test.mjs|scripts/supply-chain/sign-release.mjs|scripts/supply-chain/sign-release.test.mjs|scripts/supply-chain/scan-release.mjs) continue ;;
+  esac
   base="$(basename "$script")"
   allowed=0
   for a in "${ALLOWED_SCRIPTS[@]}"; do

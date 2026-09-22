@@ -1,0 +1,8 @@
+{
+  "name": "opsphere-ci-security-tools",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "yaml": "2.9.1"
+  }
+}

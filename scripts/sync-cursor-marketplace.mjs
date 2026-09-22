@@ -19,7 +19,8 @@ const sources = [
 
 function filesUnder(directory, prefix = '') {
   if (!fs.existsSync(directory)) return [];
-  return fs.readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
+  // Finder metadata is neither release content nor a reproducible source input.
+  return fs.readdirSync(directory, { withFileTypes: true }).filter(entry => entry.name !== '.DS_Store').flatMap(entry => {
     const relative = path.join(prefix, entry.name);
     return entry.isDirectory()
       ? filesUnder(path.join(directory, entry.name), relative)
@@ -58,7 +59,7 @@ if (process.argv.includes('--check')) {
     const source = path.join(root, sourceRelative);
     const destination = path.join(target, destinationRelative);
     fs.mkdirSync(path.dirname(destination), { recursive: true });
-    fs.cpSync(source, destination, { recursive: true });
+    fs.cpSync(source, destination, { recursive: true, filter: sourcePath => path.basename(sourcePath) !== '.DS_Store' });
   }
   console.log(`Generated ${path.relative(root, target)}`);
 }
