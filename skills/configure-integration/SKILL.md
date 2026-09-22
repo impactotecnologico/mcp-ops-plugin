@@ -265,6 +265,28 @@ It uses four MCP tools from the backend:
 
 ---
 
+## Provider: Xray (Xray Cloud / Jira Test Management)
+
+**Not the same as Jira.** Xray uses OAuth2 client credentials against Xray Cloud — do not reuse `JIRA_API_TOKEN`.
+
+**Required credentials**:
+
+| Key | Required | Description | Where to find it |
+|-----|----------|-------------|-----------------|
+| `XRAY_CLIENT_ID` | Yes | API client ID | Jira → Apps → Xray → Settings → API Keys |
+| `XRAY_CLIENT_SECRET` | Yes | API client secret | Same API Keys screen |
+| `XRAY_BASE_URL` | No | US or EU API host | Default `https://xray.cloud.getxray.app`; EU: `https://eu.xray.cloud.getxray.app` |
+
+**Setup steps**:
+
+1. Ask the user to create an API key in Xray (not Atlassian account API tokens).
+2. Call `ops_configure_integration(provider: "xray", credentials: { "XRAY_CLIENT_ID": "...", "XRAY_CLIENT_SECRET": "...", "XRAY_BASE_URL": "..." })` — omit base URL for US.
+3. Call `ops_test_integration(provider: "xray")`.
+4. Enable the `xray` module for the tenant in admin if tools are not advertised.
+5. Read tools (`xray_test_get`, `xray_tests_search`) work once credentials are valid. Write tools (`xray_test_create`, `xray_test_steps_update`) require explicit tenant opt-in and user confirmation in QA flows.
+
+---
+
 ## Provider: Confluence
 
 Confluence Cloud normally **inherits Jira's Atlassian site, email, and API token**. Do not ask the user for a second token when Jira authentication is already configured. In `ops_list_integrations`, inspect `auth_dependency`: `provider: "jira"` with `satisfied: true` means Confluence authentication is configured even when its own optional keys are empty.
@@ -493,7 +515,7 @@ Each INT/TST/PRE/PRD Application has its **own** Application ID and restricted k
 
 If a user tries a tool and gets an error about missing credentials or an unconfigured integration:
 
-1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `railway_` → Railway, `ghe_` → GitHub, `bb_` → Bitbucket, `gl_` → GitLab, `sq_` → SonarQube, `cf_` → Cloudflare, `jira_` → Jira, `sentry_` → Sentry, `alg_` → Algolia Search API, `aws_` → AWS). **`alg_status` and `alg_incidents` never require credentials** — if those fail, it is not a missing-integration error.
+1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `railway_` → Railway, `ghe_` → GitHub, `bb_` → Bitbucket, `gl_` → GitLab, `sq_` → SonarQube, `cf_` → Cloudflare, `jira_` → Jira, `xray_` → Xray, `sentry_` → Sentry, `alg_` → Algolia Search API, `aws_` → AWS). **`alg_status` and `alg_incidents` never require credentials** — if those fail, it is not a missing-integration error.
 2. Call `ops_list_integrations` to confirm the provider is not configured.
    Inspect `runtime_status` too: credential state is not the same as module enablement, Cloud Catalog setup, AWS session state, or GitHub default-org routing.
 3. Offer to set it up: "It looks like [Provider] is not configured yet. Would you like me to help you connect it?"
