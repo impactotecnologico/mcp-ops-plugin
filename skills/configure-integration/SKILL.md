@@ -275,7 +275,7 @@ It uses four MCP tools from the backend:
 |-----|----------|-------------|-----------------|
 | `XRAY_CLIENT_ID` | Yes | API client ID | Jira → Apps → Xray → Settings → API Keys |
 | `XRAY_CLIENT_SECRET` | Yes | API client secret | Same API Keys screen |
-| `XRAY_BASE_URL` | No | US or EU API host | Default `https://xray.cloud.getxray.app`; EU: `https://eu.xray.cloud.getxray.app` |
+| `XRAY_BASE_URL` | No | Reviewed Xray Cloud API origin only | Default `https://xray.cloud.getxray.app`; also `https://us.xray.cloud.getxray.app` or `https://eu.xray.cloud.getxray.app` |
 
 **Setup steps**:
 
@@ -283,7 +283,7 @@ It uses four MCP tools from the backend:
 2. Call `ops_configure_integration(provider: "xray", credentials: { "XRAY_CLIENT_ID": "...", "XRAY_CLIENT_SECRET": "...", "XRAY_BASE_URL": "..." })` — omit base URL for US.
 3. Call `ops_test_integration(provider: "xray")`.
 4. Enable the `xray` module for the tenant in admin if tools are not advertised.
-5. Read tools (`xray_test_get`, `xray_tests_search`) work once credentials are valid. Write tools (`xray_test_create`, `xray_test_steps_update`) require explicit tenant opt-in and user confirmation in QA flows.
+5. Read tools (`xray_test_get`, `xray_tests_search`) work once credentials are valid. Write tools (`xray_test_create`, `xray_test_steps_update`) are classified as sensitive, blocked on read-only plans, and require explicit user confirmation in the QA workflow. Gateway sensitive-action policy is not a transaction-bound confirmation.
 
 ---
 

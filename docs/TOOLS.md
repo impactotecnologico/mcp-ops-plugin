@@ -782,9 +782,9 @@ Search Jira issues using JQL.
 
 ## Xray (Jira Test Management)
 
-Requires: `XRAY_CLIENT_ID`, `XRAY_CLIENT_SECRET`; optional `XRAY_BASE_URL` (US/EU). **Separate from Jira API token.**
+Requires: `XRAY_CLIENT_ID`, `XRAY_CLIENT_SECRET`; optional `XRAY_BASE_URL` (`https://xray.cloud.getxray.app`, `https://us.xray.cloud.getxray.app`, or `https://eu.xray.cloud.getxray.app`). **Separate from Jira API token.**
 
-Opsphere reads and (when enabled) governs writes to Xray Cloud — it does not replace Xray as the TMS.
+Opsphere reads and, when enabled by the tenant and plan, can write to Xray Cloud. The assistant must obtain the user's explicit confirmation for each write; the current gateway policy does not itself issue a transaction-bound approval token. Opsphere does not replace Xray as the TMS.
 
 ### `xray_test_get`
 Load a Jira Test issue with manual steps from Xray.
@@ -801,7 +801,7 @@ Search Xray tests by JQL, text, or linked story key.
 ---
 
 ### `xray_test_create` / `xray_test_steps_update`
-Create or update tests in Xray — **governed write**; requires tenant opt-in and explicit user confirmation in QA workflows.
+Create a Test or replace plain manual steps in Xray after showing the exact change and obtaining confirmation. For `xray_test_steps_update`, first call `xray_test_get` and pass its `steps` unchanged as `expectedCurrentSteps`, plus the complete replacement `steps`. The update is rejected if the old steps changed or contain attachments, custom fields, or shared steps. If an update fails, inspect the Test in Xray before retrying: restoration is attempted but cannot be guaranteed as an atomic transaction.
 
 ---
 
