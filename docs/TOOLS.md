@@ -780,6 +780,31 @@ Search Jira issues using JQL.
 
 ---
 
+## Xray (Jira Test Management)
+
+Requires: `XRAY_CLIENT_ID`, `XRAY_CLIENT_SECRET`; optional `XRAY_BASE_URL` (US/EU). **Separate from Jira API token.**
+
+Opsphere reads and (when enabled) governs writes to Xray Cloud — it does not replace Xray as the TMS.
+
+### `xray_test_get`
+Load a Jira Test issue with manual steps from Xray.
+
+**Example**: _"Show Xray test steps for BEC-12345"_
+
+---
+
+### `xray_tests_search`
+Search Xray tests by JQL, text, or linked story key.
+
+**Example**: _"Find Xray tests linked to BEC-9999"_
+
+---
+
+### `xray_test_create` / `xray_test_steps_update`
+Create or update tests in Xray — **governed write**; requires tenant opt-in and explicit user confirmation in QA workflows.
+
+---
+
 ## Sentry
 
 Requires: `SENTRY_AUTH_TOKEN`.
