@@ -37,6 +37,7 @@ Use only read-only tools advertised in the current session. Useful sources may i
 - Edge evidence: `dns_lookup`, `http_check`, `cert_status`, and optional `tcp_connect` or Cloudflare tools.
 - Quality evidence: SonarQube read tools when the suspected defect relates to a quality gate or scan.
 - Tenant QA assets: start with `qa_catalog_get` as the only in-flight MCP call when advertised. It discovers candidate repositories through the active workspace SCM integration and returns normalized suites, workflows, and immutable evidence references without requiring a manifest or repository configuration.
+- Xray manual tests: when `xray_*` read tools are advertised, use `xray_tests_search` and `xray_test_get` for steps and duplicate detection. Opsphere is not a TMS — do not call `xray_test_create` or `xray_test_steps_update` unless write tools are advertised and the user explicitly confirmed the exact change. An update requires the current steps from `xray_test_get` as `expectedCurrentSteps`.
 
 ### QA catalog discipline
 
