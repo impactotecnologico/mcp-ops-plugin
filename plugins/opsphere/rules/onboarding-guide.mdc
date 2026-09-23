@@ -172,9 +172,9 @@ If a tool returns an error about missing credentials or an unconfigured provider
 
 ## Integration credentials — agent rules (mandatory)
 
-When a user needs to connect Datadog, Vercel, AWS, GitHub, or any other provider:
+When a user needs to connect Datadog, Vercel, GitHub, or any other **configure_cta** provider:
 
-1. **Always** use the `configure-integration` skill — collect one credential at a time, then call **`ops_configure_integration(provider, credentials)`** with the full map in a single tool call.
+1. **Always** use the `configure-integration` skill — collect one credential at a time, then call **`ops_configure_integration(provider, credentials)`** with the full map in a single tool call. **AWS is not in this list** — it is configured only in Admin Cloud Catalog.
 2. **Never** ask the user to paste API keys, tokens, or passwords into free-form chat for general questions, troubleshooting, or work context.
 3. **Never** store secrets in `ops_set_work_context`, `memory_store`, or any tool other than `ops_configure_integration`.
 4. **Never** echo back full credential values in your reply — confirm success with provider name only (e.g. "Datadog connected").
@@ -186,18 +186,16 @@ Credentials persist **only** on the Opsphere gateway (encrypted, tenant-scoped).
 
 ## AWS — agent rules (mandatory)
 
-Plugin AWS integration uses **static IAM access keys** configured via `ops_configure_integration`. It is **not** AWS SSO.
+AWS credentials live in **Cloud Catalog** (admin). **`ops_configure_integration(provider: "aws")` is not supported.**
 
-1. **Do not** pass `profile` to `aws_sts_whoami` or `aws_cli_query` unless the user's plan explicitly includes SSO and they have completed an SSO login flow.
-2. **Do not** call `aws_sso_login*`, `aws_session_status`, or other SSO session tools for plugin users — they are **not available** on the free plugin tier.
-3. **Do not** ask the user to run `aws sso login` locally — Opsphere runs AWS CLI on the remote gateway, not on the user's machine.
-4. **Region**: default region is **not** stored during AWS setup (only Access Key + Secret Key). Omit `region` unless the user specifies one; when needed, pass it in the CLI command (e.g. `s3api list-buckets --region eu-west-1`) or as the tool's `region` parameter if supported.
-5. After `ops_test_integration(provider: "aws")` succeeds, run this **verification checklist** before telling the user AWS is ready:
-   - `aws_sts_whoami` — **no** `profile`
-   - `aws_cli_query` with `command: "sts get-caller-identity"` — **no** `profile`
-6. For natural-language requests (e.g. _"List my S3 buckets"_), go directly to `aws_cli_query` with the appropriate read-only CLI command — **no** SSO setup step.
+1. **Do not** collect AWS access keys in chat or call `ops_configure_integration` for AWS.
+2. Use the catalog **`profile`** on `aws_sts_whoami`, `aws_cli_query`, and `ops_test_integration(provider: "aws", profile: "...")`.
+3. For **SSO accounts** (e.g. Breitling, Moeve): run gateway SSO login (`aws_sso_login_device_*`) when there is no active session; local `aws sso login` on the user's laptop does not apply.
+4. For **`iam_static`**: keys are stored in Cloud Catalog; verify with `ops_test_integration` + `aws_sts_whoami` for that profile.
+5. **Region**: use catalog default or pass region in the CLI command / tool parameter when the user specifies one.
+6. Before operational AWS work, run the verification checklist with the resolved **profile** (test integration, `aws_sts_whoami`, optional `sts get-caller-identity` via `aws_cli_query`).
 
-If `aws_cli_query` fails with **"Error loading SSO Token"**, the agent attempted SSO or passed a `profile` by mistake. Retry **without** `profile` using the configured IAM keys.
+If SSO tools report a missing session, complete SSO login for that profile — do not fall back to chat-based key configuration.
 
 ---
 
