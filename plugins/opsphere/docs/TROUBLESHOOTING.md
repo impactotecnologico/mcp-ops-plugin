@@ -268,21 +268,20 @@ Run **`ops_my_usage`** to confirm your plan name.
 
 ---
 
-## AWS: "Error loading SSO Token" or SSO-related failures
+## AWS: missing account, rejected configure, or SSO token errors
 
-**Symptom**: `ops_test_integration(provider: "aws")` passes, but `aws_cli_query` or `aws_sts_whoami` fails with `Error loading SSO Token`, missing SSO session, or similar.
+**Symptom**: Agent offers to "configure AWS" with access keys, `ops_configure_integration(aws)` fails, or AWS tools report missing profile / SSO token errors.
 
-**Cause**: The agent tried to use AWS SSO or passed a `profile` parameter. Plugin AWS integration uses **static IAM access keys** (Access Key ID + Secret Access Key), not SSO. SSO login tools are not available on the free plugin tier. Local `aws sso login` on your machine does not affect Opsphere — AWS CLI runs on the remote gateway.
+**Cause**: AWS is **Cloud Catalog only**. Admins add `iam_static` or SSO accounts in Opsphere Admin; the gateway does not accept MCP configure for AWS. SSO profiles need an active gateway SSO session per profile.
 
 **Fix**:
 
-1. Confirm AWS is configured: say _"Configure my AWS"_ or run `/integration-status`.
-2. Ask the agent to retry **without** `profile`, for example:
-   - `aws_sts_whoami` (no parameters)
-   - `aws_cli_query` with `command: "sts get-caller-identity"` (no `profile`)
-3. For regional queries, specify region in the CLI command (e.g. `--region eu-west-1`) — default region is not stored during setup.
+1. Run `/integration-status` or ask the agent to call `ops_list_integrations` — AWS should show as configured when catalog accounts exist (`configure_cta: false`).
+2. If missing: add the account in **Admin → Cloud Catalog** (or ask your tenant admin). Do not paste keys in chat.
+3. For SSO: complete device SSO login for the catalog **profile**, then `ops_test_integration(provider: "aws", profile: "...")`.
+4. For static keys: admin updates keys in Cloud Catalog; agents verify with the same `profile` on `aws_sts_whoami` / `aws_cli_query`.
 
-**Example prompt**: _"List my S3 buckets using my configured AWS keys — no SSO, no profile."_
+**Example prompt**: _"Use Cloud Catalog profile AdministratorAccess-NON-PROD — sign in with SSO if needed, then list S3 buckets."_
 
 ---
 
