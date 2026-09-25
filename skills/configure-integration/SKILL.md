@@ -1,6 +1,6 @@
 ---
 name: configure-integration
-description: Connect an eligible provider (Datadog, Vercel, GitHub, Cloudflare, Jira, Confluence, Sentry, Bitbucket, GitLab, Railway, AWS, …) when ops_list_integrations marks it available_to_connect — step-by-step guided setup from the chat. Use when the user wants to add, configure, or reconnect a provider that is configure_cta-eligible, or when a tool reports missing credentials for an eligible module.
+description: Connect an eligible provider (Datadog, Vercel, GitHub, Cloudflare, Jira, Confluence, Sentry, Bitbucket, GitLab, Railway, …) when ops_list_integrations marks it available_to_connect — step-by-step guided setup from the chat. AWS is excluded (Cloud Catalog admin only). Use when the user wants to add, configure, or reconnect a provider that is configure_cta-eligible, or when a tool reports missing credentials for an eligible module.
 ---
 
 # Configure Integration
@@ -20,6 +20,8 @@ It uses four MCP tools from the backend:
 > **Integrations ≠ admin MCP modules.** Configuring Datadog/GitHub/etc. here stores credentials so existing plan tools can call those APIs. It does **not** enable premium MCP modules (Kubernetes, ArgoCD, macros, …). Module eligibility is controlled by the subscription plan; Team+ admins manage modules in the admin portal Tools page.
 
 > **Entitlement:** Always call `ops_list_integrations` first. Only guide "Configure my [Provider]" for entries with `configure_cta: true` / `summary.available_to_connect`. If status is `upgrade_required`, `beta`, or `enterprise_only`, explain that — do not collect credentials as if setup were allowed now.
+
+> **AWS exception:** AWS is never `configure_cta`. Accounts and keys (or SSO) live in **Admin → Cloud Catalog**. Verify with `ops_test_integration(provider: "aws", profile: "...")` and SSO login tools when needed — see [Provider: AWS](#provider-aws) below.
 
 ## General Flow
 
@@ -265,6 +267,28 @@ It uses four MCP tools from the backend:
 
 ---
 
+## Provider: Xray (Xray Cloud / Jira Test Management)
+
+**Not the same as Jira.** Xray uses OAuth2 client credentials against Xray Cloud — do not reuse `JIRA_API_TOKEN`.
+
+**Required credentials**:
+
+| Key | Required | Description | Where to find it |
+|-----|----------|-------------|-----------------|
+| `XRAY_CLIENT_ID` | Yes | API client ID | Jira → Apps → Xray → Settings → API Keys |
+| `XRAY_CLIENT_SECRET` | Yes | API client secret | Same API Keys screen |
+| `XRAY_BASE_URL` | No | Reviewed Xray Cloud API origin only | Default `https://xray.cloud.getxray.app`; also `https://us.xray.cloud.getxray.app` or `https://eu.xray.cloud.getxray.app` |
+
+**Setup steps**:
+
+1. Ask the user to create an API key in Xray (not Atlassian account API tokens).
+2. Call `ops_configure_integration(provider: "xray", credentials: { "XRAY_CLIENT_ID": "...", "XRAY_CLIENT_SECRET": "...", "XRAY_BASE_URL": "..." })` — omit base URL for US.
+3. Call `ops_test_integration(provider: "xray")`.
+4. Enable the `xray` module for the tenant in admin if tools are not advertised.
+5. Read tools (`xray_test_get`, `xray_tests_search`) work once credentials are valid. Write tools (`xray_test_create`, `xray_test_steps_update`) are classified as sensitive, blocked on read-only plans, and require explicit user confirmation in the QA workflow. Gateway sensitive-action policy is not a transaction-bound confirmation.
+
+---
+
 ## Provider: Confluence
 
 Confluence Cloud normally **inherits Jira's Atlassian site, email, and API token**. Do not ask the user for a second token when Jira authentication is already configured. In `ops_list_integrations`, inspect `auth_dependency`: `provider: "jira"` with `satisfied: true` means Confluence authentication is configured even when its own optional keys are empty.
@@ -359,51 +383,36 @@ Existing workspaces may report `authentication_source: "legacy_provider_credenti
 
 ## Provider: AWS
 
-**Required credentials**:
+**Admin Cloud Catalog only — not this skill.** Do **not** call `ops_configure_integration(provider: "aws")`; the gateway rejects it. Never ask users to paste AWS access keys in chat.
 
-| Key | Required | Description | Where to find it |
-|-----|----------|-------------|-----------------|
-| `AWS_ACCESS_KEY_ID` | Yes | IAM Access Key ID | IAM Console → Users → Security Credentials → Create Access Key |
-| `AWS_SECRET_ACCESS_KEY` | Yes | IAM Secret Access Key | Shown once at key creation — must be copied immediately |
+| Auth type | Who configures | How agents verify |
+|-----------|----------------|-------------------|
+| `iam_static` | Tenant admin in **Cloud Catalog** (access key + secret on the account) | `ops_test_integration(provider: "aws", profile: "<aws_profile>")` |
+| IAM Identity Center (SSO) | Tenant admin in **Cloud Catalog** (SSO URL, region, profile — e.g. Breitling, Moeve) | `aws_sso_login_device_start` + poll, then `ops_test_integration(..., profile: ...)` |
 
-> **Note**: Plugin users typically use static IAM access keys (not enterprise SSO). The minimum required IAM policy is `sts:GetCallerIdentity` for identity verification; add read-only permissions only for the AWS operations you need.
+**When the user wants AWS access**:
 
-> **Paid workspace SSO is a different setup path**: it requires an SSO profile in that workspace's Cloud Catalog plus the relevant modules. Do not collect static keys when the user is explicitly trying to use an admin-configured SSO profile.
+1. Call `ops_list_integrations` — AWS is **configured** when Cloud Catalog has accounts (`configure_cta: false`).
+2. If missing: direct them to **Opsphere Admin → Cloud Catalog** (or their tenant admin). Do not run the generic configure flow.
+3. Resolve the **`profile`** from catalog / active work context (`aws_profile` on the account or environment).
+4. If runtime status or SSO tools indicate no session, complete SSO login for that profile before AWS CLI tools.
+5. **Verification checklist** (always include `profile` when multiple accounts exist):
+   - `ops_test_integration(provider: "aws", profile: "<profile>")`
+   - `aws_sts_whoami` with the same `profile`
+   - `aws_cli_query` with `profile` (and `region` when needed)
 
-**Setup steps**:
+**Querying AWS after verification**:
 
-1. Ask: "I need your AWS Access Key ID and Secret Access Key for static IAM authentication."
-2. Direct to: AWS Console → IAM → Users → [your user] → Security Credentials → Create Access Key.
-   Choose "Command Line Interface (CLI)" as the use case.
-3. Warn the user: "The Secret Access Key is shown only once — copy it before closing that page."
-4. Call `ops_configure_integration`:
-   ```
-   ops_configure_integration(provider: "aws", credentials: {
-     "AWS_ACCESS_KEY_ID": "<key_id>",
-     "AWS_SECRET_ACCESS_KEY": "<secret>"
-   })
-   ```
-5. Call `ops_test_integration(provider: "aws")` to verify (runs `sts:GetCallerIdentity`).
-6. On success, run the **verification checklist** (both calls **without** `profile`):
-   - `aws_sts_whoami`
-   - `aws_cli_query` with `command: "sts get-caller-identity"`
-7. Tell the user: "AWS is connected! You can use `aws_sts_whoami` and `aws_cli_query` for read-only queries."
-
-**After setup — how to query AWS**:
-
-- On the free tier, use **static IAM keys only**; AWS SSO is a paid workspace/catalog capability.
-- **Never** pass `profile` to `aws_sts_whoami` or `aws_cli_query` unless the user's plan includes SSO and they have an active SSO session.
-- On the free tier, do not call `aws_sso_login*` or `aws_session_status`; those tools are not available there.
-- **Region**: only Access Key + Secret Key are stored. Default region is **not** configured. Omit `region` unless the user asks; when needed, include it in the CLI command (e.g. `ec2 describe-instances --region us-east-1`) or pass the tool's `region` parameter.
-- Example — user says _"List my S3 buckets"_ → call `aws_cli_query` with `command: "s3api list-buckets"` (no `profile`, add `--region` only if the user specifies a region).
+- Pass **`profile`** on `aws_sts_whoami`, `aws_cli_query`, and related tools unless the workspace has a single obvious default.
+- Use catalog `default_region` or explicit `--region` / tool `region` when the user names a region.
+- Example — _"List my S3 buckets in non-prod"_ → pick the non-prod profile → `aws_cli_query` with `command: "s3api list-buckets"` and `profile`.
 
 **Common issues**:
-- `InvalidClientTokenId` → the Key ID is wrong or the key has been deactivated in IAM.
-- `SignatureDoesNotMatch` → the Secret Key is incorrect. Common cause: trailing space on copy-paste.
-- `AccessDenied` → IAM user lacks permissions. Minimum required: `sts:GetCallerIdentity`.
-- `Error loading SSO Token` → the agent used SSO or passed `profile` by mistake. Retry without `profile`.
-- `EXECUTION_MODULE_NOT_ENABLED` → configuration/entitlement, not bad credentials. `aws_sso_login_device_start` belongs to `aws`; `check_aws_session_for_env`, status, revoke, and logout belong to the separate `aws-sessions` module.
-- `aws_profile_not_configured` → the profile is missing from the active workspace Cloud Catalog/runtime. Reconnect does not create it.
+
+- `aws_profile_not_configured` → profile missing from Cloud Catalog for this workspace.
+- `InvalidClientTokenId` / `SignatureDoesNotMatch` → static keys invalid; admin must update keys in Cloud Catalog.
+- `Error loading SSO Token` → SSO account without an active caller session; run SSO login for that profile.
+- `EXECUTION_MODULE_NOT_ENABLED` → plan/module entitlement. `aws_sso_login_device_start` is `aws`; session status/revoke tools are `aws-sessions`.
 
 ---
 
@@ -493,7 +502,7 @@ Each INT/TST/PRE/PRD Application has its **own** Application ID and restricted k
 
 If a user tries a tool and gets an error about missing credentials or an unconfigured integration:
 
-1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `railway_` → Railway, `ghe_` → GitHub, `bb_` → Bitbucket, `gl_` → GitLab, `sq_` → SonarQube, `cf_` → Cloudflare, `jira_` → Jira, `sentry_` → Sentry, `alg_` → Algolia Search API, `aws_` → AWS). **`alg_status` and `alg_incidents` never require credentials** — if those fail, it is not a missing-integration error.
+1. Identify the provider from the error or the tool name prefix (`dd_` → Datadog, `vercel_` → Vercel, `railway_` → Railway, `ghe_` → GitHub, `bb_` → Bitbucket, `gl_` → GitLab, `sq_` → SonarQube, `cf_` → Cloudflare, `jira_` → Jira, `xray_` → Xray, `sentry_` → Sentry, `alg_` → Algolia Search API, `aws_` → AWS). **`alg_status` and `alg_incidents` never require credentials** — if those fail, it is not a missing-integration error.
 2. Call `ops_list_integrations` to confirm the provider is not configured.
    Inspect `runtime_status` too: credential state is not the same as module enablement, Cloud Catalog setup, AWS session state, or GitHub default-org routing.
 3. Offer to set it up: "It looks like [Provider] is not configured yet. Would you like me to help you connect it?"
