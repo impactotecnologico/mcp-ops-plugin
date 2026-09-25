@@ -87,16 +87,19 @@ Every Opsphere client opens the same browser sign-in page during OAuth.
 
 ### Codex / ChatGPT in action
 
-_Screenshots coming soon._
+The plugin detail page in these shots uses the Spanish ChatGPT UI. Labels below are the ones on screen.
 
-<!-- Template: save the files as assets/screenshots/codex-<name>.png, then uncomment.
-| | |
-|---|---|
-| ![Install](../assets/screenshots/codex-install.png) | ![Connected](../assets/screenshots/codex-connected.png) |
-| *Adding the Opsphere marketplace and installing the plugin.* | *Opsphere connected in Codex.* |
-| ![First tool call](../assets/screenshots/codex-first-call.png) | ![Endpoint health](../assets/screenshots/codex-endpoint-health.png) |
-| *First Opsphere skill or tool call.* | *Read-only endpoint health check (DNS, HTTP, TLS) for example.com.* |
--->
+**1. Open the plugin page.** The title is **Opsphere — DevOps & SRE Intelligence**. Starter prompts are `@opsphere-welcome`, `@plan-and-usage` and `@configure-integration`. The description covers the remote MCP gateway, guided skills, and credentials staying on the gateway. The action button is **Probar ahora**.
+
+![ChatGPT plugin page for Opsphere with starter prompts and the Probar ahora button](../assets/screenshots/codex-plugin-description.png)
+
+**2. Check MCP and skills.** **Servidores MCP** shows **1** server, **Opsphere**, with the toggle on. **Habilidades** shows **16** skills. This shot is the first half: CI Investigation through Opsphere Onboarding, with Plan and Usage starting at the bottom.
+
+![ChatGPT plugin page showing one Opsphere MCP server enabled and the first half of 16 skills](../assets/screenshots/codex-plugin-capabilities.png)
+
+**3. Read the rest of the skills and plugin info.** The list continues from Plan and Usage through Set Work Context. **Información** lists capabilities **Interactive, Read**, developer **Opsphere**, category **Developer Tools** and version **1.0.20** (the version in [`.codex-plugin/plugin.json`](../.codex-plugin/plugin.json)).
+
+![ChatGPT plugin page showing the remaining skills and the Informacion panel with version 1.0.20](../assets/screenshots/codex-plugin-info.png)
 
 ## Testing
 

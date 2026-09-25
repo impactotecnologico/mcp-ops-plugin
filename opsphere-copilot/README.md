@@ -103,7 +103,11 @@ copilot plugin install opsphere-io/opsphere-plugin:opsphere-copilot
 
 ![Local callback page saying Authorization Successful, you can close this window and return to the terminal](../assets/screenshots/copilot-success.png)
 
-**5. Ask a first question:** `Check DNS for opsphere.io`. Copilot reports `MCP Servers reloaded: 2 servers connected`, calls the Opsphere `dns_lookup` tool (a read-only, multi-resolver lookup) and summarizes the A, AAAA, CNAME and NS records.
+**5. Open the `opsphere` server in `/mcp`.** It is **Online** (1/1 enabled, plugin-contributed) with **338 tools** (the count for this signed-in catalog). The list is alphabetical; this capture shows the start of it: Akamai (`akamai_cache_purge`, `akamai_diag`, `akamai_papi_*`, `akamai_properties_search`, `akamai_waf_*`), `alerts_activity`, Algolia (`alg_status`, `alg_indexes_*`, `alg_logs`, `alg_obj_get`, `alg_search`), Argo CD (`argocd_apps`, `argocd_debug`, `argocd_list_apps`, …) and `aws_athena_query`.
+
+![Copilot /mcp showing the opsphere server Online with 338 tools and the start of the tool list](../assets/screenshots/copilot-mcp-tools.png)
+
+**6. Ask a first question:** `Check DNS for opsphere.io`. Copilot reports `MCP Servers reloaded: 2 servers connected`, calls the Opsphere `dns_lookup` tool (a read-only, multi-resolver lookup) and summarizes the A, AAAA, CNAME and NS records.
 
 ![Copilot CLI running the Opsphere DNS lookup for opsphere.io and summarizing the records](../assets/screenshots/copilot-check-dns.png)
 

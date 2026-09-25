@@ -139,7 +139,11 @@ claude plugin install opsphere@opsphere
 
 ![Local callback page saying Authentication successful, you can close this tab and return to Claude Code](../assets/screenshots/claude-success.png)
 
-**6. Ask a first question:** `Check DNS for opsphere.io`. Claude calls the Opsphere tools (`Called plugin:opsphere:opsphere 2 times`, read-only) and summarizes the A, AAAA, CNAME and NS records with a short assessment.
+**6. Run `/mcp` again.** The built-in server `plugin:opsphere:opsphere` is connected with **338 tools** (the count for this signed-in catalog). The diagnostics warning is expected in this repo: project [`.mcp.json`](../.mcp.json) is Codex's config (`url` without Claude's `type: http`), so that entry is skipped. The connected server is the plugin one, which matches the note above that [`.claude.mcp.json`](../.claude.mcp.json) uses `type: http`.
+
+![Claude Code /mcp showing plugin:opsphere:opsphere connected with 338 tools](../assets/screenshots/claude-mcp-tools-included.png)
+
+**7. Ask a first question:** `Check DNS for opsphere.io`. Claude calls the Opsphere tools (`Called plugin:opsphere:opsphere 2 times`, read-only) and summarizes the A, AAAA, CNAME and NS records with a short assessment.
 
 ![Claude Code running the Opsphere DNS lookup for opsphere.io and summarizing the records](../assets/screenshots/claude-check-dns.png)
 

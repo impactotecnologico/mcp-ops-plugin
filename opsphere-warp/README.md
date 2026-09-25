@@ -33,7 +33,7 @@ node install.mjs install /absolute/path/to/your-project
 
 The installer merges the project MCP config, adds a marked AGENTS.md section, and installs skills and their references in .agents/skills/. It preserves other MCP entries and existing files; conflicting skills, competing WARP.md or a different opsphere server stop installation before changes. It records ownership in .agents/opsphere-warp-install.json.
 
-Then follow the guide to enable the project MCP and complete browser OAuth. No authentication is performed by the installer. Global MCP-only configuration is an alternative documented in the guide; avoid adding both global and project entries unintentionally.
+Then follow the guide to enable the project MCP and complete browser OAuth. Warp’s own MCP server settings are documented at [https://docs.warp.dev/agents/capabilities/mcp/](https://docs.warp.dev/agents/capabilities/mcp/). No authentication is performed by the installer. Global MCP-only configuration is an alternative documented in the guide; avoid adding both global and project entries unintentionally.
 
 For manual installation, copy the selected skill directories (including references) into .agents/skills/, merge rules/AGENTS.md and configure MCP from the guide. Record the files you added; the uninstaller only manages its own manifest.
 
@@ -54,16 +54,9 @@ Every Opsphere client opens the same browser sign-in page during OAuth.
 
 ### Warp in action
 
-_Screenshots coming soon._
+**1. Open Settings → MCP Servers.** How Warp configures MCP servers is documented at [https://docs.warp.dev/agents/capabilities/mcp/](https://docs.warp.dev/agents/capabilities/mcp/). **opsphere** is enabled and shows **338 tools available** (the count for this signed-in catalog). The chip list starts with Akamai, Algolia, Argo CD, AWS, Azure, Bitbucket and Cloudflare.
 
-<!-- Template: save the files as assets/screenshots/warp-<name>.png, then uncomment.
-| | |
-|---|---|
-| ![Install](../assets/screenshots/warp-install.png) | ![Sign in](../assets/screenshots/warp-oauth-login.png) |
-| *`node install.mjs install` output.* | *Browser OAuth sign-in after enabling the project MCP.* |
-| ![Connected](../assets/screenshots/warp-connected.png) | ![First tool call](../assets/screenshots/warp-first-call.png) |
-| *Opsphere MCP enabled and running in Warp.* | *First Opsphere skill or tool call.* |
--->
+![Warp MCP Servers settings with opsphere enabled and 338 tools available](../assets/screenshots/warp-mcp-tools.png)
 
 ## Uninstall or upgrade
 
