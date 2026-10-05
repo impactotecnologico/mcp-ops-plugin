@@ -6,12 +6,12 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 - `destructiveHint`: puede borrar, sobrescribir, revocar o ejecutar una acción irreversible.
 - `openWorldHint`: puede cambiar un sistema público o un tercero externo.
 
-- Tools auditadas: 337
-- Solo lectura: 283
-- Con efectos o cambios de estado: 54
-- Destructivas o irreversibles: 31
+- Tools auditadas: 351
+- Solo lectura: 293
+- Con efectos o cambios de estado: 58
+- Destructivas o irreversibles: 34
 - Cambian sistemas públicos o externos: 19
-- Bloqueadas por la regla existente del plan de solo lectura: 32
+- Bloqueadas por la regla existente del plan de solo lectura: 35
 
 | Tool | readOnlyHint | destructiveHint | openWorldHint | Impacto real | Regla existente del plan de solo lectura |
 |---|:---:|:---:|:---:|---|:---:|
@@ -252,6 +252,16 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `memory_search` | false | false | false | Cambia estado privado de forma acotada | Permitida |
 | `memory_session_touch` | false | false | false | Cambia estado privado de forma acotada | Permitida |
 | `memory_store` | false | true | false | Sobrescribe, elimina o revoca estado privado | Permitida |
+| `noibu_company_get` | true | false | false | Solo consulta | Permitida |
+| `noibu_domain_get` | true | false | false | Solo consulta | Permitida |
+| `noibu_domains_list` | true | false | false | Solo consulta | Permitida |
+| `noibu_issue_get` | true | false | false | Solo consulta | Permitida |
+| `noibu_issues_search` | true | false | false | Solo consulta | Permitida |
+| `noibu_link_revoke` | false | true | false | Sobrescribe, elimina o revoca estado privado | Bloqueada |
+| `noibu_link_start` | false | false | false | Cambia estado privado de forma acotada | Permitida |
+| `noibu_link_status` | true | false | false | Solo consulta | Permitida |
+| `noibu_page_visits` | true | false | false | Solo consulta | Permitida |
+| `noibu_sessions_search` | true | false | false | Solo consulta | Permitida |
 | `observability_daily_digest` | true | false | false | Solo consulta | Permitida |
 | `observability_query` | true | false | false | Solo consulta | Permitida |
 | `observability_trigger_digest` | false | true | true | Cambio externo o irreversible | Bloqueada |
@@ -352,4 +362,8 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `vercel_env_sources` | true | false | false | Solo consulta | Permitida |
 | `vercel_project_status` | true | false | false | Solo consulta | Permitida |
 | `vercel_projects_list` | true | false | false | Solo consulta | Permitida |
+| `xray_test_create` | false | true | false | Sobrescribe, elimina o revoca estado privado | Bloqueada |
+| `xray_test_get` | true | false | false | Solo consulta | Permitida |
+| `xray_test_steps_update` | false | true | false | Sobrescribe, elimina o revoca estado privado | Bloqueada |
+| `xray_tests_search` | true | false | false | Solo consulta | Permitida |
 

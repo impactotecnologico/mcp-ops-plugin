@@ -371,6 +371,7 @@ Verify: ask Codex to call **`ops_my_usage`** or use **`@configure-integration`**
 | `@set-work-context` | Account work context (Team plans) |
 | `@configure-deployment-catalog` | Deployment sources (Community vs Team) |
 | `@run-macro-workflows` | Team/Enterprise macro workflows |
+| `@noibu-analytics` | Noibu store health (Store Pulse text), conversion KPIs, domains, issues — OAuth in Admin (module `noibu`) |
 
 Cursor **agents** (`/outage-triage`, etc.) map to the first four skills above; keep `agents/` and ported skills in sync when editing.
 
