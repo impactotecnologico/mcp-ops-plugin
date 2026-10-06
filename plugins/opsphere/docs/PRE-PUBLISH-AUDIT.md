@@ -22,7 +22,7 @@ npm test                    # scripts/ci-validate.sh
 |-------|-------------------|---------------|
 | Manifest hygiene | `npm test` | `=== done (failures: 0) ===` |
 | Secret patterns (HEAD) | `ci-validate.sh` §7 | No `AKIA…`, `ghp_…`, `sk-…` in tracked files |
-| Private IPs (HEAD) | `ci-validate.sh` §8 | No `10.x`, `192.168.x`, `172.16–31.x` literals |
+| Private IPs (HEAD) | `ci-validate.sh` §8 | No RFC1918 / private-range IPv4 literals in tracked files |
 | Gitleaks (history) | GitHub Actions `CI` job | Green on `main` |
 | `.env` not committed | `ci-validate.sh` §4 | `.env` gitignored and absent |
 
