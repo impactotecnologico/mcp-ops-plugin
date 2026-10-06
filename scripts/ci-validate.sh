@@ -505,6 +505,18 @@ if search_quiet 'Never include in .tools/call. arguments' rules/onboarding-guide
 else
   red "onboarding-guide must tell agents never to send policy authority fields in tools/call"
 fi
+if search_quiet 'workload_type.*derived and signed|derived and signed.*workload_type' rules/onboarding-guide.mdc && \
+   search_quiet 'terminal_for_run=true' rules/onboarding-guide.mdc skills/noibu-analytics/SKILL.md && \
+   search_quiet 'at most 48 Noibu data calls' skills/noibu-analytics/SKILL.md; then
+  ok "automation contract is bounded and server-authoritative"
+else
+  red "automation contract must keep workload identity server-side, stop terminal runs, and bound Noibu calls"
+fi
+if search_quiet 'there is no Opsphere Noibu macro' skills/noibu-analytics/SKILL.md; then
+  ok "Noibu automation uses existing atomic tools without a new macro"
+else
+  red "Noibu automation guidance must explicitly exclude a new macro"
+fi
 if search_quiet 'BROKER_SUBPROCESS_BUSY|WORKSPACE_ACCESS_REVOKED' docs/TROUBLESHOOTING.md; then
   ok "TROUBLESHOOTING documents broker subprocess and workspace errors"
 else
