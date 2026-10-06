@@ -5,14 +5,14 @@ description: Noibu ecommerce analytics on Opsphere — routing (querying-noibu-d
 
 # Noibu analytics (Opsphere)
 
-Use **Opsphere MCP** `noibu_*` tools on the remote gateway. Noibu is **not** configured via `ops_configure_integration` — the user links identity OAuth in **Admin → Integrations → Noibu** (`noibu_link_start` / `noibu_link_status`).
+Use **Opsphere MCP** `noibu_*` tools on the remote gateway. Noibu is **not** configured via `ops_configure_integration` — the tenant links **one** OAuth connection in **Admin → Integrations → Noibu** (`noibu_link_start` / `noibu_link_status`, `scope: tenant`).
 
 **Explicit opt-out is authoritative.** If the user refused Opsphere for this task, do not call Noibu tools indirectly.
 
 ## Before any data call
 
-1. Confirm `noibu_link_status` shows a linked identity (or tell the user to connect in Admin).
-2. Confirm `noibu_domains_list` (or another `noibu_*` data tool) appears in `tools/list` — module `noibu` must be enabled for the workspace.
+1. Call `noibu_link_status`. Proceed only when `linked: true` and `scope: tenant`. If not linked, tell the user any tenant admin must connect in Admin (automations cannot complete browser OAuth reliably — do not loop on `noibu_link_start` from scheduled jobs).
+2. Confirm `noibu_domains_list` (or another `noibu_*` data tool) appears in `tools/list` — module `noibu` must be enabled for the workspace **profile** in use (Cursor automation → **cursor** profile; Admin Connect → **web** profile).
 3. Read **`references/querying-noibu-data-routing.md`** — same routing semantics as Noibu's [querying-noibu-data](https://github.com/Noibu/ai-plugin/blob/main/src/skills/querying-noibu-data/SKILL.md), with Opsphere tool names.
 4. Read **`references/opsphere-broker-tools.md`** — JSON under **`input`**, optional top-level **`rationale`** (forwarded upstream).
 

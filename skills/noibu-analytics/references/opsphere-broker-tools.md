@@ -1,6 +1,6 @@
 # Noibu broker — tool args (Opsphere)
 
-Opsphere brokers a **read-only allowlist** of [Noibu MCP](https://mcp.noibu.com) tools. OAuth is per identity (`noibu_link_*`); data calls use **`input`** plus optional top-level **`rationale`** (forwarded upstream).
+Opsphere brokers a **read-only allowlist** of [Noibu MCP](https://mcp.noibu.com) tools. OAuth is **one link per tenant** (`noibu_link_*`, `scope: tenant`); data calls use **`input`** plus optional top-level **`rationale`** (forwarded upstream).
 
 Routing and field semantics match Noibu's open plugin skills — start with [querying-noibu-data](https://github.com/Noibu/ai-plugin/blob/main/src/skills/querying-noibu-data/SKILL.md). **Store Pulse** ([skill](https://github.com/Noibu/ai-plugin/blob/main/src/skills/store-pulse/SKILL.md)) is adapted in Opsphere as text + `noibu_sessions_search` queries (no Cowork `show_widget` / artifacts).
 
