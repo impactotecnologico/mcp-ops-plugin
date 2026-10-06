@@ -22,4 +22,6 @@ Noibu's [store-pulse](https://github.com/Noibu/ai-plugin/blob/main/src/skills/st
 
 Always set **`rationale`** on each tool call.
 
+For Cursor Automations, this remains an atomic-tool workflow: cap the whole run at 48 Noibu data calls, retry an invalid query at most once, checkpoint `ops_execution_budget` after KPIs and issues, and stop with a partial report when `terminal_for_run=true`. Do not wait inside the run for a budget reset.
+
 See `references/opsphere-broker-tools.md` in this skill for JSON shapes under Opsphere `input`.

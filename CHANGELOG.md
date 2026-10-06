@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Document Cursor Automation workload identity, per-run and daily execution budgets, terminal budget denials, and bounded Noibu atomic-tool reporting. No Noibu macro is introduced.
+
 All notable changes to Opsphere will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).

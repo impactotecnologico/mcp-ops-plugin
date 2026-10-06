@@ -38,6 +38,16 @@ When the user wants an at-a-glance **last 24h** health read (same intent as Noib
 2. Use measure definitions from Noibu's [core-kpis](https://github.com/Noibu/ai-plugin/blob/main/src/skills/store-pulse/references/blocks/core-kpis.md) and [purchase-funnel](https://github.com/Noibu/ai-plugin/blob/main/src/skills/store-pulse/references/blocks/purchase-funnel.md) blocks inside `noibu_sessions_search`.
 3. Present a short prose summary (KPI row + funnel steps + one investigative follow-up). **Do not** call `show_widget`, `create_artifact`, `list_artifacts`, or schedule tools — they are not brokered.
 
+## Cursor Automation guardrails
+
+For a scheduled Cursor background run, use only the existing atomic `noibu_*` tools; there is no Opsphere Noibu macro in this release.
+
+1. Call `ops_execution_budget` once at the start, once after the KPI phase, and once after the issues phase when the tool is advertised. Do not poll it before every call.
+2. Use a fixed plan of at most 48 Noibu data calls for the complete run. Do not start a phase unless the reported remaining budget covers that phase's declared maximum.
+3. Retry an invalid Noibu query at most once after correcting its arguments from the bundled references. Do not rediscover schemas during the run.
+4. If any denial reports `terminal_for_run=true`, stop immediately and produce the best partial report from evidence already collected. Do not wait for reset or open a replacement session.
+5. Do not search repositories, memory, unrelated resources, or other tenants to complete the report.
+
 ## Opsphere vs official Noibu MCP
 
 | Official | Opsphere |

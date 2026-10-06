@@ -58,7 +58,7 @@ availability must stay unknown, not become zero or "not configured". When
 | External workspaces | Community: included Personal Workspace; additional links need upgrade. **Org invite:** same email + Developer+ may already show in `ops_accounts_list` — mention when user asks about a company invitation. |
 | Integrations | Count / list next actions (Connect AWS, Datadog, …) if zero |
 | Daily / monthly usage | From tool text |
-| Current investigation budget | From `ops_execution_budget`: calls, cost, macros, retries and reset; keep separate from daily/monthly usage |
+| Current execution budget | From `ops_execution_budget`: workload, per-run calls/cost/macros/retries, automation daily runs/calls/cost, and reset times; keep separate from subscription usage |
 
 ### Good example
 
