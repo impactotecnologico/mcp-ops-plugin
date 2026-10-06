@@ -2,7 +2,6 @@
 /.github/supply-chain-tools/node_modules/
 # Internal planning documents — never commit
 _internal/
-docs/PRE-PUBLISH-AUDIT.md
 
 # Source design files (Adobe Illustrator, GIMP, etc.)
 logos/
