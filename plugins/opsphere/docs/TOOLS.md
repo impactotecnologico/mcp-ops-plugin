@@ -823,6 +823,20 @@ Advanced Sentry issue search with sorting.
 
 ---
 
+### `sentry_sessions_by_release`
+Release Health: session counts and adoption % per `release` for a project (`statsPeriod` such as `1h` or `24h`). Not Discover/events.
+
+**Example**: _"What share of sessions are on release 25.0.7 in the last hour?"_
+
+---
+
+### `sentry_release_detail`
+Release metadata plus session share for one `version` in the chosen window.
+
+**Example**: _"Sentry release detail for 25.0.7 with 1h session stats"_
+
+---
+
 ## AWS
 
 Requires: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` (static IAM — **not** AWS SSO).
