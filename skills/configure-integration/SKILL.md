@@ -337,7 +337,7 @@ Existing workspaces may report `authentication_source: "legacy_provider_credenti
    })
    ```
 3. Call `ops_test_integration(provider: "sentry")` to verify.
-4. On success: "Sentry is connected! You can now use `sentry_issues_list` and `sentry_issues_search`."
+4. On success: "Sentry is connected! You can now use `sentry_issues_list`, `sentry_issues_search`, and `sentry_sessions_by_release` for release adoption."
 
 **Common issues**:
 - 401 → token is invalid or expired. Tokens in Sentry have optional expiry — check the token's settings.

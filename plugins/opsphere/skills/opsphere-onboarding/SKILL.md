@@ -39,7 +39,7 @@ proof that a provider or tool is active in the current workspace.
 Cloudflare workspaces may contain multiple accounts. Pass the zone/hostname/URL when available for on-demand account resolution, use `environment_slug` when only an environment is known, and use `account_slug` only for an explicit account choice. Ask for an account on `CLOUDFLARE_ACCOUNT_REQUIRED`; never equate an environment label with an account.
 | Issue tracking | Jira | `jira_issue_get`, `jira_issues_search` |
 | Knowledge base | Confluence | `confluence_search`, `confluence_page_read` |
-| Error tracking | Sentry | `sentry_issues_list`, `sentry_issues_search` |
+| Error tracking | Sentry | `sentry_issues_list`, `sentry_issues_search`, `sentry_sessions_by_release` |
 | Code quality | SonarQube (paid) | `sq_projects_search` → `sq_last_scan_summary` / `sq_quality_gate_status` + `sq_issues_search`; `sq_duplications_show` for duplication drill-down |
 | Search | Algolia (paid) | `alg_indices_list`, `alg_index_settings`, `alg_search`, `alg_object_get`, `alg_logs`; `alg_status` / `alg_incidents` are built-in (no credentials) |
 | Cloud | AWS | `aws_sts_whoami`, `aws_cli_query`, `aws_bedrock_agent_diagnose`, `aws_lambda_agent_diagnose`, `aws_cloudwatch_logs_search` (Bedrock Agents — paid `aws` module) |
