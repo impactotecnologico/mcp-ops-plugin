@@ -375,6 +375,8 @@ Users might say things like:
 - "Summarize GitHub repo acme/backend" — `ghe_repo_summary(repo=acme/backend)` on github.com (no `GHE_BASE_URL` needed)
 - "Why is SKU X missing from search?" — `alg_object_get` + `alg_search` when Algolia is configured; `alg_status` if suspecting upstream outage
 - "Configure my Algolia" — triggers the `configure-integration` skill (restricted API key, not Admin)
+- "How's the store doing?" / "Store Pulse" / Noibu conversion or checkout errors — skill **`noibu-analytics`** (OAuth in Admin → Noibu via `noibu_link_*`; not `ops_configure_integration`)
+- "List my Noibu domains" / "search Noibu sessions" — same skill; args under `input` + `rationale` per `skills/noibu-analytics/references/opsphere-broker-tools.md`
 - "Diagnose the failed GitHub Actions workflow" — paid: `/ci-investigator`; Community: `ghe_actions_latest` inline or upgrade
 - "Show my usage" — triggers `ops_my_usage`
 - "Which integrations do I have configured?" — triggers `ops_list_integrations`
