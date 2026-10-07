@@ -11,7 +11,7 @@ Use **Opsphere MCP** `noibu_*` tools on the remote gateway. Noibu is **not** con
 
 ## Before any data call
 
-1. Call `noibu_link_status`. Proceed only when `linked: true` and `scope: tenant`. If not linked, tell the user any tenant admin must connect in Admin (automations cannot complete browser OAuth reliably — do not loop on `noibu_link_start` from scheduled jobs).
+1. Call `noibu_link_status`. Proceed only when `linked: true` and `scope: tenant`. If `linked: false` or `expires_at` is soon/past, a tenant admin must reconnect in Admin — QA automations fail loudly when the link is stale (same-day token expiry is normal; refresh happens on data calls when possible).
 2. Confirm `noibu_domains_list` (or another `noibu_*` data tool) appears in `tools/list` — module `noibu` must be enabled for the workspace **profile** in use (Cursor automation → **cursor** profile; Admin Connect → **web** profile).
 3. Read **`references/querying-noibu-data-routing.md`** — same routing semantics as Noibu's [querying-noibu-data](https://github.com/Noibu/ai-plugin/blob/main/src/skills/querying-noibu-data/SKILL.md), with Opsphere tool names.
 4. Read **`references/opsphere-broker-tools.md`** — JSON under **`input`**, optional top-level **`rationale`** (forwarded upstream).
@@ -25,8 +25,8 @@ Field-level measure docs remain on Noibu's GitHub (`references/sessions.md`, `re
 | Conversion, revenue, AOV, traffic sources, cohorts, funnels (counts) | `querying-noibu-data` routing → usually `noibu_sessions_search` |
 | Per-page traffic, web vitals, scroll/clicks, landing/exit | `noibu_page_visits` |
 | **Store health**, "how's the store", daily snapshot, pulse | **`references/store-pulse-opsphere.md`** (text-first; no Cowork widgets) |
-| Errors / bugs / issues (explicit) | `noibu_issues_search`, `noibu_issue_get` — after domain UUID |
-| Domain / company scope | `noibu_domains_list`, `noibu_domain_get` (`input.name`), `noibu_company_get` |
+| Errors / bugs / issues (explicit) | `noibu_issues_search` with **`preset: checkout`** for payment/cart/checkout lists; `noibu_issue_get` for drill-down |
+| Domain / company scope | `noibu_domains_list`, `noibu_domain_get` — always `{ "input": { "name": "<hostname>" } }`, `noibu_company_get` |
 
 Lead with **analytics** unless the user explicitly asks about errors.
 

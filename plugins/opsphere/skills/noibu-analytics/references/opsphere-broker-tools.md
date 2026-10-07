@@ -16,7 +16,7 @@ Routing and field semantics match Noibu's open plugin skills — start with [que
 | `noibu_search_sessions` | `noibu_sessions_search` | `input.domainId` + nested `input.input.queryInput` |
 | `noibu_get_page_visits` | `noibu_page_visits` | same nesting as sessions |
 
-Everything upstream expects at the **top level** of the MCP call must be placed under Opsphere **`input`** (except `rationale`, which is a sibling field on the Opsphere tool).
+Everything upstream expects at the **top level** of the MCP call must be placed under Opsphere **`input`**. Siblings on the Opsphere tool: **`rationale`** and **`preset`** (`checkout` on `noibu_issues_search` only).
 
 ## Domain resolution
 
@@ -51,18 +51,52 @@ Everything upstream expects at the **top level** of the MCP call must be placed 
 }
 ```
 
-### Issue search
+### Issue search — checkout preset (recommended)
 
 ```json
 {
-  "rationale": "User asked for recent checkout errors on production storefront.",
+  "rationale": "Top checkout issues last 7 days on production storefront.",
+  "preset": "checkout",
   "input": {
     "issuesSearch": {
       "domainId": "<uuid-from-domains-list>",
-      "issueConditions": { "conditions": [], "conditionMatch": "ALL" },
       "days": "LAST7_DAYS",
-      "pagination": { "limit": 5, "pageDir": "NEXT_PAGE" },
-      "sort": [{ "field": "LAST_SEEN_AT", "direction": "DESCENDING" }]
+      "pagination": { "limit": 15, "pageDir": "NEXT_PAGE" }
+    }
+  }
+}
+```
+
+### Top pages (`noibu_page_visits`)
+
+Use `groupBy.fieldSegments` with field **`URL`** (not `PAGE_URL`).
+
+```json
+{
+  "rationale": "Top storefront URLs by visit count last 24h.",
+  "input": {
+    "domainId": "<uuid>",
+    "input": {
+      "periodOptions": {
+        "dateTimeRange": {
+          "startTime": "2026-10-04T00:00:00Z",
+          "endTime": "2026-10-05T00:00:00Z"
+        }
+      },
+      "queryInput": {
+        "measures": [
+          {
+            "aggregate": {
+              "measureAlias": "visits",
+              "measureFunc": "COUNT",
+              "target": { "field": "PAGE_VISIT_ID" }
+            }
+          }
+        ],
+        "groupBy": { "fieldSegments": [{ "field": "URL" }] },
+        "orderBy": { "measureAlias": "visits", "direction": "DESCENDING" },
+        "limit": 15
+      }
     }
   }
 }
