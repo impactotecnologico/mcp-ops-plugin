@@ -15,7 +15,7 @@ Use **Opsphere MCP** `noibu_*` tools on the remote gateway. Noibu is **not** con
 2. Confirm `noibu_domains_list` (or another `noibu_*` data tool) appears in `tools/list` — module `noibu` must be enabled for the workspace **profile** in use (Cursor automation → **cursor** profile; Admin Connect → **web** profile).
 3. Read **`references/querying-noibu-data-routing.md`** — same routing semantics as Noibu's [querying-noibu-data](https://github.com/Noibu/ai-plugin/blob/main/src/skills/querying-noibu-data/SKILL.md), with Opsphere tool names.
 4. Read **`references/opsphere-broker-tools.md`** — JSON under **`input`**, optional top-level **`rationale`** and **`preset: checkout`** on `noibu_issues_search`.
-5. For **weekly checkout Slack jobs**, read **`references/weekly-checkout-health-automation.md`** and **`references/noibu-console-links-automation.md`** (`noibuConsoleLinks`, `issueUrl` in reports).
+5. For **weekly checkout Slack jobs**, the full run prompt is **not** in this repo — maintain it in Cursor Automation. Public contract: **`references/weekly-checkout-health-automation.md`** and **`references/noibu-console-links-automation.md`** (`noibuConsoleLinks`, `issueUrl` in Slack).
 
 Field-level measure docs remain on Noibu's GitHub (`references/sessions.md`, `references/page-visits.md`, `references/errors.md`, … under [ai-plugin](https://github.com/Noibu/ai-plugin/tree/main/src/skills/querying-noibu-data/references)).
 

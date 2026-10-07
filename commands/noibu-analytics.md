@@ -11,7 +11,7 @@ Follow skill **[`skills/noibu-analytics/SKILL.md`](../skills/noibu-analytics/SKI
 
 1. Call `noibu_link_status`. If `linked` is false, direct the user to **Admin → Integrations → Noibu** (tenant-wide OAuth; not `ops_configure_integration`). Scheduled automations should fail fast with that message — do not rely on `noibu_link_start` without a human browser.
 2. Load **`skills/noibu-analytics/references/querying-noibu-data-routing.md`** and **`opsphere-broker-tools.md`** (shapes, `preset: checkout`, page visits `groupBy` → field `URL`).
-3. For checkout issue lists use **`preset: checkout`** on `noibu_issues_search`; for Slack/weekly jobs also read **`weekly-checkout-health-automation.md`** and **`noibu-console-links-automation.md`**.
+3. For checkout issue lists use **`preset: checkout`** on `noibu_issues_search`; for Slack/weekly jobs follow **`weekly-checkout-health-automation.md`** and **`noibu-console-links-automation.md`** (full automation prompt stays in Cursor, not the public repo).
 4. Always pass **`rationale`**; nest upstream args under **`input`**.
 
 ## Related

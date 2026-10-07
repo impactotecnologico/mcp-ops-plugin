@@ -11,9 +11,14 @@ Routing and field semantics match Noibu's open plugin skills — start with [que
 | `noibu_list_domains` | `noibu_domains_list` | `input.pagination` required |
 | `noibu_get_domain` | `noibu_domain_get` | Always `input: { "name": "<hostname>" }` (not top-level `name`) |
 | `noibu_search_errors` | `noibu_issues_search` | `input.issuesSearch`; optional top-level `preset: checkout` |
+| `noibu_list_priority_errors` | `noibu_priority_errors_list` | `input.domainId` |
 | `noibu_get_company` | `noibu_company_get` | `input.name` required (company name) |
 | `noibu_get_error` | `noibu_issue_get` | `input.domainId`, `humanId`, `days` |
+| `noibu_get_error_diagnosis` | `noibu_error_diagnosis_get` | `input.errorIds` (UUIDs) |
+| `noibu_get_error_trends` | `noibu_error_trends_get` | `input.domainId`, `input.issueId` |
+| `noibu_get_issue_top_session_highlights` | `noibu_issue_session_highlights_get` | `input.domainId`, `input.issueId` |
 | `noibu_search_sessions` | `noibu_sessions_search` | `input.domainId` + nested `input.input.queryInput` |
+| `noibu_session_lookup` | `noibu_sessions_lookup` | `input.domainId` |
 | `noibu_get_page_visits` | `noibu_page_visits` | same nesting as sessions |
 
 Everything upstream expects at the **top level** of the MCP call must be placed under Opsphere **`input`**. Siblings on the Opsphere tool: **`rationale`** and **`preset`** (`checkout` on `noibu_issues_search` only).

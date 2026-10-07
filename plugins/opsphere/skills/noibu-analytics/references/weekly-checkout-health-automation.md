@@ -1,42 +1,36 @@
-# Weekly checkout health — automation prompt (canonical)
+# Weekly checkout health — automation contract (public)
 
-Breitling **www.breitling.com** weekly job. Base playbook lives in Cursor Automation; **this file tracks Opsphere/Noibu contract changes** so you can diff before deploy.
+Opsphere/Noibu **contract** for scheduled **checkout health** jobs (KPIs, funnel, checkout issues, optional correlation, Slack digest). The **full run prompt** (phases, caps, probes, channel IDs) lives in **Cursor Automation only** — not in this repository.
 
-Unchanged sections (Phases 0–3, 5, 7, anti-patterns except noted) match the production prompt as of 2026-10-07. Below: **insertions and replacements** only.
-
-See also: [noibu-console-links-automation.md](./noibu-console-links-automation.md).
+When updating an in-product automation after a gateway release, apply the deltas below to your private prompt. Related: [noibu-console-links-automation.md](./noibu-console-links-automation.md), [opsphere-broker-tools.md](./opsphere-broker-tools.md).
 
 ---
 
-## INSERT — after “API shapes (future-proof)” discovery list item 4
-
-### Noibu console links (broker)
+## Noibu console links (broker)
 
 On **`noibu_domain_get`**, **`noibu_issues_search`**, and **`noibu_issue_get`**, read `structuredContent.data.noibuConsoleLinks` when present:
 
 | Field | Use |
 |-------|-----|
-| `issuesListUrl` | Domain Issues tab in Noibu (`https://console.noibu.com/{domainId}/issues`) — section 1 + optional Slack footer |
+| `issuesListUrl` | Domain Issues tab (`https://console.noibu.com/{domainId}/issues`) — report header + optional Slack |
 | `issues[]` | `{ humanId, title?, issueUrl }` for table + Slack bullets |
-| `issueUrl` on issue rows | Same URL; **copy verbatim** — never construct issue deep links |
+| `issueUrl` on issue rows | **Copy verbatim** — never construct issue deep links |
 
-Slack mrkdwn when `issueUrl` is set: `<issueUrl|#humanId · short title>`.
+**Slack mrkdwn** when `issueUrl` is set: `<issueUrl|#humanId · short title>`.
 
-Run-log markdown: `[#humanId · title](issueUrl)` or full URL in the link column.
-
----
-
-## REPLACE — Phase 1 step 2
-
-2. **`noibu_domain_get`** — `input.name` = `STOREFRONT_HOST`. Store `domainId` (UUID) and, if present, `noibuConsoleLinks.issuesListUrl` for section 1 and Slack.
+**Run log markdown:** `[#humanId · title](issueUrl)` or full URL in the **Noibu link** column.
 
 ---
 
-## REPLACE — Phase 4 (entire section)
+## Phase 1 — `noibu_domain_get`
 
-## Phase 4 — Checkout issues (1 call)
+Always `{ "input": { "name": "<hostname>" } }`. Store `domainId` and, if present, **`noibuConsoleLinks.issuesListUrl`**.
 
-**`noibu_issues_search`** with top-level **`preset: "checkout"`** (avoids ad/analytics noise from `LAST_SEEN_AT`):
+---
+
+## Phase 4 — `noibu_issues_search`
+
+Use top-level **`preset: "checkout"`** (do not rely on `LAST_SEEN_AT` alone for checkout health):
 
 ```json
 {
@@ -52,35 +46,34 @@ Run-log markdown: `[#humanId · title](issueUrl)` or full URL in the link column
 }
 ```
 
-Parse structured JSON (`structuredContent.data`). Use **`noibuConsoleLinks.issues`** for links when row-level `issueUrl` is missing. **Do not** grep local artifact files unless the tool reports truncation.
-
-**Issue selection:** Top ≤5 from this response only (same rules as before: checkout/payment themes, exclude ad noise, no padding).
-
-**Table columns:** `humanId`, short title, theme, `revLost90d`, key `topUrls` or signal, `lastSeenAt`, **Noibu link** (`issueUrl` or `noibuConsoleLinks.issues[].issueUrl` — full URL, not the word “Console”).
-
-**`noibu_issue_get`:** only if `ISSUE_DETAIL_MAX` > 0; use returned `issueUrl` / `noibuConsoleLinks` in the run log if you drill down.
+Parse structured JSON; use **`noibuConsoleLinks.issues`** when row-level `issueUrl` is missing. Issues table: include **Noibu link** column from upstream URLs.
 
 ---
 
-## REPLACE — Report section 1 bullet list (add one line)
+## Phase 6 — Slack (issues block)
 
-After domain UUID: **Noibu issues list:** `issuesListUrl` from Phase 1 `noibu_domain_get` (or Phase 4 `noibuConsoleLinks`).
-
----
-
-## REPLACE — Phase 6 Slack template block “Checkout issues”
-
-```
-*Checkout issues (top ≤5)* · totalMatched=<n>
-<Optional one line: <issuesListUrl|View all issues in Noibu> when URL known from Phase 1 or Phase 4>
-• <issueUrl|#<humanId> · <theme> · <short title>> · revLost90d=<n> · <one URL or signal>
-(repeat only rows from section 5; use plain text bullet if issueUrl missing — do not invent a link)
-```
+- Optional: `<issuesListUrl|View all issues in Noibu>` when known from Phase 1 or Phase 4.
+- Per issue: `<issueUrl|#<humanId> · <theme> · <short title>>` — same rows as the run-log issues table; plain text if `issueUrl` absent (do not invent links).
 
 ---
 
-## INSERT — Anti-patterns (add bullets)
+## Other broker notes
 
-- Hand-building `console.noibu.com` issue URLs instead of using `issueUrl` / `noibuConsoleLinks`
-- Slack issue bullets without `issueUrl` when the structured response included one for that `humanId`
-- Phase 4 `noibu_issues_search` **without** `preset: checkout` when the goal is checkout health (unless explicitly testing manual filters)
+| Topic | Rule |
+|-------|------|
+| `noibu_page_visits` (if used) | `groupBy.fieldSegments: [{ "field": "URL" }]` — not `PAGE_URL` |
+| OAuth | `noibu_link_status` only in automation — no `noibu_link_start` |
+
+---
+
+## Anti-patterns
+
+- Fabricated `console.noibu.com` issue URLs
+- `noibu_issues_search` **without** `preset: checkout` for checkout-health weekly jobs
+- Slack bullets with invented links when `issueUrl` was returned for that `humanId`
+
+---
+
+## Changelog
+
+**2026-10-07** — `noibuConsoleLinks`, `preset: checkout`, Slack mrkdwn issue links; full prompt removed from public plugin repo (maintained in Cursor Automation).
