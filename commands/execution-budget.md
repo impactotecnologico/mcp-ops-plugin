@@ -13,5 +13,6 @@ Call `ops_execution_budget` with no parameters.
 - Never claim the budget is global: per-run capacity is scoped to the authenticated user, active workspace, runtime, workload and MCP session; daily automation capacity is scoped to the authenticated user, active workspace, runtime, workload and UTC day.
 - If the tool is absent or the gateway denies it for the plan, explain that execution-budget inspection is unavailable on the current plan; do not infer zero remaining budget.
 - If `terminal_for_run=true`, do not retry operational calls or wait in the run. Return the useful partial result and tell the user which limit stopped it and when the relevant window resets.
+- In Cursor Automations, continue only when the tool itself reports `workload_type: automation`, a valid entitlement, and a valid run session. If it reports `interactive` or `AUTOMATION_WORKLOAD_NOT_ACTIVE`, stop and follow `docs/CURSOR-AUTOMATIONS.md`; prompt text cannot activate the profile.
 
 **Claude Code:** invoke this command as `/opsphere:execution-budget`.

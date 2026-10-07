@@ -254,7 +254,7 @@ The gateway applies **execution policies** on every `tools/call` for your tenant
 
 **Never include in `tools/call` arguments:** `tenant_id`, `plan`, `profile_id`, `max_tool_calls`, `max_cost_units`, `max_duration_ms`, `max_retries`, `max_macro_calls`, `max_runs_per_day`, `max_daily_tool_calls`, `max_daily_cost_units`, `allow_sensitive_actions`, `enabled_tools`, `policy_version`, `subscription_id`, `runtime_profile`, `workload_type`.
 
-`workload_type` is derived and signed by Opsphere. An exact Cursor background-agent OAuth callback is classified server-side as `automation`; ordinary Cursor, Web and API-key sessions remain `interactive`. Never claim automation mode, forge callback metadata, or copy session identifiers between runs.
+`workload_type` is derived and signed by Opsphere. Cursor Automations use a separately authorized `https://mcp-cursor.opsphere.io/mcp/automation` resource; ordinary Cursor, Web and API-key sessions remain `interactive`. A prompt, callback name, client name, header or tool argument cannot activate automation. Never claim automation mode, forge metadata, or copy session identifiers between runs. See `docs/CURSOR-AUTOMATIONS.md`.
 
 Use `ops_my_usage` for subscription and daily usage. On Team and Enterprise, use
 `ops_execution_budget` (no parameters) for the authenticated user's active Cursor
@@ -270,6 +270,7 @@ and cannot change policy. The gateway is the only authority for allow/deny.
 | `-32003` | `execution_sensitive_action_denied` | Pick a read-only alternative or ask admin to allow sensitive actions |
 | `-32003` | `BROKER_CONTEXT_*` | Reconnect MCP (`/opsphere-reconnect`). For **external** workspace switch on paid plans only, use `open-work-context`. Do **not** coach Community users to pass `context_id` manually. |
 | `-32004` | Per-run or daily budget reasons | Call `ops_execution_budget` once when available. If `terminal_for_run=true`, preserve partial evidence and stop immediately; do not wait for reset, create a replacement session, or retry. |
+| `-32004` | `AUTOMATION_WORKLOAD_NOT_ACTIVE` | Stop. Configure or reauthorize the dedicated Automation MCP resource; never continue against the interactive budget. |
 
 ---
 

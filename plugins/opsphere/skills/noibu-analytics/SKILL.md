@@ -42,7 +42,7 @@ When the user wants an at-a-glance **last 24h** health read (same intent as Noib
 
 For a scheduled Cursor background run, use only the existing atomic `noibu_*` tools; there is no Opsphere Noibu macro in this release.
 
-1. Call `ops_execution_budget` once at the start, once after the KPI phase, and once after the issues phase when the tool is advertised. Do not poll it before every call.
+1. Call `ops_execution_budget` once at the start, once after the KPI phase, and once after the issues phase when the tool is advertised. At the start, require the authoritative response to report `workload_type: automation`, `classification.entitlement_valid: true`, and `classification.run_session_valid: true`; otherwise stop and report incorrect Automation MCP configuration. Do not poll it before every call.
 2. Use a fixed plan of at most 48 Noibu data calls for the complete run. Do not start a phase unless the reported remaining budget covers that phase's declared maximum.
 3. Retry an invalid Noibu query at most once after correcting its arguments from the bundled references. Do not rediscover schemas during the run.
 4. If any denial reports `terminal_for_run=true`, stop immediately and produce the best partial report from evidence already collected. Do not wait for reset or open a replacement session.
