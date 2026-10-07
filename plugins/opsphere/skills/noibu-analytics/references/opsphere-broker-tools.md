@@ -9,9 +9,9 @@ Routing and field semantics match Noibu's open plugin skills — start with [que
 | Official tool | Opsphere tool | Notes |
 |---------------|---------------|--------|
 | `noibu_list_domains` | `noibu_domains_list` | `input.pagination` required |
-| `noibu_get_domain` | `noibu_domain_get` | `input.name` required (hostname) |
+| `noibu_get_domain` | `noibu_domain_get` | Always `input: { "name": "<hostname>" }` (not top-level `name`) |
+| `noibu_search_errors` | `noibu_issues_search` | `input.issuesSearch`; optional top-level `preset: checkout` |
 | `noibu_get_company` | `noibu_company_get` | `input.name` required (company name) |
-| `noibu_search_errors` | `noibu_issues_search` | `input.issuesSearch` object |
 | `noibu_get_error` | `noibu_issue_get` | `input.domainId`, `humanId`, `days` |
 | `noibu_search_sessions` | `noibu_sessions_search` | `input.domainId` + nested `input.input.queryInput` |
 | `noibu_get_page_visits` | `noibu_page_visits` | same nesting as sessions |
@@ -36,6 +36,8 @@ Everything upstream expects at the **top level** of the MCP call must be placed 
 ```
 
 ### Domain / company lookup
+
+Wrap the hostname under **`input.name`** on the Opsphere tool (not a sibling `name` field).
 
 ```json
 {
@@ -136,6 +138,20 @@ Use `noibu_sessions_search` with measures from [core-kpis.md](https://github.com
   }
 }
 ```
+
+## Noibu console links (`noibuConsoleLinks`)
+
+On **`noibu_domain_get`**, **`noibu_issues_search`**, and **`noibu_issue_get`**, read `structuredContent.data.noibuConsoleLinks` when present:
+
+| Field | Use |
+|-------|-----|
+| `issuesListUrl` | Domain **Issues** tab in Noibu |
+| `issues[]` | `{ humanId, title?, issueUrl }` — copy **`issueUrl` verbatim** |
+| `issueUrl` on rows | Same; never hand-build issue deep links |
+
+Details: **`references/noibu-console-links-automation.md`**. Policy: [Noibu console-urls.md](https://github.com/Noibu/ai-plugin/blob/main/src/skills/querying-noibu-data/references/console-urls.md).
+
+Gateway `content[].text` may include markdown or Slack `<url|label>` links when URLs exist (after gateway deploy with console-link enrichment).
 
 ## Not brokered (official MCP only)
 

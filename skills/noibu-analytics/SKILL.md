@@ -14,7 +14,8 @@ Use **Opsphere MCP** `noibu_*` tools on the remote gateway. Noibu is **not** con
 1. Call `noibu_link_status`. Proceed only when `linked: true` and `scope: tenant`. If `linked: false` or `expires_at` is soon/past, a tenant admin must reconnect in Admin — QA automations fail loudly when the link is stale (same-day token expiry is normal; refresh happens on data calls when possible).
 2. Confirm `noibu_domains_list` (or another `noibu_*` data tool) appears in `tools/list` — module `noibu` must be enabled for the workspace **profile** in use (Cursor automation → **cursor** profile; Admin Connect → **web** profile).
 3. Read **`references/querying-noibu-data-routing.md`** — same routing semantics as Noibu's [querying-noibu-data](https://github.com/Noibu/ai-plugin/blob/main/src/skills/querying-noibu-data/SKILL.md), with Opsphere tool names.
-4. Read **`references/opsphere-broker-tools.md`** — JSON under **`input`**, optional top-level **`rationale`** (forwarded upstream).
+4. Read **`references/opsphere-broker-tools.md`** — JSON under **`input`**, optional top-level **`rationale`** and **`preset: checkout`** on `noibu_issues_search`.
+5. For **weekly checkout Slack jobs**, read **`references/weekly-checkout-health-automation.md`** and **`references/noibu-console-links-automation.md`** (`noibuConsoleLinks`, `issueUrl` in reports).
 
 Field-level measure docs remain on Noibu's GitHub (`references/sessions.md`, `references/page-visits.md`, `references/errors.md`, … under [ai-plugin](https://github.com/Noibu/ai-plugin/tree/main/src/skills/querying-noibu-data/references)).
 
@@ -60,7 +61,11 @@ For a scheduled Cursor background run, use only the existing atomic `noibu_*` to
 | `noibu_search_sessions` | `noibu_sessions_search` |
 | `noibu_get_page_visits` | `noibu_page_visits` |
 
-Upstream arguments belong under **`input`**. **`rationale`** is a sibling field on the Opsphere tool call — always set it.
+Upstream arguments belong under **`input`**. Siblings on the Opsphere tool: **`rationale`** (always) and **`preset: checkout`** on `noibu_issues_search` when the user wants checkout/payment issue lists.
+
+## Console links in reports
+
+After **`noibu_domain_get`**, **`noibu_issues_search`**, or **`noibu_issue_get`**, use `structuredContent.data.noibuConsoleLinks` and row-level **`issueUrl`** when present. See **`references/noibu-console-links-automation.md`**. Do not fabricate `console.noibu.com` issue paths.
 
 ## Out of scope (Opsphere allowlist)
 
@@ -71,3 +76,4 @@ Writes, AB tests, replays, platform logs, visualizations (`noibu_visualize_page_
 - State domain name and UUID used, time window (UTC), and sibling-domain checks when conversion looked zero.
 - Separate live tool results from inference.
 - If tools return GraphQL or validation errors, quote the gateway message; fix args using `references/opsphere-broker-tools.md` before retrying.
+- For issues in Slack or markdown reports, link with upstream **`issueUrl`** or **`noibuConsoleLinks`** — never fabricate console issue paths.

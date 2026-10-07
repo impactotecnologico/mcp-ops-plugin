@@ -12,13 +12,13 @@ Adapted from Noibu [querying-noibu-data](https://github.com/Noibu/ai-plugin/blob
 | `noibu_search_errors` | `noibu_issues_search` |
 | `noibu_get_error` | `noibu_issue_get` |
 
-Place upstream args under **`input`**. Set top-level **`rationale`** on every call.
+Place upstream args under **`input`**. Siblings on the Opsphere tool: **`rationale`** (always) and **`preset: checkout`** on `noibu_issues_search` when listing checkout/payment/cart issues (avoids ad/analytics noise from `LAST_SEEN_AT` alone).
 
 ## Canonical entrypoints (order)
 
 1. **`noibu_domain_get`** — resolve hostname → UUID (`input.name`). Skip if user gave UUID. Fallback: **`noibu_domains_list`**.
 2. **`noibu_sessions_search`** — session-level aggregates (CVR, revenue, sources, products). Requires **`orderBy`** inside `queryInput`.
-3. **`noibu_page_visits`** — page-level aggregates, web vitals, per-URL behaviour. Requires **`orderBy`**.
+3. **`noibu_page_visits`** — page-level aggregates, web vitals, per-URL behaviour. Requires **`orderBy`**. Top URLs: `groupBy.fieldSegments` with field **`URL`** (not `PAGE_URL`).
 
 ## Top-level routing
 
@@ -26,7 +26,7 @@ Place upstream args under **`input`**. Set top-level **`rationale`** on every ca
 - Traffic source / channel — usually sessions (`UTM_SOURCE`, `UTM_MEDIUM`). If UTM empty for paid, use **`noibu_page_visits`** + `REFERRING_URL CONTAINS "gclid"` (see official **Recovering URL parameters**).
 - Slow/broken pages, LCP/CLS/INP, per-URL traffic → **`noibu_page_visits`** ([page-visits.md](https://github.com/Noibu/ai-plugin/blob/main/src/skills/querying-noibu-data/references/page-visits.md)).
 - Store health / "how's my store" / pulse → skill **`store-pulse-opsphere.md`** (not error tools first).
-- Errors / bugs — **only when explicit** → **`noibu_issues_search`** / **`noibu_issue_get`** ([errors.md](https://github.com/Noibu/ai-plugin/blob/main/src/skills/querying-noibu-data/references/errors.md)).
+- Errors / bugs — **only when explicit** → **`noibu_issues_search`** (`preset: checkout` for storefront checkout lists) / **`noibu_issue_get`** ([errors.md](https://github.com/Noibu/ai-plugin/blob/main/src/skills/querying-noibu-data/references/errors.md)). Use **`issueUrl`** / **`noibuConsoleLinks`** in reports — see **`noibu-console-links-automation.md`**.
 
 **Not brokered on Opsphere:** `noibu_visualize_page_visits`, AB tests, releases, journeys/replay, `noibu_send_feedback`, funnel chart renderer — official MCP only.
 
