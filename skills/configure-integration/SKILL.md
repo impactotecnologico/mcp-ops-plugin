@@ -388,7 +388,7 @@ Existing workspaces may report `authentication_source: "legacy_provider_credenti
 | Auth type | Who configures | How agents verify |
 |-----------|----------------|-------------------|
 | `iam_static` | Tenant admin in **Cloud Catalog** (access key + secret on the account) | `ops_test_integration(provider: "aws", profile: "<aws_profile>")` |
-| IAM Identity Center (SSO) | Tenant admin in **Cloud Catalog** (SSO URL, region, profile — e.g. Breitling, Moeve) | `aws_sso_login_device_start` + poll, then `ops_test_integration(..., profile: ...)` |
+| IAM Identity Center (SSO) | Tenant admin in **Cloud Catalog** (SSO URL, region, profile — e.g. `acme-prod`, `acme-nonprod`) | `aws_sso_login_device_start` + poll, then `ops_test_integration(..., profile: ...)` |
 
 **When the user wants AWS access**:
 

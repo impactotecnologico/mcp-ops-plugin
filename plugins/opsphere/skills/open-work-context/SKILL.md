@@ -36,8 +36,8 @@ If the user **just accepted an invitation** to an organization workspace:
 3. Do **not** run after Community signup, returning login, or when only Personal Workspace exists.
 
 A resource lookup is not an implicit switch request. For example, asking for a
-Moeve Jira ticket while Breitling is active means: explain the likely workspace
-mismatch and ask whether to switch to Moeve. Do not call `ops_context_open` until
+Jira ticket in workspace **Acme** while workspace **Beta Corp** is active means: explain the likely workspace
+mismatch and ask whether to switch to Acme. Do not call `ops_context_open` until
 the user explicitly confirms the named target.
 
 ## When NOT to run

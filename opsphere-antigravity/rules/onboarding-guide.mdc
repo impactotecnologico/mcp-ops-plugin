@@ -190,7 +190,7 @@ AWS credentials live in **Cloud Catalog** (admin). **`ops_configure_integration(
 
 1. **Do not** collect AWS access keys in chat or call `ops_configure_integration` for AWS.
 2. Use the catalog **`profile`** on `aws_sts_whoami`, `aws_cli_query`, and `ops_test_integration(provider: "aws", profile: "...")`.
-3. For **SSO accounts** (e.g. Breitling, Moeve): run gateway SSO login (`aws_sso_login_device_*`) when there is no active session; local `aws sso login` on the user's laptop does not apply.
+3. For **SSO accounts** (profile names from Cloud Catalog, e.g. `acme-prod`): run gateway SSO login (`aws_sso_login_device_*`) when there is no active session; local `aws sso login` on the user's laptop does not apply.
 4. For **`iam_static`**: keys are stored in Cloud Catalog; verify with `ops_test_integration` + `aws_sts_whoami` for that profile.
 5. **Region**: use catalog default or pass region in the CLI command / tool parameter when the user specifies one.
 6. Before operational AWS work, run the verification checklist with the resolved **profile** (test integration, `aws_sts_whoami`, optional `sts get-caller-identity` via `aws_cli_query`).
@@ -252,7 +252,9 @@ If the gateway returns error code `RATE_LIMIT_EXCEEDED`:
 
 The gateway applies **execution policies** on every `tools/call` for your tenant and runtime (`cursor` for this plugin). Limits come from PostgreSQL — **never** send policy fields in tool arguments.
 
-**Never include in `tools/call` arguments:** `tenant_id`, `plan`, `profile_id`, `max_tool_calls`, `max_cost_units`, `max_duration_ms`, `max_retries`, `max_macro_calls`, `allow_sensitive_actions`, `enabled_tools`, `policy_version`, `subscription_id`, `runtime_profile`.
+**Never include in `tools/call` arguments:** `tenant_id`, `plan`, `profile_id`, `max_tool_calls`, `max_cost_units`, `max_duration_ms`, `max_retries`, `max_macro_calls`, `max_runs_per_day`, `max_daily_tool_calls`, `max_daily_cost_units`, `allow_sensitive_actions`, `enabled_tools`, `policy_version`, `subscription_id`, `runtime_profile`, `workload_type`.
+
+`workload_type` is derived and signed by Opsphere. Cursor Automations use a separately authorized `https://mcp-cursor.opsphere.io/mcp/automation` resource; ordinary Cursor, Web and API-key sessions remain `interactive`. A prompt, callback name, client name, header or tool argument cannot activate automation. Never claim automation mode, forge metadata, or copy session identifiers between runs. See `docs/CURSOR-AUTOMATIONS.md`.
 
 Use `ops_my_usage` for subscription and daily usage. On Team and Enterprise, use
 `ops_execution_budget` (no parameters) for the authenticated user's active Cursor
@@ -267,7 +269,8 @@ and cannot change policy. The gateway is the only authority for allow/deny.
 | `-32003` | `execution_module_not_enabled` | Tool/module not on plan — suggest `ops_my_usage` or upgrade |
 | `-32003` | `execution_sensitive_action_denied` | Pick a read-only alternative or ask admin to allow sensitive actions |
 | `-32003` | `BROKER_CONTEXT_*` | Reconnect MCP (`/opsphere-reconnect`). For **external** workspace switch on paid plans only, use `open-work-context`. Do **not** coach Community users to pass `context_id` manually. |
-| `-32004` | `max_tool_calls`, `max_cost_units`, `max_macro_calls`, `max_retries` | Budget exhausted — call `ops_execution_budget` once when available, report its reset time, then stop; do not spam retries |
+| `-32004` | Per-run or daily budget reasons | Call `ops_execution_budget` once when available. If `terminal_for_run=true`, preserve partial evidence and stop immediately; do not wait for reset, create a replacement session, or retry. |
+| `-32004` | `AUTOMATION_WORKLOAD_NOT_ACTIVE` | Stop. Configure or reauthorize the dedicated Automation MCP resource; never continue against the interactive budget. |
 
 ---
 
@@ -375,6 +378,8 @@ Users might say things like:
 - "Summarize GitHub repo acme/backend" — `ghe_repo_summary(repo=acme/backend)` on github.com (no `GHE_BASE_URL` needed)
 - "Why is SKU X missing from search?" — `alg_object_get` + `alg_search` when Algolia is configured; `alg_status` if suspecting upstream outage
 - "Configure my Algolia" — triggers the `configure-integration` skill (restricted API key, not Admin)
+- "How's the store doing?" / "Store Pulse" / Noibu conversion or checkout errors — skill **`noibu-analytics`** (OAuth in Admin → Noibu via `noibu_link_*`; not `ops_configure_integration`)
+- "List my Noibu domains" / "search Noibu sessions" — same skill; args under `input` + `rationale`; checkout issues → `preset: checkout` on `noibu_issues_search`; links → `noibuConsoleLinks` / `issueUrl` per `skills/noibu-analytics/references/opsphere-broker-tools.md`
 - "Diagnose the failed GitHub Actions workflow" — paid: `/ci-investigator`; Community: `ghe_actions_latest` inline or upgrade
 - "Show my usage" — triggers `ops_my_usage`
 - "Which integrations do I have configured?" — triggers `ops_list_integrations`

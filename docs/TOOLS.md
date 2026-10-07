@@ -684,7 +684,7 @@ List Logpush jobs for a zone (Datadog, Scrunch, S3 destinations).
 
 **Parameters:** `zone` (required).
 
-**Example**: _"Show Logpush jobs for breitling.com"_
+**Example**: _"Show Logpush jobs for example.com"_
 
 ---
 
@@ -693,7 +693,7 @@ List Snippets deployed on a zone.
 
 **Parameters:** `zone` (required).
 
-**Example**: _"List Cloudflare snippets on www-storefront.breitling.com"_
+**Example**: _"List Cloudflare snippets on www-storefront.example.com"_
 
 ---
 
@@ -711,9 +711,9 @@ List account Load Balancers (name, hostname, enabled, pool ids). Optional zone f
 
 **Parameters:** `accountId?`, `zoneOrId?`, `zone?`, `search?`, `page?`, `per_page?`.
 
-**Permission:** Account Load Balancers Read (configured on Breitling token).
+**Permission:** Account Load Balancers Read (on the configured Cloudflare API token).
 
-**Example**: _"List Cloudflare load balancers for breitling.com"_
+**Example**: _"List Cloudflare load balancers for example.com"_
 
 ---
 
@@ -758,7 +758,7 @@ Get zone settings (all settings or one by `settingId` like `ssl`, `security_leve
 
 **Parameters:** `zone` (required), `settingId?`.
 
-**Example**: _"What is the SSL mode for breitling.com?"_
+**Example**: _"What is the SSL mode for example.com?"_
 
 ---
 

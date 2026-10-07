@@ -73,7 +73,7 @@ After filter-repo: force-push coordination, re-clone for all contributors, re-ru
 
 | Decision | Status |
 |----------|--------|
-| filter-repo required? | **No** — HEAD clean; historical `breitling` only in old commits; no real secrets in history |
+| filter-repo required? | **No** — HEAD clean; historical client tenant names may exist in old commits only; no real secrets in history |
 
 ---
 
@@ -144,7 +144,7 @@ Copy-paste block for OpenAI submission — same substance as [SECURITY-AND-TRUST
 
 | Item | Status |
 |------|--------|
-| Dedicated Community tenant (`demo-c3c991`) | ✅ `demo@opsphere.io` — `POST /api/plugin/login` → 200, tenant `demo-c3c991`, plan `public_free` (2026-07-20) |
+| Dedicated Community demo tenant | ✅ Public demo login verified (`demo@opsphere.io`, plan `public_free`, 2026-07-20); tenant slug kept in internal runbook only |
 | Read-only integrations (sandbox Datadog or none) | ✅ None configured (Community defaults) |
 | Credentials for OpenAI reviewers | ✅ In [CODEX-TEST-CASES.md](CODEX-TEST-CASES.md) §5 (public demo password) |
 | Documented in [CODEX-TEST-CASES.md](CODEX-TEST-CASES.md) § Prerequisites | ✅ |
@@ -166,10 +166,10 @@ Complete before clicking **Submit** on OpenAI directory:
 - [x] `CHANGELOG.md` updated for 1.0.2
 - [ ] Git tag + GitHub Release on `main` after merge (see § release freeze)
 
-| Role | Name | Date | Approved |
-|------|------|------|----------|
-| Engineering | Jose Ariza | 2026-07-20 | ✅ (docs + demo + Gitleaks root cause) |
-| Legal / privacy | Jose Ariza | 2026-07-20 | ✅ (docs + website aligned; optional Codex/no-training line on site) |
+| Role | Date | Approved |
+|------|------|----------|
+| Engineering | 2026-07-20 | ✅ (docs + demo + Gitleaks root cause) |
+| Legal / privacy | 2026-07-20 | ✅ (docs + website aligned; optional Codex/no-training line on site) |
 
 ---
 

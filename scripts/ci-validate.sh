@@ -588,5 +588,30 @@ else
   red "phase6 UX content invariants failed"
 fi
 
+# Client tenant / customer literals must not appear in the public bundle (patterns embedded here — no separate list file)
+CLIENT_LITERAL_SCAN=()
+while IFS= read -r f; do
+  [[ -z "$f" ]] && continue
+  [[ "$f" == "scripts/ci-validate.sh" ]] && continue
+  CLIENT_LITERAL_SCAN+=("$f")
+done <<<"$TRACKED"
+CLIENT_LITERAL_PATTERN='breitling|moeve|gallet|universalgeneve|ug-static'
+CLIENT_LITERAL_HIT=0
+if [[ "$HAS_RG" -eq 1 ]]; then
+  if rg -i -q -- "$CLIENT_LITERAL_PATTERN" "${CLIENT_LITERAL_SCAN[@]}" 2>/dev/null; then
+    CLIENT_LITERAL_HIT=1
+    rg -n -i -- "$CLIENT_LITERAL_PATTERN" "${CLIENT_LITERAL_SCAN[@]}" 2>/dev/null | head -20 || true
+  fi
+elif [[ "${#CLIENT_LITERAL_SCAN[@]}" -gt 0 ]]; then
+  if grep -E -i -q -- "$CLIENT_LITERAL_PATTERN" "${CLIENT_LITERAL_SCAN[@]}" 2>/dev/null; then
+    CLIENT_LITERAL_HIT=1
+  fi
+fi
+if [[ "$CLIENT_LITERAL_HIT" -eq 1 ]]; then
+  red "client-specific tenant or brand literals in tracked files (use acme/example.com placeholders)"
+else
+  ok "no client-specific tenant literals in tracked tree"
+fi
+
 echo "=== done (failures: $FAIL) ==="
 exit "$FAIL"

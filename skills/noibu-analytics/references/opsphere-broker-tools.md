@@ -47,14 +47,14 @@ Wrap the hostname under **`input.name`** on the Opsphere tool (not a sibling `na
 ```json
 {
   "rationale": "Resolve hostname before issue search.",
-  "input": { "name": "www.breitling.com" }
+  "input": { "name": "www.example.com" }
 }
 ```
 
 ```json
 {
   "rationale": "Check sibling domains before reporting zero conversion.",
-  "input": { "name": "BREITLING" }
+  "input": { "name": "ACME RETAIL" }
 }
 ```
 

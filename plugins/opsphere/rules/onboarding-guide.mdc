@@ -190,7 +190,7 @@ AWS credentials live in **Cloud Catalog** (admin). **`ops_configure_integration(
 
 1. **Do not** collect AWS access keys in chat or call `ops_configure_integration` for AWS.
 2. Use the catalog **`profile`** on `aws_sts_whoami`, `aws_cli_query`, and `ops_test_integration(provider: "aws", profile: "...")`.
-3. For **SSO accounts** (e.g. Breitling, Moeve): run gateway SSO login (`aws_sso_login_device_*`) when there is no active session; local `aws sso login` on the user's laptop does not apply.
+3. For **SSO accounts** (profile names from Cloud Catalog, e.g. `acme-prod`): run gateway SSO login (`aws_sso_login_device_*`) when there is no active session; local `aws sso login` on the user's laptop does not apply.
 4. For **`iam_static`**: keys are stored in Cloud Catalog; verify with `ops_test_integration` + `aws_sts_whoami` for that profile.
 5. **Region**: use catalog default or pass region in the CLI command / tool parameter when the user specifies one.
 6. Before operational AWS work, run the verification checklist with the resolved **profile** (test integration, `aws_sts_whoami`, optional `sts get-caller-identity` via `aws_cli_query`).

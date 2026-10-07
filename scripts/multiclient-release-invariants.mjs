@@ -142,12 +142,25 @@ assert.equal(read('skills/connect-another-client/SKILL.md'), read('opsphere-open
 assert.equal(read('skills/connect-another-client/SKILL.md'), read('opsphere-antigravity/skills/connect-another-client/SKILL.md'));
 assert.equal(read('skills/connect-another-client/SKILL.md'), read('opsphere-copilot/skills/connect-another-client/SKILL.md'));
 
-const portable = ['endpoint-health', 'incident-investigation', 'ci-investigation', 'postmortem-writer', 'qa-test-investigation', 'qa-release-readiness', 'configure-deployment-catalog'];
+const portable = [
+  'endpoint-health',
+  'incident-investigation',
+  'ci-investigation',
+  'postmortem-writer',
+  'qa-test-investigation',
+  'qa-release-readiness',
+  'configure-deployment-catalog',
+  'configure-integration',
+];
 for (const name of portable) {
   const canonical = read(`skills/${name}/SKILL.md`);
   for (const pkg of ['opsphere-warp', 'opsphere-opencode', 'opsphere-antigravity', 'opsphere-copilot']) {
     assert.equal(canonical, read(`${pkg}/skills/${name}/SKILL.md`), `${pkg} portable skill drift: ${name}`);
   }
+}
+const onboardingRule = read('rules/onboarding-guide.mdc');
+for (const pkg of ['opsphere-warp', 'opsphere-opencode', 'opsphere-antigravity', 'opsphere-copilot']) {
+  assert.equal(onboardingRule, read(`${pkg}/rules/onboarding-guide.mdc`), `${pkg} onboarding-guide drift`);
 }
 
 const hostForbidden = /alwaysApply|reload-plugins|claude mcp login|codex mcp|\/opsphere:/;
