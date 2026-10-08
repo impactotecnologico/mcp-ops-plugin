@@ -179,6 +179,8 @@ No shell scripts run automatically when you open a workspace — you invoke comm
 
 Remote MCP: Cursor calls **one endpoint** — `https://mcp-cursor.opsphere.io/mcp`. See [docs/REMOTE-MCP-ARCHITECTURE.md](docs/REMOTE-MCP-ARCHITECTURE.md) for the full flow and domain list.
 
+Cursor Automations use a separately authorized workload resource so their execution budget cannot be activated by prompt text or shared with interactive sessions. See [docs/CURSOR-AUTOMATIONS.md](docs/CURSOR-AUTOMATIONS.md).
+
 ```
 You (Cursor chat)
       │
@@ -477,6 +479,7 @@ Verify: ask Codex to call **`ops_my_usage`** or use **`@configure-integration`**
 | `@set-work-context` | Account work context (Team plans) |
 | `@configure-deployment-catalog` | Deployment sources (Community vs Team) |
 | `@run-macro-workflows` | Team/Enterprise macro workflows |
+| `@noibu-analytics` | Noibu store health (Store Pulse text), KPIs, domains, issues (`preset: checkout`, broker aliases, console links) — OAuth in Admin (module `noibu`); see `skills/noibu-analytics/references/opsphere-broker-aliases.md` |
 
 Cursor **agents** (`/outage-triage`, etc.) map to the first four skills above; keep `agents/` and ported skills in sync when editing.
 

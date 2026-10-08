@@ -684,7 +684,7 @@ List Logpush jobs for a zone (Datadog, Scrunch, S3 destinations).
 
 **Parameters:** `zone` (required).
 
-**Example**: _"Show Logpush jobs for breitling.com"_
+**Example**: _"Show Logpush jobs for example.com"_
 
 ---
 
@@ -693,7 +693,7 @@ List Snippets deployed on a zone.
 
 **Parameters:** `zone` (required).
 
-**Example**: _"List Cloudflare snippets on www-storefront.breitling.com"_
+**Example**: _"List Cloudflare snippets on www-storefront.example.com"_
 
 ---
 
@@ -711,9 +711,9 @@ List account Load Balancers (name, hostname, enabled, pool ids). Optional zone f
 
 **Parameters:** `accountId?`, `zoneOrId?`, `zone?`, `search?`, `page?`, `per_page?`.
 
-**Permission:** Account Load Balancers Read (configured on Breitling token).
+**Permission:** Account Load Balancers Read (on the configured Cloudflare API token).
 
-**Example**: _"List Cloudflare load balancers for breitling.com"_
+**Example**: _"List Cloudflare load balancers for example.com"_
 
 ---
 
@@ -758,7 +758,7 @@ Get zone settings (all settings or one by `settingId` like `ssl`, `security_leve
 
 **Parameters:** `zone` (required), `settingId?`.
 
-**Example**: _"What is the SSL mode for breitling.com?"_
+**Example**: _"What is the SSL mode for example.com?"_
 
 ---
 
@@ -820,6 +820,20 @@ List Sentry issues with filters (status, severity, environment).
 Advanced Sentry issue search with sorting.
 
 **Example**: _"Search Sentry for unresolved errors in the last 24 hours, sorted by frequency"_
+
+---
+
+### `sentry_sessions_by_release`
+Release Health: session counts and adoption % per `release` for a project (`statsPeriod` such as `1h` or `24h`). Not Discover/events.
+
+**Example**: _"What share of sessions are on release 25.0.7 in the last hour?"_
+
+---
+
+### `sentry_release_detail`
+Release metadata plus session share for one `version` in the chosen window.
+
+**Example**: _"Sentry release detail for 25.0.7 with 1h session stats"_
 
 ---
 

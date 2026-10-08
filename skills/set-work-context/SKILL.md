@@ -57,7 +57,7 @@ Confirm briefly and suggest the next step (e.g. "Configure my Datadog").
 
 - "SaaS on Vercel + Datadog. Prod project `acme-storefront-prod`. Jira project PROJ. No Kubernetes."
 - "AWS eu-west-1, ECS service `web` on cluster `acme-prod`. Bitbucket workspace `acmecorp`. Escalate prod issues to #platform-oncall."
-- "Static site: S3 bucket `ug-static-prod` behind CloudFront. No Vercel."
+- "Static site: S3 bucket `acme-static-prod` behind CloudFront. No Vercel."
 
 Mentioning Vercel project names, CI repos, S3 buckets, or ECS services here helps **`deployment_status`** even before structured Deployment sources exist (Team admins configure JSON in admin portal).
 
