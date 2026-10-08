@@ -11,8 +11,14 @@ Adapted from Noibu [querying-noibu-data](https://github.com/Noibu/ai-plugin/blob
 | `noibu_get_page_visits` | `noibu_page_visits` |
 | `noibu_search_errors` | `noibu_issues_search` |
 | `noibu_get_error` | `noibu_issue_get` |
+| `noibu_get_error_diagnosis` | `noibu_error_diagnosis_get` |
+| `noibu_get_error_trends` | `noibu_error_trends_get` |
+| `noibu_session_lookup` | `noibu_sessions_lookup` |
+| `noibu_get_issue_top_session_highlights` | `noibu_issue_session_highlights_get` |
 
 Place upstream args under **`input`**. Siblings on the Opsphere tool: **`rationale`** (always) and **`preset: checkout`** on `noibu_issues_search` when listing checkout/payment/cart issues (avoids ad/analytics noise from `LAST_SEEN_AT` alone).
+
+Opsphere-only broker rewrites (`errorIds`, trends `days` → intervals, session lookup windows): **`opsphere-broker-aliases.md`**.
 
 ## Canonical entrypoints (order)
 
@@ -27,6 +33,10 @@ Place upstream args under **`input`**. Siblings on the Opsphere tool: **`rationa
 - Slow/broken pages, LCP/CLS/INP, per-URL traffic → **`noibu_page_visits`** ([page-visits.md](https://github.com/Noibu/ai-plugin/blob/main/src/skills/querying-noibu-data/references/page-visits.md)).
 - Store health / "how's my store" / pulse → skill **`store-pulse-opsphere.md`** (not error tools first).
 - Errors / bugs — **only when explicit** → **`noibu_issues_search`** (`preset: checkout` for storefront checkout lists) / **`noibu_issue_get`** ([errors.md](https://github.com/Noibu/ai-plugin/blob/main/src/skills/querying-noibu-data/references/errors.md)). Use **`issueUrl`** / **`noibuConsoleLinks`** in reports — see **`noibu-console-links-automation.md`**.
+- Explain an issue (AI) → **`noibu_error_diagnosis_get`** with Opsphere **`errorIds`**.
+- Issue trend chart data → **`noibu_error_trends_get`** (`issueId` + `days` on Opsphere).
+- One session by id → **`noibu_sessions_lookup`** (requires nested **`periodOptions.dateTimeRange`**).
+- Representative sessions for an issue → **`noibu_issue_session_highlights_get`**.
 
 **Not brokered on Opsphere:** `noibu_visualize_page_visits`, AB tests, releases, journeys/replay, `noibu_send_feedback`, funnel chart renderer — official MCP only.
 

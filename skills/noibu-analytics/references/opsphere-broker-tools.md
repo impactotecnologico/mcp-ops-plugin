@@ -14,12 +14,14 @@ Routing and field semantics match Noibu's open plugin skills — start with [que
 | `noibu_list_priority_errors` | `noibu_priority_errors_list` | `input.domainId` |
 | `noibu_get_company` | `noibu_company_get` | `input.name` required (company name) |
 | `noibu_get_error` | `noibu_issue_get` | `input.domainId`, `humanId`, `days` |
-| `noibu_get_error_diagnosis` | `noibu_error_diagnosis_get` | `input.errorIds` (UUIDs) |
-| `noibu_get_error_trends` | `noibu_error_trends_get` | `input.domainId`, `input.issueId` |
+| `noibu_get_error_diagnosis` | `noibu_error_diagnosis_get` | `input.errorIds` (broker → upstream `issueIds`) |
+| `noibu_get_error_trends` | `noibu_error_trends_get` | `input.domainId`, `issueId` or `issueIds`; optional `days` → broker `timePeriod` + `currentInterval` |
 | `noibu_get_issue_top_session_highlights` | `noibu_issue_session_highlights_get` | `input.domainId`, `input.issueId` |
-| `noibu_search_sessions` | `noibu_sessions_search` | `input.domainId` + nested `input.input.queryInput` |
-| `noibu_session_lookup` | `noibu_sessions_lookup` | `input.domainId` |
+| `noibu_search_sessions` | `noibu_sessions_search` | `input.domainId` + nested `input.input` (`periodOptions` + `queryInput`) |
+| `noibu_session_lookup` | `noibu_sessions_lookup` | same nesting; **`periodOptions.dateTimeRange` required** |
 | `noibu_get_page_visits` | `noibu_page_visits` | same nesting as sessions |
+
+Broker rewrites (diagnosis `errorIds`, trends intervals): **`references/opsphere-broker-aliases.md`**.
 
 Everything upstream expects at the **top level** of the MCP call must be placed under Opsphere **`input`**. Siblings on the Opsphere tool: **`rationale`** and **`preset`** (`checkout` on `noibu_issues_search` only).
 
@@ -105,6 +107,30 @@ Use `groupBy.fieldSegments` with field **`URL`** (not `PAGE_URL`).
         "limit": 15
       }
     }
+  }
+}
+```
+
+### Error diagnosis (`noibu_error_diagnosis_get`)
+
+Use issue UUIDs from search/detail as **`errorIds`** — the broker maps them upstream.
+
+```json
+{
+  "rationale": "Explain checkout failure for issue UUIDs from search.",
+  "input": { "errorIds": ["<issue-uuid>"] }
+}
+```
+
+### Error trends (`noibu_error_trends_get`)
+
+```json
+{
+  "rationale": "Issue occurrence trend last 7 days.",
+  "input": {
+    "domainId": "<uuid>",
+    "issueId": "<issue-uuid>",
+    "days": "LAST7_DAYS"
   }
 }
 ```

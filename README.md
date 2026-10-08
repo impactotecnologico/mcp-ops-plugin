@@ -373,7 +373,7 @@ Verify: ask Codex to call **`ops_my_usage`** or use **`@configure-integration`**
 | `@set-work-context` | Account work context (Team plans) |
 | `@configure-deployment-catalog` | Deployment sources (Community vs Team) |
 | `@run-macro-workflows` | Team/Enterprise macro workflows |
-| `@noibu-analytics` | Noibu store health (Store Pulse text), KPIs, domains, issues (`preset: checkout`, console links) — OAuth in Admin (module `noibu`) |
+| `@noibu-analytics` | Noibu store health (Store Pulse text), KPIs, domains, issues (`preset: checkout`, broker aliases, console links) — OAuth in Admin (module `noibu`); see `skills/noibu-analytics/references/opsphere-broker-aliases.md` |
 
 Cursor **agents** (`/outage-triage`, etc.) map to the first four skills above; keep `agents/` and ported skills in sync when editing.
 

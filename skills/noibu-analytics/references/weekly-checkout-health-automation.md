@@ -2,7 +2,7 @@
 
 Opsphere/Noibu **contract** for scheduled **checkout health** jobs (KPIs, funnel, checkout issues, optional correlation, Slack digest). The **full run prompt** (phases, caps, probes, channel IDs) lives in **Cursor Automation only** — not in this repository.
 
-When updating an in-product automation after a gateway release, apply the deltas below to your private prompt. Related: [noibu-console-links-automation.md](./noibu-console-links-automation.md), [opsphere-broker-tools.md](./opsphere-broker-tools.md).
+When updating an in-product automation after a gateway release, apply the deltas below to your private prompt. Related: [noibu-console-links-automation.md](./noibu-console-links-automation.md), [opsphere-broker-tools.md](./opsphere-broker-tools.md), [opsphere-broker-aliases.md](./opsphere-broker-aliases.md).
 
 ---
 

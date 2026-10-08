@@ -15,7 +15,8 @@ Use **Opsphere MCP** `noibu_*` tools on the remote gateway. Noibu is **not** con
 2. Confirm `noibu_domains_list` (or another `noibu_*` data tool) appears in `tools/list` — module `noibu` must be enabled for the workspace **profile** in use (Cursor automation → **cursor** profile; Admin Connect → **web** profile).
 3. Read **`references/querying-noibu-data-routing.md`** — same routing semantics as Noibu's [querying-noibu-data](https://github.com/Noibu/ai-plugin/blob/main/src/skills/querying-noibu-data/SKILL.md), with Opsphere tool names.
 4. Read **`references/opsphere-broker-tools.md`** — JSON under **`input`**, optional top-level **`rationale`** and **`preset: checkout`** on `noibu_issues_search`.
-5. For **weekly checkout Slack jobs**, the full run prompt is **not** in this repo — maintain it in Cursor Automation. Public contract: **`references/weekly-checkout-health-automation.md`** and **`references/noibu-console-links-automation.md`** (`noibuConsoleLinks`, `issueUrl` in Slack).
+5. Read **`references/opsphere-broker-aliases.md`** when calling diagnosis, trends, session lookup, or grouped page visits (Opsphere vs upstream argument names).
+6. For **weekly checkout Slack jobs**, the full run prompt is **not** in this repo — maintain it in Cursor Automation. Public contract: **`references/weekly-checkout-health-automation.md`** and **`references/noibu-console-links-automation.md`** (`noibuConsoleLinks`, `issueUrl` in Slack).
 
 Field-level measure docs remain on Noibu's GitHub (`references/sessions.md`, `references/page-visits.md`, `references/errors.md`, … under [ai-plugin](https://github.com/Noibu/ai-plugin/tree/main/src/skills/querying-noibu-data/references)).
 
@@ -27,6 +28,10 @@ Field-level measure docs remain on Noibu's GitHub (`references/sessions.md`, `re
 | Per-page traffic, web vitals, scroll/clicks, landing/exit | `noibu_page_visits` |
 | **Store health**, "how's the store", daily snapshot, pulse | **`references/store-pulse-opsphere.md`** (text-first; no Cowork widgets) |
 | Errors / bugs / issues (explicit) | `noibu_issues_search` with **`preset: checkout`** for payment/cart/checkout lists; `noibu_issue_get` for drill-down |
+| AI issue explanation | `noibu_error_diagnosis_get` — Opsphere **`errorIds`** (broker → upstream `issueIds`) |
+| Issue volume over time | `noibu_error_trends_get` — `domainId` + `issueId`/`issueIds` + optional `days` (broker sets intervals) |
+| Top sessions for an issue | `noibu_issue_session_highlights_get` |
+| Single session drill-down | `noibu_sessions_lookup` — nested `periodOptions.dateTimeRange` + `queryInput` |
 | Domain / company scope | `noibu_domains_list`, `noibu_domain_get` — always `{ "input": { "name": "<hostname>" } }`, `noibu_company_get` |
 
 Lead with **analytics** unless the user explicitly asks about errors.
@@ -51,15 +56,7 @@ For a scheduled Cursor background run, use only the existing atomic `noibu_*` to
 
 ## Opsphere vs official Noibu MCP
 
-| Official | Opsphere |
-|----------|----------|
-| `noibu_list_domains` | `noibu_domains_list` |
-| `noibu_get_domain` | `noibu_domain_get` |
-| `noibu_get_company` | `noibu_company_get` |
-| `noibu_search_errors` | `noibu_issues_search` |
-| `noibu_get_error` | `noibu_issue_get` |
-| `noibu_search_sessions` | `noibu_sessions_search` |
-| `noibu_get_page_visits` | `noibu_page_visits` |
+Full allowlist and JSON examples: **`references/opsphere-broker-tools.md`**. Broker-only rewrites: **`references/opsphere-broker-aliases.md`**.
 
 Upstream arguments belong under **`input`**. Siblings on the Opsphere tool: **`rationale`** (always) and **`preset: checkout`** on `noibu_issues_search` when the user wants checkout/payment issue lists.
 
@@ -75,5 +72,5 @@ Writes, AB tests, replays, platform logs, visualizations (`noibu_visualize_page_
 
 - State domain name and UUID used, time window (UTC), and sibling-domain checks when conversion looked zero.
 - Separate live tool results from inference.
-- If tools return GraphQL or validation errors, quote the gateway message; fix args using `references/opsphere-broker-tools.md` before retrying.
+- If tools return GraphQL or validation errors, quote the gateway message; fix args using `references/opsphere-broker-tools.md` and **`references/opsphere-broker-aliases.md`** before retrying (one correction retry in automations).
 - For issues in Slack or markdown reports, link with upstream **`issueUrl`** or **`noibuConsoleLinks`** — never fabricate console issue paths.
