@@ -20,17 +20,10 @@ For trends and highlights, pass **`issueId`** (single) or **`issueIds`** (array)
 |------------------|------------------|
 | `domainId` | forwarded |
 | `issueId` or `issueIds` | upstream `issueIds` |
-| `days` (e.g. `LAST7_DAYS`; default `LAST7_DAYS` if omitted) | `timePeriod` + `currentInterval` |
+| `days` (e.g. `LAST7_DAYS`; default `LAST7_DAYS` if omitted) | forwarded upstream (same preset strings as `noibu_issue_get`) |
+| `steps` | default `[0,1,2,3,4]` when omitted |
 
-Bucket size (aligned with Noibu [querying-noibu-data](https://github.com/Noibu/ai-plugin/blob/main/src/skills/querying-noibu-data/SKILL.md)):
-
-| `days` / window | `currentInterval` |
-|-----------------|-------------------|
-| 24h-style presets | `HOUR` |
-| 7d / 30d | `DAY` |
-| 90d | `WEEK` |
-
-Do not pass upstream-only `currentInterval` / `timePeriod` on Opsphere unless you intentionally bypass broker defaults.
+Do **not** pass `timePeriod` or `currentInterval` on Opsphere — the broker removes them; the official Noibu MCP maps `days` to GraphQL enums internally.
 
 ## Session and page exploration (nested `input.input`)
 
@@ -48,8 +41,8 @@ Shared shape for **`noibu_sessions_search`**, **`noibu_sessions_lookup`**, **`no
 }
 ```
 
-- **`noibu_sessions_lookup`** — nested **`periodOptions.dateTimeRange`** is required (lookup without a window fails upstream).
-- **`queryInput.orderBy`** — required for session/page aggregates.
+- **`noibu_sessions_lookup`** — nested **`periodOptions.dateTimeRange`** is required. Row-level **`queryInput.select`** must be objects (broker coerces string field names and applies defaults: `SESSION_ID`, `SESSION_START_TIME`, `orderBy`, `limit: 10`).
+- **`queryInput.orderBy`** — required for session/page **aggregates** (`noibu_sessions_search` / `noibu_page_visits`).
 - **`noibu_page_visits`** with `groupBy` — use field **`URL`** in `groupBy.fieldSegments`, not `PAGE_URL`; include `orderBy` on your `measureAlias`.
 
 Grouped page-visit rows often appear under `structuredContent.data.domain.<query>.records` (for example `pageVisitsQuery.records`). If the gateway reports no rows with groupBy, fix field/window/orderBy before retrying.
@@ -59,7 +52,7 @@ Grouped page-visit rows often appear under `structuredContent.data.domain.<query
 | Symptom | Likely fix |
 |---------|------------|
 | Upstream text "Missing issueIds" on diagnosis | Use Opsphere `errorIds`; ensure gateway includes broker alias release |
-| GraphQL missing `$currentInterval` / `$timePeriod` on trends | Pass Opsphere `days`; use `issueId` or `issueIds`, not upstream-only names |
+| GraphQL `$timePeriod` / `$currentInterval` invalid on trends | Use Opsphere `days` only (`LAST7_DAYS`); do not pass `timePeriod`/`currentInterval` — upgrade gateway if broker still injects them |
 | `upstream_empty` on page visits with groupBy | `URL` groupBy + `orderBy` + `dateTimeRange` |
 | Validation on `count` / `total` as strings | Fixed in gateway schema coercion — upgrade gateway if you still see MCP -32602 |
 | Markdown/plain text in `content[]` with thin `data` | Read `content[].text` or `data.text` when `format` is `markdown` / `plain` |

@@ -15,7 +15,7 @@ Routing and field semantics match Noibu's open plugin skills — start with [que
 | `noibu_get_company` | `noibu_company_get` | `input.name` required (company name) |
 | `noibu_get_error` | `noibu_issue_get` | `input.domainId`, `humanId`, `days` |
 | `noibu_get_error_diagnosis` | `noibu_error_diagnosis_get` | `input.errorIds` (broker → upstream `issueIds`) |
-| `noibu_get_error_trends` | `noibu_error_trends_get` | `input.domainId`, `issueId` or `issueIds`; optional `days` → broker `timePeriod` + `currentInterval` |
+| `noibu_get_error_trends` | `noibu_error_trends_get` | `input.domainId`, `issueId` or `issueIds`; optional `days` + `steps` (broker forwards `days`, not GraphQL enum names) |
 | `noibu_get_issue_top_session_highlights` | `noibu_issue_session_highlights_get` | `input.domainId`, `input.issueId` |
 | `noibu_search_sessions` | `noibu_sessions_search` | `input.domainId` + nested `input.input` (`periodOptions` + `queryInput`) |
 | `noibu_session_lookup` | `noibu_sessions_lookup` | same nesting; **`periodOptions.dateTimeRange` required** |

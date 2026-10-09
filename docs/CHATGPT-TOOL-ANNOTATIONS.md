@@ -6,8 +6,8 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 - `destructiveHint`: puede borrar, sobrescribir, revocar o ejecutar una acción irreversible.
 - `openWorldHint`: puede cambiar un sistema público o un tercero externo.
 
-- Tools auditadas: 358
-- Solo lectura: 300
+- Tools auditadas: 362
+- Solo lectura: 304
 - Con efectos o cambios de estado: 58
 - Destructivas o irreversibles: 34
 - Cambian sistemas públicos o externos: 19
@@ -115,6 +115,9 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `cf_config_rules_replace` | false | true | true | Cambio externo o irreversible | Bloqueada |
 | `cf_dns_records` | true | false | false | Solo consulta | Permitida |
 | `cf_firewall_events` | true | false | false | Solo consulta | Permitida |
+| `cf_http_security_breakdown` | true | false | false | Solo consulta | Permitida |
+| `cf_http_security_samples` | true | false | false | Solo consulta | Permitida |
+| `cf_http_security_top_talkers` | true | false | false | Solo consulta | Permitida |
 | `cf_kv_keys_list` | true | false | false | Solo consulta | Permitida |
 | `cf_kv_namespaces_list` | true | false | false | Solo consulta | Permitida |
 | `cf_kv_value_get` | true | false | false | Solo consulta | Permitida |
@@ -244,6 +247,7 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `k8s_replicasets_list` | true | false | false | Solo consulta | Permitida |
 | `k8s_resource_yaml` | true | false | false | Solo consulta | Permitida |
 | `k8s_rollout_history` | true | false | false | Solo consulta | Permitida |
+| `macro_cf_ecom_abuse_triage` | true | false | false | Solo consulta | Permitida |
 | `macro_endpoint_health` | true | false | false | Solo consulta | Permitida |
 | `macro_env_health` | true | false | false | Solo consulta | Permitida |
 | `macro_outage_triage` | true | false | false | Solo consulta | Permitida |

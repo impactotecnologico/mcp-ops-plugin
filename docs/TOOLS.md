@@ -663,6 +663,20 @@ Analyze historical cache outcomes for a zone and optional hostname: requests and
 
 ---
 
+### `cf_http_security_breakdown` / `cf_http_security_top_talkers` / `cf_http_security_samples`
+GraphQL HTTP adaptive analytics for **all eyeball requests** (not WAF-only). Use for cart/checkout bot score, ASN, country, JA4/JA3, path, and sampled Ray IDs. Requires Zone Analytics Read; bot/JA4 fields need Bot Management. `path_preset=breitling_cart_checkout` filters common storefront cart/checkout paths.
+
+**Example**: _"Break down bot score buckets on breitling.com checkout traffic in the last hour"_
+
+---
+
+### `macro_cf_ecom_abuse_triage`
+Single macro: bot score + ASN breakdown, top JA4/IP talkers, and low bot-score samples for cart/checkout paths.
+
+**Example**: _"Triage Cloudflare abuse on breitling.com cart and checkout"_
+
+---
+
 ### `cf_cache_probe`
 Probe one URL 1–3 times and report `CF-Cache-Status`, `Age`, `CF-Ray`, cache headers, latency, and transition. The result is scoped to the responding request path/POP, not Cloudflare's global cache.
 
