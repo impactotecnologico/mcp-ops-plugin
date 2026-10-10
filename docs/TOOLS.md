@@ -211,6 +211,41 @@ Search Datadog Logs v2. Supports any log query syntax.
 
 ---
 
+### `dd_logs_aggregate`
+Exact log counts (and optional `groupBy` facet) via Logs Analytics — no log sampling.
+
+**Example**: _"How many status:error logs for storefront in the last hour, grouped by service?"_
+
+---
+
+### `dd_apm_traces_search`
+Search APM spans (paginated; read `pageTotal` and `nextCursor`).
+
+**Example**: _"Find slow spans for service:storefront in the last 30 minutes"_
+
+---
+
+### `dd_events_search`
+Datadog event stream (deploys, changes) in a time window.
+
+**Example**: _"List Datadog events in the last 2 hours tagged env:prd"_
+
+---
+
+### `dd_monitors_lookup`
+Fetch monitor details by id or search query (not the full firing list — use `alerts_active`).
+
+**Example**: _"Look up Datadog monitor 12345678"_
+
+---
+
+### `dd_downtimes_active`
+List currently active monitor downtimes (silences).
+
+**Example**: _"What Datadog downtimes are active right now?"_
+
+---
+
 ### `dd_errors_by_service`
 Get error counts grouped by service for the last N hours. Use as a discovery step before drilling into specific errors.
 

@@ -6,8 +6,8 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 - `destructiveHint`: puede borrar, sobrescribir, revocar o ejecutar una acción irreversible.
 - `openWorldHint`: puede cambiar un sistema público o un tercero externo.
 
-- Tools auditadas: 362
-- Solo lectura: 304
+- Tools auditadas: 367
+- Solo lectura: 309
 - Con efectos o cambios de estado: 58
 - Destructivas o irreversibles: 34
 - Cambian sistemas públicos o externos: 19
@@ -175,11 +175,16 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `ctf_graphql_query` | true | false | false | Solo consulta | Permitida |
 | `ctf_graphql_schema_introspect` | true | false | false | Solo consulta | Permitida |
 | `ctf_spaces_list` | true | false | false | Solo consulta | Permitida |
+| `dd_apm_traces_search` | true | false | false | Solo consulta | Permitida |
+| `dd_downtimes_active` | true | false | false | Solo consulta | Permitida |
 | `dd_errors_by_service` | true | false | false | Solo consulta | Permitida |
 | `dd_errors_recent` | true | false | false | Solo consulta | Permitida |
+| `dd_events_search` | true | false | false | Solo consulta | Permitida |
 | `dd_log_get` | true | false | false | Solo consulta | Permitida |
+| `dd_logs_aggregate` | true | false | false | Solo consulta | Permitida |
 | `dd_logs_search` | true | false | false | Solo consulta | Permitida |
 | `dd_metrics_query` | true | false | false | Solo consulta | Permitida |
+| `dd_monitors_lookup` | true | false | false | Solo consulta | Permitida |
 | `dd_synthetics_results` | true | false | false | Solo consulta | Permitida |
 | `dd_synthetics_summary` | true | false | false | Solo consulta | Permitida |
 | `dd_waf_bots` | true | false | false | Solo consulta | Permitida |
