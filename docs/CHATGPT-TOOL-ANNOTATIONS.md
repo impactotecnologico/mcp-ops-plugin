@@ -6,8 +6,8 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 - `destructiveHint`: puede borrar, sobrescribir, revocar o ejecutar una acción irreversible.
 - `openWorldHint`: puede cambiar un sistema público o un tercero externo.
 
-- Tools auditadas: 367
-- Solo lectura: 309
+- Tools auditadas: 379
+- Solo lectura: 321
 - Con efectos o cambios de estado: 58
 - Destructivas o irreversibles: 34
 - Cambian sistemas públicos o externos: 19
@@ -226,6 +226,18 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `gl_pipelines_latest` | true | false | false | Solo consulta | Permitida |
 | `gl_projects_list` | true | false | false | Solo consulta | Permitida |
 | `gl_tags_list` | true | false | false | Solo consulta | Permitida |
+| `grafana_alert_rules_list` | true | false | false | Solo consulta | Permitida |
+| `grafana_alerts_firing` | true | false | false | Solo consulta | Permitida |
+| `grafana_annotations_list` | true | false | false | Solo consulta | Permitida |
+| `grafana_dashboard_get` | true | false | false | Solo consulta | Permitida |
+| `grafana_dashboard_panel_queries` | true | false | false | Solo consulta | Permitida |
+| `grafana_dashboards_search` | true | false | false | Solo consulta | Permitida |
+| `grafana_datasource_health` | true | false | false | Solo consulta | Permitida |
+| `grafana_datasources_list` | true | false | false | Solo consulta | Permitida |
+| `grafana_prom_query` | true | false | false | Solo consulta | Permitida |
+| `grafana_sm_check_results` | true | false | false | Solo consulta | Permitida |
+| `grafana_sm_checks_list` | true | false | false | Solo consulta | Permitida |
+| `grafana_status` | true | false | false | Solo consulta | Permitida |
 | `http_check` | true | false | false | Solo consulta | Permitida |
 | `infra_tfvars_catalog` | true | false | false | Solo consulta | Permitida |
 | `infra_tfvars_find` | true | false | false | Solo consulta | Permitida |
