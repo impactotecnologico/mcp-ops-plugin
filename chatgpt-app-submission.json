@@ -2588,14 +2588,14 @@
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
     },
-    "grafana_dashboard_panel_queries": {
+    "grafana_dashboard_panel_promql": {
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
         "openWorldHint": false
       },
       "justifications": {
-        "read_only_justification": "Retrieves or computes grafana dashboard panel queries information without changing Opsphere or provider state.",
+        "read_only_justification": "Retrieves or computes grafana dashboard panel promql information without changing Opsphere or provider state.",
         "open_world_justification": "Does not change public internet state or write to an external third-party system.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
@@ -2648,14 +2648,14 @@
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
     },
-    "grafana_sm_check_results": {
+    "grafana_sm_check_get": {
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
         "openWorldHint": false
       },
       "justifications": {
-        "read_only_justification": "Retrieves or computes grafana sm check results information without changing Opsphere or provider state.",
+        "read_only_justification": "Retrieves or computes grafana sm check get information without changing Opsphere or provider state.",
         "open_world_justification": "Does not change public internet state or write to an external third-party system.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
