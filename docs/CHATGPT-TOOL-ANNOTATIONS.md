@@ -230,12 +230,12 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `grafana_alerts_firing` | true | false | false | Solo consulta | Permitida |
 | `grafana_annotations_list` | true | false | false | Solo consulta | Permitida |
 | `grafana_dashboard_get` | true | false | false | Solo consulta | Permitida |
-| `grafana_dashboard_panel_queries` | true | false | false | Solo consulta | Permitida |
+| `grafana_dashboard_panel_promql` | true | false | false | Solo consulta | Permitida |
 | `grafana_dashboards_search` | true | false | false | Solo consulta | Permitida |
 | `grafana_datasource_health` | true | false | false | Solo consulta | Permitida |
 | `grafana_datasources_list` | true | false | false | Solo consulta | Permitida |
 | `grafana_prom_query` | true | false | false | Solo consulta | Permitida |
-| `grafana_sm_check_results` | true | false | false | Solo consulta | Permitida |
+| `grafana_sm_check_get` | true | false | false | Solo consulta | Permitida |
 | `grafana_sm_checks_list` | true | false | false | Solo consulta | Permitida |
 | `grafana_status` | true | false | false | Solo consulta | Permitida |
 | `http_check` | true | false | false | Solo consulta | Permitida |
