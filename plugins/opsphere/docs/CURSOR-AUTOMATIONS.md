@@ -34,3 +34,7 @@ This text verifies the connection; it does not activate or enlarge the profile. 
 
 If `ops_execution_budget` reports `interactive`, stop: the Automation is connected to the normal `/mcp` resource or is reusing its old authorization. Reconnect the dedicated `/mcp/automation` server and test again.
 
+## Noibu checkout / store health automations
+
+Scheduled jobs that call `noibu_*` tools should load skill **`noibu-analytics`** (or at least `skills/noibu-analytics/references/weekly-checkout-health-automation.md`, `opsphere-broker-tools.md`, and `opsphere-broker-aliases.md`). Use the automation MCP URL above, `noibu_link_status` before data calls, and the prompt guard in the previous section. After a gateway upgrade, skim **`opsphere-broker-aliases.md`** for broker argument changes before editing your private automation prompt.
+

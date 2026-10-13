@@ -6,12 +6,12 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 - `destructiveHint`: puede borrar, sobrescribir, revocar o ejecutar una acción irreversible.
 - `openWorldHint`: puede cambiar un sistema público o un tercero externo.
 
-- Tools auditadas: 358
-- Solo lectura: 300
-- Con efectos o cambios de estado: 58
-- Destructivas o irreversibles: 34
+- Tools auditadas: 418
+- Solo lectura: 358
+- Con efectos o cambios de estado: 60
+- Destructivas o irreversibles: 35
 - Cambian sistemas públicos o externos: 19
-- Bloqueadas por la regla existente del plan de solo lectura: 35
+- Bloqueadas por la regla existente del plan de solo lectura: 36
 
 | Tool | readOnlyHint | destructiveHint | openWorldHint | Impacto real | Regla existente del plan de solo lectura |
 |---|:---:|:---:|:---:|---|:---:|
@@ -115,6 +115,9 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `cf_config_rules_replace` | false | true | true | Cambio externo o irreversible | Bloqueada |
 | `cf_dns_records` | true | false | false | Solo consulta | Permitida |
 | `cf_firewall_events` | true | false | false | Solo consulta | Permitida |
+| `cf_http_security_breakdown` | true | false | false | Solo consulta | Permitida |
+| `cf_http_security_samples` | true | false | false | Solo consulta | Permitida |
+| `cf_http_security_top_talkers` | true | false | false | Solo consulta | Permitida |
 | `cf_kv_keys_list` | true | false | false | Solo consulta | Permitida |
 | `cf_kv_namespaces_list` | true | false | false | Solo consulta | Permitida |
 | `cf_kv_value_get` | true | false | false | Solo consulta | Permitida |
@@ -172,11 +175,16 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `ctf_graphql_query` | true | false | false | Solo consulta | Permitida |
 | `ctf_graphql_schema_introspect` | true | false | false | Solo consulta | Permitida |
 | `ctf_spaces_list` | true | false | false | Solo consulta | Permitida |
+| `dd_apm_traces_search` | true | false | false | Solo consulta | Permitida |
+| `dd_downtimes_active` | true | false | false | Solo consulta | Permitida |
 | `dd_errors_by_service` | true | false | false | Solo consulta | Permitida |
 | `dd_errors_recent` | true | false | false | Solo consulta | Permitida |
+| `dd_events_search` | true | false | false | Solo consulta | Permitida |
 | `dd_log_get` | true | false | false | Solo consulta | Permitida |
+| `dd_logs_aggregate` | true | false | false | Solo consulta | Permitida |
 | `dd_logs_search` | true | false | false | Solo consulta | Permitida |
 | `dd_metrics_query` | true | false | false | Solo consulta | Permitida |
+| `dd_monitors_lookup` | true | false | false | Solo consulta | Permitida |
 | `dd_synthetics_results` | true | false | false | Solo consulta | Permitida |
 | `dd_synthetics_summary` | true | false | false | Solo consulta | Permitida |
 | `dd_waf_bots` | true | false | false | Solo consulta | Permitida |
@@ -189,6 +197,18 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `env_capacity_overview` | true | false | false | Solo consulta | Permitida |
 | `env_errors_overview` | true | false | false | Solo consulta | Permitida |
 | `env_health_summary` | true | false | false | Solo consulta | Permitida |
+| `ga4_acquisition_report` | true | false | false | Solo consulta | Permitida |
+| `ga4_compare_periods` | true | false | false | Solo consulta | Permitida |
+| `ga4_conversions_report` | true | false | false | Solo consulta | Permitida |
+| `ga4_custom_report` | true | false | false | Solo consulta | Permitida |
+| `ga4_events_report` | true | false | false | Solo consulta | Permitida |
+| `ga4_funnel_analysis` | true | false | false | Solo consulta | Permitida |
+| `ga4_pages_performance` | true | false | false | Solo consulta | Permitida |
+| `ga4_properties_list` | true | false | false | Solo consulta | Permitida |
+| `ga4_property_details` | true | false | false | Solo consulta | Permitida |
+| `ga4_realtime_overview` | true | false | false | Solo consulta | Permitida |
+| `ga4_tracking_config` | true | false | false | Solo consulta | Permitida |
+| `ga4_traffic_overview` | true | false | false | Solo consulta | Permitida |
 | `ghe_actions_diagnose` | true | false | false | Solo consulta | Permitida |
 | `ghe_actions_latest` | true | false | false | Solo consulta | Permitida |
 | `ghe_actions_latest_jobs` | true | false | false | Solo consulta | Permitida |
@@ -218,6 +238,41 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `gl_pipelines_latest` | true | false | false | Solo consulta | Permitida |
 | `gl_projects_list` | true | false | false | Solo consulta | Permitida |
 | `gl_tags_list` | true | false | false | Solo consulta | Permitida |
+| `google_link_revoke` | false | true | false | Sobrescribe, elimina o revoca estado privado | Bloqueada |
+| `google_link_start` | false | false | false | Cambia estado privado de forma acotada | Permitida |
+| `google_link_status` | true | false | false | Solo consulta | Permitida |
+| `grafana_alert_rules_list` | true | false | false | Solo consulta | Permitida |
+| `grafana_alerts_firing` | true | false | false | Solo consulta | Permitida |
+| `grafana_annotations_list` | true | false | false | Solo consulta | Permitida |
+| `grafana_dashboard_get` | true | false | false | Solo consulta | Permitida |
+| `grafana_dashboard_panel_promql` | true | false | false | Solo consulta | Permitida |
+| `grafana_dashboards_search` | true | false | false | Solo consulta | Permitida |
+| `grafana_datasource_health` | true | false | false | Solo consulta | Permitida |
+| `grafana_datasources_list` | true | false | false | Solo consulta | Permitida |
+| `grafana_prom_query` | true | false | false | Solo consulta | Permitida |
+| `grafana_sm_check_get` | true | false | false | Solo consulta | Permitida |
+| `grafana_sm_checks_list` | true | false | false | Solo consulta | Permitida |
+| `grafana_status` | true | false | false | Solo consulta | Permitida |
+| `gsc_device_country_report` | true | false | false | Solo consulta | Permitida |
+| `gsc_performance_overview` | true | false | false | Solo consulta | Permitida |
+| `gsc_period_comparison` | true | false | false | Solo consulta | Permitida |
+| `gsc_search_opportunities` | true | false | false | Solo consulta | Permitida |
+| `gsc_search_trends` | true | false | false | Solo consulta | Permitida |
+| `gsc_sitemaps_list` | true | false | false | Solo consulta | Permitida |
+| `gsc_sites_list` | true | false | false | Solo consulta | Permitida |
+| `gsc_top_pages` | true | false | false | Solo consulta | Permitida |
+| `gsc_top_queries` | true | false | false | Solo consulta | Permitida |
+| `gsc_url_inspection` | true | false | false | Solo consulta | Permitida |
+| `gtm_accounts_list` | true | false | false | Solo consulta | Permitida |
+| `gtm_container_details` | true | false | false | Solo consulta | Permitida |
+| `gtm_containers_list` | true | false | false | Solo consulta | Permitida |
+| `gtm_live_version` | true | false | false | Solo consulta | Permitida |
+| `gtm_tags_list` | true | false | false | Solo consulta | Permitida |
+| `gtm_triggers_list` | true | false | false | Solo consulta | Permitida |
+| `gtm_variables_list` | true | false | false | Solo consulta | Permitida |
+| `gtm_version_diff` | true | false | false | Solo consulta | Permitida |
+| `gtm_versions_list` | true | false | false | Solo consulta | Permitida |
+| `gtm_workspaces_status` | true | false | false | Solo consulta | Permitida |
 | `http_check` | true | false | false | Solo consulta | Permitida |
 | `infra_tfvars_catalog` | true | false | false | Solo consulta | Permitida |
 | `infra_tfvars_find` | true | false | false | Solo consulta | Permitida |
@@ -244,9 +299,14 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `k8s_replicasets_list` | true | false | false | Solo consulta | Permitida |
 | `k8s_resource_yaml` | true | false | false | Solo consulta | Permitida |
 | `k8s_rollout_history` | true | false | false | Solo consulta | Permitida |
+| `macro_cf_ecom_abuse_triage` | true | false | false | Solo consulta | Permitida |
+| `macro_digital_experience_overview` | true | false | false | Solo consulta | Permitida |
 | `macro_endpoint_health` | true | false | false | Solo consulta | Permitida |
 | `macro_env_health` | true | false | false | Solo consulta | Permitida |
 | `macro_outage_triage` | true | false | false | Solo consulta | Permitida |
+| `macro_release_business_impact` | true | false | false | Solo consulta | Permitida |
+| `macro_seo_technical_diagnostic` | true | false | false | Solo consulta | Permitida |
+| `macro_tracking_integrity_audit` | true | false | false | Solo consulta | Permitida |
 | `memory_invalidate` | false | true | false | Sobrescribe, elimina o revoca estado privado | Bloqueada |
 | `memory_purge_user` | false | true | false | Sobrescribe, elimina o revoca estado privado | Bloqueada |
 | `memory_search` | false | false | false | Cambia estado privado de forma acotada | Permitida |

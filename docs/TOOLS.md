@@ -699,16 +699,16 @@ Analyze historical cache outcomes for a zone and optional hostname: requests and
 ---
 
 ### `cf_http_security_breakdown` / `cf_http_security_top_talkers` / `cf_http_security_samples`
-GraphQL HTTP adaptive analytics for **all eyeball requests** (not WAF-only). Use for cart/checkout bot score, ASN, country, JA4/JA3, path, and sampled Ray IDs. Requires Zone Analytics Read; bot/JA4 fields need Bot Management. `path_preset=breitling_cart_checkout` filters common storefront cart/checkout paths.
+GraphQL HTTP adaptive analytics for **all eyeball requests** (not WAF-only). Use for cart/checkout bot score, ASN, country, JA4/JA3, path, and sampled Ray IDs. Requires Zone Analytics Read; bot/JA4 fields need Bot Management. `path_preset=cart_checkout_api` filters common storefront cart/checkout paths.
 
-**Example**: _"Break down bot score buckets on breitling.com checkout traffic in the last hour"_
+**Example**: _"Break down bot score buckets on www.example.com checkout traffic in the last hour"_
 
 ---
 
 ### `macro_cf_ecom_abuse_triage`
 Single macro: bot score + ASN breakdown, top JA4/IP talkers, and low bot-score samples for cart/checkout paths.
 
-**Example**: _"Triage Cloudflare abuse on breitling.com cart and checkout"_
+**Example**: _"Triage Cloudflare abuse on www.example.com cart and checkout"_
 
 ---
 
@@ -1052,8 +1052,26 @@ Composite read-only tools that run multi-step investigations on the gateway with
 | `macro_endpoint_health` | DNS + HTTP + TLS for one hostname/URL |
 | `macro_env_health` | Environment snapshot (errors, deploys, capacity) |
 | `macro_outage_triage` | Incident triage: edge, deploys, errors, optional K8s |
+| `macro_digital_experience_overview` | GA4 + GSC snapshot with optional infra context (no causal claims) |
+| `macro_release_business_impact` | Recent deploy + marketing metrics correlation |
+| `macro_seo_technical_diagnostic` | GSC URL inspection + HTTP/DNS checks |
+| `macro_tracking_integrity_audit` | GTM container version vs site signals |
 
 **Community:** not available (`MACROS_PAID_ONLY`). Use subagents or atomic tools.
+
+---
+
+## Google Marketing (GA4, GSC, GTM)
+
+Per-tenant **Google OAuth** (`google_link_start` / `google_link_status` / `google_link_revoke`) with readonly Analytics, Search Console, and Tag Manager scopes. Set tenant defaults in Admin (`ga4_default_property`, `gsc_default_site`, GTM account/container IDs).
+
+| Module | Examples |
+|--------|----------|
+| `ga4_*` | `ga4_traffic_overview`, `ga4_conversions_report`, `ga4_realtime_overview` |
+| `gsc_*` | `gsc_performance_overview`, `gsc_url_inspection`, `gsc_top_queries` |
+| `gtm_*` | `gtm_live_version`, `gtm_tags_list`, `gtm_version_diff` |
+
+Platform operator: GCP OAuth client + SSM `GOOGLE_OAUTH_CLIENT_*` on the gateway. See `mcp-ops-b/docs/google-marketing-tools.md`.
 
 Skill: [`skills/run-macro-workflows/`](skills/run-macro-workflows/).
 
