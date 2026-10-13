@@ -20,14 +20,12 @@ For trends and highlights, pass **`issueId`** (single) or **`issueIds`** (array)
 |------------------|------------------|
 | `domainId` | forwarded |
 | `issueId` or `issueIds` | upstream `issueIds` |
-| `days` (e.g. `LAST7_DAYS`; default `LAST7_DAYS` if omitted) | forwarded upstream (same preset strings as `noibu_issue_get`) |
-| `steps` | default `[0,1,2,3,4]` when omitted |
+| `days` (e.g. `LAST7_DAYS`; default `LAST7_DAYS`) | forwarded (same presets as `noibu_issue_get`) |
+| optional `steps` | defaults to `[0,1,2,3,4]` |
 
-Do **not** pass `timePeriod` or `currentInterval` on Opsphere — the broker removes them; the official Noibu MCP maps `days` to GraphQL enums internally.
+Do **not** pass `timePeriod` or `currentInterval` on Opsphere — the broker strips them. The official Noibu MCP maps `days` to GraphQL enums internally (broker-injected enum strings break upstream).
 
-## Session and page exploration (nested `input.input`)
-
-Shared shape for **`noibu_sessions_search`**, **`noibu_sessions_lookup`**, **`noibu_page_visits`**:
+## Session lookup (`noibu_sessions_lookup`) — different from sessions search
 
 ```json
 {
@@ -36,25 +34,52 @@ Shared shape for **`noibu_sessions_search`**, **`noibu_sessions_lookup`**, **`no
     "periodOptions": {
       "dateTimeRange": { "startTime": "…Z", "endTime": "…Z" }
     },
-    "queryInput": { }
+    "queryInput": {
+      "select": [
+        { "field": { "target": "SESSION_ID" } },
+        { "timeField": { "target": "SESSION_START_TIME" } }
+      ],
+      "orderBy": { "selectAlias": "session_start_time", "direction": "DESCENDING" },
+      "limit": 10
+    }
   }
 }
 ```
 
-- **`noibu_sessions_lookup`** — nested **`periodOptions.dateTimeRange`** is required. Row-level **`queryInput.select`** must be objects (broker coerces string field names and applies defaults: `SESSION_ID`, `SESSION_START_TIME`, `orderBy`, `limit: 10`).
-- **`queryInput.orderBy`** — required for session/page **aggregates** (`noibu_sessions_search` / `noibu_page_visits`).
-- **`noibu_page_visits`** with `groupBy` — use field **`URL`** in `groupBy.fieldSegments`, not `PAGE_URL`; include `orderBy` on your `measureAlias`.
+- **`periodOptions.dateTimeRange` required**
+- **`queryInput.select`** — objects (broker coerces `"SESSION_ID"` strings; if omitted, defaults to `SESSION_ID` + `SESSION_START_TIME`, `orderBy`, `limit: 10`)
+- Use **`orderBy`** or named **`sort`** — **not** `measures` / `groupBy` (those are for `noibu_sessions_search`)
 
-Grouped page-visit rows often appear under `structuredContent.data.domain.<query>.records` (for example `pageVisitsQuery.records`). If the gateway reports no rows with groupBy, fix field/window/orderBy before retrying.
+## Session search / page visits (aggregates)
+
+Shared aggregate shape for **`noibu_sessions_search`** and **`noibu_page_visits`**:
+
+```json
+{
+  "domainId": "<uuid>",
+  "input": {
+    "periodOptions": {
+      "dateTimeRange": { "startTime": "…Z", "endTime": "…Z" }
+    },
+    "queryInput": { "measures": [], "orderBy": {} }
+  }
+}
+```
+
+- **`queryInput.orderBy`** required for aggregates.
+- **`noibu_page_visits`** with `groupBy` — field **`URL`** in `groupBy.fieldSegments`, not `PAGE_URL`.
+
+Grouped page-visit rows often appear under `structuredContent.data.domain.<query>.records`.
 
 ## Common failures
 
 | Symptom | Likely fix |
 |---------|------------|
 | Upstream text "Missing issueIds" on diagnosis | Use Opsphere `errorIds`; ensure gateway includes broker alias release |
-| GraphQL `$timePeriod` / `$currentInterval` invalid on trends | Use Opsphere `days` only (`LAST7_DAYS`); do not pass `timePeriod`/`currentInterval` — upgrade gateway if broker still injects them |
+| GraphQL invalid `$timePeriod` / `$currentInterval` on trends | Opsphere `days` only (`LAST7_DAYS`); broker must not inject enum vars — redeploy gateway |
+| GraphQL missing `$steps` on trends | Broker should inject `[0,1,2,3,4]` after deploy |
+| `select` GraphQL errors on session lookup | Object select items + `periodOptions.dateTimeRange`; no measures |
 | `upstream_empty` on page visits with groupBy | `URL` groupBy + `orderBy` + `dateTimeRange` |
 | Validation on `count` / `total` as strings | Fixed in gateway schema coercion — upgrade gateway if you still see MCP -32602 |
-| Markdown/plain text in `content[]` with thin `data` | Read `content[].text` or `data.text` when `format` is `markdown` / `plain` |
 
 Gateway debug (operators): `NOIBU_DEBUG_PAYLOAD=1` on the gateway task — see `opsphere-broker-tools.md` in `mcp-ops-b`.
