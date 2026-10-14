@@ -794,11 +794,20 @@ List account LB health monitors (path, interval, retries, expected codes).
 ---
 
 ### `cf_account_ruleset_entrypoint_get`
-Read account-level ruleset entrypoint (managed WAF, rate limiting, bulk redirects).
+Read account-level ruleset entrypoint (custom WAF, managed WAF, rate limiting, bulk redirects). Execute rules include `childRulesetId`.
 
-**Parameters:** `phase` (`http_request_firewall_managed`, `http_ratelimit`, `http_request_redirect`), `accountId?`, `zoneOrId?`.
+**Parameters:** `phase` (`http_request_firewall_custom`, `http_request_firewall_managed`, `http_ratelimit`, `http_request_redirect`), `accountId?`, `zoneOrId?`.
 
-**Example**: _"Show account bulk redirect rules on Cloudflare"_
+**Example**: _"Show prod account custom WAF entrypoint execute rules"_
+
+---
+
+### `cf_account_ruleset_get`
+Read an account-level child ruleset by UUID (bypass, non_prod_custom, Noibu blocks, etc.).
+
+**Parameters:** `rulesetId` (required), `accountId?`, `zoneOrId?`.
+
+**Example**: _"What rules are in account ruleset af628c4c…?"_
 
 ---
 
