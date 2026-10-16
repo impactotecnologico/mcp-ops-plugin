@@ -10,7 +10,7 @@ Follow the public package availability check in the guide before downloading. MC
 
 ## Install in a project (recommended)
 
-Requires Node.js 20 or newer. Install into a **throwaway project** (do not install into the Opsphere plugin repository).
+Requires Node.js 20 or newer. Install into your target project (use a throwaway project for verification; do not install into the Opsphere plugin repository). For availability across projects, use [global installation](#install-globally).
 
 ### Install from the public repo
 
@@ -33,6 +33,8 @@ node install.mjs install /absolute/path/to/your-project
 
 The installer merges `opencode.json`, adds a marked AGENTS.md section, and installs skills, agents and commands under `.opencode/`. It preserves other MCP entries and existing files; colliding skills or a different opsphere server stop installation before changes. It records ownership in `.opencode/opsphere-opencode-install.json`.
 
+An existing `opencode.jsonc` is supported instead of `opencode.json`; unrelated formatting, comments and trailing commas are preserved. If both files exist, consolidate them before installing. No runtime npm dependencies are needed.
+
 Then, from **that project**:
 
 ```sh
@@ -46,6 +48,33 @@ Current OpenCode **1.x** (verified against 1.18.31) still uses V1 `mcp.opsphere`
 For manual installation, merge [mcp/opsphere.json](mcp/opsphere.json) into `opencode.json`, copy `skills/`, `agents/` and `commands/` into `.opencode/`, and merge `rules/AGENTS.md`. Record the files you added; the uninstaller only manages its own manifest.
 
 If your OpenCode build requires V2 `mcp.servers`, nest the same `opsphere` object under `mcp.servers` instead of `mcp.opsphere`. Keep `codemode` false and a catalog timeout of at least 60000 ms.
+
+## Install globally
+
+From the cloned repository root:
+
+```sh
+node opsphere-opencode/install.mjs install --global
+```
+
+Or, from the obtained `opsphere-opencode/` folder, run `node install.mjs install --global`. This installs the full package for your user, including skills, agents, commands, rules and MCP configuration. It does not require administrator access.
+
+The default directory is `~/.config/opencode/` (`C:\Users\<user>\.config\opencode\` on Windows). When `XDG_CONFIG_HOME` is set to an absolute path, the directory is `$XDG_CONFIG_HOME/opencode/`.
+
+| Content | Global destination |
+|---|---|
+| Skills, including supporting references | `skills/` |
+| OpenCode agents | `agents/` |
+| Slash commands | `commands/` |
+| Operational rules | Marked section merged into `AGENTS.md` |
+| MCP server | Merged into `opencode.json` or existing `opencode.jsonc` |
+| Ownership manifest | `opsphere-opencode-install.json` |
+
+These paths are relative to the global directory; there is no nested `.opencode/` folder. Existing rules, unrelated settings and comments are preserved. Conflicting files or an incompatible Opsphere MCP entry stop installation before changes.
+
+Then run `opencode mcp auth opsphere` (or `/mcps` in OpenCode) and start a new session to verify skill, agent and command discovery. Global rules apply across sessions. Choose either a global or project Opsphere installation; remove an old project installation with its project uninstall command before switching to global. The installer does not scan or change your other projects. Project configuration can override global defaults.
+
+`OPENCODE_CONFIG` and `OPENCODE_CONFIG_DIR` are OpenCode override layers; `--global` targets the standard global directory, not those custom layers. Review overrides when verifying discovery. See OpenCode's [configuration](https://opencode.ai/docs/config/), [skills](https://opencode.ai/docs/skills/), [agents](https://opencode.ai/docs/agents/) and [rules](https://opencode.ai/docs/rules/) documentation.
 
 ## MCP-only (no package)
 
@@ -108,6 +137,14 @@ cd /absolute/path/to/your-project
 ```sh
 node install.mjs uninstall /absolute/path/to/your-project
 ```
+
+For a global installation, use the same configuration home as at install time:
+
+```sh
+node install.mjs uninstall --global
+```
+
+Global uninstall uses `opsphere-opencode-install.json` and creates `opsphere-opencode-removed-<timestamp>/` in the global directory. It preserves user-edited skills, agents, commands, rules and MCP settings, and backs up unchanged owned files. Project and global installs have separate manifests. Existing project manifests from earlier installer versions remain supported.
 
 Uninstall removes only the unchanged MCP entry it introduced and its exact rules block. Unchanged owned files are moved to `.opencode/opsphere-opencode-removed-<timestamp>/` for recovery. Edited files and pre-existing matching files are preserved and reported. Empty directories and config files may remain. No recursive project deletion is used.
 
