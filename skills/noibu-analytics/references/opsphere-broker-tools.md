@@ -76,6 +76,8 @@ Wrap the hostname under **`input.name`** on the Opsphere tool (not a sibling `na
 }
 ```
 
+Rolling 7d automation may set `issuesSearch.dateTimeRange` (`RW_START` 00:00Z → `RUN_NOW`) instead of `days`; see `mcp-ops-b` `docs/noibu-broker-tools.md` § Issue search — rolling window.
+
 ### Top pages (`noibu_page_visits`)
 
 Use `groupBy.fieldSegments` with field **`URL`** (not `PAGE_URL`).
