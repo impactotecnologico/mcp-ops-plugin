@@ -8,7 +8,24 @@ Follow the public package availability check in the guide before downloading. MC
 
 ## Install in a project
 
-Requires Node.js 20 or newer. From this obtained package folder:
+Requires Node.js 20 or newer.
+
+### Install from the public repo
+
+Warp has no `github:` plugin install command, so fetch only this folder of `https://github.com/opsphere-io/opsphere-plugin` with a sparse checkout and run the installer from it:
+
+```sh
+git clone --depth 1 --filter=blob:none --sparse https://github.com/opsphere-io/opsphere-plugin.git
+cd opsphere-plugin
+git sparse-checkout set opsphere-warp
+node opsphere-warp/install.mjs install /absolute/path/to/your-project
+```
+
+Do not run `npx skills add opsphere-io/opsphere-plugin`: the repo-root `skills/` catalog is for Cursor, Claude Code and Codex, not Warp.
+
+### Install from an obtained copy
+
+From this obtained package folder:
 
 ```sh
 node install.mjs install /absolute/path/to/your-project
@@ -16,13 +33,30 @@ node install.mjs install /absolute/path/to/your-project
 
 The installer merges the project MCP config, adds a marked AGENTS.md section, and installs skills and their references in .agents/skills/. It preserves other MCP entries and existing files; conflicting skills, competing WARP.md or a different opsphere server stop installation before changes. It records ownership in .agents/opsphere-warp-install.json.
 
-Then follow the guide to enable the project MCP and complete browser OAuth. No authentication is performed by the installer. Global MCP-only configuration is an alternative documented in the guide; avoid adding both global and project entries unintentionally.
+Then follow the guide to enable the project MCP and complete browser OAuth. Warp’s own MCP server settings are documented at [https://docs.warp.dev/agents/capabilities/mcp/](https://docs.warp.dev/agents/capabilities/mcp/). No authentication is performed by the installer. Global MCP-only configuration is an alternative documented in the guide; avoid adding both global and project entries unintentionally.
 
 For manual installation, copy the selected skill directories (including references) into .agents/skills/, merge rules/AGENTS.md and configure MCP from the guide. Record the files you added; the uninstaller only manages its own manifest.
 
 ## Profile and first run
 
 Use [the recommended profile checklist](profiles/recommended.md), then ask Warp to run opsphere-onboarding. See [local examples](examples/local.md). Skills are not an import of another host's plugin engine.
+
+## Screenshots
+
+### Sign in (common to all clients)
+
+Every Opsphere client opens the same browser sign-in page during OAuth.
+
+| | |
+|---|---|
+| ![OAuth login](../assets/screenshots/oauth-login.png) | ![OAuth signup](../assets/screenshots/oauth-signup.png) |
+| *Sign in with your existing account — browser-based OAuth2.* | *New user? Create a free account in seconds — no credit card required.* |
+
+### Warp in action
+
+**1. Open Settings → MCP Servers.** How Warp configures MCP servers is documented at [https://docs.warp.dev/agents/capabilities/mcp/](https://docs.warp.dev/agents/capabilities/mcp/). **opsphere** is enabled and shows **338 tools available** (the count for this signed-in catalog). The chip list starts with Akamai, Algolia, Argo CD, AWS, Azure, Bitbucket and Cloudflare.
+
+![Warp MCP Servers settings with opsphere enabled and 338 tools available](../assets/screenshots/warp-mcp-tools.png)
 
 ## Uninstall or upgrade
 

@@ -14,6 +14,24 @@ Upstream rejects `errorIds`. On Opsphere, keep using **`errorIds`** for diagnosi
 
 For trends and highlights, pass **`issueId`** (single) or **`issueIds`** (array). The broker coalesces `issueId` / `issueIds` / `errorIds` into upstream **`issueIds`** for `noibu_error_trends_get` only.
 
+## Issue search rolling window (`noibu_issues_search`)
+
+Optional `input.issuesSearch.dateTimeRange { startTime, endTime }` (ISO UTC). When set, the broker omits conflicting `days` (default `LAST7_DAYS` when range omitted). Default gateway strategy translates the range into `LAST_SEEN_AT` **issueConditions**; set gateway env `NOIBU_ISSUES_SEARCH_DATE_TIME_RANGE_STRATEGY=passthrough` only after confirming upstream accepts `dateTimeRange` on `noibu_search_errors`.
+
+Optional `issuesSearch.sort` merges with `preset: checkout` defaults (preset fields first, then user fields without duplicate `field` names).
+
+Responses may include `structuredContent.data._opsphereEffectiveWindow` and presenter line `effective_window: … → …`.
+
+## Issue detail / trends / highlights — `dateTimeRange` + `handoffHints`
+
+| Tool | Opsphere `input` | Gateway behavior |
+|------|------------------|------------------|
+| `noibu_issue_get` | `days` **or** `dateTimeRange` | Forwards range upstream when set; else `days` |
+| `noibu_error_trends_get` | optional `dateTimeRange` | Skips `days` → `timePeriod` mapping when range set |
+| `noibu_issue_session_highlights_get` | optional `dateTimeRange` | Forwards range when set |
+
+`structuredContent.data.handoffHints` (when present): `marketsTopUrls`, `sampleFailingUrl`, `lastSeenAt` — see `docs/noibu-broker-tools.md` § Handoff hints.
+
 ## Error trends (`noibu_error_trends_get`)
 
 | Opsphere `input` | Gateway behavior |

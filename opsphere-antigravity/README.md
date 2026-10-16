@@ -10,16 +10,31 @@ Follow the public package availability check in the guide before downloading. MC
 
 ## Install (plugin)
 
-Current `agy` **1.2.x** (verified against 1.2.3). From a clone or extracted copy of this folder:
+Current `agy` **1.2.x** (verified against 1.2.3). Choose **one** of the two options below.
+
+### Install from the public repo
+
+Uses this folder (`opsphere-antigravity/`) of `https://github.com/opsphere-io/opsphere-plugin`, not the repo root:
+
+```sh
+agy plugin install https://github.com/opsphere-io/opsphere-plugin/tree/main/opsphere-antigravity
+agy plugin validate ~/.gemini/config/plugins/opsphere
+```
+
+### Install from a local copy
+
+From a clone or extracted copy of this folder:
 
 ```sh
 agy plugin install /absolute/path/to/opsphere-antigravity
 agy plugin validate ~/.gemini/config/plugins/opsphere
 ```
 
+### After installing
+
 Official install path: `~/.gemini/config/plugins/opsphere/`. Validate must report `mcpServers` processed. On current `agy`, the same output also reports skills and agents processed, and `agy plugin list` includes `mcpServers`.
 
-Then start a **new** `agy` session. Do not enable a second MCP entry named `opsphere` while the plugin is installed. Do not install from `https://github.com/opsphere-io/opsphere-plugin` (repo root): live `agy` 1.2.3 treats that as this whole monorepo, not this folder.
+Then start a **new** `agy` session. Do not enable a second MCP entry named `opsphere` while the plugin is installed. Do not install from the bare repo-root URL `https://github.com/opsphere-io/opsphere-plugin`: live `agy` 1.2.3 treats that as this whole monorepo (the Cursor/Claude bundle), not this folder. Always include the `/tree/main/opsphere-antigravity` path.
 
 `.agents/plugins/opsphere/` and `~/.gemini/antigravity-cli/plugins/opsphere/` are experimental and unsupported. Google docs may still cite the `antigravity-cli` path; use `~/.gemini/config/plugins/opsphere/` on current `agy`.
 
@@ -69,6 +84,45 @@ Local removal does not revoke the server session or delete your account.
 ## First run
 
 See [local examples](examples/local.md). Do not copy OAuth files from Cursor, Codex, Claude Code, Warp or OpenCode.
+
+## Screenshots
+
+### Sign in (common to all clients)
+
+Every Opsphere client opens the same browser sign-in page during OAuth.
+
+| | |
+|---|---|
+| ![OAuth login](../assets/screenshots/oauth-login.png) | ![OAuth signup](../assets/screenshots/oauth-signup.png) |
+| *Sign in with your existing account — browser-based OAuth2.* | *New user? Create a free account in seconds — no credit card required.* |
+
+### Antigravity in action
+
+Captured with Antigravity CLI 1.2.6 after `agy plugin install`.
+
+**1. Start a new session and run `/mcp`.** Before you sign in, the plugin's server `opsphere_opsphere` is listed under **Plugins** as `Unauthorized [Auth Needed]`.
+
+![Antigravity /mcp listing opsphere_opsphere as Unauthorized, Auth Needed](../assets/screenshots/antigravity-mcp-noauth.png)
+
+**2. Sign in in the browser.** Antigravity opens the Opsphere authorize page with its stable CIMD client id (`https://antigravity.google/oauth/client-metadata.json`). Log in, or choose **Sign up free**.
+
+![Browser showing the Opsphere sign-in page opened by Antigravity](../assets/screenshots/antigravity-callback.png)
+
+**3. Copy the one-time code.** After you sign in, Google Antigravity shows a one-time authorization code. Paste it into the terminal. Never share or document this code; it is redacted here.
+
+![Google Antigravity page showing the one-time code to paste into the application](../assets/screenshots/antigravity-success.png)
+
+**4. Check `/mcp` again.** `opsphere_opsphere` now shows `[Authed]` with its tool list.
+
+![Antigravity /mcp listing opsphere_opsphere as Authed with its tools](../assets/screenshots/antigravity-mcp-connected.png)
+
+**5. Ask a first question:** `Check DNS for opsphere.io`. The agent loads the `endpoint-health` skill, then calls `ops_my_usage`, `dns_lookup`, `http_check`, `cert_status` and `dnssec_check`. All are read-only.
+
+![Antigravity running the endpoint-health skill and Opsphere DNS, HTTP, TLS and DNSSEC tools](../assets/screenshots/antigravity-check-dns-one.png)
+
+**6. Read the report.** The result is a structured verdict with the target, DNS, HTTP, TLS, evidence, gaps and next steps.
+
+![Antigravity endpoint-health report for opsphere.io with verdict, DNS, HTTP, TLS and evidence](../assets/screenshots/antigravity-check-dns-two.png)
 
 ## Testing
 
