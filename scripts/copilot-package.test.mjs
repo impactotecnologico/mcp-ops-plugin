@@ -56,7 +56,9 @@ test('portable skills exist and README documents Copilot install', () => {
 test('Copilot marketplace points at opsphere-copilot and Claude marketplace is unchanged', () => {
   const marketplace = JSON.parse(fs.readFileSync(path.join(root, '.github/plugin/marketplace.json'), 'utf8'));
   assert.equal(marketplace.name, 'opsphere');
-  assert.equal(marketplace.plugins.length, 1);
+  assert.equal(marketplace.plugins.length, 2);
+  assert.equal(marketplace.plugins[1].name, 'opsphere-vscode');
+  assert.equal(marketplace.plugins[1].source, './opsphere-vscode');
   assert.equal(marketplace.plugins[0].name, 'opsphere');
   assert.equal(marketplace.plugins[0].source, './opsphere-copilot');
   const claude = JSON.parse(fs.readFileSync(path.join(root, '.claude-plugin/marketplace.json'), 'utf8'));

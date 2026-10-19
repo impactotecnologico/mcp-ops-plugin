@@ -14,6 +14,12 @@
       "version": "1.0.0",
       "source": "./opsphere-copilot",
       "description": "Opsphere DevOps and SRE tools for Copilot CLI"
+    },
+    {
+      "name": "opsphere-vscode",
+      "version": "1.0.0",
+      "source": "./opsphere-vscode",
+      "description": "Opsphere DevOps and SRE tools for desktop VS Code with GitHub Copilot"
     }
   ]
 }
