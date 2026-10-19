@@ -12,9 +12,10 @@ Copy or paraphrase the following:
 
 > **Opsphere — DevOps Intelligence**
 >
-> You're connected to a remote MCP gateway. All tools run on `mcp-cursor.opsphere.io` — nothing executes from hidden scripts in this package.
+> Opsphere connects to the remote MCP gateway at `mcp-cursor.opsphere.io`. A successful `ops_my_usage` call confirms account access; seeing this welcome guide alone does not confirm a connection. Nothing executes from hidden scripts in this package.
 >
 > **First time here?**
+> - Send a first message in this chat to initialize the session runtime, then open **MCP: List Servers → opsphere** and start it if needed. If already **Running**, continue with setup and verification in this same chat.
 > - Run **`/opsphere-setup`** — connect your account (OAuth) and configure your first integration.
 > - Or say: _"Set up my Opsphere account"_
 >

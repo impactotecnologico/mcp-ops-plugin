@@ -5,6 +5,8 @@ description: Get started with Opsphere in desktop VS Code with GitHub Copilot; d
 
 # Opsphere in desktop VS Code with GitHub Copilot
 
+If starting MCP reports “Cannot start an MCP server before the session runtime has been created. Send a message first.”, ask the user to submit a first message in the same VS Code chat and retry after session initialization. This is a host runtime prerequisite, not evidence of failed OAuth or a gateway error. Do not add a duplicate server or change authentication fields to work around it.
+
 Use live MCP discovery, then `ops_my_usage` and `ops_accounts_list` to identify the active workspace and plan. Personal Workspace availability does not mean it is currently selected. Do not expose internal IDs unless diagnosing a mismatch.
 
 If disconnected, read the installed `connect-another-client` skill and its reference. Never copy tokens from another app. Installing a skill does not install or authorize MCP. Open **MCP: List Servers**, select **opsphere**, start it and follow browser authentication. Let VS Code manage OAuth discovery and credentials. Do not configure client_id, callback, tokens or secrets.

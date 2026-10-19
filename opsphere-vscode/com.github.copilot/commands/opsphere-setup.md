@@ -8,6 +8,8 @@ Guide the user through connecting Opsphere and configuring their first integrati
 
 ## Step 1 — Check authentication status
 
+If the tools are not available yet, do not invent a call or treat this as a 401. Ask the user to send a first message in the same VS Code chat to initialize its runtime, then open **MCP: List Servers**, select **opsphere** and start it if needed. A **Running** status alone does not verify authenticated tool access. Check the chat's **Configure Tools** picker if Opsphere tools are disabled.
+
 Call `ops_my_usage` (no parameters). This determines the current state:
 
 - **Success**: the user is already authenticated. Skip to Step 3.
