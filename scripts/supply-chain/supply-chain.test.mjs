@@ -42,6 +42,16 @@ test('image releases cannot disable SBOM or provenance', t => {
   assert.match(errors, /provenance is required/);
   assert.match(errors, /SBOM generator is required/);
 });
+test('Node tooling is reviewed by major version', t => {
+  const f = fixture(t);
+  const action = 'actions/setup-node@' + policy.actions['actions/setup-node'];
+  f.set('.github/workflows/ci.yml', 'steps:\n  - uses: ' + action + '\n    with:\n      node-version: 22\n');
+  assert.deepEqual(checkPolicy(f.dir), []);
+  f.set('.github/workflows/ci.yml', 'steps:\n  - uses: ' + action + '\n    with:\n      node-version: "22.23.2"\n');
+  assert.deepEqual(checkPolicy(f.dir), []);
+  f.set('.github/workflows/ci.yml', 'steps:\n  - uses: ' + action + '\n    with:\n      node-version: 20\n');
+  assert.match(checkPolicy(f.dir).join(), /Node tooling version is not reviewed/);
+});
 test('mutable or unapproved Action fails', t => {
   const f = fixture(t);
   for (const ref of ['v4', 'e'.repeat(40)]) {

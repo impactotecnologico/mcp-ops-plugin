@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "opsphere-vscode",
+  "version": "1.0.0",
+  "description": "Opsphere DevOps and SRE tools for desktop VS Code with GitHub Copilot",
+  "author": {
+    "name": "Opsphere",
+    "email": "contact@opsphere.io"
+  },
+  "homepage": "https://opsphere.io",
+  "repository": "https://github.com/opsphere-io/opsphere-plugin",
+  "license": "MIT",
+  "keywords": [
+    "devops",
+    "sre",
+    "mcp",
+    "opsphere",
+    "vscode"
+  ]
+}

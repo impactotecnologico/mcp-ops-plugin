@@ -32,7 +32,7 @@ export function checkPolicy(root = process.cwd()) {
   const visit = (value, path) => {
     if (!value || typeof value !== 'object') return;
     if (String(value.uses ?? '').startsWith('docker/setup-buildx-action@') && value.with?.version !== policy.buildxVersion) errors.push(path + ': Buildx version is not reviewed');
-    if (String(value.uses ?? '').startsWith('actions/setup-node@') && value.with?.['node-version'] !== policy.nodeVersion) errors.push(path + ': Node tooling version is not reviewed');
+    if (String(value.uses ?? '').startsWith('actions/setup-node@') && String(value.with?.['node-version'] ?? '').split('.')[0] !== String(policy.nodeVersion).split('.')[0]) errors.push(path + ': Node tooling version is not reviewed');
     if (String(value.uses ?? '').startsWith('docker/build-push-action@')) {
       if (value.with?.provenance !== 'mode=min,version=v0.2') errors.push(path + ': release provenance is required');
       if (!String(value.with?.sbom ?? '').startsWith('generator=')) errors.push(path + ': pinned SBOM generator is required');

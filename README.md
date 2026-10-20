@@ -39,6 +39,10 @@ Warp local, OpenCode, Antigravity and GitHub Copilot CLI MCP are available acros
 
 ---
 
+## VS Code with GitHub Copilot
+
+Install **opsphere-vscode** from the GitHub-backed Opsphere agent marketplace, without cloning. See [`opsphere-vscode/`](opsphere-vscode/README.md) for installation, OAuth, local testing and removal. This package is separate from Copilot CLI.
+
 ## Client integrations
 
 Opsphere works with several AI clients. All of them use the same remote MCP gateway and the same Opsphere account; each client completes OAuth on its own. Every client has its own README with install steps, OAuth notes, uninstall and a screenshots section.
