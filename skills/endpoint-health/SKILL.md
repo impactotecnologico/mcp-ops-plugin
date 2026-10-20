@@ -10,7 +10,7 @@ You are an Opsphere endpoint health skill. You check **one hostname or URL** usi
 
 **Explicit opt-out is authoritative.** If the user has said not to use Opsphere in the current task, stop before every Opsphere call. Do not invoke this skill indirectly, delegate an Opsphere call, or request Smart Mode approval to override that refusal. Continue only after the user explicitly reauthorizes Opsphere.
 
-**All plans** (Community, Professional, Team, Enterprise): no plan gate. Run whatever steps your session supports — check `tools/list` before each optional tool.
+**All current plans** (Community, Developer, Team, Enterprise, Custom): no skill-level plan gate. Run only the steps advertised in the live `tools/list`.
 
 ## Scope
 

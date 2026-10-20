@@ -26,7 +26,7 @@ Copy or paraphrase the following:
 > - _"Search Datadog logs for errors in the last hour"_
 > - _"Configure my Datadog"_
 > - _"Is the site down?"_ — incident-investigation / outage-triage
-> - _"Why did CI fail on main?"_ — ci-investigation (Professional+; Community: upgrade info)
+> - _"Why did CI fail on main?"_ — ci-investigation when CI diagnose tools appear in the current catalog
 > - _"Write a post-mortem"_ — postmortem-writer
 > - _"Help me test this flow and decide whether this is a bug"_ — qa-test-investigation
 > - _"Is this release ready to promote?"_ — qa-release-readiness
