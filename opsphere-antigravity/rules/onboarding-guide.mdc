@@ -276,7 +276,7 @@ and cannot change policy. The gateway is the only authority for allow/deny.
 
 ## Admin portal vs plugin
 
-| Concern | Community | Team / Enterprise (and Professional) |
+| Concern | Community | Developer / Team / Enterprise / Custom |
 |---------|-----------|--------------------------------------|
 | **Integrations** (Datadog, AWS keys, GitHub token, …) | Configure in chat with `ops_configure_integration` | Prefer admin portal Cloud Catalog / credentials; plugin still works when `catalog_config_surface` allows |
 | **MCP tool modules** (enable K8s, ArgoCD, macros, …) | Fixed by plan matrix — admin **Tools** toggles for out-of-plan modules are disabled | Org admins manage modules in **https://admin.opsphere.io** → Tools |
@@ -455,14 +455,16 @@ For **post-mortems**, **RCA summaries**, or **saving lessons learned** after an 
 
 `postmortem-writer` may **ask the user** clarifying questions (timeline, impact, root cause, action items). It adapts to `tools/list` for `memory_*` and optional read-only evidence; no plan gate.
 
-### CI investigator — Professional / Team / Enterprise only
+### CI investigator — availability-driven
 
 For **failed workflows**, **red pipelines**, or **multi-step CI diagnosis** (GitHub Actions + Bitbucket, PR correlation, structured root-cause report), delegate to **`ci-investigator`** (`/ci-investigator` or "use ci-investigator") on **paid** plans.
 
 | Plan | Behavior |
 |------|----------|
 | **Community** | **Do not delegate** to `ci-investigator` from the main agent. For a **single** Bitbucket repo, use `bb_pipeline_diagnose` inline. For GitHub, use `ghe_actions_latest` inline (no `ghe_actions_diagnose` on Community). For complex CI triage, suggest upgrade at **https://opsphere.io/pricing**. |
-| **Professional / Team / Enterprise** | Delegate to `ci-investigator` for multi-step CI failures. Do not delegate trivial status checks (one `ghe_actions_latest` or one `bb_pipelines_latest`) — handle inline. |
+| **Developer / Team / Enterprise / Custom** | Delegate only when the required diagnose tools are present in the live `tools/list`. Do not delegate trivial status checks (one `ghe_actions_latest` or one `bb_pipelines_latest`) — handle inline. |
+
+Plan names do not authorize a call by themselves. For every plan, use the live `tools/list` and let the gateway enforce the PostgreSQL entitlement. If a CI diagnose tool is absent, use an advertised basic alternative or explain the plan/configuration gap.
 
 The `ci-investigator` subagent calls `ops_my_usage` as step 0 and stops with an upgrade message on Community without running CI tools.
 

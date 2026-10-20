@@ -182,7 +182,7 @@ After signup or returning login, **Personal Workspace should already be Active**
 
 **Symptom**: A tool call returns `PLAN_TOOL_NOT_INCLUDED`, or the Admin portal shows a module as **Not in plan** with the toggle disabled.
 
-**Cause**: The tool or module is outside your subscription tier (e.g. Kubernetes on Community, ArgoCD on Professional). The gateway blocks execution even if the module was left enabled from an older configuration.
+**Cause**: The individual tool is outside the current plan entitlement (for example, an optional Kubernetes or ArgoCD tool on a capped plan). The gateway blocks execution even if the module was left enabled from an older configuration.
 
 **Fix**:
 
@@ -216,7 +216,7 @@ The gateway enforces per-tenant execution policies on every `tools/call`. The pl
 
 **Cause**: Community plan blocks mutating tools (writes to CDN, cache purge, workflow dispatch, etc.).
 
-**Fix**: Upgrade at **https://opsphere.io/pricing** for Team/Professional write access.
+**Fix**: Upgrade at **https://opsphere.io/pricing** when the gateway identifies a plan restriction; Developer, Team, Enterprise, and Custom remain subject to sensitive-action policy and approval.
 
 ---
 
@@ -234,13 +234,13 @@ The gateway enforces per-tenant execution policies on every `tools/call`. The pl
 
 **Symptom**: You run **`/ci-investigator`** or ask for automated CI diagnosis and get a message that CI Investigator requires a paid plan.
 
-**Cause**: The **`ci-investigator`** subagent is included on **Professional**, **Team**, and **Enterprise** only. Community includes basic CI tools in chat (`bb_pipeline_diagnose`, `ghe_actions_latest`) but not deep GitHub diagnose (`ghe_actions_diagnose`) or the subagent workflow.
+**Cause**: The current plan, tenant module configuration, or integration does not expose the CI diagnose tools required by **`ci-investigator`**.
 
 **Fix**:
 
 - For a **single** Bitbucket pipeline: ask _"Diagnose the failed Bitbucket pipeline for [repo]"_ — the main agent can call `bb_pipeline_diagnose` inline.
 - For **GitHub**: ask _"What GitHub Actions ran on main?"_ — `ghe_actions_latest` on Community; full auto-diagnose needs an upgrade.
-- Upgrade at **https://opsphere.io/pricing** for **`/ci-investigator`** and the full tool catalog.
+- Upgrade at **https://opsphere.io/pricing** only when the gateway reports a plan restriction. There is no fixed client-side "full catalog"; reconnect or refresh discovery after an administrator changes entitlements.
 
 Run **`ops_my_usage`** to confirm your plan name.
 

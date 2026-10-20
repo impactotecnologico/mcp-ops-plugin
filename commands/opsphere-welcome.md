@@ -36,7 +36,7 @@ Copy or paraphrase the following:
 > - **`/open-work-context`** — switch to another **linked external** workspace (paid). Not needed for Community Personal Workspace.
 > - _"I accepted my company invite — is my workspace linked?"_ — check with `ops_accounts_list`
 > - _"Is the site down?"_ or **`/outage-triage`** — multi-step incident triage (all plans)
-> - _"Why did CI fail on main?"_ or **`/ci-investigator`** — pipeline diagnosis (Professional+; Community: upgrade info)
+> - _"Why did CI fail on main?"_ or **`/ci-investigator`** — pipeline diagnosis when CI diagnose tools are available in your current catalog
 > - _"Write a post-mortem"_ or **`/postmortem-writer`** — RCA + optional incident memory (all plans)
 > - _"Help me test this flow and decide whether this is a bug"_ or **`/qa-test-investigator`** — QA cases + evidence (all plans)
 > - _"Is release abc123 ready for production?"_ or **`/qa-release-readiness`** — traceable release gate (all plans)

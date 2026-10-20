@@ -133,7 +133,7 @@ const checks = [
   {
     file: 'docs/PLANS.md',
     forbid: [/OPS_DEVELOPER_PLAN_ENABLED=true/i],
-    require: [/Personal Workspace/i, /Developer.*only available when/i],
+    require: [/Personal Workspace/i, /Community.*Developer.*Team.*Enterprise.*Custom/is, /tools\/list/i],
   },
 ];
 

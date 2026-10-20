@@ -1,70 +1,68 @@
-# Opsphere Plans
+# Opsphere plans and tool availability
 
-Commercial tiers for the Cursor plugin (remote MCP at `mcp-cursor.opsphere.io`).  
-Paid plans are provisioned by Opsphere — not self-serve Sign up.
+Opsphere exposes a tenant-specific tool catalog through the remote MCP gateway at `mcp-cursor.opsphere.io`. PostgreSQL plan entitlements are authoritative; the plugin bundle does not grant tools and no client-side list can bypass the gateway.
 
-| | **Community** | **Professional** | **Team** | **Enterprise** |
+## Current plans
+
+| | **Community** | **Developer** | **Team** | **Enterprise / Custom** |
 |---|:---:|:---:|:---:|:---:|
-| **Who** | Sign up / OAuth (individual) | Small teams (contact sales) | Org tenants (invite) | Custom contracts |
+| **Intended use** | Individual operational workspace | Individual builders and small technical teams | Organization tenants | Organizations with unrestricted or contractual catalogs |
+| **Counted-tool ceiling** | 100 | 250 | 400 | Unlimited |
+| **Plan membership** | Curated individual-tool grants | Broader curated individual-tool grants | Broad curated individual-tool grants | Every globally available tool |
 | **Personal Workspace** | Automatic at signup | Automatic | Automatic | Automatic |
-| **External workspaces** | Not included (upgrade) | Per plan quota | Per plan quota | Custom |
-| **MCP tools** | Community operational catalog (gateway is source of truth) | Expanded catalog | Full catalog | Full + custom |
-| **Daily tool calls** | 100 / day (UTC) | Unlimited | Unlimited | Unlimited |
-| **Trial** | 30 days | — | — | — |
-| **Write / mutate infra** | No (read-only) | Yes | Yes | Yes |
-| **Environments per request** | 1 | Multiple | Multiple | Multiple |
-| **Premium providers** | — | Partial | K8s, ArgoCD, Azure, Akamai, Pingdom, … | All |
-| **Configure integrations** | Plugin (`ops_configure_integration`) | Plugin + admin | Admin portal (primary) + plugin | Admin portal (primary) |
-| **Enable MCP modules (Tools page)** | Plan matrix only (premium toggles blocked) | Admin portal | Admin portal | Admin portal |
-| **Operational memory** | Yes | Yes | Yes | Yes |
-| **Outage triage subagent** (`/outage-triage`) | Yes | Yes | Yes | Yes |
-| **Endpoint health subagent** (`/endpoint-health`) | Yes | Yes | Yes | Yes |
-| **Post-mortem writer subagent** (`/postmortem-writer`) | Yes | Yes | Yes | Yes |
-| **CI Investigator subagent** (`/ci-investigator`) | No | Yes | Yes | Yes |
-| **QA Test Investigator** (`/qa-test-investigator`) | Yes | Yes | Yes | Yes |
-| **QA Release Readiness** (`/qa-release-readiness`) | Yes | Yes | Yes | Yes |
-| **Users** | 1 | Up to 5 | Up to 20 | Custom |
+| **External workspaces** | Not included | Per-plan quota | Per-plan quota | Contractual quota |
+| **Write / mutate infrastructure** | Read-only plan boundary | Subject to policy and approval | Subject to policy and approval | Subject to policy and approval |
+| **Configure tenant modules** | Within the Community catalog | Within the Developer catalog | Within the Team catalog | Within the globally available catalog |
+| **Administration surface** | Plugin/chat | Plugin and admin when enabled | Admin portal | Admin portal |
 
-## Community (free trial)
+The ceiling is not a promise that every account will see exactly that number. Tool availability is the intersection of:
 
-- **Connect** via Cursor OAuth (Sign up free / login) → Hub + **Personal Workspace** automatic (`subscription_id: community`).
-- Operational tools available immediately — no manual Personal Workspace link and no manual session open for normal use.
-- **Work Context** is optional stack notes; **External workspaces** require upgrade. **Organization invites:** accepting with the same email on Developer+ can auto-link that workspace to your Hub — see Team/Enterprise below.
-- Network tools (`dns_lookup`, `http_check`, `cert_status`) work immediately — no credentials.
-- Check status anytime: **`ops_my_usage`** or _"Show my usage"_ in chat.
-- **Basic CI in chat** — `bb_pipeline_diagnose`, `ghe_actions_latest` (not the **`/ci-investigator`** subagent; see below).
-- **Developer** plan features are only available when that plan is enabled for the account — do not assume Developer is globally on.
+1. the tool being globally available;
+2. the tool being included in the tenant's plan;
+3. the module being enabled for that tenant and runtime;
+4. required integration credentials and Cloud Catalog context being configured; and
+5. the gateway's security and execution-policy checks.
 
-After trial or when you need write access / external workspaces / full catalog → [opsphere.io/pricing](https://opsphere.io/pricing).
+`ops_*` control-plane tools do not consume the 100/250/400 counted-tool capacity, but capped plans still need an explicit entitlement for them. Tools in the `repo` and `repos` modules are globally disabled because the gateway cannot safely use repositories from the user's local computer.
 
-## Professional
+## How to know what you can use
 
-- Expanded MCP catalog (includes `ghe_actions_diagnose` and related GitHub CI tools).
-- **`/ci-investigator`** subagent — structured diagnosis for failed GitHub Actions and Bitbucket pipelines.
-- Unlimited daily tool calls; write/mutate tools enabled.
+- Trust the current MCP `tools/list` for the signed-in user, active workspace, and runtime.
+- Use `ops_my_usage` to confirm the current plan and workspace.
+- A tool shown by stable discovery is still subject to server-side authorization when called.
+- The platform administrator can change plan membership without a plugin update, so static screenshots and historical tool totals are informational only.
 
-Contact sales via [opsphere.io/pricing](https://opsphere.io/pricing).
+Agents and skills must never invent a tool or assume that a paid plan has a fixed "full catalog". If an optional tool is absent, use an advertised alternative or explain the plan/configuration gap.
 
-## Team / Enterprise (invite)
+## Tenant administrators
 
-Your org admin provisions access (e.g. `user@company.com` → your organization workspace).
+Tenant administrators enable or disable modules and configure integrations only inside the catalog allowed by their plan. Enabling a tenant module never expands the plan. When the plan excludes a tool, the gateway returns `PLAN_TOOL_NOT_INCLUDED` even if stale tenant configuration still references its module.
 
-- Full tool surface (200+ tools in Cursor).
-- **`/ci-investigator`** subagent for multi-step CI failures (GitHub + Bitbucket).
-- No daily rate limit.
-- No read-only gate.
-- **Connection Hub:** when you accept an admin invitation with the **same email** as your Hub on **Developer** or higher, that organization workspace is typically **linked automatically** — confirm with `ops_accounts_list`. Use **`/link-account`** if emails differ or you need to link manually.
+## Platform administrators
 
-Use **`ops_my_usage`** to confirm plan name and enabled tool count.
+Platform administrators manage individual tools and whole modules for Community, Developer, and Team in the admin portal. Totals are derived from the selected individual tools. Enterprise and Custom are unlimited and receive every globally available tool automatically; they do not use per-tool grant rows.
 
-## Error codes (Community)
+## Community
+
+- Personal Workspace is created automatically after signup.
+- Network and other curated operational tools can work immediately; integrations that need credentials must be configured first.
+- External workspaces, mutating operations, and non-entitled tools remain unavailable.
+- Use `ops_my_usage` for trial and daily usage status.
+
+## Developer, Team, Enterprise, and Custom
+
+- The visible catalog grows according to plan entitlements and tenant configuration.
+- External workspace quota, execution budgets, sensitive actions, and approvals remain separate controls; tool membership does not disable them.
+- Organization workspaces are administered at [admin.opsphere.io](https://admin.opsphere.io) when the account exposes that surface.
+
+## Common errors
 
 | Code | Meaning |
 |------|---------|
-| `TRIAL_EXPIRED` | 30-day trial ended — upgrade required |
-| `RATE_LIMIT_EXCEEDED` | 100 daily calls used |
-| `READ_ONLY_PLAN` | Mutating tool blocked on Community |
-| `PLAN_TOOL_NOT_INCLUDED` | Tool / module outside the plan allow-list |
-| `SINGLE_ENVIRONMENT_ONLY` | More than one env in a single request |
+| `PLAN_TOOL_NOT_INCLUDED` | The individual tool is not included in the current plan |
+| `READ_ONLY_PLAN` | The plan blocks a mutating operation |
+| `TRIAL_EXPIRED` | The trial ended |
+| `RATE_LIMIT_EXCEEDED` | The daily usage limit was reached |
+| `SINGLE_ENVIRONMENT_ONLY` | The request exceeds the plan's environment scope |
 
-See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) and the plugin onboarding rule for agent behavior.
+See [TOOLS.md](TOOLS.md) for tool behavior and [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for recovery guidance.
