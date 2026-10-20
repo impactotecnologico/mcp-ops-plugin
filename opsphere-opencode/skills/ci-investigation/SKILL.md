@@ -34,33 +34,14 @@ direct corporate-workspace login.
 
 If a tool fails for missing credentials, note it in **Gaps** and continue with other available tools. Do not ask the user to paste secrets.
 
-## Plan gate (mandatory — step 0)
+## Availability gate (mandatory — step 0)
 
-Before any CI tool call, invoke `ops_my_usage` **when it is present**. If it is
-absent in a direct corporate workspace, do not treat that as a disconnected
-workspace: proceed only with CI tools advertised in the live `tools/list`; the
-gateway remains authoritative for entitlement and execution limits.
+Invoke `ops_my_usage` when it is present to understand the active plan and workspace. If it is absent in a direct corporate workspace, continue only with CI tools advertised in the live `tools/list`; the gateway remains authoritative.
 
-### Community — stop immediately
-
-If the response contains `**Plan**: Community`:
-
-1. Return this message to the parent agent (do not paraphrase the upgrade URL):
-
-   **CI Investigator requires a paid plan**
-
-   The **CI Investigation** skill (automated GitHub Actions and Bitbucket pipeline diagnosis with structured root-cause reports) is included on **Professional**, **Team**, and **Enterprise** plans.
-
-   Your current plan is **Community** (Personal Workspace included, 100 calls/day, read-only). Upgrade for the full catalog, unlimited daily calls, and premium providers including deep CI diagnose (`ghe_actions_diagnose`).
-
-   **https://opsphere.io/pricing**
-
-2. **Stop.** Do not call `bb_pipeline_diagnose`, `ghe_actions_diagnose`, or any other CI tool.
-3. Use at most **one** tool call total (`ops_my_usage` only).
-
-### Paid plans — continue
-
-If `**Plan**` is **Professional**, **Team**, **Enterprise**, or **Custom** (anything other than Community), proceed to the investigation flow below.
+- If at least one relevant diagnose tool is advertised, continue with that provider.
+- If only basic CI status tools are advertised, perform a bounded basic check and report that deep diagnosis is unavailable.
+- If no relevant CI tool is advertised, stop with an **inconclusive** result and explain that the current plan, tenant module configuration, or integration does not expose CI tools. Link **https://opsphere.io/pricing** only when the gateway reports a plan restriction.
+- Never promise a fixed "full catalog" or infer access solely from Community, Developer, Team, Enterprise, or Custom.
 
 ### Other abort conditions
 
@@ -70,17 +51,17 @@ If `**Plan**` is **Professional**, **Team**, **Enterprise**, or **Custom** (anyt
 | `RATE_LIMIT_EXCEEDED` | Show `resetsAt` from error; suggest `ops_my_usage`; stop |
 | Tenant not active | Explain status from `ops_my_usage`; stop |
 
-## Tools/list check (paid plans only)
+## Tools/list check
 
-After passing the plan gate, note which CI diagnose tools exist:
+After the availability gate, note which CI diagnose tools exist:
 
-- `ghe_actions_diagnose` absent → run Bitbucket path if available; document GHE diagnose gap. **Do not** treat as Community.
+- `ghe_actions_diagnose` absent → run Bitbucket/GitLab or basic GitHub status path if available; document the diagnose gap. Do not guess the user's plan.
 - `bb_pipeline_diagnose` absent → run GitHub path if available; document Bitbucket gap.
 - Both absent → return **inconclusive** with **Gaps** listing missing integrations; suggest `configure-integration` for GitHub or Bitbucket.
 
 ## Ask the user (when missing)
 
-After the plan gate, before CI tool calls, ensure you can target the right pipeline. **Ask the user** for gaps — do not invent repo names, owners, or workflow names.
+After the availability gate, before CI tool calls, ensure you can target the right pipeline. **Ask the user** for gaps — do not invent repo names, owners, or workflow names.
 
 | Topic | Example question |
 |-------|------------------|
@@ -94,7 +75,7 @@ After the plan gate, before CI tool calls, ensure you can target the right pipel
 
 Reuse context from the thread. Batch at most **2–4 questions** per turn. If repo + platform are clear, proceed without asking.
 
-## Investigation flow (paid plans only)
+## Investigation flow
 
 Follow in order; skip steps when tools are unavailable or the user already gave enough context.
 

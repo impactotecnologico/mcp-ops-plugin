@@ -95,7 +95,7 @@ automatically. Keep the current workspace unchanged until the user decides.
 |----------|--------|-------|---------|
 | `outage-triage` | `@opsphere:outage-triage` | All | Site-down, widespread failures, multi-step incident triage |
 | `endpoint-health` | `@opsphere:endpoint-health` | All | One hostname/URL: DNS + HTTP + TLS |
-| `ci-investigator` | `@opsphere:ci-investigator` | Professional+ | Failed CI/CD pipelines (Community gets an upgrade message) |
+| `ci-investigator` | `@opsphere:ci-investigator` | When required CI diagnose tools are in `tools/list` | Failed CI/CD pipelines; missing entitlements produce plan/configuration guidance |
 | `postmortem-writer` | `@opsphere:postmortem-writer` | All | Post-mortem / RCA drafting, optional `memory_store` |
 | `qa-test-investigator` | `@opsphere:qa-test-investigator` | All | Feature tests, bug reproduction and ticket-ready QA evidence |
 | `qa-release-readiness` | `@opsphere:qa-release-readiness` | All | Release gate based on matching tests, deployments and runtime evidence |

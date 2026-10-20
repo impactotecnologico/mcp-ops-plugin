@@ -228,7 +228,7 @@ Subagents use advertised tools and respect the active workspace's plan, configur
 |----------|--------|-------|-----------|--------------|
 | [**outage-triage**](agents/outage-triage.md) | `/outage-triage` | All | Yes | Multi-step **incident triage**: alerts, edge (DNS/HTTP/TLS), deploys, logs, K8s/ArgoCD when available. Structured verdict + evidence. |
 | [**endpoint-health**](agents/endpoint-health.md) | `/endpoint-health` | All | Yes | **Single host/URL** check: DNS → HTTP → TLS (+ optional TCP, DNSSEC, Cloudflare, Pingdom on paid catalogs). |
-| [**ci-investigator**](agents/ci-investigator.md) | `/ci-investigator` | Professional+ | Yes | **Failed CI**: GitHub Actions + Bitbucket diagnose, PR/deploy correlation. Community gets upgrade guidance at step 0. |
+| [**ci-investigator**](agents/ci-investigator.md) | `/ci-investigator` | When CI diagnose tools are entitled and advertised | Yes | **Failed CI**: GitHub Actions + Bitbucket diagnose, PR/deploy correlation. Missing tools produce plan/configuration guidance. |
 | [**postmortem-writer**](agents/postmortem-writer.md) | `/postmortem-writer` | All | No* | **Post-mortem / RCA** draft; optional `memory_store` (`scope=incident`) after you approve. Asks for timeline, impact, action items. |
 | [**qa-test-investigator**](agents/qa-test-investigator.md) | `/qa-test-investigator` | All | Yes | Designs focused tests, investigates suspected defects, and returns traceable evidence plus a ticket-ready bug report. |
 | [**qa-release-readiness**](agents/qa-release-readiness.md) | `/qa-release-readiness` | All | Yes | Assesses one release against matching CI, test, deployment, endpoint, and observability evidence. |
@@ -295,7 +295,7 @@ The Community setup uses **IAM Access Key + Secret Access Key**. Paid workspaces
 
 On **paid plans** with the `aws` module enabled, Opsphere can **diagnose Amazon Bedrock Agents** (not Agent Core): `aws_bedrock_agent_diagnose` for agent status, aliases, action groups, IAM, knowledge bases, and findings → `aws_lambda_agent_diagnose` for each backing Lambda → optional CloudWatch logs. Guided MCP prompt: **`investigate-bedrock-agent`** (listed in `opsphere://playbooks/index`). Details: [docs/TOOLS.md](docs/TOOLS.md#aws_bedrock_agent_diagnose).
 
-> Full tool catalog on paid plans — including Kubernetes, ArgoCD, Azure Service Bus, Akamai, Confluence, and more.
+> Tool availability is dynamic. The gateway combines plan entitlements, tenant module settings, integration configuration, runtime, and security policy. Check the current `tools/list`; paid does not mean a fixed full catalog.
 
 ---
 

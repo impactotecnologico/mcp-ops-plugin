@@ -472,7 +472,7 @@ Requires: `GHE_TOKEN` (and optionally `GHE_BASE_URL` for self-hosted instances).
 
 For **github.com**, only `GHE_TOKEN` is required — the gateway defaults to `https://api.github.com`. Pass `repo` as `owner/repo` (e.g. `acme/storefront`).
 
-**Subagent (paid plans):** For failed workflows or multi-step CI triage on **Professional / Team / Enterprise**, use **`/ci-investigator`** — read-only structured report with `ghe_actions_diagnose`. Community: use `ghe_actions_latest` inline or upgrade; see [PLANS.md](PLANS.md).
+**Subagent (availability-driven):** For failed workflows or multi-step CI triage, use **`/ci-investigator`** when the relevant diagnose tools are present in the live `tools/list`. Otherwise use an advertised basic status tool or explain the plan/configuration gap; see [PLANS.md](PLANS.md).
 
 ### `ghe_repo_summary`
 Get a repository summary: default branch, latest commit, open PRs. Accepts `repo` as repository name or `owner/repo` slug.
@@ -488,7 +488,7 @@ Show the latest workflow run for a repository.
 
 ---
 
-### `ghe_actions_diagnose` (Professional / Team / Enterprise)
+### `ghe_actions_diagnose` (when entitled and configured)
 
 Auto-diagnose the latest failed workflow: finds the failed run, identifies failed jobs/steps, returns log excerpts.
 
@@ -502,7 +502,7 @@ Auto-diagnose the latest failed workflow: finds the failed run, identifies faile
 
 Requires: `BITBUCKET_API_EMAIL`, `BITBUCKET_API_TOKEN`.
 
-**Subagent (paid plans):** **`/ci-investigator`** combines Bitbucket and GitHub diagnosis on **Professional / Team / Enterprise**. Community can still use `bb_pipeline_diagnose` directly in chat for a single repo.
+**Subagent:** **`/ci-investigator`** combines advertised Bitbucket, GitHub, and GitLab diagnosis tools. Availability comes from the current plan entitlement and tenant configuration, not from a hardcoded client-side plan list.
 
 ### `bb_pipelines_latest`
 List the latest pipeline runs for a repository.
@@ -1086,9 +1086,9 @@ Skill: [`skills/run-macro-workflows/`](skills/run-macro-workflows/).
 
 ---
 
-## Premium Tools (Pro / Enterprise)
+## Plan-gated tools
 
-The following categories are available on paid plans:
+The following categories may be available when their individual tools are included in the current plan and their tenant modules/integrations are configured:
 
 - **Kubernetes** — pod logs, cluster summary, resource YAML, rollout history
 - **ArgoCD** — app list, sync/health status, unhealthy resources
@@ -1098,4 +1098,4 @@ The following categories are available on paid plans:
 - **Confluence** — page search and content read
 - **Contentful**, **Pingdom**, and more
 
-Upgrade at **https://opsphere.io/pricing**.
+Use the live `tools/list` as the catalog for the authenticated user and active workspace. Upgrade guidance belongs only to a gateway-reported plan restriction.

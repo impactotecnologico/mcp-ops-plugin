@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.27] - 2026-10-20 (Plan-aware tool discovery)
+
+- Replaced retired Professional-plan guidance with the current Community, Developer, Team, Enterprise, and Custom model.
+- Documented PostgreSQL-backed per-tool entitlements, tenant/runtime configuration, and live `tools/list` discovery as the authoritative availability contract.
+- Added portable agent synchronization and CI invariants that prevent stale plan gates from returning.
+- Distribution versions: Cursor **1.0.27**, Codex **1.0.21**, Claude Code **1.0.15**.
+
 ## Unreleased
 
 - Document Cursor Automation workload identity, per-run and daily execution budgets, terminal budget denials, and bounded Noibu atomic-tool reporting. No Noibu macro is introduced.
