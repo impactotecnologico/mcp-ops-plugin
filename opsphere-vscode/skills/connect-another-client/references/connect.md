@@ -149,7 +149,7 @@ Do not put client_id, callback, tokens or secrets in the plugin. MCP-only uses ~
 
 ## Verify
 
-- Call ops_my_usage and ops_accounts_list after login to verify the account and intended active workspace.
+- After login, call **`ops_my_usage` once** and wait for the result before any other `tools/call`. Then call `ops_accounts_list` if you need workspace enumeration. Do not run these in parallel with `tools/list` or `resources/list` on first connect — the Hub returns `BROKER_SUBPROCESS_BUSY` when the subprocess pool is saturated (not an auth failure). Retry once after `details.retryAfterMs`.
 - Use live MCP discovery; do not promise a fixed count of tools or change workspace to test connectivity.
 
 ## Troubleshooting

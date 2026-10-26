@@ -203,7 +203,7 @@ The gateway enforces per-tenant execution policies on every `tools/call`. The pl
 | Tool blocked by plan/runtime | `-32003` / `execution_module_not_enabled` | Check plan with `ops_my_usage`; upgrade or enable module in admin |
 | Sensitive action blocked | `-32003` / `execution_sensitive_action_denied` | Use read-only tools or ask admin to allow sensitive actions |
 | Budget exhausted | `-32004` / `max_tool_calls`, `max_cost_units`, `max_macro_calls` | Wait until `resetsAt` in the error body; narrow investigation scope |
-| Subprocess busy | `BROKER_SUBPROCESS_BUSY` | Retry after a few seconds — another tool call is using the broker worker |
+| Subprocess busy | `BROKER_SUBPROCESS_BUSY` | **Not an auth failure.** The Connection Hub allows only a limited number of concurrent MCP subprocess workers per gateway task. Run **one** `tools/call` at a time during onboarding (especially `ops_my_usage`); wait `details.retryAfterMs` (often 3000 ms) and retry **once**. Do not parallelize `tools/list`, `resources/list`, and tool calls on first connect. |
 | Linked workspace revoked | `WORKSPACE_ACCESS_REVOKED` | Re-link with **`/link-account`** or open a different connection |
 
 **Agent rule:** never send `max_tool_calls`, `profile_id`, `plan`, or other policy fields in tool arguments — the gateway ignores client-supplied limits and may reject malformed requests.

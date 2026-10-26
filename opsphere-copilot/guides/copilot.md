@@ -45,7 +45,7 @@ MCP-only is a separate mode: `copilot mcp add --transport http opsphere https://
 
 ## Verify
 
-- Call ops_my_usage and ops_accounts_list after login to verify the account and intended active workspace.
+- After login, call ops_my_usage once and wait before any other tools/call; then ops_accounts_list if needed. Serialize Hub MCP calls on first connect; on BROKER_SUBPROCESS_BUSY wait retryAfterMs and retry once (not an auth failure).
 - Use live MCP discovery; do not promise a fixed count of tools or change workspace to test connectivity.
 
 ## Troubleshooting
@@ -53,6 +53,7 @@ MCP-only is a separate mode: `copilot mcp add --transport http opsphere https://
 - missing_server: Check the JSON, configuration path and local server enablement.
 - invalid_redirect_uri: Callback registration compatibility error before account login, not a plan or invitation restriction. Report the callback shape and redacted error to support.
 - authentication: For 401, invalid_grant or expired sessions, complete OAuth in the destination client and reconnect once. If it still fails, report the redacted error. Do not copy credentials.
+- broker_subprocess_busy: Not an auth failure. The Connection Hub limits concurrent MCP subprocess workers per gateway task. Run one tools/call at a time during onboarding (especially ops_my_usage). Wait details.retryAfterMs (often 3000 ms) and retry once. Do not parallelize tools/list, resources/list, and tool calls on first connect.
 - stale_catalog: Check catalog.mode in ops_my_usage. In stable mode, do not reconnect after workspace changes; inspect workspace availability or ops_list_integrations instead. Legacy mode with tools_discovery.stale=true may require client catalog refresh/reconnect. Future product/schema updates may need one reload. Never change workspace to repair discovery, and do not ask the agent to invoke tools/list if its host does not expose it.
 - revocation: Revoke only the destination session. Removing configuration is not server-side revocation. Do not unlink workspaces or revoke other apps as a reconnect shortcut.
 
