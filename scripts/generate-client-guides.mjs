@@ -108,6 +108,7 @@ function renderShared(catalog, configs) {
       'unknown_client_id',
       'token_issuance_failed',
       'authentication',
+      'broker_subprocess_busy',
       'stale_catalog',
       'revocation',
     ]),
@@ -309,14 +310,28 @@ export function generateGuides() {
     packageKey: 'warpPackage',
     configKey: 'warp',
     preamble: { dcr: true, cimd: false },
-    troubleKeys: ['missing_server', 'invalid_redirect_uri', 'authentication', 'stale_catalog', 'revocation'],
+    troubleKeys: [
+      'missing_server',
+      'invalid_redirect_uri',
+      'authentication',
+      'broker_subprocess_busy',
+      'stale_catalog',
+      'revocation',
+    ],
   });
   const opencode = renderClientGuide(catalog, configs, {
     id: 'opencode',
     packageKey: 'opencodePackage',
     configKey: 'opencode',
     preamble: { dcr: true, cimd: false },
-    troubleKeys: ['missing_server', 'invalid_redirect_uri', 'authentication', 'stale_catalog', 'revocation'],
+    troubleKeys: [
+      'missing_server',
+      'invalid_redirect_uri',
+      'authentication',
+      'broker_subprocess_busy',
+      'stale_catalog',
+      'revocation',
+    ],
   });
   const antigravity = renderClientGuide(catalog, configs, {
     id: 'antigravity',
@@ -330,6 +345,7 @@ export function generateGuides() {
       'unknown_client_id',
       'token_issuance_failed',
       'authentication',
+      'broker_subprocess_busy',
       'stale_catalog',
       'revocation',
     ],
@@ -339,7 +355,14 @@ export function generateGuides() {
     packageKey: 'copilotPackage',
     configKey: 'copilot',
     preamble: { dcr: true, cimd: false },
-    troubleKeys: ['missing_server', 'invalid_redirect_uri', 'authentication', 'stale_catalog', 'revocation'],
+    troubleKeys: [
+      'missing_server',
+      'invalid_redirect_uri',
+      'authentication',
+      'broker_subprocess_busy',
+      'stale_catalog',
+      'revocation',
+    ],
   });
   return { shared, warp, opencode, antigravity, copilot };
 }
