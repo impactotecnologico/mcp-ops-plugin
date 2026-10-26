@@ -141,6 +141,15 @@ The gateway enforces execution policy on every `tools/call`. **Never** send poli
 | `-32003` | `execution_module_not_enabled` | Tool/module not on plan — suggest `ops_my_usage` or upgrade |
 | `-32003` | `execution_sensitive_action_denied` | Pick a read-only alternative |
 | `-32004` | `max_tool_calls` / `max_cost_units` / `max_macro_calls` | Budget exhausted — wait for `resetsAt`, don't spam retries |
+| `BROKER_SUBPROCESS_BUSY` | Hub subprocess pool at capacity | **Not** invalid credentials. Serialize MCP `tools/call` (one at a time on first connect). Call `ops_my_usage` alone before other tools. Honor `retryAfterMs`, then retry once. Do not fan out `tools/list`, `resources/list`, and tool calls in parallel. |
+
+## Connection Hub — MCP concurrency (mandatory)
+
+The remote gateway runs a **small pool** of MCP subprocess workers per task. Parallel tool calls from the client (common during onboarding or multi-intent prompts) return `BROKER_SUBPROCESS_BUSY` even when authentication succeeded and `tools/list` looks correct.
+
+1. After login, call **`ops_my_usage` once**, wait for the result, then continue.
+2. Never launch multiple Opsphere `tools/call` in parallel on the same Hub session unless the user explicitly needs concurrent reads and accepts retries.
+3. On `BROKER_SUBPROCESS_BUSY`, wait `details.retryAfterMs` milliseconds and retry **only that call once** before escalating.
 
 ## Datadog Synthetics (outage triage)
 
