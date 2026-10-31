@@ -6,9 +6,9 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 - `destructiveHint`: puede borrar, sobrescribir, revocar o ejecutar una acción irreversible.
 - `openWorldHint`: puede cambiar un sistema público o un tercero externo.
 
-- Tools auditadas: 419
-- Solo lectura: 359
-- Con efectos o cambios de estado: 60
+- Tools auditadas: 424
+- Solo lectura: 363
+- Con efectos o cambios de estado: 61
 - Destructivas o irreversibles: 35
 - Cambian sistemas públicos o externos: 19
 - Bloqueadas por la regla existente del plan de solo lectura: 36
@@ -204,6 +204,7 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `ga4_custom_report` | true | false | false | Solo consulta | Permitida |
 | `ga4_events_report` | true | false | false | Solo consulta | Permitida |
 | `ga4_funnel_analysis` | true | false | false | Solo consulta | Permitida |
+| `ga4_organic_landing_report` | true | false | false | Solo consulta | Permitida |
 | `ga4_pages_performance` | true | false | false | Solo consulta | Permitida |
 | `ga4_properties_list` | true | false | false | Solo consulta | Permitida |
 | `ga4_property_details` | true | false | false | Solo consulta | Permitida |
@@ -257,9 +258,12 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `gsc_device_country_report` | true | false | false | Solo consulta | Permitida |
 | `gsc_performance_overview` | true | false | false | Solo consulta | Permitida |
 | `gsc_period_comparison` | true | false | false | Solo consulta | Permitida |
+| `gsc_pillar_index_audit` | true | false | false | Solo consulta | Permitida |
+| `gsc_query_page_report` | true | false | false | Solo consulta | Permitida |
 | `gsc_search_opportunities` | true | false | false | Solo consulta | Permitida |
 | `gsc_search_trends` | true | false | false | Solo consulta | Permitida |
 | `gsc_sitemaps_list` | true | false | false | Solo consulta | Permitida |
+| `gsc_sitemaps_submit` | false | false | false | Cambia estado privado de forma acotada | Permitida |
 | `gsc_sites_list` | true | false | false | Solo consulta | Permitida |
 | `gsc_top_pages` | true | false | false | Solo consulta | Permitida |
 | `gsc_top_queries` | true | false | false | Solo consulta | Permitida |
@@ -304,6 +308,7 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `macro_digital_experience_overview` | true | false | false | Solo consulta | Permitida |
 | `macro_endpoint_health` | true | false | false | Solo consulta | Permitida |
 | `macro_env_health` | true | false | false | Solo consulta | Permitida |
+| `macro_organic_seo_pack` | true | false | false | Solo consulta | Permitida |
 | `macro_outage_triage` | true | false | false | Solo consulta | Permitida |
 | `macro_release_business_impact` | true | false | false | Solo consulta | Permitida |
 | `macro_seo_technical_diagnostic` | true | false | false | Solo consulta | Permitida |

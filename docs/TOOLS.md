@@ -1063,6 +1063,7 @@ Composite read-only tools that run multi-step investigations on the gateway with
 | `macro_outage_triage` | Incident triage: edge, deploys, errors, optional K8s |
 | `macro_digital_experience_overview` | GA4 + GSC snapshot with optional infra context (no causal claims) |
 | `macro_release_business_impact` | Recent deploy + marketing metrics correlation |
+| `macro_organic_seo_pack` | Organic SEO workflow: GSC opportunities, query/page, GA4 organic landings, pillar audit (read-only; sitemap submit only with explicit approval) |
 | `macro_seo_technical_diagnostic` | GSC URL inspection + HTTP/DNS checks |
 | `macro_tracking_integrity_audit` | GTM container version vs site signals |
 
@@ -1072,17 +1073,40 @@ Composite read-only tools that run multi-step investigations on the gateway with
 
 ## Google Marketing (GA4, GSC, GTM)
 
-Per-tenant **Google OAuth** (`google_link_start` / `google_link_status` / `google_link_revoke`) with readonly Analytics, Search Console, and Tag Manager scopes. Set tenant defaults in Admin (`ga4_default_property`, `gsc_default_site`, GTM account/container IDs).
+Per-tenant **Google OAuth** (`google_link_start` / `google_link_status` / `google_link_revoke`). Scopes: Analytics readonly, Search Console **`webmasters`** (read + sitemap submit — not readonly-only), Tag Manager readonly. Tenants linked before the GSC scope upgrade must **re-link** via `google_link_start`.
+
+**Admin defaults:** `ga4_default_property`, `gsc_default_site`, `gtm_default_account_id`, `gtm_default_container_id`. **SEO credentials:** `gsc_brand_keywords`, `gsc_pillar_urls`, `ga4_cta_event_names`, `ga4_conversion_event_names`.
 
 | Module | Examples |
 |--------|----------|
-| `ga4_*` | `ga4_traffic_overview`, `ga4_conversions_report`, `ga4_realtime_overview` |
-| `gsc_*` | `gsc_performance_overview`, `gsc_url_inspection`, `gsc_top_queries` |
+| `ga4_*` | `ga4_traffic_overview`, `ga4_organic_landing_report`, `ga4_conversions_report` |
+| `gsc_*` | `gsc_search_opportunities`, `gsc_query_page_report`, `gsc_pillar_index_audit`, `gsc_url_inspection` |
 | `gtm_*` | `gtm_live_version`, `gtm_tags_list`, `gtm_version_diff` |
 
-Platform operator: GCP OAuth client + SSM `GOOGLE_OAUTH_CLIENT_*` on the gateway. See `mcp-ops-b/docs/google-marketing-tools.md`.
+**Mutating (explicit approval):** `gsc_sitemaps_submit` — medium risk; requires `webmasters` scope.
 
-Skill: [`skills/run-macro-workflows/`](skills/run-macro-workflows/).
+Canonical doc: [`mcp-ops-b/docs/vigentes/integraciones/google-marketing-tools.md`](https://github.com/impactotecnologico/mcp-ops-b/blob/main/docs/vigentes/integraciones/google-marketing-tools.md).
+
+Skills: [`skills/run-macro-workflows/`](skills/run-macro-workflows/).
+
+---
+
+## Noibu (e-commerce session replay)
+
+Per-tenant **Noibu OAuth** (`noibu_link_start` / `noibu_link_status` / `noibu_link_revoke`) — one link per tenant, not `ops_configure_integration`. Read-only broker over allowlisted Noibu MCP tools; pass operational args under top-level **`input`** (optional **`rationale`**).
+
+| Tool | Purpose |
+|------|---------|
+| `noibu_domains_list` / `noibu_domain_get` | Resolve monitored storefront domains |
+| `noibu_company_get` | Company-level domain grouping |
+| `noibu_issues_search` / `noibu_priority_errors_list` | Find checkout / JS errors |
+| `noibu_issue_get` / `noibu_error_diagnosis_get` / `noibu_error_trends_get` | Issue detail and diagnosis |
+| `noibu_issue_session_highlights_get` | Session highlights for an issue |
+| `noibu_sessions_search` / `noibu_sessions_lookup` / `noibu_page_visits` | Session exploration |
+
+Skill: [`skills/noibu-analytics/SKILL.md`](skills/noibu-analytics/SKILL.md). Broker arg mapping: [`skills/noibu-analytics/references/opsphere-broker-tools.md`](skills/noibu-analytics/references/opsphere-broker-tools.md).
+
+Optional correlation (no causal claims): Cloudflare checkout abuse (`macro_cf_ecom_abuse_triage`, `cf_http_security_*` with `path_preset=cart_checkout_api`) and GA4 conversion events when configured.
 
 ---
 
