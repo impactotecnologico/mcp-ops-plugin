@@ -47,7 +47,7 @@ Macros **replace long atomic chains** in telemetry — one macro call, not six s
 2. **Catalog** — Confirm the macro exists in `tools/list`.
 3. **Clarify** — Ask for missing hostname, environment, or time window (batch 2–3 questions max).
 4. **Invoke** — Call the macro with structured arguments. Wait for the final JSON result; progress events are handled by the client.
-5. **Report** — Summarize verdict, evidence bullets, and gaps (tools that were skipped). Treat macro output as point-in-time — verify critical facts with live tools if the incident is ongoing.
+5. **Report** — Read **`content[].text`** sections `## Veredicto`, `## Next checks`, and `## Gaps` from the macro result (see skill **evidence-backed-verdict**). Do not rebuild verdict from JSON `sections` alone. Treat macro output as point-in-time — verify critical facts with live tools if the incident is ongoing.
 
 ## Argument hints
 

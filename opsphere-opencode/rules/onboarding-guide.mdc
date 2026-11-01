@@ -43,6 +43,9 @@ Tools can include the following once authenticated, entitled, and configured:
 | **Connection Hub** (broker) | — | `ops_accounts_list`, `ops_account_link_start`, `ops_account_unlink`, `ops_context_open`, `ops_context_close` — only when `tools/list` includes them |
 | Operational memory | — | `memory_search`, `memory_store`, `memory_session_touch`, `memory_invalidate` |
 | **Macro workflows** (Team+) | — | `macro_outage_triage`, `macro_endpoint_health`, `macro_env_health` — composite read-only runs with SSE progress |
+| **IDE investigation session** | — | `investigation_open` / `investigation_close` — atomic tools + `_meta.investigation_id`; read **Veredicto** from tool text (same as macros) |
+
+Structured incident RCA in the IDE must come from **macro `content[].text` (Veredicto)** or **`investigation_close`**, not from hand-waving over atomic JSON alone.
 
 **Network tools (`dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents`) work immediately after login — no integration setup needed.** `dns_lookup` accepts `recordTypes` (`A`, `AAAA`, `CNAME`, `NS`); for DNS cutovers use `["NS", "CNAME"]` rather than falling back to shell `dig`. `http_check` supports optional `connectHost`, `headers` (e.g. `Host`), and `servername` for direct origin probes bypassing CDN DNS. `alg_status` / `alg_incidents` report **global** Algolia platform health (not your tenant App ID).
 

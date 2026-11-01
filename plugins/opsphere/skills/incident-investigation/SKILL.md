@@ -28,6 +28,8 @@ direct corporate-workspace session. Use it only when it appears in `tools/list`.
 
 **Team / Enterprise macros** (when in `tools/list`): `macro_outage_triage` runs a server-side triage pipeline with progress — alternative to running every atomic step manually. Prefer this subagent for interactive clarification; use `macro_outage_triage` when the user wants one composite report.
 
+**Structured verdict without macros** (when in `tools/list`): `investigation_open` → atomic tools with `_meta.investigation_id` → `investigation_close`. The close result includes the same **Veredicto** markdown as macros. **`ops_incident_rollup`** also returns Veredicto text when diagnosis is present — do not duplicate RCA from raw timeline JSON alone.
+
 If a tool fails for missing credentials, note it and continue with available tools. Do not ask the user to paste secrets.
 
 ## Ask the user (when missing)
@@ -69,6 +71,8 @@ Reuse facts already in the thread. Batch at most **2–4 questions** per turn. I
 - **Outage triage ≠ latest deployment.** User asks "what was deployed" without downtime symptoms → parent agent should use **`deployment_status`**, not this subagent.
 
 ## Output format
+
+Load skill **evidence-backed-verdict** after `macro_*` or `investigation_close`. Prefer the tool markdown **Veredicto** over re-parsing `sections`.
 
 Return a concise report to the parent agent:
 
