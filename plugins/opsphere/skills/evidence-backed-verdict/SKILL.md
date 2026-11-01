@@ -19,11 +19,19 @@ When **`macro_*`**, **`investigation_close`**, or **`ops_incident_rollup`** retu
 
 ## Session workflow (Community / no macros)
 
-1. `investigation_open` with env/hostname/query.
-2. Atomic tools with `arguments._meta.investigation_id` set to the returned id.
-3. `investigation_close` — paste **Veredicto** and **Next checks** into the user summary.
+1. **`investigation_open`** — paste **Slack/Sentry alert text** into `query` (project slug, culprit, “First Seen”). Read `playbook.suggested_tools` and `sentry_project_slug` from structuredContent.
+2. Run atomic tools with **`arguments._meta.investigation_id`** — **always scope Sentry** with `projectSlug` from the playbook (never org-wide sort-by-date alone).
+3. Optional: `dd_logs_search` with `service:` from playbook, `k8s_pods_list` for the app label, `dns_lookup` / `cf_firewall_events` if gaps mention edge attribution.
+4. **`investigation_close`** — paste **Veredicto**, **Gaps**, and **Next checks** into the user summary.
+
+## Alert / security triage (Saleor, Sentry “New issue”)
+
+- If the notification names **`saleor-replicadb-client`**, **`saleor-orders`**, or “Replica App”, do **not** pivot to a different Sentry project based on volume alone.
+- Clustered errors on **`/saleor/manifest`**, **`SecretId` length 0**, **`download_file` + fake job IDs** → treat as **reconnaissance/noise** until WAF/IP evidence says otherwise; confirm pods healthy via `k8s_pods_list`.
+- When `## Gaps` lists missing Cloudflare evidence, say attribution is incomplete — do not claim “attack” or “no attack” with HIGH confidence without edge logs.
 
 ## Prohibited
 
 - Closing an outage RCA using only atomic tools without `macro_outage_triage` or `investigation_close` when structured verdict was available.
 - Raising confidence because logs “look bad” when the tool band is LOW or evidence is neutral-only.
+- Identifying the wrong microservice because Datadog org-wide error volume dominated the search.
