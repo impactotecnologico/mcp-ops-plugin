@@ -1,0 +1,8 @@
+{
+  "name": "opsphere-plugin",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "install": "./.cursor/install.sh"
+}
