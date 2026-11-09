@@ -43,9 +43,12 @@ jobs:
       # (opsphere-io). The MIT gitleaks CLI has the same detection rules.
       - name: Gitleaks (full history)
         run: |
+          set -euo pipefail
           GITLEAKS_VERSION=8.24.2
+          GITLEAKS_URL="https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
           mkdir -p build-evidence
-          curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" -o /tmp/gitleaks.tar.gz
+          curl -fsSL --connect-timeout 30 --max-time 300 --retry 5 --retry-delay 10 --retry-all-errors \
+            "${GITLEAKS_URL}" -o /tmp/gitleaks.tar.gz
           echo "fa0500f6b7e41d28791ebc680f5dd9899cd42b58629218a5f041efa899151a8e  /tmp/gitleaks.tar.gz" | sha256sum --check --strict
           tar -xzf /tmp/gitleaks.tar.gz gitleaks
           ./gitleaks detect --source . --config .gitleaks.toml --report-format json --report-path build-evidence/gitleaks.json --verbose
