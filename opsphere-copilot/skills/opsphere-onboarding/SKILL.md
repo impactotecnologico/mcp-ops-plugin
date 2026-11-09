@@ -27,3 +27,10 @@ ambiguous source with `qa_source_confirm`; never execute discovered commands.
 Keep the active workspace unless the user explicitly requests a change. Start with read-only diagnostics; ask before state-changing operations. Do not manually pass or invent a `context_id` for normal operations.
 
 The package supports local GitHub Copilot CLI. Copilot cloud agent is outside this package's support boundary. Do not copy OAuth files from another client.
+
+## Discovery, code and memory
+
+- **Local workspace code:** IDE read/grep/search. Opsphere does not index the open repository.
+- **Remote Git:** only SCM tools in `tools/list` (`ghe_*`, `bb_*`, `gl_*`, `repos_*`, etc.).
+- **`tools/list`** is the invocable catalog. Read **`opsphere://rules/operational`** when workflows are unclear. **`opsphere://tools/catalog`** is gateway module configuration, not Postgres entitlement — use `ops_my_usage`.
+- Before a long incident triage, **`memory_search`** when `memory_*` is in `tools/list`; after a useful finding, **`memory_store`** a short summary (no secrets or raw logs). If `memory_*` is absent, do not invent those tools.

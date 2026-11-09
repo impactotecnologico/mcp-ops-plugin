@@ -13,12 +13,15 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const checks = [
   {
     file: 'rules/opsphere-router.mdc',
-    forbid: [],
+    forbid: [/CodeGraphContext/i],
     require: [
       /explicit user instruction not to use Opsphere revokes that authority/i,
       /zero Opsphere MCP calls/i,
       /do not request Smart Mode approval/i,
       /only after the user explicitly reauthorizes/i,
+      /memory_search/i,
+      /opsphere:\/\/rules\/operational/i,
+      /does not index the user's local repository/i,
     ],
   },
   {

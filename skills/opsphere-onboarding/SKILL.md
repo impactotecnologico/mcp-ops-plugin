@@ -57,6 +57,23 @@ In particular, `ops_my_usage` and the other self-service `ops_*` tools are not
 guaranteed in a direct corporate-workspace login. Their absence does not mean the
 operational provider integrations in that workspace are disconnected.
 
+## Local code vs remote ops
+
+- **Local workspace code:** use IDE read/grep/search. Opsphere does **not** index the user's open repository.
+- **Remote Git:** use only SCM tools in `tools/list` (`ghe_*`, `bb_*`, `gl_*`, `repos_*`, etc.).
+- **`tools/list`** = invocable tools and schemas. **`opsphere://rules/operational`** = workflows and reference catalog when routing is unclear (fetch from gateway; do not assume always in context).
+- **`opsphere://tools/catalog`** = gateway runtime **module configuration**, not Postgres tenant entitlement — use `ops_my_usage` for workspace availability.
+
+## Operational memory (when `memory_*` is in `tools/list`)
+
+1. **Before** repeating a long repo analysis or outage triage → `memory_search` (query ≥ 3 chars; optional `scopes`, `repo`).
+2. **If empty** → reformulate **once** with concrete tokens (service, env, repo, HTTP code) or different `scopes`. Do not spam extra `memory_search` unless the user asks.
+3. **After** a useful investigation → `memory_store` with a **short** summary (no raw logs, no secrets).
+4. **When outdated** → `memory_invalidate` with `status: stale` (owner or admin).
+5. **Optional** → `memory_session_touch` once per session when useful.
+
+If `memory_*` tools are missing from `tools/list`, do not invent them. Do not store text that duplicates `cloud_accounts.system_prompt_context` (`catalog_context_duplicate`).
+
 ## Provider routing rules
 
 - **GitHub**: prefer `repo: "owner/name"` when known. If the repository is unknown, call `ghe_org_repos`; a bare repo name uses only the active workspace's configured default org. A successful GitHub test/tool call means the token works—do not diagnose credentials as invalid until explicit repository routing and access have been checked.

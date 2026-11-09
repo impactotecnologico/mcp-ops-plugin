@@ -20,13 +20,16 @@ del Team/curso administradas por Cursor. Su contenido no está en los checkouts 
 
 ## Diseño aplicado
 
-- Siempre activo: solo un router CGC de 73 palabras y un router Opsphere breve.
-- Carga inteligente: estrategia estructural CGC y onboarding operativo Opsphere, con
-  descripciones que delimitan cuándo aplican.
-- Carga manual: diagnóstico y recuperación de CGC.
+- Siempre activo (plugin de **tenants**): solo `rules/opsphere-router.mdc` breve — sin
+  CodeGraphContext; el cliente no incluye el MCP CGC.
+- **Mantenimiento interno** (no marketplace): regla CGC en `mcp-ops-plugin/.cursor/rules/`
+  y en repos Opsphere para ingeniería local; no confundir con el bundle publicado.
+- Carga inteligente: onboarding operativo Opsphere (`onboarding-guide.mdc`) con
+  descripción que delimita cuándo aplica.
 - Eliminado: resumen de proyecto duplicado en web pública.
 - `sessionStart`: contexto vacío cuando todos los repos están `READY`.
-- MCP CGC: cuatro schemas expuestos; las tools internas de mutación no llegan al modelo.
+- MCP CGC (solo mantenimiento): cuatro schemas en el workspace del equipo; no forma
+  parte del plugin instalado por clientes.
 
 ## Auditoría del Team
 
