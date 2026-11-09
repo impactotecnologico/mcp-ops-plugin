@@ -1808,18 +1808,6 @@
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
     },
-    "check_azure_session_for_tenant": {
-      "annotations": {
-        "readOnlyHint": false,
-        "destructiveHint": false,
-        "openWorldHint": false
-      },
-      "justifications": {
-        "read_only_justification": "May start Azure device authorization and persist login state when no valid session exists.",
-        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
-        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
-      }
-    },
     "confluence_page_read": {
       "annotations": {
         "readOnlyHint": true,
@@ -3196,6 +3184,30 @@
       },
       "justifications": {
         "read_only_justification": "Retrieves or computes infra tfvars find information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "investigation_close": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes investigation close information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "investigation_open": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes investigation open information without changing Opsphere or provider state.",
         "open_world_justification": "Does not change public internet state or write to an external third-party system.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
