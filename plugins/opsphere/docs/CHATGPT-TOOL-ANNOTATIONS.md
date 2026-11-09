@@ -6,9 +6,9 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 - `destructiveHint`: puede borrar, sobrescribir, revocar o ejecutar una acción irreversible.
 - `openWorldHint`: puede cambiar un sistema público o un tercero externo.
 
-- Tools auditadas: 424
-- Solo lectura: 363
-- Con efectos o cambios de estado: 61
+- Tools auditadas: 425
+- Solo lectura: 365
+- Con efectos o cambios de estado: 60
 - Destructivas o irreversibles: 35
 - Cambian sistemas públicos o externos: 19
 - Bloqueadas por la regla existente del plan de solo lectura: 36
@@ -165,7 +165,6 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `cf_zones_list` | true | false | false | Solo consulta | Permitida |
 | `check_aws_session_for_env` | false | false | false | Cambia estado privado de forma acotada | Permitida |
 | `check_azure_session_for_account` | false | false | false | Cambia estado privado de forma acotada | Permitida |
-| `check_azure_session_for_tenant` | false | false | false | Cambia estado privado de forma acotada | Permitida |
 | `confluence_page_read` | true | false | false | Solo consulta | Permitida |
 | `confluence_search` | true | false | false | Solo consulta | Permitida |
 | `ctf_content_type_get` | true | false | false | Solo consulta | Permitida |
@@ -281,6 +280,8 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `http_check` | true | false | false | Solo consulta | Permitida |
 | `infra_tfvars_catalog` | true | false | false | Solo consulta | Permitida |
 | `infra_tfvars_find` | true | false | false | Solo consulta | Permitida |
+| `investigation_close` | true | false | false | Solo consulta | Permitida |
+| `investigation_open` | true | false | false | Solo consulta | Permitida |
 | `jira_issue_comments` | true | false | false | Solo consulta | Permitida |
 | `jira_issue_fulldetails` | true | false | false | Solo consulta | Permitida |
 | `jira_issue_get` | true | false | false | Solo consulta | Permitida |
