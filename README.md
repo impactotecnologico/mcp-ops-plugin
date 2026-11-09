@@ -2,12 +2,12 @@
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.28-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
-[![Codex plugin](https://img.shields.io/badge/Codex-1.0.22-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
-[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-1.0.16-orange)](https://github.com/opsphere-io/opsphere-plugin/releases)
-[![OpenCode package](https://img.shields.io/badge/OpenCode-1.0.1-lightgrey)](https://github.com/opsphere-io/opsphere-plugin)
-[![Antigravity package](https://img.shields.io/badge/Antigravity-1.0.1-lightgrey)](https://github.com/opsphere-io/opsphere-plugin)
-[![Copilot package](https://img.shields.io/badge/Copilot%20CLI-1.0.1-lightgrey)](https://github.com/opsphere-io/opsphere-plugin)
+[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.29-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Codex plugin](https://img.shields.io/badge/Codex-1.0.23-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-1.0.17-orange)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![OpenCode package](https://img.shields.io/badge/OpenCode-1.0.2-lightgrey)](https://github.com/opsphere-io/opsphere-plugin)
+[![Antigravity package](https://img.shields.io/badge/Antigravity-1.0.2-lightgrey)](https://github.com/opsphere-io/opsphere-plugin)
+[![Copilot package](https://img.shields.io/badge/Copilot%20CLI-1.0.2-lightgrey)](https://github.com/opsphere-io/opsphere-plugin)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CI](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/opsphere-io/opsphere-plugin/actions/workflows/ci.yml)
 [![Cursor](https://img.shields.io/badge/cursor-%3E%3D0.50.0-purple)](https://cursor.com)

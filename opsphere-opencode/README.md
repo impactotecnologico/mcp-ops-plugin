@@ -2,7 +2,7 @@
 
 Use the [official generated OpenCode connection guide](guides/opencode.md) for the endpoint, literal MCP configuration, OAuth, plan compatibility and troubleshooting. The guide and MCP resources are generated from one canonical connection contract, not maintained separately here.
 
-Package version **1.0.1**. This folder does not change the Cursor, Codex or Claude Code plugin bundles.
+Package version **1.0.2**. This folder does not change the Cursor, Codex or Claude Code plugin bundles.
 
 ## Obtain the package
 

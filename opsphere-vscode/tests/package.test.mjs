@@ -20,7 +20,7 @@ test('VS Code manifests define one remote server with client-managed authenticat
   const plugin = json('plugin.json');
   assert.equal(plugin.$schema, 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json');
   assert.equal(plugin.name, 'opsphere-vscode');
-  assert.equal(plugin.version, '1.0.1');
+  assert.equal(plugin.version, '1.0.2');
   assert.match(plugin.description, /VS Code/);
   assert.deepEqual(Object.keys(plugin).sort(), ['$schema', 'author', 'description', 'homepage', 'keywords', 'license', 'name', 'repository', 'version']);
   assert.deepEqual(json('mcp.json'), {
@@ -70,8 +70,8 @@ test('marketplace preserves Copilot CLI identity and adds an independent VS Code
   const marketplace = JSON.parse(fs.readFileSync(path.join(root, '.github/plugin/marketplace.json'), 'utf8'));
   assert.equal(marketplace.name, 'opsphere');
   assert.deepEqual(marketplace.plugins.map(({ name, source, version }) => ({ name, source, version })), [
-    { name: 'opsphere', source: './opsphere-copilot', version: '1.0.1' },
-    { name: 'opsphere-vscode', source: './opsphere-vscode', version: '1.0.1' },
+    { name: 'opsphere', source: './opsphere-copilot', version: '1.0.2' },
+    { name: 'opsphere-vscode', source: './opsphere-vscode', version: '1.0.2' },
   ]);
   assert.equal(marketplace.plugins[1].description, json('plugin.json').description);
 });

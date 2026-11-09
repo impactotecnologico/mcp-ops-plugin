@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.29] - 2026-11-09 (Effective tools/list discovery)
+
+- Document `result._meta["io.opsphere/catalog"]` protocol across router, onboarding, and portable host rules: module rollup, `announcedToolCount`, `entitlementFingerprint`, and when to re-run `tools/list`.
+- Requires gateway release with effective-catalog `_meta` on authoritative `tools/list`.
+- Distribution versions: Cursor **1.0.29**, Codex **1.0.23**, Claude Code **1.0.17**; portable Agent Plugins **1.0.2**.
+
 ## [1.0.28] - 2026-11-09 (Client context alignment)
 
 - Align always-on routing across Cursor, Codex, Claude Code, Warp, OpenCode, Antigravity, Copilot CLI, and VS Code: live `tools/list`, `opsphere://rules/operational`, `memory_*`, and local IDE rules vs remote SCM.
