@@ -1,6 +1,6 @@
 # Opsphere for VS Code
 
-Agent Plugins 1.0 package for desktop VS Code with GitHub Copilot. Includes skills, agents, commands, rules and one remote MCP server. Version 1.0.0. No runtime dependencies, hooks or installer.
+Agent Plugins 1.0 package for desktop VS Code with GitHub Copilot. Includes skills, agents, commands, rules and one remote MCP server. Version 1.0.1. No runtime dependencies, hooks or installer.
 
 ## Install from GitHub (no manual clone)
 

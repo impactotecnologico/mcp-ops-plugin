@@ -1,6 +1,6 @@
 # Antigravity — test cases for Opsphere
 
-**Package:** `opsphere-antigravity/` 1.0.0  
+**Package:** `opsphere-antigravity/` 1.0.1  
 **MCP gateway:** `https://mcp-cursor.opsphere.io/mcp`  
 **Install:** `agy plugin install` (does not modify Cursor, Codex or Claude Code).
 

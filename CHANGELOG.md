@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.28] - 2026-11-09 (Client context alignment)
+
+- Align always-on routing across Cursor, Codex, Claude Code, Warp, OpenCode, Antigravity, Copilot CLI, and VS Code: live `tools/list`, `opsphere://rules/operational`, `memory_*`, and local IDE rules vs remote SCM.
+- Remove CodeGraphContext from the public always-on router; document when to load onboarding and connect skills.
+- Distribution versions: Cursor **1.0.28**, Codex **1.0.22**, Claude Code **1.0.16**; portable Agent Plugins packages **1.0.1** (OpenCode folder release track **1.0.1**).
+
 ## [1.0.27] - 2026-10-20 (Plan-aware tool discovery)
 
 - Replaced retired Professional-plan guidance with the current Community, Developer, Team, Enterprise, and Custom model.

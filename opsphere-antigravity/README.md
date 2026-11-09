@@ -2,7 +2,7 @@
 
 Use the [official generated Antigravity connection guide](guides/antigravity.md) for the endpoint, native `mcp_config.json`, Agent Plugins `mcp.json`, CIMD OAuth, plan compatibility and troubleshooting. The guide is generated from the canonical connection catalog.
 
-Package version **1.0.0**. This folder does not change the Cursor, Codex or Claude Code plugin bundles.
+Package version **1.0.1**. This folder does not change the Cursor, Codex or Claude Code plugin bundles.
 
 ## Obtain the package
 

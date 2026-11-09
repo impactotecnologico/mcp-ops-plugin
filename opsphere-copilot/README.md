@@ -2,7 +2,7 @@
 
 Use the [official generated Copilot connection guide](guides/copilot.md) for the endpoint, Agent Plugins `mcp.json`, DCR OAuth, plan compatibility and troubleshooting. The guide is generated from the canonical connection catalog.
 
-Package version **1.0.0**. This folder does not change the Cursor, Codex, Claude Code, Warp, OpenCode or Antigravity plugin bundles.
+Package version **1.0.1**. This folder does not change the Cursor, Codex, Claude Code, Warp, OpenCode or Antigravity plugin bundles.
 
 ## Obtain the package
 

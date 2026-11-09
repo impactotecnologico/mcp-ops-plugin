@@ -6,18 +6,18 @@
   },
   "metadata": {
     "description": "Opsphere for GitHub Copilot CLI",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "plugins": [
     {
       "name": "opsphere",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "source": "./opsphere-copilot",
       "description": "Opsphere DevOps and SRE tools for Copilot CLI"
     },
     {
       "name": "opsphere-vscode",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "source": "./opsphere-vscode",
       "description": "Opsphere DevOps and SRE tools for desktop VS Code with GitHub Copilot"
     }

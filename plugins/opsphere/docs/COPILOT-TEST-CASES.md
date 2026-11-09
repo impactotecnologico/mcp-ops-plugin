@@ -1,6 +1,6 @@
 # GitHub Copilot CLI — test cases for Opsphere
 
-**Package:** `opsphere-copilot/` 1.0.0  
+**Package:** `opsphere-copilot/` 1.0.1  
 **MCP gateway:** `https://mcp-cursor.opsphere.io/mcp`  
 **Install:** `copilot plugin install` (does not modify Cursor, Codex, Claude Code, Warp, OpenCode or Antigravity).
 

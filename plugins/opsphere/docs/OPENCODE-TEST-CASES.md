@@ -1,6 +1,6 @@
 # OpenCode — test cases for Opsphere
 
-**Package:** `opsphere-opencode/` 1.0.0  
+**Package:** `opsphere-opencode/` 1.0.1  
 **MCP gateway:** `https://mcp-cursor.opsphere.io/mcp`  
 **Install:** project or user-global `node install.mjs` (does not modify Cursor, Codex or Claude Code).
 
