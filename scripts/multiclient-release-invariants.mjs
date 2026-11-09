@@ -44,7 +44,7 @@ assert.equal(antigravityNative.mcpServers.opsphere.oauth, undefined);
 assert.equal(antigravityNative.mcpServers.opsphere.headers, undefined);
 assert.equal(plugin.$schema, 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json');
 assert.equal(plugin.name, 'opsphere');
-assert.equal(plugin.version, '1.0.1');
+assert.equal(plugin.version, '1.0.2');
 assert.equal(copilotConfig.$schema, 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json');
 assert.equal(copilotConfig.mcpServers.opsphere.type, 'streamable-http');
 assert.equal(copilotConfig.mcpServers.opsphere.url, catalog.endpoint);

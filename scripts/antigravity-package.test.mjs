@@ -13,7 +13,7 @@ test('portable Agent Plugins manifests use official schemas and no OAuth secrets
   const plugin = json('plugin.json');
   assert.equal(plugin.$schema, 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json');
   assert.equal(plugin.name, 'opsphere');
-  assert.equal(plugin.version, '1.0.1');
+  assert.equal(plugin.version, '1.0.2');
   assert.ok(plugin.description);
   const mcp = json('mcp.json');
   assert.equal(mcp.$schema, 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json');

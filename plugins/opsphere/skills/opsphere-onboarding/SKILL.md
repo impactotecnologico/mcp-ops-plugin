@@ -15,6 +15,11 @@ The table below is a routing reference for the full Opsphere product. It is **no
 proof that a provider or tool is active in the current workspace.
 
 - MCP `tools/list` describes callable definitions, not workspace authorization.
+- Use `result._meta["io.opsphere/catalog"]` (`modules`, `announcedToolCount`,
+  `entitlementFingerprint`) to orient discovery; invoke only names in `result.tools`.
+  Re-run `tools/list` when the fingerprint changes, when the host sends
+  `notifications/tools/list_changed`, or when context open/close returns
+  `tools_discovery.stale`.
 - Use `ops_my_usage`, workspace availability and `ops_list_integrations` to
   distinguish usable capabilities from setup, plan or permission requirements.
 - Do not describe absent provider tools as active integrations. If setup/status
