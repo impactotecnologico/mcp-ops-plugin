@@ -1,0 +1,26 @@
+{
+  "name": "main — supply chain gate",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "include": ["refs/heads/main"],
+      "exclude": []
+    }
+  },
+  "rules": [
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "do_not_enforce_on_create": false,
+        "strict_required_status_checks_policy": true,
+        "required_status_checks": [
+          {
+            "context": "Supply chain policy",
+            "integration_id": 15368
+          }
+        ]
+      }
+    }
+  ]
+}
