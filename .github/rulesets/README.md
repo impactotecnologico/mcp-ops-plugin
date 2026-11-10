@@ -5,7 +5,7 @@
 Apply or refresh after editing:
 
 ```sh
-./scripts/github/apply-main-supply-chain-ruleset.sh
+./.github/rulesets/apply-main-supply-chain-ruleset.sh
 ```
 
 If a ruleset with the same name already exists, the script updates it via `PUT`.
