@@ -6,12 +6,12 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 - `destructiveHint`: puede borrar, sobrescribir, revocar o ejecutar una acción irreversible.
 - `openWorldHint`: puede cambiar un sistema público o un tercero externo.
 
-- Tools auditadas: 425
-- Solo lectura: 365
-- Con efectos o cambios de estado: 60
+- Tools auditadas: 447
+- Solo lectura: 383
+- Con efectos o cambios de estado: 64
 - Destructivas o irreversibles: 35
 - Cambian sistemas públicos o externos: 19
-- Bloqueadas por la regla existente del plan de solo lectura: 36
+- Bloqueadas por la regla existente del plan de solo lectura: 40
 
 | Tool | readOnlyHint | destructiveHint | openWorldHint | Impacto real | Regla existente del plan de solo lectura |
 |---|:---:|:---:|:---:|---|:---:|
@@ -38,8 +38,23 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `argocd_list_apps` | true | false | false | Solo consulta | Permitida |
 | `argocd_list_clusters` | true | false | false | Solo consulta | Permitida |
 | `aws_athena_query` | false | false | false | Cambia estado privado de forma acotada | Permitida |
+| `aws_bedrock_agent_alias_update` | false | false | false | Cambia estado privado de forma acotada | Bloqueada |
 | `aws_bedrock_agent_diagnose` | true | false | false | Solo consulta | Permitida |
+| `aws_bedrock_agent_invoke` | false | false | false | Cambia estado privado de forma acotada | Bloqueada |
+| `aws_bedrock_agent_prepare` | false | false | false | Cambia estado privado de forma acotada | Bloqueada |
+| `aws_bedrock_agents_list` | true | false | false | Solo consulta | Permitida |
+| `aws_bedrock_ingestion_jobs_list` | true | false | false | Solo consulta | Permitida |
+| `aws_bedrock_knowledge_base_describe` | true | false | false | Solo consulta | Permitida |
+| `aws_bedrock_knowledge_base_ingest_start` | false | false | false | Cambia estado privado de forma acotada | Bloqueada |
+| `aws_bedrock_knowledge_base_retrieve` | true | false | false | Solo consulta | Permitida |
+| `aws_bedrock_knowledge_bases_list` | true | false | false | Solo consulta | Permitida |
+| `aws_bedrock_metrics_summary` | true | false | false | Solo consulta | Permitida |
 | `aws_cli_query` | true | false | false | Solo consulta | Permitida |
+| `aws_cloudwatch_log_groups_list` | true | false | false | Solo consulta | Permitida |
+| `aws_cloudwatch_log_streams_list` | true | false | false | Solo consulta | Permitida |
+| `aws_cloudwatch_logs_anomalies_list` | true | false | false | Solo consulta | Permitida |
+| `aws_cloudwatch_logs_anomaly_detectors_list` | true | false | false | Solo consulta | Permitida |
+| `aws_cloudwatch_logs_insights_query` | true | false | false | Solo consulta | Permitida |
 | `aws_cloudwatch_logs_search` | true | false | false | Solo consulta | Permitida |
 | `aws_codeartifact_packages` | true | false | false | Solo consulta | Permitida |
 | `aws_codeartifact_versions` | true | false | false | Solo consulta | Permitida |
@@ -428,6 +443,13 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `system_update` | false | true | false | Sobrescribe, elimina o revoca estado privado | Bloqueada |
 | `tcp_connect` | true | false | false | Solo consulta | Permitida |
 | `traceroute` | true | false | false | Solo consulta | Permitida |
+| `trello_card_comments` | true | false | false | Solo consulta | Permitida |
+| `trello_card_fulldetails` | true | false | false | Solo consulta | Permitida |
+| `trello_card_get` | true | false | false | Solo consulta | Permitida |
+| `trello_cards_list` | true | false | false | Solo consulta | Permitida |
+| `trello_cards_recent` | true | false | false | Solo consulta | Permitida |
+| `trello_cards_search` | true | false | false | Solo consulta | Permitida |
+| `trello_members_me` | true | false | false | Solo consulta | Permitida |
 | `vercel_deployment_logs` | true | false | false | Solo consulta | Permitida |
 | `vercel_deploys_latest` | true | false | false | Solo consulta | Permitida |
 | `vercel_env_diff` | true | false | false | Solo consulta | Permitida |

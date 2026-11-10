@@ -47,7 +47,7 @@ Cloudflare workspaces may contain multiple accounts. Pass the zone/hostname/URL 
 | Error tracking | Sentry | `sentry_issues_list`, `sentry_issues_search`, `sentry_sessions_by_release` |
 | Code quality | SonarQube (paid) | `sq_projects_search` → `sq_last_scan_summary` / `sq_quality_gate_status` + `sq_issues_search`; `sq_duplications_show` for duplication drill-down |
 | Search | Algolia (paid) | `alg_indices_list`, `alg_index_settings`, `alg_search`, `alg_object_get`, `alg_logs`; `alg_status` / `alg_incidents` are built-in (no credentials) |
-| Cloud | AWS | `aws_sts_whoami`, `aws_cli_query`, `aws_bedrock_agent_diagnose`, `aws_lambda_agent_diagnose`, `aws_cloudwatch_logs_search` (Bedrock Agents — paid `aws` module) |
+| Cloud | AWS | `aws_sts_whoami`, `aws_cli_query`, `aws_cloudwatch_log_groups_list`, `aws_cloudwatch_logs_insights_query`, `aws_bedrock_agents_list`, `aws_bedrock_agent_diagnose`, `aws_lambda_agent_diagnose`, `aws_cloudwatch_logs_search` (only when present in `tools/list`) |
 | AWS user sessions | AWS SSO | `check_aws_session_for_env`, `aws_session_status`, `aws_session_revoke`, `aws_sso_logout` (separate `aws-sessions` module) |
 | Network (built-in) | — | `dns_lookup`, `http_check`, `cert_status` — work immediately after login, no setup needed |
 | Integration mgmt | — | `ops_configure_integration`, `ops_list_integrations`, `ops_test_integration`, `ops_remove_integration` |
@@ -183,10 +183,11 @@ The remote gateway runs a **small pool** of MCP subprocess workers per task. Par
 
 For **Bedrock Agent**, **action group**, **knowledge base**, or **agent alias** issues (not **Agent Core** — clarify scope if mentioned):
 
-1. Call `aws_bedrock_agent_diagnose` first (`agentId`, `region`).
+1. If `agentId` is unknown, call `aws_bedrock_agents_list` first. Then call `aws_bedrock_agent_diagnose` (`agentId`, `region`).
 2. For each Lambda in `lambdas[]`, call `aws_lambda_agent_diagnose` (`functionName`, same `region`).
-3. If findings cite CloudWatch errors, use `aws_cloudwatch_logs_search` on the cited log group.
-4. When listed in playbooks, use MCP prompt `investigate-bedrock-agent`.
+3. If the log group is unknown, use `aws_cloudwatch_log_groups_list`, then `aws_cloudwatch_logs_search` or `aws_cloudwatch_logs_insights_query` on the cited groups.
+4. When listed in playbooks, use MCP prompt `investigate-bedrock-agent`. That prompt diagnoses only; do not invoke the agent or start ingestion from it.
+5. `aws_bedrock_agent_invoke`, `aws_bedrock_knowledge_base_ingest_start`, `aws_bedrock_agent_prepare`, and `aws_bedrock_agent_alias_update` change AWS state and require approval. Use them only when the user asks for that change and the tool is in `tools/list`.
 
 ## Integration credentials
 

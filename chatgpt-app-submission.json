@@ -284,6 +284,18 @@
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
     },
+    "aws_bedrock_agent_alias_update": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Changes private operational state through aws bedrock agent alias update.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
     "aws_bedrock_agent_diagnose": {
       "annotations": {
         "readOnlyHint": true,
@@ -296,6 +308,114 @@
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
     },
+    "aws_bedrock_agent_invoke": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Changes private operational state through aws bedrock agent invoke.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_bedrock_agent_prepare": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Changes private operational state through aws bedrock agent prepare.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_bedrock_agents_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws bedrock agents list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_bedrock_ingestion_jobs_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws bedrock ingestion jobs list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_bedrock_knowledge_base_describe": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws bedrock knowledge base describe information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_bedrock_knowledge_base_ingest_start": {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Changes private operational state through aws bedrock knowledge base ingest start.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_bedrock_knowledge_base_retrieve": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws bedrock knowledge base retrieve information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_bedrock_knowledge_bases_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws bedrock knowledge bases list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_bedrock_metrics_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws bedrock metrics summary information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
     "aws_cli_query": {
       "annotations": {
         "readOnlyHint": true,
@@ -304,6 +424,66 @@
       },
       "justifications": {
         "read_only_justification": "Retrieves or computes aws cli query information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_cloudwatch_log_groups_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws cloudwatch log groups list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_cloudwatch_log_streams_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws cloudwatch log streams list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_cloudwatch_logs_anomalies_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws cloudwatch logs anomalies list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_cloudwatch_logs_anomaly_detectors_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws cloudwatch logs anomaly detectors list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "aws_cloudwatch_logs_insights_query": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes aws cloudwatch logs insights query information without changing Opsphere or provider state.",
         "open_world_justification": "Does not change public internet state or write to an external third-party system.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
@@ -4960,6 +5140,90 @@
       },
       "justifications": {
         "read_only_justification": "Retrieves or computes traceroute information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "trello_card_comments": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes trello card comments information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "trello_card_fulldetails": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes trello card fulldetails information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "trello_card_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes trello card get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "trello_cards_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes trello cards list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "trello_cards_recent": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes trello cards recent information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "trello_cards_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes trello cards search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "trello_members_me": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes trello members me information without changing Opsphere or provider state.",
         "open_world_justification": "Does not change public internet state or write to an external third-party system.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
