@@ -602,7 +602,7 @@ Files with duplicated lines and duplication blocks (line ranges + duplicate file
 
 **Guided prompt** (when listed in `opsphere://playbooks/index`): `diagnose-sonarqube-quality-gate` — structured QG failure triage with suggested `sq_*` tool order.
 
-**Bedrock Agents** (AWS module, paid plans with `aws` enabled): `aws_bedrock_agent_diagnose` → `aws_lambda_agent_diagnose` per action-group Lambda. Prompt: `investigate-bedrock-agent`. Not Agent Core — clarify scope if the user mentions Agent Core.
+**Bedrock Agents and CloudWatch Logs** (AWS module; availability follows the live `tools/list`, plan, and workspace): discover agents with `aws_bedrock_agents_list` when `agentId` is unknown, then `aws_bedrock_agent_diagnose` → `aws_lambda_agent_diagnose` per action-group Lambda. Log discovery and analytics use `aws_cloudwatch_log_groups_list`, `aws_cloudwatch_logs_insights_query`, and the anomaly tools. Prompt: `investigate-bedrock-agent` (diagnosis only — it does not invoke or mutate). Not Agent Core — clarify scope if the user mentions Agent Core. Invoke, ingest, prepare, and alias update require approval and are absent on read-only plans.
 
 ---
 
@@ -998,6 +998,51 @@ Diagnose a **Lambda** used by a Bedrock Agent action group: runtime, timeout, me
 **Example:** _"Diagnose Lambda my-bedrock-action-fn for the agent"_
 
 Pair with `aws_bedrock_agent_diagnose` — do not skip agent-level context when the user mentions Bedrock.
+
+---
+
+### CloudWatch Logs discovery and analytics
+
+Same delegated AWS session as the other AWS tools. These calls are read-only. Prefer them over `aws_cli_query`.
+
+| Tool | Use |
+|------|-----|
+| `aws_cloudwatch_log_groups_list` | Discover log groups by prefix |
+| `aws_cloudwatch_log_streams_list` | List streams in one group |
+| `aws_cloudwatch_logs_insights_query` | CloudWatch Logs Insights (CWLI only, 1–20 groups) |
+| `aws_cloudwatch_logs_anomalies_list` | Recent log anomalies |
+| `aws_cloudwatch_logs_anomaly_detectors_list` | Anomaly detectors and their groups |
+| `aws_cloudwatch_logs_search` | Filter a known group (existing tool) |
+
+**Example:** _"Which log groups look like the checkout API, and what errors showed up in the last hour?"_
+
+---
+
+### Bedrock agents, knowledge bases, and metrics
+
+Read-only discovery and retrieval. Do not invoke an agent or start ingestion unless the user explicitly asks to change AWS state.
+
+| Tool | Use |
+|------|-----|
+| `aws_bedrock_agents_list` | List agents when `agentId` is unknown |
+| `aws_bedrock_knowledge_bases_list` | List knowledge bases |
+| `aws_bedrock_knowledge_base_describe` | One knowledge base plus data sources |
+| `aws_bedrock_knowledge_base_retrieve` | Retrieve chunks only — no model generation |
+| `aws_bedrock_ingestion_jobs_list` | Recent ingestion jobs |
+| `aws_bedrock_metrics_summary` | CloudWatch `AWS/Bedrock` metrics |
+
+**Approval required** (blocked on read-only plans; `sensitive_action`, no retries):
+
+| Tool | Effect |
+|------|--------|
+| `aws_bedrock_agent_invoke` | Invoke the agent and return the text completion |
+| `aws_bedrock_knowledge_base_ingest_start` | Start an ingestion job |
+| `aws_bedrock_agent_prepare` | Prepare the agent |
+| `aws_bedrock_agent_alias_update` | Update alias routing (`agentAliasName` is required by AWS even when unchanged) |
+
+**Example:** _"List Bedrock agents in eu-west-1, then diagnose the checkout agent."_
+
+Customer IAM must allow the corresponding `logs:*`, `bedrock:*`, and `cloudwatch:GetMetricData` actions. Opsphere does not add gateway task-role permissions for these calls.
 
 ---
 

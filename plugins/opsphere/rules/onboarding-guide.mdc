@@ -40,7 +40,7 @@ Tools can include the following once authenticated, entitled, and configured:
 | Error Tracking | Sentry | `sentry_issues_list`, `sentry_issues_search` |
 | Code Quality | SonarQube (paid) | `sq_projects_search` (URL or key) → `sq_last_scan_summary` for last scan; `sq_quality_gate_status` + `sq_issues_search` for QG drill-down — prompt `diagnose-sonarqube-quality-gate` when in playbooks |
 | Search | Algolia (paid) | `alg_indices_list`, `alg_index_settings`, `alg_search`, `alg_object_get`, `alg_logs` — configure with App ID + restricted API key |
-| Cloud | AWS | `aws_sts_whoami`, `aws_cli_query`, `aws_bedrock_agent_diagnose`, `aws_lambda_agent_diagnose` (Bedrock Agents — paid `aws` module) |
+| Cloud | AWS | `aws_sts_whoami`, `aws_cli_query`, `aws_cloudwatch_log_groups_list`, `aws_cloudwatch_logs_insights_query`, `aws_bedrock_agents_list`, `aws_bedrock_agent_diagnose`, `aws_lambda_agent_diagnose` (only when present in `tools/list`) |
 | Network (built-in) | — | `dns_lookup`, `http_check`, `cert_status`, `alg_status`, `alg_incidents` |
 | Integration Mgmt | — | `ops_configure_integration`, `ops_list_integrations`, `ops_test_integration`, `ops_remove_integration` |
 | Plan & Usage | — | `ops_my_usage` (when advertised by a Hub/self-service session) |
@@ -118,10 +118,10 @@ Eleven read-only resources ship with the remote MCP server (nine universal + two
 
 For **Bedrock Agent**, **action group**, **knowledge base**, or **agent alias** issues (not **Agent Core** — clarify scope if the user mentions Agent Core):
 
-1. Call **`aws_bedrock_agent_diagnose`** first (`agentId`, `region` e.g. `eu-central-1`).
+1. If `agentId` is unknown, call **`aws_bedrock_agents_list`**. Then call **`aws_bedrock_agent_diagnose`** (`agentId`, `region` e.g. `eu-central-1`).
 2. For each Lambda in `lambdas[]`, call **`aws_lambda_agent_diagnose`** (`functionName`, same `region`).
-3. If findings cite CloudWatch errors, use **`aws_cloudwatch_logs_search`** on the cited log group.
-4. When listed in playbooks, use MCP prompt **`investigate-bedrock-agent`**.
+3. If the log group is unknown, use **`aws_cloudwatch_log_groups_list`**, then **`aws_cloudwatch_logs_search`** or **`aws_cloudwatch_logs_insights_query`**. Do not invoke the agent or start ingestion unless the user asks for that change.
+4. When listed in playbooks, use MCP prompt **`investigate-bedrock-agent`**. That prompt diagnoses only.
 
 Requires AWS IAM keys via `ops_configure_integration` (plugin tier — no SSO `profile`). Env var **values** from Lambda diagnose are never returned.
 
@@ -370,7 +370,7 @@ Users might say things like:
 - "Configure my Datadog" — triggers the `configure-integration` skill
 - "Configure my AWS" — IAM Access Key + Secret Key (not SSO)
 - "List my S3 buckets" — `aws_cli_query` directly after AWS is configured (no SSO step)
-- "What's wrong with my Bedrock agent?" / paste `agentId` — `aws_bedrock_agent_diagnose` → `aws_lambda_agent_diagnose` per Lambda; prompt `investigate-bedrock-agent` when in playbooks (paid `aws` module; not Agent Core)
+- "What's wrong with my Bedrock agent?" / paste `agentId` — `aws_bedrock_agents_list` when the id is unknown, then `aws_bedrock_agent_diagnose` → `aws_lambda_agent_diagnose` per Lambda; prompt `investigate-bedrock-agent` when in playbooks (only if those tools are in `tools/list`; not Agent Core)
 - "Tell Opsphere what I usually work with" — triggers the `set-work-context` skill
 - "I accepted my company invite — is my workspace linked?" — `ops_accounts_list` first (auto-link on same email + Developer+); else **`link-account`**
 - "Link another organization workspace" / "add an external workspace" — skill **`link-account`** (paid Hub / when external quota allows; Community → upgrade CTA)
