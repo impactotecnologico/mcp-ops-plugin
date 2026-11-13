@@ -1124,7 +1124,7 @@ Per-tenant **Google OAuth** (`google_link_start` / `google_link_status` / `googl
 
 | Module | Examples |
 |--------|----------|
-| `ga4_*` | `ga4_traffic_overview`, `ga4_organic_landing_report`, `ga4_conversions_report` |
+| `ga4_*` | `ga4_traffic_overview`, `ga4_geo_device_report`, `ga4_audience_overview`, `ga4_organic_landing_report`, `ga4_conversions_report` |
 | `gsc_*` | `gsc_search_opportunities`, `gsc_query_page_report`, `gsc_pillar_index_audit`, `gsc_url_inspection` |
 | `gtm_*` | `gtm_live_version`, `gtm_tags_list`, `gtm_version_diff` |
 
