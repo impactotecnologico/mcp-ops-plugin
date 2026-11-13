@@ -6,8 +6,8 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 - `destructiveHint`: puede borrar, sobrescribir, revocar o ejecutar una acción irreversible.
 - `openWorldHint`: puede cambiar un sistema público o un tercero externo.
 
-- Tools auditadas: 447
-- Solo lectura: 383
+- Tools auditadas: 449
+- Solo lectura: 385
 - Con efectos o cambios de estado: 64
 - Destructivas o irreversibles: 35
 - Cambian sistemas públicos o externos: 19
@@ -213,11 +213,13 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `env_errors_overview` | true | false | false | Solo consulta | Permitida |
 | `env_health_summary` | true | false | false | Solo consulta | Permitida |
 | `ga4_acquisition_report` | true | false | false | Solo consulta | Permitida |
+| `ga4_audience_overview` | true | false | false | Solo consulta | Permitida |
 | `ga4_compare_periods` | true | false | false | Solo consulta | Permitida |
 | `ga4_conversions_report` | true | false | false | Solo consulta | Permitida |
 | `ga4_custom_report` | true | false | false | Solo consulta | Permitida |
 | `ga4_events_report` | true | false | false | Solo consulta | Permitida |
 | `ga4_funnel_analysis` | true | false | false | Solo consulta | Permitida |
+| `ga4_geo_device_report` | true | false | false | Solo consulta | Permitida |
 | `ga4_organic_landing_report` | true | false | false | Solo consulta | Permitida |
 | `ga4_pages_performance` | true | false | false | Solo consulta | Permitida |
 | `ga4_properties_list` | true | false | false | Solo consulta | Permitida |
