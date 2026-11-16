@@ -4,7 +4,7 @@
   "private": true,
   "description": "Opsphere DevOps & SRE intelligence plugin for Cursor (manifest, rules, skills — no npm runtime deps)",
   "scripts": {
-    "hooks:install": "husky",
+    "hooks:install": "npx --yes husky@9.1.7",
     "ci:supply-chain": "bash .husky/lib/run-supply-chain.sh",
     "ci:pre-push": "bash .husky/lib/pre-push.sh",
     "sync:portable-skills": "node scripts/sync-portable-skills.mjs",
@@ -18,14 +18,8 @@
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts}": [
-      "oxlint --fix -c .oxlintrc.json",
-      "oxfmt --write -c .oxfmtrc.json"
+      "npx --yes oxlint@1.76.0 --fix -c .oxlintrc.json",
+      "npx --yes oxfmt@0.52.0 --write -c .oxfmtrc.json"
     ]
-  },
-  "devDependencies": {
-    "husky": "9.1.7",
-    "lint-staged": "15.5.2",
-    "oxfmt": "0.52.0",
-    "oxlint": "1.76.0"
   }
 }
