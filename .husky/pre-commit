@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+bash "$(dirname -- "$0")/lib/pre-commit.sh"
