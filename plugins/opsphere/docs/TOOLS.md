@@ -1132,6 +1132,8 @@ Per-tenant **Google OAuth** (`google_link_start` / `google_link_status` / `googl
 
 Canonical doc: [`mcp-ops-b/docs/vigentes/integraciones/google-marketing-tools.md`](https://github.com/impactotecnologico/mcp-ops-b/blob/main/docs/vigentes/integraciones/google-marketing-tools.md).
 
+**Cross-integration macros:** `macro_digital_experience_overview` and `macro_release_business_impact` correlate GA4/GSC with `deployment_status` (ECS/GHE sources in Cloud Catalog) and optional Datadog (`dd_errors_recent`). Configure `deployment_sources` and Datadog in Admin before expecting full sections in prod.
+
 Skills: [`skills/run-macro-workflows/`](skills/run-macro-workflows/).
 
 ---
