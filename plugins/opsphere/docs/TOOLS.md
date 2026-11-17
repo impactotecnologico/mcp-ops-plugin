@@ -1157,6 +1157,48 @@ Optional correlation (no causal claims): Cloudflare checkout abuse (`macro_cf_ec
 
 ---
 
+## Supabase
+
+Requires: `SUPABASE_ACCESS_TOKEN` (read-scoped personal access token). Optional `SUPABASE_ORGANIZATION_SLUG` and `SUPABASE_PROJECT_REF` (20 lowercase letters). The gateway calls only `https://api.supabase.com`. There is no project URL, service-role key, or database password.
+
+Read-only Management API diagnostics. The module is off until the tenant enables it. Developer receives the twelve core tools. Team and above also receive the ten service tools. Callers cannot pass SQL. Secret values and function source are never returned.
+
+### Core
+
+| Tool | Purpose |
+|------|---------|
+| `supabase_projects_list` | Projects visible to the token |
+| `supabase_project_status` | One project, service health, and organization entitlements |
+| `supabase_logs_search` | One allowlisted log source over at most 24 hours |
+| `supabase_errors_recent` | Recent error lines from one log source |
+| `supabase_metrics_summary` | Allowlisted Prometheus samples |
+| `supabase_database_capacity` | Disk size, utilization, and autoscale |
+| `supabase_connections_status` | Pooler configuration without connection secrets |
+| `supabase_usage_overview` | API and Edge Function usage |
+| `supabase_database_inspect` | Fixed read-only checks: activity, locks, large tables, extensions |
+| `supabase_advisors` | Security and performance advisor findings |
+| `supabase_migrations_list` | Applied migrations, without applying SQL |
+| `supabase_backups_status` | Backup inventory, schedule, and restore points |
+
+### Services (Team and above)
+
+| Tool | Purpose |
+|------|---------|
+| `supabase_functions_list` | Edge Functions without source or secrets |
+| `supabase_function_status` | One function's status and recent error lines |
+| `supabase_auth_config` | Redacted Auth settings |
+| `supabase_auth_errors` | Recent Auth error lines |
+| `supabase_storage_buckets` | Bucket names and visibility, without objects |
+| `supabase_storage_health` | Storage health and recent error lines |
+| `supabase_realtime_health` | Realtime configuration and health |
+| `supabase_branches_list` | Branch names and status |
+| `supabase_config_summary` | Redacted project configuration |
+| `supabase_secrets_metadata` | Secret names only |
+
+**Example**: _"Which Supabase projects are degraded, and what do the last hour of Auth errors say?"_
+
+---
+
 ## Plan-gated tools
 
 The following categories may be available when their individual tools are included in the current plan and their tenant modules/integrations are configured:
