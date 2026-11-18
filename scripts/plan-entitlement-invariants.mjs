@@ -28,7 +28,7 @@ const plans = read('docs/PLANS.md');
 for (const plan of ['Community', 'Developer', 'Team', 'Enterprise', 'Custom']) {
   assert.match(plans, new RegExp(`\\b${plan}\\b`), `docs/PLANS.md missing ${plan}`);
 }
-for (const cap of ['100', '250', '400']) {
+for (const cap of ['100', '250', '500']) {
   assert.match(plans, new RegExp(`\\b${cap}\\b`), `docs/PLANS.md missing cap ${cap}`);
 }
 assert.match(plans, /tools\/list/);

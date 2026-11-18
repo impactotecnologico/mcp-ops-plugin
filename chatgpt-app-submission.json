@@ -752,6 +752,30 @@
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
     },
+    "azure_ai_deployment_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure ai deployment status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_ai_deployments": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure ai deployments information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
     "azure_blob_find": {
       "annotations": {
         "readOnlyHint": true,
@@ -772,6 +796,90 @@
       },
       "justifications": {
         "read_only_justification": "Retrieves or computes azure cli query information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_copilot_agent_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure copilot agent status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_copilot_agents": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure copilot agents information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_devops_pipeline_run_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure devops pipeline run get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_devops_pipelines_latest": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure devops pipelines latest information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_devops_projects": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure devops projects information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_devops_work_item_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure devops work item get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_devops_work_items_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure devops work items search information without changing Opsphere or provider state.",
         "open_world_justification": "Does not change public internet state or write to an external third-party system.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
@@ -820,6 +928,54 @@
       },
       "justifications": {
         "read_only_justification": "Retrieves or computes azure log analytics query information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_power_automate_flows": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure power automate flows information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_power_automate_runs": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure power automate runs information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_power_platform_environment_get": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure power platform environment get information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "azure_power_platform_environments": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes azure power platform environments information without changing Opsphere or provider state.",
         "open_world_justification": "Does not change public internet state or write to an external third-party system.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }
@@ -5116,6 +5272,270 @@
       },
       "justifications": {
         "read_only_justification": "Retrieves or computes sq quality gate status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_advisors": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase advisors information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_auth_config": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase auth config information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_auth_errors": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase auth errors information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_backups_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase backups status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_branches_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase branches list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_config_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase config summary information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_connections_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase connections status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_database_capacity": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase database capacity information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_database_inspect": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase database inspect information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_errors_recent": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase errors recent information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_function_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase function status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_functions_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase functions list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_logs_search": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase logs search information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_metrics_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase metrics summary information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_migrations_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase migrations list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_project_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase project status information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_projects_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase projects list information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_realtime_health": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase realtime health information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_secrets_metadata": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase secrets metadata information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_storage_buckets": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase storage buckets information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_storage_health": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase storage health information without changing Opsphere or provider state.",
+        "open_world_justification": "Does not change public internet state or write to an external third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
+      }
+    },
+    "supabase_usage_overview": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves or computes supabase usage overview information without changing Opsphere or provider state.",
         "open_world_justification": "Does not change public internet state or write to an external third-party system.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or send an irreversible action."
       }

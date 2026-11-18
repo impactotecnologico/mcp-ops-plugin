@@ -7,7 +7,7 @@ Opsphere exposes a tenant-specific tool catalog through the remote MCP gateway a
 | | **Community** | **Developer** | **Team** | **Enterprise / Custom** |
 |---|:---:|:---:|:---:|:---:|
 | **Intended use** | Individual operational workspace | Individual builders and small technical teams | Organization tenants | Organizations with unrestricted or contractual catalogs |
-| **Counted-tool ceiling** | 100 | 250 | 400 | Unlimited |
+| **Counted-tool ceiling** | 100 | 250 | 500 | Unlimited |
 | **Plan membership** | Curated individual-tool grants | Broader curated individual-tool grants | Broad curated individual-tool grants | Every globally available tool |
 | **Personal Workspace** | Automatic at signup | Automatic | Automatic | Automatic |
 | **External workspaces** | Not included | Per-plan quota | Per-plan quota | Contractual quota |
@@ -23,7 +23,7 @@ The ceiling is not a promise that every account will see exactly that number. To
 4. required integration credentials and Cloud Catalog context being configured; and
 5. the gateway's security and execution-policy checks.
 
-`ops_*` control-plane tools do not consume the 100/250/400 counted-tool capacity, but capped plans still need an explicit entitlement for them. Tools in the `repo` and `repos` modules are globally disabled because the gateway cannot safely use repositories from the user's local computer.
+`ops_*` control-plane tools do not consume the 100/250/500 counted-tool capacity, but capped plans still need an explicit entitlement for them. Tools in the `repo` and `repos` modules are globally disabled because the gateway cannot safely use repositories from the user's local computer.
 
 ## How to know what you can use
 
