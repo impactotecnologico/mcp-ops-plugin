@@ -1095,6 +1095,10 @@ Prefer over `azure_cli_query("keyvault secret show …")` — generic CLI blocks
 
 Community tenants: these four tools stay in `disabledTools` until enabled on the tenant plan (same pattern as AWS data tools).
 
+### Specialized Azure reads
+
+Read-only tools in the existing Azure module cover Power Platform environments, Power Automate flows and runs (including agent flows), Copilot Studio agent publication status, Azure OpenAI / AI Foundry deployments, and Azure DevOps projects, work items, and pipeline runs. They do not create, delete, approve, rerun, or invoke anything. A call uses the delegated Azure session that already exists. Power Platform, Power Automate, Copilot Studio, and Azure DevOps ask for their own Entra scope when the current token cannot call that API. Deployed-model reads use the Azure Resource Manager token. Optional Cloud Catalog defaults (`power_platform_environment_id`, `azure_devops_organization`, `azure_devops_project`) avoid repeating an id; an explicit argument wins, and a detail call without either one reports the missing argument. Whether a signed-in account can call one of these tools still depends on its plan, tenant module, and catalog.
+
 ---
 
 ## Macro Workflows (Team / Enterprise)
@@ -1205,7 +1209,7 @@ The following categories may be available when their individual tools are includ
 
 - **Kubernetes** — pod logs, cluster summary, resource YAML, rollout history
 - **ArgoCD** — app list, sync/health status, unhealthy resources
-- **Azure** — Service Bus, DNS, resource groups, CLI queries
+- **Azure** — Service Bus, DNS, resource groups, CLI queries, Power Platform, Power Automate, Copilot Studio, AI deployments, Azure DevOps
 - **Akamai** — WAF policies, cache purge, property rules
 - **Observability** — multi-environment health digest, capacity overview
 - **Confluence** — page search and content read

@@ -6,8 +6,8 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 - `destructiveHint`: puede borrar, sobrescribir, revocar o ejecutar una acción irreversible.
 - `openWorldHint`: puede cambiar un sistema público o un tercero externo.
 
-- Tools auditadas: 449
-- Solo lectura: 385
+- Tools auditadas: 484
+- Solo lectura: 420
 - Con efectos o cambios de estado: 64
 - Destructivas o irreversibles: 35
 - Cambian sistemas públicos o externos: 19
@@ -77,12 +77,25 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `aws_sso_login_remote` | false | false | false | Cambia estado privado de forma acotada | Bloqueada |
 | `aws_sso_logout` | false | true | false | Sobrescribe, elimina o revoca estado privado | Bloqueada |
 | `aws_sts_whoami` | true | false | false | Solo consulta | Permitida |
+| `azure_ai_deployment_status` | true | false | false | Solo consulta | Permitida |
+| `azure_ai_deployments` | true | false | false | Solo consulta | Permitida |
 | `azure_blob_find` | true | false | false | Solo consulta | Permitida |
 | `azure_cli_query` | true | false | false | Solo consulta | Permitida |
+| `azure_copilot_agent_status` | true | false | false | Solo consulta | Permitida |
+| `azure_copilot_agents` | true | false | false | Solo consulta | Permitida |
+| `azure_devops_pipeline_run_get` | true | false | false | Solo consulta | Permitida |
+| `azure_devops_pipelines_latest` | true | false | false | Solo consulta | Permitida |
+| `azure_devops_projects` | true | false | false | Solo consulta | Permitida |
+| `azure_devops_work_item_get` | true | false | false | Solo consulta | Permitida |
+| `azure_devops_work_items_search` | true | false | false | Solo consulta | Permitida |
 | `azure_dns_lookup` | true | false | false | Solo consulta | Permitida |
 | `azure_keyvault_secret_metadata` | true | false | false | Solo consulta | Permitida |
 | `azure_keyvault_secrets_list` | true | false | false | Solo consulta | Permitida |
 | `azure_log_analytics_query` | true | false | false | Solo consulta | Permitida |
+| `azure_power_automate_flows` | true | false | false | Solo consulta | Permitida |
+| `azure_power_automate_runs` | true | false | false | Solo consulta | Permitida |
+| `azure_power_platform_environment_get` | true | false | false | Solo consulta | Permitida |
+| `azure_power_platform_environments` | true | false | false | Solo consulta | Permitida |
 | `azure_resource_groups` | true | false | false | Solo consulta | Permitida |
 | `azure_servicebus_dlq_content` | true | false | false | Solo consulta | Permitida |
 | `azure_servicebus_health_overview` | true | false | false | Solo consulta | Permitida |
@@ -441,6 +454,28 @@ Generada desde el catálogo MCP local completo. Las etiquetas visibles para Chat
 | `sq_projects_search` | true | false | false | Solo consulta | Permitida |
 | `sq_pull_requests_list` | true | false | false | Solo consulta | Permitida |
 | `sq_quality_gate_status` | true | false | false | Solo consulta | Permitida |
+| `supabase_advisors` | true | false | false | Solo consulta | Permitida |
+| `supabase_auth_config` | true | false | false | Solo consulta | Permitida |
+| `supabase_auth_errors` | true | false | false | Solo consulta | Permitida |
+| `supabase_backups_status` | true | false | false | Solo consulta | Permitida |
+| `supabase_branches_list` | true | false | false | Solo consulta | Permitida |
+| `supabase_config_summary` | true | false | false | Solo consulta | Permitida |
+| `supabase_connections_status` | true | false | false | Solo consulta | Permitida |
+| `supabase_database_capacity` | true | false | false | Solo consulta | Permitida |
+| `supabase_database_inspect` | true | false | false | Solo consulta | Permitida |
+| `supabase_errors_recent` | true | false | false | Solo consulta | Permitida |
+| `supabase_function_status` | true | false | false | Solo consulta | Permitida |
+| `supabase_functions_list` | true | false | false | Solo consulta | Permitida |
+| `supabase_logs_search` | true | false | false | Solo consulta | Permitida |
+| `supabase_metrics_summary` | true | false | false | Solo consulta | Permitida |
+| `supabase_migrations_list` | true | false | false | Solo consulta | Permitida |
+| `supabase_project_status` | true | false | false | Solo consulta | Permitida |
+| `supabase_projects_list` | true | false | false | Solo consulta | Permitida |
+| `supabase_realtime_health` | true | false | false | Solo consulta | Permitida |
+| `supabase_secrets_metadata` | true | false | false | Solo consulta | Permitida |
+| `supabase_storage_buckets` | true | false | false | Solo consulta | Permitida |
+| `supabase_storage_health` | true | false | false | Solo consulta | Permitida |
+| `supabase_usage_overview` | true | false | false | Solo consulta | Permitida |
 | `synthetics_summary_by_location` | true | false | false | Solo consulta | Permitida |
 | `system_update` | false | true | false | Sobrescribe, elimina o revoca estado privado | Bloqueada |
 | `tcp_connect` | true | false | false | Solo consulta | Permitida |
