@@ -1203,6 +1203,30 @@ Read-only Management API diagnostics. The module is off until the tenant enables
 
 ---
 
+## Protocol operations
+
+Read-only EVM checks against the profile an admin stores for the tenant. The whole `protocol-ops` module is on or off together. Developer tenants start with it on. Team, Enterprise and Custom start with it off. Community does not include it. The Developer plan ceiling for counted tools is 259.
+
+The gateway reads only addresses from that profile. It calls the tenant's public HTTPS RPC and rejects `eth_send*`, `debug_*` and `trace_*`. A stored RPC URL is never returned. Solana is accepted in the profile and answered with `UNSUPPORTED_CHAIN_FAMILY` until that adapter exists.
+
+An artifact or upgrade-authority mismatch is a successful result with a verdict (`match`, `mismatch`, `inconclusive`, `aligned`, `drift` or `partial`). It is not a transport error.
+
+| Tool | Purpose |
+|------|---------|
+| `onchain_rpc_health` | Compare the configured public RPC endpoints and their chain head |
+| `onchain_program_or_contract_info` | Read code and proxy metadata for one registered contract |
+| `onchain_upgrade_authority` | Read the EIP-1967 implementation and admin of a registered proxy |
+| `onchain_artifact_coherence` | Compare deployed bytecode with the expected checksum or tag |
+| `onchain_oracle_freshness` | Report Chainlink feed age against the configured maximum |
+| `onchain_indexer_lag` | Compare the chain head with a block number from an existing read-only credential |
+| `onchain_release_correlation` | Compare a release tag and on-chain address, and name the build variable such as `NEXT_PUBLIC_PROGRAM_ID` |
+| `macro_protocol_health` | Read the profile, head, contracts, feeds and indexer together |
+| `macro_protocol_release_check` | Check one configured service against its expected tag and address |
+
+Pass `environment` as `staging` or `prod` (default `prod`). Do not ask the user for the RPC URL, a private key, or a signature.
+
+---
+
 ## Plan-gated tools
 
 The following categories may be available when their individual tools are included in the current plan and their tenant modules/integrations are configured:
