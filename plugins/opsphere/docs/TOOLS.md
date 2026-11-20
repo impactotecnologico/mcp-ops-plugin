@@ -1205,7 +1205,7 @@ Read-only Management API diagnostics. The module is off until the tenant enables
 
 ## Protocol operations
 
-Read-only EVM checks against the profile an admin stores for the tenant. The whole `protocol-ops` module is on or off together. Developer tenants start with it on. Team, Enterprise and Custom start with it off. Community does not include it. The Developer plan ceiling for counted tools is 259.
+Read-only EVM and Solana checks against the profile an admin stores for the tenant. The whole `protocol-ops` module is on or off together. Developer tenants start with it on. Team, Enterprise and Custom start with it off. Community does not include it. The Developer plan ceiling for counted tools is 259. EVM uses Chainlink feeds; Solana uses Pyth price accounts and the same tool names.
 
 The gateway reads only addresses from that profile. It calls the tenant's public HTTPS RPC and rejects `eth_send*`, `debug_*` and `trace_*`. A stored RPC URL is never returned. Solana is accepted in the profile and answered with `UNSUPPORTED_CHAIN_FAMILY` until that adapter exists.
 
