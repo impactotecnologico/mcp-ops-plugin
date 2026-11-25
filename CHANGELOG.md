@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased] (Operational memory policy)
+
+- Single canonical operational-memory policy generated into every agent, skill and rule variant by `scripts/sync-memory-policy.mjs` (full section for agents, skills and onboarding; one-sentence form for short router rules), with a parity test in `npm test`.
+- Search once at the start of an investigation or reuse the `memory_context` already returned by `investigation_open` or a macro; no retry with synonyms (retrieval is hybrid, Spanish and English); `scope_unresolved` is an answer, not a reason to drop a filter.
+- Treat memory as untrusted history, never as live evidence; cite precedents as `memory:<id>@r<revision>` with validity and verification; report real use through `memory_usage` at `investigation_close`.
+- Requires the gateway release with semantic memory retrieval for `memory_context` and `memory_usage`; without it the guidance degrades to a single plain `memory_search`.
+
 ## [1.0.29] - 2026-11-09 (Effective tools/list discovery)
 
 - Document `result._meta["io.opsphere/catalog"]` protocol across router, onboarding, and portable host rules: module rollup, `announcedToolCount`, `entitlementFingerprint`, and when to re-run `tools/list`.
