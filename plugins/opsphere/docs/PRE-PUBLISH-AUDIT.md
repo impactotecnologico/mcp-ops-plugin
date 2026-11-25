@@ -105,7 +105,7 @@ rg 'AKIA[0-9A-Z]{16}|ghp_[a-zA-Z0-9]{20,}|sk-[a-zA-Z0-9]{20,}'
 | No `hooks/hooks.json` / workspace-open shell | `ci-validate` §3 |
 | No install lifecycle in `package.json` | `ci-validate` §5 |
 | Only maintainer scripts in `scripts/` | `ci-validate.sh`, `codex-install.sh`, `codex-mcp-config.sh` |
-| Single public MCP URL | `mcp.json` + `.mcp.json` → `https://mcp-cursor.opsphere.io/mcp` |
+| Single public MCP URL | `mcp.json` + `.codex.mcp.json` → `https://mcp-cursor.opsphere.io/mcp` |
 | Codex manifest valid | `.codex-plugin/plugin.json` v1.0.2, `ci-validate` §16 |
 
 ---

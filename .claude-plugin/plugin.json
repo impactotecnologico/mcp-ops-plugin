@@ -1,13 +1,14 @@
 {
   "name": "opsphere",
   "displayName": "Opsphere — DevOps & SRE Intelligence",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "DevOps, SRE, and QA intelligence for Claude Code via a remote MCP gateway.",
   "author": {
     "name": "Opsphere",
     "email": "contact@opsphere.io"
   },
   "homepage": "https://opsphere.io",
+  "privacyPolicyUrl": "https://opsphere.io/privacy",
   "repository": "https://github.com/opsphere-io/opsphere-plugin",
   "license": "MIT",
   "keywords": ["devops", "sre", "mcp", "incident-triage", "datadog", "opsphere"],

@@ -12,7 +12,7 @@ Files that make up the Claude Code plugin, all at the repo root:
 
 - [`.claude-plugin/plugin.json`](../.claude-plugin/plugin.json): plugin manifest (name `opsphere`, which namespaces skills and agents).
 - [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json): marketplace catalog (`source: ./`).
-- [`.claude.mcp.json`](../.claude.mcp.json): MCP config (`type: http`, gateway `url`, camelCase `oauth.clientId`). It is **not** compatible with Codex's `.mcp.json`.
+- [`.claude.mcp.json`](../.claude.mcp.json): MCP config (`type: http`, gateway `url`, camelCase `oauth.clientId`). It is **not** compatible with Codex's `.codex.mcp.json`.
 - [`skills/`](../skills/), [`agents/`](../agents/) and [`commands/`](../commands/): skills, subagents and slash commands.
 
 No credentials are included.
@@ -139,7 +139,7 @@ claude plugin install opsphere@opsphere
 
 ![Local callback page saying Authentication successful, you can close this tab and return to Claude Code](../assets/screenshots/claude-success.png)
 
-**6. Run `/mcp` again.** The built-in server `plugin:opsphere:opsphere` is connected with **338 tools** (the count for this signed-in catalog). The diagnostics warning is expected in this repo: project [`.mcp.json`](../.mcp.json) is Codex's config (`url` without Claude's `type: http`), so that entry is skipped. The connected server is the plugin one, which matches the note above that [`.claude.mcp.json`](../.claude.mcp.json) uses `type: http`.
+**6. Run `/mcp` again.** The built-in server `plugin:opsphere:opsphere` is connected with **338 tools** (the count for this signed-in catalog). The connected server is the plugin one, which matches the note above that [`.claude.mcp.json`](../.claude.mcp.json) uses `type: http`.
 
 ![Claude Code /mcp showing plugin:opsphere:opsphere connected with 338 tools](../assets/screenshots/claude-mcp-tools-included.png)
 

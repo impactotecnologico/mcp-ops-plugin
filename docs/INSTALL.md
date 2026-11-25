@@ -170,7 +170,7 @@ or `@configure-integration help me connect Datadog`.
 
 Opsphere is **not** in the public OpenAI Plugins Directory yet (Fase 5). Users add the **Git marketplace** from the repo; the search bar at the top of Plugins only searches the public directory.
 
-The plugin bundles a full `.mcp.json` (OAuth `client_id`, `User-Agent`, `oauth_resource`) — same metadata as `scripts/codex-mcp-config.sh`. Users do **not** need to edit `~/.codex/config.toml` for desktop.
+The plugin bundles a full `.codex.mcp.json` (OAuth `client_id`, `User-Agent`, `oauth_resource`) — same metadata as `scripts/codex-mcp-config.sh`. Users do **not** need to edit `~/.codex/config.toml` for desktop.
 
 1. **Settings → Security → Developer mode** (on).
 2. Open **Plugins** → tab **Add marketplace** (not the search box).

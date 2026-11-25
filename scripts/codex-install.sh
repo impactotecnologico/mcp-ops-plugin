@@ -13,7 +13,7 @@ echo "=== Opsphere Codex plugin install ==="
 echo "Source: ${ROOT}"
 echo "Dest:   ${DEST}"
 
-for f in .codex-plugin/plugin.json .mcp.json; do
+for f in .codex-plugin/plugin.json .codex.mcp.json; do
   [[ -f "${ROOT}/${f}" ]] || { echo "FAIL: missing ${f} — run from the Opsphere plugin repository root"; exit 1; }
 done
 

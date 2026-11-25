@@ -361,7 +361,7 @@ Same as Cursor: `@ci-investigation` calls `ops_my_usage` first — Team plan req
 3. Open a chat with Opsphere (Try now) or type `/mcp` in Codex mode to see server status.
 4. If MCP is disconnected, use **Authenticate** in MCP settings or re-install after updating the plugin.
 
-The bundled `.mcp.json` includes `oauth.client_id`, `http_headers.User-Agent`, and `oauth_resource` (same as `scripts/codex-mcp-config.sh`). Restart ChatGPT desktop after updating the plugin files.
+The bundled `.codex.mcp.json` includes `oauth.client_id`, `http_headers.User-Agent`, and `oauth_resource` (same as `scripts/codex-mcp-config.sh`). Restart ChatGPT desktop after updating the plugin files.
 
 ### ChatGPT desktop — raw JSON instead of conversational reply
 
@@ -375,11 +375,11 @@ The bundled `.mcp.json` includes `oauth.client_id`, `http_headers.User-Agent`, a
 
 ### ChatGPT desktop — stale OAuth metadata
 
-**Cause**: Stale plugin cache, or an older `.mcp.json` without OAuth metadata.
+**Cause**: Stale plugin cache, or an older `.codex.mcp.json` without OAuth metadata.
 
 **Fix**:
 
-1. Update to the latest plugin commit (`.mcp.json` must include `codex-mcp` client id and `User-Agent`).
+1. Update to the latest plugin commit (`.codex.mcp.json` must include `codex-mcp` client id and `User-Agent`).
 2. Quit and restart ChatGPT desktop.
 3. Re-install the plugin or trigger OAuth from MCP settings.
 4. Optional fallback: run `./scripts/codex-mcp-config.sh` once (shared `~/.codex/config.toml` with desktop).

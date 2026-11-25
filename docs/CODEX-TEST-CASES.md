@@ -28,7 +28,7 @@ cd opsphere-plugin
 ./scripts/codex-mcp-config.sh
 ```
 
-This appends to `~/.codex/config.toml` (optional for desktop — `.mcp.json` in the plugin already bundles the same OAuth metadata):
+This appends to `~/.codex/config.toml` (optional for desktop — `.codex.mcp.json` in the plugin already bundles the same OAuth metadata):
 
 - `[mcp_servers.opsphere]` with `User-Agent = codex-mcp/1.0`
 - `[mcp_servers.opsphere.oauth] client_id = codex-mcp`
@@ -225,7 +225,7 @@ curl -sS -H 'User-Agent: codex-mcp/1.0' \
 
 **Goal:** End-user UI path (not CLI).
 
-**Prerequisites:** Developer mode on; plugin **1.0.2+** with enriched `.mcp.json`.
+**Prerequisites:** Developer mode on; plugin **1.0.2+** with enriched `.codex.mcp.json`.
 
 **Steps:**
 
@@ -261,7 +261,7 @@ curl -sS -H 'User-Agent: codex-mcp/1.0' \
 |---------|-----|
 | No **Connect** on plugin detail page | Expected — OAuth on **Install** or **Try now** / MCP settings |
 | Desktop shows plugin **1.0.0** | Reinstall from marketplace after pull **1.0.2+** |
-| `No authorization support detected` | Update plugin; `.mcp.json` must include `client_id` + `User-Agent` |
+| `No authorization support detected` | Update plugin; `.codex.mcp.json` must include `client_id` + `User-Agent` |
 | `MCP startup incomplete` | Run `mcp login` **before** starting Codex; use new session |
 | Tools not exposed after login in same chat | Exit Codex; login in terminal; start fresh session |
 | OAuth 403 on authorize | Contact `contact@opsphere.io` (WAF / redirect_uri) |
