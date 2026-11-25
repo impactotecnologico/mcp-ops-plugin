@@ -38,7 +38,7 @@
     "opsphere"
   ],
   "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
+  "mcpServers": "./.codex.mcp.json",
   "interface": {
     "displayName": "Opsphere",
     "shortDescription": "DevOps & SRE intelligence",
@@ -59,6 +59,7 @@
     "composerIcon": "./assets/logo-icon.svg",
     "logo": "./assets/logo-icon.svg",
     "privacyPolicyURL": "https://opsphere.io/en/privacy",
-    "termsOfServiceURL": "https://opsphere.io/en/terms"
+    "termsOfServiceURL": "https://opsphere.io/en/terms",
+    "supportURL": "https://opsphere.io/contact"
   }
 }

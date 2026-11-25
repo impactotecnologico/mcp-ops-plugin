@@ -333,8 +333,8 @@ else:
     if skills_ref != "./skills/":
         fail(f".codex-plugin/plugin.json skills must be ./skills/ (got {skills_ref!r})")
     mcp_ref = codex.get("mcpServers")
-    if mcp_ref != "./.mcp.json":
-        fail(f".codex-plugin/plugin.json mcpServers must be ./.mcp.json (got {mcp_ref!r})")
+    if mcp_ref != "./.codex.mcp.json":
+        fail(f".codex-plugin/plugin.json mcpServers must be ./.codex.mcp.json (got {mcp_ref!r})")
     iface = codex.get("interface") or {}
     icon = iface.get("composerIcon") or iface.get("logo")
     if icon and not os.path.isfile(os.path.join(ROOT, icon.lstrip("./"))):
