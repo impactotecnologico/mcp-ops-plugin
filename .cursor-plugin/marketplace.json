@@ -1,5 +1,4 @@
 {
-  "$schema": "https://cursor.com/schema/marketplace.schema.json",
   "name": "opsphere",
   "owner": {
     "name": "Opsphere",
@@ -7,7 +6,7 @@
   },
   "metadata": {
     "description": "Opsphere DevOps, SRE, and QA intelligence plugins for Cursor.",
-    "version": "1.0.29",
+    "version": "1.0.30",
     "pluginRoot": "plugins"
   },
   "plugins": [

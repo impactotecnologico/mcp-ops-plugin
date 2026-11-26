@@ -46,7 +46,7 @@ tracked_match_exists() {
 echo "=== Opsphere plugin — public repo validation ==="
 
 # 1. Required manifest files
-for f in .cursor-plugin/plugin.json .codex-plugin/plugin.json .claude-plugin/plugin.json .mcp.json mcp.json .claude.mcp.json README.md CHANGELOG.md LICENSE; do
+for f in .cursor-plugin/plugin.json .codex-plugin/plugin.json .claude-plugin/plugin.json .codex.mcp.json mcp.json .claude.mcp.json README.md CHANGELOG.md LICENSE; do
   [[ -f "$f" ]] || { red "missing $f"; continue; }
   ok "$f exists"
 done
@@ -57,7 +57,7 @@ done
 [[ -f assets/icon.png ]] && ok "assets/icon.png"
 
 # 3. JSON syntax
-for j in .cursor-plugin/plugin.json .cursor-plugin/marketplace.json .codex-plugin/plugin.json .claude-plugin/plugin.json .claude-plugin/marketplace.json .agents/plugins/marketplace.json .mcp.json mcp.json .claude.mcp.json client-connectivity/catalog.json opsphere-opencode/mcp/opsphere.json opsphere-opencode/opencode.json opsphere-antigravity/plugin.json opsphere-antigravity/mcp.json opsphere-antigravity/mcp_config.json opsphere-warp/mcp/opsphere.json opsphere-copilot/plugin.json opsphere-copilot/mcp.json .github/plugin/marketplace.json; do
+for j in .cursor-plugin/plugin.json .cursor-plugin/marketplace.json .codex-plugin/plugin.json .claude-plugin/plugin.json .claude-plugin/marketplace.json .agents/plugins/marketplace.json .codex.mcp.json mcp.json .claude.mcp.json client-connectivity/catalog.json opsphere-opencode/mcp/opsphere.json opsphere-opencode/opencode.json opsphere-antigravity/plugin.json opsphere-antigravity/mcp.json opsphere-antigravity/mcp_config.json opsphere-warp/mcp/opsphere.json opsphere-copilot/plugin.json opsphere-copilot/mcp.json .github/plugin/marketplace.json; do
   [[ -f "$j" ]] || continue
   python3 -m json.tool "$j" >/dev/null || red "invalid JSON: $j"
 done
@@ -148,12 +148,12 @@ if search_quiet 'cursor-mcp' mcp.json && search_quiet '"scopes"' mcp.json; then
 else
   red "mcp.json must include auth.CLIENT_ID cursor-mcp and scopes (e.g. mcp:tools)"
 fi
-if search_quiet 'mcp-cursor\.opsphere\.io' .mcp.json; then ok ".mcp.json uses public gateway URL"; else red "unexpected .mcp.json URL"; fi
-if search_quiet '"auth"[[:space:]]*:[[:space:]]*"oauth"' .mcp.json; then ok ".mcp.json uses oauth auth"; else red ".mcp.json must set auth oauth"; fi
-if search_quiet 'codex-mcp' .mcp.json && search_quiet 'User-Agent' .mcp.json && search_quiet 'oauth_resource' .mcp.json; then
-  ok ".mcp.json bundles Codex OAuth client_id, User-Agent, oauth_resource"
+if search_quiet 'mcp-cursor\.opsphere\.io' .codex.mcp.json; then ok ".codex.mcp.json uses public gateway URL"; else red "unexpected .codex.mcp.json URL"; fi
+if search_quiet '"auth"[[:space:]]*:[[:space:]]*"oauth"' .codex.mcp.json; then ok ".codex.mcp.json uses oauth auth"; else red ".codex.mcp.json must set auth oauth"; fi
+if search_quiet 'codex-mcp' .codex.mcp.json && search_quiet 'User-Agent' .codex.mcp.json && search_quiet 'oauth_resource' .codex.mcp.json; then
+  ok ".codex.mcp.json bundles Codex OAuth client_id, User-Agent, oauth_resource"
 else
-  red ".mcp.json must include oauth.client_id, http_headers.User-Agent, oauth_resource for ChatGPT desktop"
+  red ".codex.mcp.json must include oauth.client_id, http_headers.User-Agent, oauth_resource for ChatGPT desktop"
 fi
 
 # 11–14. Cursor submission checklist (frontmatter, logo, paths, version sync)
@@ -333,8 +333,8 @@ else:
     if skills_ref != "./skills/":
         fail(f".codex-plugin/plugin.json skills must be ./skills/ (got {skills_ref!r})")
     mcp_ref = codex.get("mcpServers")
-    if mcp_ref != "./.mcp.json":
-        fail(f".codex-plugin/plugin.json mcpServers must be ./.mcp.json (got {mcp_ref!r})")
+    if mcp_ref != "./.codex.mcp.json":
+        fail(f".codex-plugin/plugin.json mcpServers must be ./.codex.mcp.json (got {mcp_ref!r})")
     iface = codex.get("interface") or {}
     icon = iface.get("composerIcon") or iface.get("logo")
     if icon and not os.path.isfile(os.path.join(ROOT, icon.lstrip("./"))):
@@ -421,7 +421,7 @@ else:
     if mcp_ref != "./.claude.mcp.json":
         fail(
             f".claude-plugin/plugin.json mcpServers must be ./.claude.mcp.json "
-            f"(got {mcp_ref!r}) — must never point at .mcp.json (Codex)"
+            f"(got {mcp_ref!r}) — must never point at .codex.mcp.json (Codex)"
         )
     else:
         print("OK: .claude-plugin/plugin.json mcpServers points to ./.claude.mcp.json")

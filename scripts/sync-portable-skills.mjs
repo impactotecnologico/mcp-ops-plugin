@@ -83,6 +83,14 @@ function syncFile(sourceRelative, destinationRelative, check) {
 const check = process.argv.includes('--check');
 for (const skill of skills) {
   syncFile(path.join('skills', skill, 'SKILL.md'), path.join('skills', skill, 'SKILL.md'), check);
+  // Skills may split bulky content into references/ so SKILL.md stays under host load limits (agy: 24000 bytes).
+  const referencesDir = path.join(root, 'skills', skill, 'references');
+  if (fs.existsSync(referencesDir)) {
+    for (const file of fs.readdirSync(referencesDir)) {
+      const relative = path.join('skills', skill, 'references', file);
+      syncFile(relative, relative, check);
+    }
+  }
 }
 for (const { source, destination } of portableRules) {
   syncFile(source, destination, check);

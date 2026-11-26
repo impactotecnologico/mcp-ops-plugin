@@ -2,9 +2,9 @@
 
 > Query logs, diagnose incidents, check deploys, and manage your infrastructure — without leaving the IDE.
 
-[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.29-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
-[![Codex plugin](https://img.shields.io/badge/Codex-1.0.23-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
-[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-1.0.17-orange)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Cursor plugin](https://img.shields.io/badge/Cursor-1.0.30-blue)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Codex plugin](https://img.shields.io/badge/Codex-1.0.24-teal)](https://github.com/opsphere-io/opsphere-plugin/releases)
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-1.0.18-orange)](https://github.com/opsphere-io/opsphere-plugin/releases)
 [![OpenCode package](https://img.shields.io/badge/OpenCode-1.0.2-lightgrey)](https://github.com/opsphere-io/opsphere-plugin)
 [![Antigravity package](https://img.shields.io/badge/Antigravity-1.0.2-lightgrey)](https://github.com/opsphere-io/opsphere-plugin)
 [![Copilot package](https://img.shields.io/badge/Copilot%20CLI-1.0.2-lightgrey)](https://github.com/opsphere-io/opsphere-plugin)
@@ -457,7 +457,7 @@ See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for the full guide.
 
 ## Codex / ChatGPT
 
-Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.19** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
+Opsphere is also packaged as a **Codex plugin** (same remote gateway as Cursor). Version **1.0.24** lives in `.codex-plugin/plugin.json` — independent from the Cursor marketplace version in `.cursor-plugin/plugin.json`.
 
 ### Quick start (Codex CLI)
 
@@ -493,7 +493,7 @@ Full install paths (desktop marketplace, troubleshooting): **[docs/INSTALL.md](d
 
 ## Claude Code
 
-Opsphere is also packaged as a **Claude Code plugin** (same remote gateway as Cursor and Codex). Version **1.0.13** lives in `.claude-plugin/plugin.json` — independent from the Cursor and Codex manifest versions. MCP configuration is a dedicated `.claude.mcp.json` (Claude requires `"type": "http"` and a camelCase `oauth.clientId`; it is **not** compatible with Codex's `.mcp.json`).
+Opsphere is also packaged as a **Claude Code plugin** (same remote gateway as Cursor and Codex). Version **1.0.18** lives in `.claude-plugin/plugin.json` — independent from the Cursor and Codex manifest versions. MCP configuration is a dedicated `.claude.mcp.json` (Claude requires `"type": "http"` and a camelCase `oauth.clientId`; it is **not** compatible with Codex's `.codex.mcp.json`).
 
 ### Quick start (Claude Code CLI)
 

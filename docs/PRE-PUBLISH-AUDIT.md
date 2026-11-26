@@ -105,7 +105,7 @@ rg 'AKIA[0-9A-Z]{16}|ghp_[a-zA-Z0-9]{20,}|sk-[a-zA-Z0-9]{20,}'
 | No `hooks/hooks.json` / workspace-open shell | `ci-validate` §3 |
 | No install lifecycle in `package.json` | `ci-validate` §5 |
 | Only maintainer scripts in `scripts/` | `ci-validate.sh`, `codex-install.sh`, `codex-mcp-config.sh` |
-| Single public MCP URL | `mcp.json` + `.mcp.json` → `https://mcp-cursor.opsphere.io/mcp` |
+| Single public MCP URL | `mcp.json` + `.codex.mcp.json` → `https://mcp-cursor.opsphere.io/mcp` |
 | Codex manifest valid | `.codex-plugin/plugin.json` v1.0.2, `ci-validate` §16 |
 
 ---
@@ -116,7 +116,8 @@ rg 'AKIA[0-9A-Z]{16}|ghp_[a-zA-Z0-9]{20,}|sk-[a-zA-Z0-9]{20,}'
 |-------|-------|-------|
 | `interface.privacyPolicyURL` | `https://opsphere.io/en/privacy` | ✅ HTTP 200 (2026-07-17) |
 | `interface.termsOfServiceURL` | `https://opsphere.io/en/terms` | ✅ HTTP 200 (2026-07-17) |
-| `homepage` | `https://opsphere.io` | ✅ |
+| `homepage` / `websiteURL` | `https://opsphere.io` | ✅ |
+| `interface.supportURL` | `https://opsphere.io/contact` | Re-check before OpenAI submit |
 | `repository` | `https://github.com/opsphere-io/opsphere-plugin` | Public |
 
 **Legal coherence review (2026-07-20):** `docs/PRIVACY.md` + `SECURITY.md` match product behavior (thin client, remote MCP, `ops_configure_integration` only path for secrets, tenant isolation, OAuth PKCE, usage limits, revocation). Website policies at `/en/privacy` and `/en/terms` cover the same model (MCP gateway, encrypted integration creds, no sale of personal data, free tier/limits). **Optional hardening before OpenAI portal:** add “ChatGPT/Codex plugin” alongside Cursor in website intro, and mirror the explicit **no AI model training** sentence from `docs/PRIVACY.md` onto opsphere.io (currently only in repo docs).
@@ -178,3 +179,5 @@ Complete before clicking **Submit** on OpenAI directory:
 - Gateway backend penetration test — separate ops process
 - Fase 4 Apps SDK / ChatGPT desktop DCR
 - Cursor Marketplace re-submission (use [SECURITY-AND-TRUST.md](SECURITY-AND-TRUST.md) directly)
+- **Cursor `validate-plugins.mjs`:** requires identical `version` in root `plugin.json`, `.cursor-plugin`, and `.claude-plugin`. This repo versions each distribution separately; **`npm test` / `ci-validate.sh` is the gate**, not `validate-plugins.mjs`.
+- **Public OpenAI directory vs desktop bundle:** `.codex.mcp.json` keeps pragmatic keys (`auth`, `http_headers`, `oauth.client_id`, `oauth_resource`) for Codex CLI and ChatGPT desktop. For a **public directory** submission, plan a documented-variant pass (`extensions["com.openai"]`, no server `http_headers`) per OpenAI MCP review rules — do not break the working bundle until that submit is scheduled.
