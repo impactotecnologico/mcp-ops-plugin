@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.30] - 2026-11-25 (Manifest validator fixes)
+
+- Claude Code: rename Codex MCP config `.mcp.json` to `.codex.mcp.json` so Claude no longer auto-loads a remote server without `"type"` (silently dropped, `claude plugin validate` error); `.codex-plugin/plugin.json` `mcpServers` points to the new file. Add explicit `privacyPolicyUrl`.
+- Codex: align `interface` with the published listing limits (`displayName` and `shortDescription` at most 30 characters, up to 3 `defaultPrompt` entries of at most 128 characters without `@` mentions, at most 25 `keywords`).
+- Cursor: drop unsupported `$schema` from `.cursor-plugin/marketplace.json` (the official marketplace schema rejects unknown top-level keys).
+- Antigravity: `rules/opsphere.md` gets `trigger: always_on`, `plugin.json` declares `logo`, and `configure-integration` provider steps move to `references/providers.md` so `SKILL.md` stays under the 24000-byte load limit. `scripts/sync-portable-skills.mjs` now syncs skill `references/`.
+- Distribution versions: Cursor **1.0.30**, Codex **1.0.24**, Claude Code **1.0.18**; Antigravity package **1.0.3**.
+- Codex: fix `.codex-plugin/plugin.json` `mcpServers` → `./.codex.mcp.json` (matches rename; was still `./.mcp.json`). Add `interface.supportURL` for the four listing URLs required by MCP review.
+- Codex: remove plan, free-trial and other-client wording from `interface.longDescription` (OpenAI plugin guidelines disallow advertising pricing or trials in listings).
+
 ## [1.0.29] - 2026-11-09 (Effective tools/list discovery)
 
 - Document `result._meta["io.opsphere/catalog"]` protocol across router, onboarding, and portable host rules: module rollup, `announcedToolCount`, `entitlementFingerprint`, and when to re-run `tools/list`.

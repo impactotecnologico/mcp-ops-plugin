@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Opsphere operational rules
 
 - Start with live MCP discovery for public definitions, not authorization. Check `ops_my_usage` for catalog mode and active workspace availability.

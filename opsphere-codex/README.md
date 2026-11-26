@@ -12,7 +12,7 @@ Files that make up the Codex plugin, all at the repo root:
 
 - [`.codex-plugin/plugin.json`](../.codex-plugin/plugin.json): plugin manifest.
 - [`.agents/plugins/marketplace.json`](../.agents/plugins/marketplace.json): marketplace catalog (`source: ./`, `authentication: ON_INSTALL`).
-- [`.mcp.json`](../.mcp.json): MCP config (gateway `url`, `oauth_resource`, `User-Agent` header, `oauth.client_id`). It is **not** compatible with Claude Code's `.claude.mcp.json`.
+- [`.codex.mcp.json`](../.codex.mcp.json): MCP config (gateway `url`, `oauth_resource`, `User-Agent` header, `oauth.client_id`). It is **not** compatible with Claude Code's `.claude.mcp.json`.
 - [`skills/`](../skills/): skills shared with the other clients.
 
 No credentials are included.
@@ -41,7 +41,7 @@ cd opsphere-plugin
 npx @openai/codex mcp login opsphere
 ```
 
-`codex-mcp-config.sh` appends the required `User-Agent` header and the preset `codex-mcp` client id to `~/.codex/config.toml`. It is needed for Codex CLI OAuth; ChatGPT desktop reads the same metadata from `.mcp.json`.
+`codex-mcp-config.sh` appends the required `User-Agent` header and the preset `codex-mcp` client id to `~/.codex/config.toml`. It is needed for Codex CLI OAuth; ChatGPT desktop reads the same metadata from `.codex.mcp.json`.
 
 ## OAuth
 

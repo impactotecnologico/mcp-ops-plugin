@@ -13,12 +13,12 @@ echo "=== Opsphere Codex plugin install ==="
 echo "Source: ${ROOT}"
 echo "Dest:   ${DEST}"
 
-for f in .codex-plugin/plugin.json .mcp.json; do
+for f in .codex-plugin/plugin.json .codex.mcp.json; do
   [[ -f "${ROOT}/${f}" ]] || { echo "FAIL: missing ${f} — run from the Opsphere plugin repository root"; exit 1; }
 done
 
 python3 -m json.tool "${ROOT}/.codex-plugin/plugin.json" >/dev/null
-python3 -m json.tool "${ROOT}/.mcp.json" >/dev/null
+python3 -m json.tool "${ROOT}/.codex.mcp.json" >/dev/null
 echo "OK: Codex manifests parse"
 
 mkdir -p "${DEST}"
