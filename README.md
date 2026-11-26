@@ -396,6 +396,8 @@ Opsphere is a **remote MCP SaaS**: this repo is the open-source Cursor plugin bu
 
 **Automated verification (public repo):** every push/PR runs [`scripts/ci-validate.sh`](scripts/ci-validate.sh) (manifest + hygiene checks) and **Gitleaks** (full-history secret scan) via [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Run locally: `npm test`.
 
+**Optional local review:** when an `ops-review` command is installed, the pre-push hook validates its local review evidence before running the existing checks. Contributors without that command keep the standard checks. This optional integration does not bundle private rules, call a model, or add a GitHub Actions job.
+
 > Cursor security review: *"Security agent confirmed no secrets, no install hooks, no exfiltration in bundle."*
 
 Full details: **[SECURITY.md](SECURITY.md)** (encryption, retention, isolation, vulnerability reporting). Marketplace copy-paste: **[docs/SECURITY-AND-TRUST.md](docs/SECURITY-AND-TRUST.md)**.

@@ -1,2 +1,6 @@
 #!/usr/bin/env sh
+# Optional local review integration; public contributors need no private tooling.
+if [ "${CI:-}" != "true" ] && command -v ops-review >/dev/null 2>&1; then
+  ops-review check-push --repo . || exit $?
+fi
 bash "$(dirname -- "$0")/lib/pre-push.sh"
