@@ -8,6 +8,7 @@
 - Antigravity: `rules/opsphere.md` gets `trigger: always_on`, `plugin.json` declares `logo`, and `configure-integration` provider steps move to `references/providers.md` so `SKILL.md` stays under the 24000-byte load limit. `scripts/sync-portable-skills.mjs` now syncs skill `references/`.
 - Distribution versions: Cursor **1.0.30**, Codex **1.0.24**, Claude Code **1.0.18**; Antigravity package **1.0.3**.
 - Codex: fix `.codex-plugin/plugin.json` `mcpServers` → `./.codex.mcp.json` (matches rename; was still `./.mcp.json`). Add `interface.supportURL` for the four listing URLs required by MCP review.
+- Codex: remove plan, free-trial and other-client wording from `interface.longDescription` (OpenAI plugin guidelines disallow advertising pricing or trials in listings).
 
 ## [1.0.29] - 2026-11-09 (Effective tools/list discovery)
 

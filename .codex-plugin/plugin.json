@@ -42,7 +42,7 @@
   "interface": {
     "displayName": "Opsphere",
     "shortDescription": "DevOps & SRE intelligence",
-    "longDescription": "Opsphere connects ChatGPT Codex to your operational stack through a secure remote MCP gateway. Start with the welcome guide, connect your account, define your work context, and configure your first integration. Then use guided skills to investigate suspected bugs, assess release readiness, investigate outages, run DNS, HTTP, and TLS endpoint health checks, diagnose failed GitHub Actions and Bitbucket pipelines, search Datadog logs, inspect multi-platform deployments, triage Sentry issues and Jira tickets, diagnose Amazon Bedrock Agents and backing Lambdas, and produce structured postmortems. Credentials remain encrypted on the Opsphere gateway, and no hidden scripts execute from the plugin. Includes a Community plan with a free trial and the same operational tool ecosystem available through the Opsphere Cursor plugin.",
+    "longDescription": "Opsphere connects ChatGPT Codex to your operational stack through a secure remote MCP gateway. Start with the welcome guide, connect your account, define your work context, and configure your first integration. Then use guided skills to investigate suspected bugs, assess release readiness, investigate outages, run DNS, HTTP, and TLS endpoint health checks, diagnose failed GitHub Actions and Bitbucket pipelines, search Datadog logs, inspect multi-platform deployments, triage Sentry issues and Jira tickets, diagnose Amazon Bedrock Agents and backing Lambdas, and produce structured postmortems. Credentials remain encrypted on the Opsphere gateway, and no hidden scripts execute from the plugin.",
     "developerName": "Opsphere",
     "category": "Developer Tools",
     "capabilities": [
